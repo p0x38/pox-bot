@@ -5,7 +5,6 @@ import random
 from typing import Optional
 from discord.ext import commands
 from discord import Activity, ActivityType, ClientStatus, Color, CustomActivity, Embed, Forbidden, Game, HTTPException, Interaction, Member, Role, Spotify, Status, Streaming, TextChannel, app_commands
-from os.path import exists, join
 from aiocache import cached
 
 from bot import PoxBot
@@ -60,7 +59,7 @@ class UserGroup(commands.Cog):
     
     group = app_commands.Group(name="user", description="An group for Members.")
     
-    @group.command(name="how_long", description="Checks how long user has been in the server.")
+    @group.command(name="guild_duration", description="Checks how long user has been in the server.")
     @app_commands.guild_only()
     async def check_how_long_user_has_been(self, interaction: Interaction, member:Member):
         await interaction.response.defer()
@@ -240,7 +239,7 @@ class UserGroup(commands.Cog):
         await member.timeout(timedelta(minutes=length), reason=f"You're timed out. \"{reason if reason else "No reason provided from source"}\", Requested by {ctx.user.name}")
         return await ctx.response.send_message(f"Timed out {member.mention} for {length} minutes.")
     
-    @group.command(name="untimeout", description="Un-timeout member")
+    @group.command(name="un_timeout", description="Un-timeout member")
     @app_commands.checks.has_permissions(moderate_members=True)
     @app_commands.describe(member="Member to remove timeout")
     @app_commands.guild_only()
@@ -248,7 +247,7 @@ class UserGroup(commands.Cog):
         await member.edit(timed_out_until=None)
         return await ctx.response.send_message(f"Took the timeout for {member.mention}.")
 
-    @group.command(name="list", description="Returns total members")
+    @group.command(name="total_members", description="Returns total members")
     @app_commands.guild_only()
     async def get_list_members(self, interaction: Interaction):
         await interaction.response.defer(thinking=True)
@@ -265,7 +264,7 @@ class UserGroup(commands.Cog):
 
         return await interaction.followup.send(embed=embed)
 
-    @group.command(name="nick", description="Sets user's nickname")
+    @group.command(name="set_nick", description="Sets user's nickname")
     @app_commands.guild_only()
     async def change_nickname(self, interaction: Interaction, member: Member, new_nick: Optional[str] = None):
         if new_nick is None:
@@ -290,7 +289,7 @@ class UserGroup(commands.Cog):
 
         return await interaction.followup.send(embed=e)
     
-    @group.command(name="remaining", description="Returns remaining members to reach a goal value.")
+    @group.command(name="to_reachgoal", description="Returns remaining members to reach a goal value.")
     @app_commands.guild_only()
     async def get_remaining_members(self, interaction: Interaction, goal: Optional[int] = None):
         if interaction.guild is None: return await interaction.response.send_message("Object is not guild", ephemeral=True)
@@ -467,7 +466,7 @@ class UserGroup(commands.Cog):
 
         return await interaction.followup.send(embed=embed)
     
-    @group.command(name="pepo", description="check if this dude is pepo")
+    @group.command(name="is_pepo", description="check if this dude is pepo")
     @app_commands.guild_only()
     async def is_pepo(self, interaction: Interaction, member: Member):
         await interaction.response.defer(thinking=True)
@@ -481,7 +480,7 @@ class UserGroup(commands.Cog):
         return await interaction.followup.send(embed=e)
     
     @cached(120*4)
-    @group.command(name="hash", description="Get user's hash code.")
+    @group.command(name="hash_value", description="Get user's hash code.")
     @app_commands.guild_only()
     async def get_user_hash(self, interaction: Interaction, member: Member):
         await interaction.response.defer(thinking=True)

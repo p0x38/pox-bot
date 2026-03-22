@@ -60,7 +60,7 @@ class MessageGroup(commands.Cog):
         except Exception:
             raise
 
-    @group.command(name="mass_delete",description="Deletes messages before specified messages.")
+    @group.command(name="mass_delete", description="Deletes messages before specified messages.")
     @app_commands.describe(limit="How much range bot will delete.")
     @app_commands.checks.has_permissions(manage_channels=True, manage_messages=True)
     @app_commands.guild_only()
@@ -96,7 +96,7 @@ class MessageGroup(commands.Cog):
             deleted = await interaction.channel.purge(limit=limit if limit is not None else 100, check=check_messages)
             await interaction.followup.send(f"Purged {len(deleted)} messages.")
 
-    @group.command(name="delete_botmessages",description="Deletes bot's messages")
+    @group.command(name="purge_bot_messages",description="Deletes bot's messages")
     @app_commands.describe(limit="How much bot deletes it")
     @app_commands.checks.has_permissions(manage_channels=True, manage_messages=True)
     @app_commands.check(stuff.is_bot_owner)
@@ -127,12 +127,12 @@ class MessageGroup(commands.Cog):
                 
             await ctx.response.send_message(content=f"Deleted {deleted_count} messages including the messages that replied to me.")
 
-    @group.command(name="uwu", description="Sends a message to everyone that you did")
+    @group.command(name="uwuify", description="Sends a message to everyone that you did")
     @app_commands.describe(msg="Message to send")
     async def uwuified_say_something(self, ctx: Interaction, *, msg: str):
         await ctx.response.send_message(f"{stuff.to_uwu(msg)}")
     
-    @group.command(name="dm",description="DMs to a member")
+    @group.command(name="direct_message",description="DMs to a member")
     @app_commands.checks.has_permissions(send_messages=True)
     @app_commands.guild_only()
     async def send_dm_to_member(self, ctx: Interaction, member: Member, enable_sent_by: Optional[bool]):
@@ -168,7 +168,7 @@ class MessageGroup(commands.Cog):
         return interaction.followup.send(f"Sent to {send_count} of channels: "+"\n".join(sent_channels))
     
     @cached(60)
-    @group.command(name="search", description="Searches messages in current channel.")
+    @group.command(name="search_for", description="Searches messages in current channel.")
     @app_commands.guild_only()
     async def search_messages_in_channel(self, interaction: Interaction, keyword: str, limit: Optional[int] = 100):
         await interaction.response.defer()
@@ -195,7 +195,7 @@ class MessageGroup(commands.Cog):
             return await interaction.followup.send(embed=embed)
 
     @cached(120)
-    @group.command(name="last", description="Fetches the last message from the current channel.")
+    @group.command(name="last_sent", description="Fetches the last message from the current channel.")
     @app_commands.guild_only()
     async def fetch_last_message(self, interaction: Interaction):
         await interaction.response.defer()
@@ -219,7 +219,7 @@ class MessageGroup(commands.Cog):
             return await interaction.followup.send(embed=embed)
     
     @cached(240)
-    @group.command(name="first", description="Fetches the first message from the current channel.")
+    @group.command(name="first_sent", description="Fetches the first message from the current channel.")
     @app_commands.guild_only()
     async def fetch_first_message(self, interaction: Interaction):
         await interaction.response.defer()
@@ -244,7 +244,7 @@ class MessageGroup(commands.Cog):
             return await interaction.followup.send(embed=embed)
     
     @cached(60)
-    @group.command(name="count", description="Counts messages in the current channel.")
+    @group.command(name="message_count", description="Counts messages in the current channel.")
     @app_commands.guild_only()
     async def count_messages_in_channel(self, interaction: Interaction):
         await interaction.response.defer()
@@ -258,7 +258,7 @@ class MessageGroup(commands.Cog):
         return await interaction.followup.send(f"There are {message_count} messages in this channel.")
 
     @cached(60)
-    @group.command(name="random", description="Fetches a random message from the current channel.")
+    @group.command(name="get_random_message", description="Fetches a random message from the current channel.")
     @app_commands.guild_only()
     async def fetch_random_message(self, interaction: Interaction):
         await interaction.response.defer()

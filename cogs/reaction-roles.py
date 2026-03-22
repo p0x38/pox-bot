@@ -13,7 +13,7 @@ class ReactionRolesCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
 
-    group = app_commands.Group(name="reactionroles", description="Manage reaction roles")
+    group = app_commands.Group(name="reaction_roles", description="Manage reaction roles")
 
     async def get_target_message(self, interaction):
         if not self.bot.user: return None

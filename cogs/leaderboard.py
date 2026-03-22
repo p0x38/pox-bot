@@ -89,7 +89,7 @@ class Leaderboard(Cog):
             await interaction.followup.send("sorry, bot has no connection with Database.")
     
     @cached(60)
-    @group.command(name="mine", description="Shows your word points for no reason")
+    @group.command(name="your_word_points", description="Shows your word points for no reason")
     async def my_point(self , interaction: Interaction):
         await interaction.response.defer()
 
@@ -111,7 +111,7 @@ class Leaderboard(Cog):
             await interaction.followup.send("sorry, bot has no connection with Database.")
     
     @cached(60)
-    @group.command(name="words",description="Shows leaderboard who has yapping all times")
+    @group.command(name="word_points",description="Shows leaderboard who has yapping all times")
     async def word_leaderboard(self, interaction: Interaction):
         await interaction.response.defer()
         if self.bot.db_connection:
@@ -138,7 +138,7 @@ class Leaderboard(Cog):
             await interaction.followup.send("sorry, bot has no connection with Database.")
     
     @cached(120)
-    @group.command(name="local_words",description="Shows leaderboard in server who has yapping all times")
+    @group.command(name="local_word_points",description="Shows leaderboard in server who has yapping all times")
     @guild_only()
     async def word_leaderboard_local(self, interaction: Interaction):
         await interaction.response.defer()
@@ -228,7 +228,7 @@ class Leaderboard(Cog):
 
     # get specified user's word count
     @cached(60)
-    @group.command(name="user_words",description="Shows specified user's word points")
+    @group.command(name="get_user_word_points",description="Shows specified user's word points")
     async def user_word_count(self, interaction: Interaction, user: Member):
         await interaction.response.defer()
 

@@ -35,7 +35,7 @@ class TTS(commands.Cog):
         return suggestions
     
     @cached(60*2)
-    @ttsgroup.command(name="google")
+    @ttsgroup.command(name="google_translate")
     @app_commands.autocomplete(lang=googletts_autocomplete)
     async def google_text_to_speech(self, interaction: discord.Interaction, text: str, slow: Optional[bool] = False, lang: Optional[str] = "en"):
         await interaction.response.defer(thinking=True)
@@ -63,7 +63,7 @@ class TTS(commands.Cog):
             logger.exception(f"{e}")
     
     @cached(60)
-    @ttsgroup.command(name="piper")
+    @ttsgroup.command(name="piper_tts")
     async def piper_text_to_speech(
         self,
         interaction: discord.Interaction,

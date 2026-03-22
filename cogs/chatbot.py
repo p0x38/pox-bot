@@ -3,17 +3,17 @@ import datetime
 import random
 import re
 import time
-from typing import Any, Optional
-import aiohttp
+from typing import Optional
 from discord.ext import commands, tasks
-from discord import Color, DeletedReferencedMessage, Embed, Interaction, Member, Message, TextChannel, app_commands
+from discord import Color, Embed, Interaction, Member, Message, TextChannel, app_commands
 
 import ollama
+import openai
 import lmstudio
 
 from bot import PoxBot
 from logger import logger
-from stuff import get_lmstudio_token
+from stuff import get_openai_api_key
 
 class ChatbotCog(commands.Cog):
     def __init__(self, bot):
@@ -354,7 +354,7 @@ class ChatbotCog(commands.Cog):
             
             # Identify the channel name
             channel = self.bot.get_channel(channel_id)
-            channel_name = channel.name if channel else f"ID: {channel_id}"
+            channel_name = channel.name if channel and isinstance(channel, TextChannel) else f"ID: {channel_id}"
             
             # Status bar
             bar = self.get_latency_bar(token_est, 512)

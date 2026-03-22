@@ -34,6 +34,9 @@ def get_bot_token():
 def get_lmstudio_token():
     return os.getenv("LM_API_TOKEN")
 
+def get_openai_api_key():
+    return os.getenv("OPENAI_API_KEY")
+
 def get_mysql_credentials():
     logger.debug("Retrieving MySQL credentials...")
     user = os.getenv('MYSQL_USER')

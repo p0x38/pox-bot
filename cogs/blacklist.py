@@ -2,7 +2,6 @@ from discord.ext import commands
 from discord import Embed, Interaction, app_commands
 
 from bot import PoxBot
-from logger import logger
 
 class Blacklister(commands.Cog):
     def __init__(self, bot):
@@ -64,6 +63,8 @@ class Blacklister(commands.Cog):
     @app_commands.guild_only()
     @app_commands.checks.has_permissions(manage_messages=True, manage_guild=True)
     async def list_blacklisted_words(self, interaction: Interaction):
+        if not interaction.guild: raise Exception("No guild found from interaction data")
+        
         embed = Embed(title="Banned words")
         lines = ["Banned words in this server listed below:"]
         banned_words = self.bot.blacklisted_words.get(str(interaction.guild.id), [])

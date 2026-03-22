@@ -176,7 +176,7 @@ class Info(commands.Cog):
         global start_time
         await ctx.response.send_message("I have been online for {}.".format(stuff.get_formatted_from_seconds(round(time.time() - self.bot.launch_time2))))
     
-    @group.command(name="info", description="I always with you :)")
+    @group.command(name="retrieve", description="I always with you :)")
     async def show_stats(self, interaction: Interaction):
         await interaction.response.defer(thinking=True)
         

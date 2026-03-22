@@ -1,0 +1,22 @@
+from discord import Embed, Interaction, app_commands
+from discord.ext import commands
+
+from bot import PoxBot
+
+class LanguageCog(commands.Cog):
+    def __init__(self, bot):
+        self.bot: PoxBot = bot
+    
+    group = app_commands.Group(name="lang", description="Language")
+    
+    @group.command(name="set", description="Set language")
+    async def set_user_language(self, interaction: Interaction, locale: str):
+        locale = locale.lower().split("-")[0]
+        
+        embed = Embed()
+        
+        if locale not in self.bot.i18n.translations:
+            embed.title = "Unsupported language"
+            embed.description = f"you have selected an unsupported language: {locale}"
+            return await interaction.response.send_message(embed=embed, ephemeral=True)
+        

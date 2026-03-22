@@ -54,7 +54,7 @@ class RatingCog(commands.Cog):
         logger.info("Saving data")
         await self.save()
     
-    @group.command(name="rate", description="Rate member.")
+    @group.command(name="rate_user", description="Rate member.")
     @app_commands.guild_only()
     @app_commands.describe(rate="A floating point number to rate member between 0 to 100.")
     async def rate_member(self, interaction: Interaction, member: Member, rate: float, override: Optional[bool] = False):
@@ -77,7 +77,7 @@ class RatingCog(commands.Cog):
 
         return await interaction.response.send_message(f"You gave `{member.display_name}` rate of {rate}.")
     
-    @group.command(name="rating", description="Gets member's rating info.")
+    @group.command(name="user_rating", description="Gets member's rating info.")
     @app_commands.guild_only()
     async def get_rating_info(self, interaction: Interaction, member: Member):
         if interaction.guild is None: return await interaction.response.send_message("You cannot set welcome channel unless the bot is for guild.")

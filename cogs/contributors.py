@@ -5,8 +5,6 @@ from os.path import dirname, join
 from bot import PoxBot
 import data
 
-from matplotlib import pyplot as plt
-
 class Contributors(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot

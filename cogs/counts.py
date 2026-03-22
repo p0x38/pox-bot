@@ -4,8 +4,6 @@ from discord import Embed, Interaction, Status, app_commands
 
 from bot import PoxBot
 
-from logger import logger
-
 class CountsGroup(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot

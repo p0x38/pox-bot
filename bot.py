@@ -1,7 +1,5 @@
-import asyncio
 import datetime
 import os
-from pathlib import Path
 import random
 import re
 import subprocess
@@ -11,17 +9,16 @@ import aiomysql
 import discord
 from discord.ext import commands
 from gtts.lang import tts_langs
-from prompt_toolkit import PromptSession
 from prompt_toolkit.patch_stdout import patch_stdout
 from classes import Cache, EmoticonGenerator, MyTranslator
+from i18n import I18n
 import stuff
 import data
 import aiosqlite
 import profanityfilter
 import roblox
-import websockets
-from logger import logger, interact_logger
-from discord import Forbidden, HTTPException, Interaction, MissingApplicationID, TextChannel, app_commands
+from logger import logger
+from discord import Color, Embed, Forbidden, HTTPException, MissingApplicationID, app_commands
 
 import aiofiles
 import json
@@ -40,9 +37,11 @@ DB_CONFIG = {
 class PoxBot(commands.AutoShardedBot):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args,**kwargs)
-        
         self.launch_time = datetime.datetime.now(datetime.UTC)
         self.launch_time2 = time()
+        
+        self.i18n = I18n("en")
+        
         self.handled_messages = 0
         self.db_connection = None
         self.mysql = None
@@ -87,6 +86,8 @@ class PoxBot(commands.AutoShardedBot):
         self.bot_servers_limit = 90
     
     async def setup_hook(self):
+        self.i18n.load()
+        self.loop.create_task(self.i18n.watch())
         stuff.setup_database("./leaderboard.db")
         # set a translator for app commands (async API)
         try:
@@ -207,7 +208,7 @@ class PoxBot(commands.AutoShardedBot):
                 f"User ID: {self.user.id}",
                 f"Username: {self.user.name}",
                 f"Connected Guilds: {len(self.guilds)}",
-                f"Guilds: {", ".join([guild.name for guild in self.guilds])}",
+                f"Guilds: {', '.join([guild.name for guild in self.guilds])}",
                 f"Users: {len(self.users)}",
                 f"Commit Hash: {self.commit_hash}",
                 f"Session UUID: {self.session_uuid}",
@@ -408,9 +409,16 @@ class PoxBot(commands.AutoShardedBot):
             await self.process_commands(message)
     
     async def on_command_error(self,ctx: commands.Context, e: commands.CommandError):
-        logger.exception(f"Exception thrown: {e}!")
-        embed = discord.Embed(title="Error occured!",description=f"Exception thrown while processing command: {e}")
-        await ctx.reply(embed=embed)
+        try:
+            logger.exception(f"Exception thrown: {e}!")
+
+            embed = Embed(title="Error thrown while processing this command",
+                          timestamp=datetime.datetime.now(),
+                          color=Color.red())
+            
+            await ctx.reply(embed=embed)
+        except Exception as e2:
+            logger.exception(f"Couldn't send error embed: {e2}")
     
     async def on_interaction(self,inter: discord.Interaction):
         if inter.type == discord.InteractionType.application_command:
