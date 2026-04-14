@@ -1,8 +1,9 @@
 import asyncio
 import platform
 import time
-from discord import ButtonStyle, Color, Embed, Interaction, SelectOption, app_commands
+from discord import ButtonStyle, Color, Embed, Interaction, SelectOption, TextStyle, app_commands
 import discord
+from discord import ui
 from discord.ext import commands
 from discord.ui import Select
 import distro
@@ -15,6 +16,49 @@ from cogs.chatbot import ChatbotCog
 from logger import logger
 from stuff import get_formatted_from_seconds
 import stuff
+
+class FeedbackModal(ui.Modal):
+    def __init__(self, bot):
+        super().__init__(title="Feedback", timeout=None, custom_id="feedback-modal")
+        self.feedback = ui.TextInput(
+            label="Give me feedback to the bot.",
+            style=TextStyle.long,
+            placeholder="Type your feedback, like suggestions, reviews, etc...",
+            required=True,
+            min_length=25,
+            max_length=900,
+            custom_id="feedback-text",
+        )
+        self.add_item(self.feedback)
+        
+        self.bot: PoxBot = bot
+    
+    async def send_feedback(self, interaction: Interaction):
+        try:
+            owner_id = self.bot.owner_id
+            if not owner_id: return
+            
+            owner = self.bot.get_user(owner_id)
+            if not owner: raise Exception("Why's owner not found")
+            
+            embed = Embed(title=f"Bot feedback received from {interaction.user.name}", color=Color.blurple())
+            embed.set_author(name=interaction.user.name, icon_url=interaction.user.display_avatar.url)
+            embed.set_footer(text=f"Sent on {datetime.now().strftime("%d.%m.%Y %H:%M:%S")}")
+            
+            embed.description = self.feedback.value
+            
+            await owner.send(embed=embed)
+        except Exception as e:
+            logger.exception(f"Exception thrown: {e}")
+    
+    async def on_submit(self, interaction: Interaction):
+        await self.send_feedback(interaction)
+        await interaction.response.send_message(f"Thanks for your feedback!", ephemeral=True, delete_after=10)
+    
+    async def on_error(self, interaction: Interaction, error: Exception):
+        await interaction.response.send_message("Oops! something went wrong.", ephemeral=True, delete_after=10)
+        
+        logger.exception(f"Error raised: {error}")
 
 class DynamicInfoView(discord.ui.View):
     def __init__(self, cog, bot):
@@ -170,6 +214,10 @@ class Info(commands.Cog):
             await ctx.response.send_message("Commands have been synced.")
         else:
             await ctx.response.send_message("This command can only be used in a server.")
+    
+    @group.command(name="botserver", description="Join to bot's main server")
+    async def send_botserver_invite_link(self, interaction: Interaction):
+        await interaction.response.send_message(f"Here's the server:\nhttps://discord.gg/3FVGf5MBJV", ephemeral=True)
     
     @group.command(name="uptime", description="How long this bot is in session")
     async def check_uptime(self,ctx: Interaction):
@@ -394,5 +442,9 @@ class Info(commands.Cog):
             e.add_field(name="Platform", value=platform.platform(aliased=True))
         
         await interaction.followup.send(embed=e)
+    
+    @group.command(name="feedback", description="Send developer a feedback.")
+    async def send_feedback(self, interaction: Interaction):
+        await interaction.response.send_modal(FeedbackModal(self.bot))
 async def setup(bot):
     await bot.add_cog(Info(bot))

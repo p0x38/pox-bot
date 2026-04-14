@@ -19,12 +19,12 @@ class ChatbotCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         self.client = ollama.AsyncClient(host="http://127.0.0.1:11434")
-        self.model_name = "idk"
+        self.model_name = "idk2"
         
         self.user_windows = collections.defaultdict(list)
         self.max_requests = 2
         self.window_seconds = 6
-        self.chat_probability = 0.05
+        self.chat_probability = 0.00
         self.min_message_length = 6
         
         self.default_data = {
@@ -46,10 +46,11 @@ class ChatbotCog(commands.Cog):
         }
         
         self.trigger_list = {
-            "jimbot": re.compile(r"(?i)\bjim\s*+b+o+t+\b"),
+            #"jimbot": re.compile(r"(?i)\bjim\s*+b+o+t+\b"),
             #"bot_accuse": re.compile(r"(?i)\b(you|ur|u|are)\s*(a|the)?\s*bot\b"),
             "shut_up": re.compile(r"(?i)\b(shut\s*up|be\s*quiet|stop\s*talking|silence|sybau|stfu)\s*(jim|jim\s*bot|p[o0]x(38)?|stupid|bitch|fucker)\b"),
-            "name_drop": re.compile(r"(?i)\b(jim+|p[o0]x38|pox+)\b")
+            #"name_drop": re.compile(r"(?i)\b(jim+|p[o0]x38|pox+)\b"),
+            "null": re.compile(r"(?i)\bnull+\b"),
         }
         
         self.perf_logs = []
@@ -179,7 +180,7 @@ class ChatbotCog(commands.Cog):
         
         if self.trigger_list['shut_up'].search(content_lower) and is_mentioned:
             self.channel_data[channel_id].update({"muted_until": now + (60 * 10)})
-            await message.channel.send("😭")
+            await message.channel.send("3:")
             return
         
         is_triggered = any(reg.search(content_lower) for reg in self.trigger_list.values())
@@ -235,13 +236,7 @@ class ChatbotCog(commands.Cog):
                     
                     logger.debug(f"Generating LLM Response from Ollama REST API with prompt: \n\n{context}")
                     
-                    options = {
-                        'num_predict': 80,
-                        'temperature': 0.85,
-                        'stop': ["[/REP]", "user:", "\n"]
-                    }
-                    
-                    async for chunk in await self.client.generate(model=self.model_name, prompt=context, keep_alive=-1, stream=True, options=options):
+                    async for chunk in await self.client.generate(model=self.model_name, prompt=context, keep_alive=-1, stream=True, think=True):
                         if first_token_ts is None:
                             first_token_ts = time.perf_counter()
                         

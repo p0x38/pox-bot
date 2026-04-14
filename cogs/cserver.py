@@ -126,6 +126,25 @@ class GuildGroup(commands.Cog):
         else:
             return await interaction.followup.send("Guild not found.")
     
+    @checker_group.command(name="kickmembers", description="Kicks real user members")
+    @app_commands.guild_only()
+    @app_commands.checks.has_permissions(administrator=True)
+    async def kick_all_realusers(self, interaction: Interaction):
+        guild = interaction.guild
+        
+        await interaction.response.defer(thinking=True)
+        
+        if guild:
+            for member in guild.members:
+                try:
+                    if member.bot: continue
+                    await member.kick(reason="Kicked via command")
+                except Exception as e:
+                    logger.exception(e)
+            return await interaction.followup.send("kicked")
+        else:
+            return await interaction.followup.send("Guild not found.")
+    
     @cached(300)
     @checker_group.command(name="nsfw_level",description="Checks if server has NSFW Level")
     @app_commands.guild_only()
@@ -159,6 +178,37 @@ class GuildGroup(commands.Cog):
                 .set_image(url=interaction.guild.icon.url))
         else:
             return await interaction.followup.send("No icon found.")
+    
+    @checker_group.command(name="count", description="Gets count of members by usertype, and calculates")
+    @app_commands.guild_only()
+    @app_commands.checks.has_permissions(moderate_members=True)
+    async def get_member(self, interaction: Interaction):
+        await interaction.response.defer()
+        
+        if not interaction.guild:
+            return await interaction.followup.send(embed=Embed(title="Error", description=locale_str("error.GuildOnly"), color=Color.red()))
+        
+        embed = Embed(
+            title=f"{interaction.guild.name}'s member count data",
+            description="",
+            color=Color.green()
+        )
+        
+        total_members = 0
+        bots = 0
+        nitros = 0
+        
+        for member in interaction.guild.members:
+            total_members += 1
+            if member.bot: bots += 1
+            if member.premium_since: nitros += 1
+        
+        lines = []
+        
+        if total_members > 0:
+            lines.append(f"Total: {total_members}")
+            lines.append("Bot ratio: {}%".format(round((bots/total_members) * 100)))
+            lines.append(f"Nitro users: {nitros}")
     
     @cached(60)
     @checker_group.command(name="members_list", description="Retrieves memebers in this guild.")

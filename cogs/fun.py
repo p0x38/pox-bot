@@ -1,6 +1,9 @@
+import re
+from typing import Optional, Union
+
 from aiocache import cached
 from discord.ext.commands import Cog
-from discord import Embed, Member, app_commands, Interaction
+from discord import Embed, Member, User, app_commands, Interaction
 import random
 
 from bot import PoxBot
@@ -11,11 +14,27 @@ import asyncio
 from logger import logger
 import stuff
 
+def ship_names(name1, name2):
+    n1 = name1.lower()
+    n2 = name2.lower()
+    
+    match1 = re.search(r'[aeiou]', n1)
+    split1 = match1.start() + 1 if match1 else len(n1) // 2
+    
+    indices = [m.start() for m in re.finditer(r'[aeiou]', n2)]
+    split2 = indices[-1] if indices else len(n2) // 2
+    
+    combined = n1[:split1] + n2[split2:]
+    
+    return combined.capitalize()
+
 class Fun(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
-    @app_commands.command(name="guess_game", description="Starts a new number guessing game (1 ~ 100)")
+    group = app_commands.Group(name="fun", description="Fun stuff.")
+    
+    @group.command(name="guess_game", description="Starts a new number guessing game (1 ~ 100)")
     async def guess_game(self, interaction: Interaction):
         user_id = interaction.user.id
 
@@ -37,7 +56,7 @@ class Fun(Cog):
             f"Use /guess <number> to guess."
         )
     
-    @app_commands.command(name='guess', description="Guess the number.")
+    @group.command(name='guess', description="Guess the number.")
     async def make_guess(self, interaction: Interaction, number: int):
         user_id = interaction.user.id
 
@@ -83,7 +102,7 @@ class Fun(Cog):
             
             return await interaction.response.send_message(f"You failed to guess. {special}\n It was {secret_number}. Your score is {game_data['score']}. Try again.")
     
-    @app_commands.command(name="stopguess", description="Stops the current guessing game.")
+    @group.command(name="stopguess", description="Stops the current guessing game.")
     async def stop_guessing(self, interaction: Interaction):
         user_id = interaction.user.id
 
@@ -95,7 +114,7 @@ class Fun(Cog):
             return await interaction.response.send_message(f"You've not even started the guess.")
 
     @cached(300)
-    @app_commands.command(name="job_application",description="yeah")
+    @group.command(name="job_application",description="yeah")
     async def a_job_message(self, ctx):
         try:
             await ctx.response.send_message("Today, I'll be talking about one of humanity's biggest fears.")
@@ -104,12 +123,12 @@ class Fun(Cog):
         except Exception as e:
             logger.error(e)
     
-    @app_commands.command(name="boop_member",description="boops someone")
+    @group.command(name="boop_member",description="boops someone")
     @app_commands.describe(user="Member to boop")
     async def boop_member(self, ctx: Interaction, user: Member):
         return await ctx.response.send_message(f"<@{user.id}> boop.")
     
-    @app_commands.command(name="dice", description="Rolls dice.")
+    @group.command(name="dice", description="Rolls dice.")
     async def roll_dice(self, interaction: Interaction, dices: int, sides: int):
         await interaction.response.defer()
 
@@ -124,5 +143,34 @@ class Fun(Cog):
         embed = Embed(title="Dice roll", description=lalapapa)
 
         return await interaction.followup.send(embed=embed)
+    
+    @group.command(name="ship", description="Calculates the love rate between two users")
+    async def ship_users(self, interaction: Interaction, user1: Member, user2: Optional[Member] = None):
+        if not user2:
+            if interaction.guild:
+                try:
+                    user2 = interaction.guild.get_member(interaction.user.id)
+                    if not user2: raise Exception()
+                except:
+                    return await interaction.response.send_message("Error occured.")
+            else: return await interaction.response.send_message("The command should've to ran with guild")
+        
+        rand_seed = user1.id + user2.id
+        random.seed(rand_seed)
+        rand = random.random()
+        
+        await interaction.response.defer()
+        
+        e = Embed(title="Ship stuff with them yuh")
+        rows_to_add = [
+            f"{user1.mention} x {user2.mention}",
+            f"Possibility: {round(rand*100)} %"
+        ]
+        
+        e.description = "\n".join(rows_to_add)
+        e.set_footer(text="W.I.P.")
+        
+        await interaction.followup.send(embed=e)
+    
 async def setup(bot):
     await bot.add_cog(Fun(bot))

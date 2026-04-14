@@ -93,7 +93,7 @@ class MonitorWindow(QtWidgets.QMainWindow):
         self.main_layout.addWidget(self.mem_plot)
         
         self.core_count = core_count
-        self.max_points = 400 # 30 seconds at 10Hz
+        self.max_points = 100 # 30 seconds at 10Hz
         self.start_time = time.time()
         
         self.mem_stabilizer = DataStabilizer()

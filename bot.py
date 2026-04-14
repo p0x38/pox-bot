@@ -9,9 +9,7 @@ import aiomysql
 import discord
 from discord.ext import commands
 from gtts.lang import tts_langs
-from prompt_toolkit.patch_stdout import patch_stdout
 from classes import Cache, EmoticonGenerator, MyTranslator
-from i18n import I18n
 import stuff
 import data
 import aiosqlite
@@ -22,8 +20,6 @@ from discord import Color, Embed, Forbidden, HTTPException, MissingApplicationID
 
 import aiofiles
 import json
-
-from data import null_interactions, null_messages
 
 DB_CONFIG = {
     'host': 'localhost',
@@ -39,8 +35,6 @@ class PoxBot(commands.AutoShardedBot):
         super().__init__(*args,**kwargs)
         self.launch_time = datetime.datetime.now(datetime.UTC)
         self.launch_time2 = time()
-        
-        self.i18n = I18n("en")
         
         self.handled_messages = 0
         self.db_connection = None
@@ -79,15 +73,13 @@ class PoxBot(commands.AutoShardedBot):
         self.server_data2_loaded = False
         self.auth_code = str(random.randint(10000000,99999999))
         self.EXCLUDE_EXTENSIONS = [
-            "chat",
+            "chat", "chatbot",
             "log",
             "others"
         ]
         self.bot_servers_limit = 90
     
     async def setup_hook(self):
-        self.i18n.load()
-        self.loop.create_task(self.i18n.watch())
         stuff.setup_database("./leaderboard.db")
         # set a translator for app commands (async API)
         try:
