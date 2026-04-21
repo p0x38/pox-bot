@@ -11,6 +11,7 @@ import re
 import base64
 import aiofiles
 import dotenv
+from typing import Optional
 
 dotenv.load_dotenv()
 
@@ -617,3 +618,12 @@ def get_int(i):
         return 0
     except Exception:
         return -1
+
+def format_boolean(i: Optional[bool], true_text: str = "Yes", false_text: str = "No"):
+    if not i: return "None"
+    return true_text if i == True else false_text
+
+def format_seconds(i: Optional[int]):
+    if not i: return "???"
+    suffix = "seconds" if i > 1 else "second"
+    return f"{i} {suffix}"
