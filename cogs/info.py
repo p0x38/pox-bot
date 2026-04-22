@@ -91,10 +91,7 @@ class DynamicInfoView(discord.ui.View):
         chatbot_cog = self.bot.get_cog("ChatbotCog")
         channel_id = interaction.channel_id
         
-        chan_info = chatbot_cog.channel_data.get(channel_id, {"muted_until": 0}) if chatbot_cog else {}
-        is_muted = "Yes" if time.time() < chan_info.get("muted_until", 0) else "No"
-        
-        return {
+        temp = {
             "identity": {
                 "title": "Identity & Version",
                 "fields": {
@@ -159,7 +156,14 @@ class DynamicInfoView(discord.ui.View):
                     "disk": {"display": "Disk Usage", "value": self.cog.make_bar(disk.percent)},
                     "ram_details": {"display": "Memory Details", "value": f"{mem.used // (1024**2)}MB / {mem.total // (1024**2)}MB"}
                 }
-            },
+            }
+        }
+        
+        if chatbot_cog and isinstance(chatbot_cog, ChatbotCog):
+            chan_info = chatbot_cog.channel_data.get(channel_id, {"muted_until": 0}) if chatbot_cog else {}
+            is_muted = "Yes" if time.time() < chan_info.get("muted_until", 0) else "No"
+            
+            temp.update({
             "context": {
                 "title": "Local brain data",
                 "fields": {
@@ -167,8 +171,9 @@ class DynamicInfoView(discord.ui.View):
                     "memory": {"display": "Context Usage", "value": f"{len(chatbot_cog.history.get(channel_id, []))}/10 messages"},
                     "mode": {"display": "Current Mood", "value": "idk"},
                 }
-            }
-        }
+            }})
+        
+        return temp
     
     @discord.ui.select(
         placeholder="Choose a category...",

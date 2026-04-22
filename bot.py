@@ -75,7 +75,7 @@ class PoxBot(commands.AutoShardedBot):
         self.EXCLUDE_EXTENSIONS = [
             "chat", "chatbot",
             "log",
-            "others"
+            "others", "websockets"
         ]
         self.bot_servers_limit = 90
     

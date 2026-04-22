@@ -49,6 +49,7 @@ class HelpCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         self.command_map = {}
+        self.commands_per_page = 12
     
     @app_commands.command(name="help_v2")
     async def help_command(self, interaction: Interaction, index_number: Optional[int] = 0):
@@ -59,16 +60,16 @@ class HelpCog(commands.Cog):
         
         all_commands = self.bot.tree.get_commands()
         
-        if index_number > (round(len(all_commands)/20) - 1):
+        if index_number > (round(len(all_commands) / self.commands_per_page) - 1):
             await interaction.response.send_message("Requested search index is larger than list length.",ephemeral=True)
             return
         
-        remaining = len(all_commands) - len(all_commands[:(index_number + 1) * 20])
-        limited_commands = all_commands[(index_number * 20):(index_number + 1) * 20]
+        remaining = len(all_commands) - len(all_commands[:(index_number + 1) * self.commands_per_page])
+        limited_commands = all_commands[(index_number * self.commands_per_page):(index_number + 1) * self.commands_per_page]
 
         lines = []
 
-        lines.append(f"Index: {index_number} / {(round(len(all_commands) / 20) - 1)}")
+        lines.append(f"Index: {index_number} / {(round(len(all_commands) / self.commands_per_page) - 1)}")
         lines.append(f"Remaining: {remaining}")
         
         for command in limited_commands:

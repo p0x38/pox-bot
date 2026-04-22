@@ -163,8 +163,9 @@ class Fun(Cog):
         
         e = Embed(title="Ship stuff with them yuh")
         rows_to_add = [
-            f"{user1.mention} x {user2.mention}",
-            f"Possibility: {round(rand*100)} %"
+            f"Ship name: {ship_names(user1.display_name, user2.display_name)}"
+            f"Ship format: {user1.mention} x {user2.mention}",
+            f"\"LOVE\" Possibility: {round(rand*100)} %"
         ]
         
         e.description = "\n".join(rows_to_add)

@@ -76,6 +76,9 @@ class UserGroup(commands.Cog):
             duration = now - joined_date
             
             embed.description = f"{member.name} has been on the server for {duration} days"
+            embed.color = Color.green()
+            
+            await interaction.followup.send(embed=embed)
         except Exception as e:
             logger.exception(e)
             await interaction.followup.send("sry errored")
