@@ -2,9 +2,10 @@ import asyncio
 from datetime import datetime, timedelta
 import math
 import random
+import re
 from typing import Optional
 from discord.ext import commands
-from discord import Activity, ActivityType, ClientStatus, Color, CustomActivity, Embed, Forbidden, Game, HTTPException, Interaction, Member, Role, Spotify, Status, Streaming, TextChannel, app_commands
+from discord import Activity, ActivityType, ClientStatus, Color, CustomActivity, Embed, Forbidden, Game, HTTPException, Interaction, Member, Role, Spotify, Status, Streaming, TextChannel, TextStyle, User, app_commands, ui
 from aiocache import cached
 
 from bot import PoxBot
@@ -41,7 +42,7 @@ def format_status(client_status: ClientStatus):
     if client_status.web is str: platforms.append("Website")
 
     if platforms:
-        result = result + f" ({", ".join(platforms)})"
+        result = result + f" ({', '.join(platforms)})"
 
     return result
 
@@ -53,9 +54,168 @@ def get_next_power_of_two(n: int) -> int:
 
     return 2 ** exponent
 
+DURATION_REGEX = re.compile(
+    r"(?:(?P<weeks>\d+)\s*w)?\s*"
+    r"(?:(?P<days>\d+)\s*d)?\s*"
+    r"(?:(?P<hours>\d+)\s*h)?\s*"
+    r"(?:(?P<minutes>\d+)\s*m)?\s*"
+    r"(?:(?P<seconds>\d+)\s*s)?",
+    re.IGNORECASE
+)
+
+MAX_TIMEOUT = timedelta(days=28)
+
+def parse_duration(text: str) -> timedelta:
+    text = text.strip().lower()
+    
+    if text.isdigit():
+        return timedelta(seconds=int(text))
+    
+    if ":" in text:
+        parts = text.split(":")
+        if len(parts) == 2:
+            m, s = parts
+            return timedelta(minutes=int(m), seconds=int(s))
+        elif len(parts) == 3:
+            h, m, s = parts
+            return timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+        elif len(parts) == 4:
+            d, h, m, s = parts
+            return timedelta(days=int(d), hours=int(h), minutes=int(m), seconds=int(s))
+        else:
+            raise ValueError("Invalid time format!!! 3:<")
+    
+    match = DURATION_REGEX.fullmatch(text)
+    if match:
+        parts = {k: int(v) if v else 0 for k, v in match.groupdict().items()}
+        return timedelta(**parts)
+    
+    raise ValueError("Couldn't parse duration.. 3:")
+
+SUFFIX = "Action taken by {} via ContextMenu"
+
+class TimeoutModal(ui.Modal, title="User timeout"):
+    def __init__(self, target: Member):
+        super().__init__()
+        self.target = target
+        self.reason_suffix = SUFFIX.format(target.display_name)
+        self.embed = Embed(color=Color.red())
+    
+    duration = ui.TextInput(
+        label="Duration",
+        placeholder="e.g. 1d 2h (1 day 2 hours), 02:00 (2 minutes), 3600 (1 hour)",
+        required=True
+    )
+    
+    reason = ui.TextInput(
+        label="Reason",
+        style=TextStyle.paragraph,
+        required=False,
+        max_length=250
+    )
+    
+    async def on_submit(self, interaction: Interaction):
+        try:
+            td = parse_duration(self.duration.value)
+            
+            if td.total_seconds() <= 0:
+                raise ValueError("Duration must be greater than 0")
+            
+            if td > MAX_TIMEOUT:
+                td = MAX_TIMEOUT
+            
+            if not interaction.guild:
+                raise Exception("This command can only be used in a server")
+            
+            if isinstance(interaction.user, User):
+                raise Exception("The library mishook yourself as `User`")
+            
+            if self.target == interaction.user:
+                raise Exception("You cannot timeout yourself")
+            
+            if self.target == interaction.guild.owner:
+                raise Exception("You cannot timeout the server owner")
+            
+            if self.target.top_role >= interaction.user.top_role:
+                raise Exception("Your role is not high enough to timeout the user")
+            
+            if not interaction.guild.me.guild_permissions.moderate_members:
+                raise Exception("I don't have permission to timeout members.")
+            
+            if self.target.top_role >= interaction.guild.me.top_role:
+                raise Exception("My role is not high enough to timeout this user.")
+            
+            try:
+                timeout_reason = self.reason.value or "No reason specified from executor"
+                await self.target.timeout(td, reason=timeout_reason + self.reason_suffix)
+            except Exception as e:
+                self.embed.description = f"Exception thrown!\n{e}"
+                logger.exception(e)
+                await interaction.response.send_message(embed=self.embed)
+                return
+            
+            self.embed.description = f"{self.target.mention} has been timed out for `{td}`."
+            
+            await interaction.response.send_message(embed=self.embed)
+        except Exception as e:
+            self.embed.description = f"Exception thrown!\n{e}"
+            logger.exception(e)
+            await interaction.response.send_message(embed=self.embed)
+            
+
 class UserGroup(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
+        
+        @app_commands.context_menu(name="Kick this member")
+        @app_commands.checks.has_permissions(kick_members=True)
+        @app_commands.guild_only()
+        async def contextmenu_kick(interaction: Interaction, member: Member):
+            embed = Embed(color=Color.red())
+
+            await interaction.response.defer()
+
+            try:
+                await member.kick(reason=f"{interaction.user.display_name} kicked user via Context menu")
+                embed.description = f"{member.display_name} has been kicked from the server."
+            except Forbidden:
+                embed.description = f"You do not have permission to kick member {member.display_name}."
+            except HTTPException:
+                embed.description = f"The operation has failed due to HTTP Error."
+            except Exception as e:
+                embed.description = f"Uncaught exception: {e}"
+            finally:
+                return await interaction.followup.send(embed=embed)
+        
+        @app_commands.context_menu(name="Ban this member")
+        @app_commands.checks.has_permissions(ban_members=True)
+        @app_commands.guild_only()
+        async def contextmenu_ban(interaction: Interaction, member: Member):
+            embed = Embed(color=Color.red())
+            
+            await interaction.response.defer()
+            
+            try:
+                await member.ban(reason=f"{interaction.user.display_name} banned user via Context menu")
+                embed.description = f"{member.display_name} has been banned from the server."
+            except Forbidden:
+                embed.description = f"You do not have permission to ban member {member.display_name}."
+            except HTTPException:
+                embed.description = f"The operation has failed due to HTTP Error."
+            except Exception as e:
+                embed.description = f"Uncaught exception: {e}"
+            finally:
+                return await interaction.followup.send(embed=embed)
+        
+        @app_commands.context_menu(name="Timeout this member")
+        @app_commands.checks.has_permissions(moderate_members=True)
+        @app_commands.guild_only()
+        async def contextmenu_timeout(interaction: Interaction, member: Member):
+            await interaction.response.send_modal(TimeoutModal(member))
+        
+        bot.tree.add_command(contextmenu_kick)
+        bot.tree.add_command(contextmenu_ban)
+        bot.tree.add_command(contextmenu_timeout)
     
     group = app_commands.Group(name="user", description="An group for Members.")
     
@@ -184,15 +344,13 @@ class UserGroup(commands.Cog):
         try:
             await member.kick(reason=(reason if reason is not None else "Reason not provided by issuer."))
             e.description = f"{member.name} has been kicked from the server."
-            return await interaction.followup.send(embed=e)
         except Forbidden:
             e.description = f"You do not have permission to kick {member.name}."
-            return await interaction.followup.send(embed=e)
         except HTTPException:
             e.description = f"The operation has failed."
-            return await interaction.followup.send(embed=e)
         except Exception as ex:
             e.description = f"Uncaught exception. {ex}"
+        finally:
             return await interaction.followup.send(embed=e)
 
     @group.command(name="ban", description="Bans member from the server")
@@ -242,7 +400,7 @@ class UserGroup(commands.Cog):
         await member.timeout(timedelta(minutes=length), reason=f"You're timed out. \"{reason if reason else "No reason provided from source"}\", Requested by {ctx.user.name}")
         return await ctx.response.send_message(f"Timed out {member.mention} for {length} minutes.")
     
-    @group.command(name="un_timeout", description="Un-timeout member")
+    @group.command(name="remove_timeout", description="Un-timeout member")
     @app_commands.checks.has_permissions(moderate_members=True)
     @app_commands.describe(member="Member to remove timeout")
     @app_commands.guild_only()

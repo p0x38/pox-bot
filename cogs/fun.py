@@ -3,11 +3,12 @@ from typing import Optional, Union
 
 from aiocache import cached
 from discord.ext.commands import Cog
-from discord import Embed, Member, User, app_commands, Interaction
+from discord import Color, Embed, Member, User, app_commands, Interaction
 import random
 
 from bot import PoxBot
 
+import data
 from logger import logger
 import asyncio
 
@@ -31,6 +32,47 @@ def ship_names(name1, name2):
 class Fun(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
+        
+        @app_commands.context_menu(name="Ship with this user")
+        async def ship_with_target(interaction: Interaction, target_user: Union[User, Member]):
+            embed = Embed(color=Color.red(), description="Uncaught Exception")
+            user = None
+
+            if not target_user:
+                embed.description = "Couldn't find user."
+                return await interaction.response.send_message(embed=embed)
+
+            if interaction.guild:
+                guild = interaction.guild
+
+                user = guild.get_member(target_user.id)
+                if not user:
+                    embed.description = "Couldn't find user."
+                    return await interaction.response.send_message(embed=embed)
+            else:
+                user = target_user
+
+            if not user:
+                embed.description = "Unknown error, user not found"
+                return await interaction.response.send_message(embed=embed)
+
+            rand_seed = interaction.user.id + user.id
+            random.seed(rand_seed)
+            rand = random.random()
+
+            await interaction.response.defer()
+
+            e = Embed()
+            rows = [
+                f"Ship name: {ship_names(interaction.user.display_name, user.display_name)}",
+                f"Ship format: {interaction.user.mention} x {user.mention}",
+                f"\"LOVE\" Possibility: {round(rand * 100)} %"
+            ]
+
+            e.description = "\n".join(rows)
+            e.set_footer(text="W.I.P.")
+
+            await interaction.followup.send(embed=e)
     
     group = app_commands.Group(name="fun", description="Fun stuff.")
     
@@ -114,7 +156,7 @@ class Fun(Cog):
             return await interaction.response.send_message(f"You've not even started the guess.")
 
     @cached(300)
-    @group.command(name="job_application",description="yeah")
+    @group.command(name="job_application", description="yeah")
     async def a_job_message(self, ctx):
         try:
             await ctx.response.send_message("Today, I'll be talking about one of humanity's biggest fears.")
@@ -123,9 +165,9 @@ class Fun(Cog):
         except Exception as e:
             logger.error(e)
     
-    @group.command(name="boop_member",description="boops someone")
+    @group.command(name="boop_member", description="boops someone")
     @app_commands.describe(user="Member to boop")
-    async def boop_member(self, ctx: Interaction, user: Member):
+    async def boop_member(self, ctx: Interaction, user: Union[User, Member]):
         return await ctx.response.send_message(f"<@{user.id}> boop.")
     
     @group.command(name="dice", description="Rolls dice.")
@@ -144,6 +186,26 @@ class Fun(Cog):
 
         return await interaction.followup.send(embed=embed)
     
+    @group.command(name="8ball", description="Gives a random, magic 8-ball response")
+    async def generate_response_from_eightball(self, interaction: Interaction, question: str):
+        choice = random.choice(data.possibility_words)
+        
+        embed = Embed(title=f"8-ball response to your question", color=Color.random())
+        embed.add_field(name="Question", value=question, inline=True)
+        embed.add_field(name="Response", value=choice, inline=True)
+        
+        await interaction.response.send_message(embed=embed)
+    
+    @group.command(name="yesno", description="Gives yes or no to your question")
+    async def generate_yesno(self, interaction: Interaction, question: str):
+        choice = random.choice(data.yesno_words)
+        
+        embed = Embed(title=f"Yes or no to your question", color=Color.random())
+        embed.add_field(name="Question", value=question, inline=True)
+        embed.add_field(name="Response", value=choice, inline=True)
+        
+        await interaction.response.send_message(embed=embed)
+    
     @group.command(name="ship", description="Calculates the love rate between two users")
     async def ship_users(self, interaction: Interaction, user1: Member, user2: Optional[Member] = None):
         if not user2:
@@ -161,9 +223,9 @@ class Fun(Cog):
         
         await interaction.response.defer()
         
-        e = Embed(title="Ship stuff with them yuh")
+        e = Embed()
         rows_to_add = [
-            f"Ship name: {ship_names(user1.display_name, user2.display_name)}"
+            f"Ship name: {ship_names(user1.display_name, user2.display_name)}",
             f"Ship format: {user1.mention} x {user2.mention}",
             f"\"LOVE\" Possibility: {round(rand*100)} %"
         ]

@@ -37,6 +37,19 @@ possible_map = {
     11: "yuh uh",
 }
 
+yesno_words = [
+    "Yes",
+    "Yea",
+    "Yup",
+    "Yeah",
+    "Yuh",
+    "Nah",
+    "No",
+    "Nope",
+    "Nuh uh",
+    "Nuh"
+]
+
 possibility_words = [
     "Nope.",
     "No.",

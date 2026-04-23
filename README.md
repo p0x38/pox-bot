@@ -1,5 +1,8 @@
 # pox-bot
 
+> [!CAUTION]
+> There is large files that may consume your disk space.
+
 source for my bot called stupid bot
 
 ## Requirements to run

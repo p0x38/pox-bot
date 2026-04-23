@@ -74,6 +74,9 @@ class DynamicInfoView(discord.ui.View):
         mem = await asyncio.to_thread(psutil.virtual_memory)
         disk = await asyncio.to_thread(psutil.disk_usage, '/')
         
+        own_cpuusage = await asyncio.to_thread(self.bot.proc.cpu_percent, interval=0.1)
+        own_memusage = await asyncio.to_thread(self.bot.proc.memory_percent)
+        
         uptime = "Unknown"
         if self.bot.launch_time2:
             uptime = stuff.get_formatted_from_seconds(round(time.time() - self.bot.launch_time2))
@@ -146,12 +149,20 @@ class DynamicInfoView(discord.ui.View):
                 "fields": {
                     "platform": {"display": "Platform", "value": platform_info},
                     "cpu": {
-                        "display": "CPU usage",
+                        "display": "CPU usage (total)",
                         "value": self.cog.make_bar(cpu_usage),
                     },
+                    "cpu_own": {
+                        "display": "CPU usage (program)",
+                        "value": self.cog.make_bar(own_cpuusage),
+                    },
                     "ram": {
-                        "display": "Memory Usage",
+                        "display": "Memory Usage (total)",
                         "value": self.cog.make_bar(mem.percent),
+                    },
+                    "ram_own": {
+                        "display": "Memory Usage (program)",
+                        "value": self.cog.make_bar(own_memusage),
                     },
                     "disk": {"display": "Disk Usage", "value": self.cog.make_bar(disk.percent)},
                     "ram_details": {"display": "Memory Details", "value": f"{mem.used // (1024**2)}MB / {mem.total // (1024**2)}MB"}
@@ -190,7 +201,7 @@ class DynamicInfoView(discord.ui.View):
         full_data = await self.get_stats_data(interaction)
         category = full_data.get(select.values[0], {})
         
-        e = Embed(title=f"Bot information - {category.get('title', "Unknown")}")
+        e = Embed(title=f"Bot information - {category.get('title', "Missing category")}")
         
         for field_id, info in category.get('fields', {}).items():
             is_inline = info.get('inline', True)

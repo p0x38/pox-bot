@@ -44,6 +44,9 @@ def get_mysql_credentials():
     password = os.getenv('MYSQL_PASS')
     return user, password
 
+def get_pid():
+    return os.getpid()
+
 def _find_key_recursive(config: dict,key) -> bool:
     if key in config:
         logging.debug(f"Found key '{key}' at a nested level.")

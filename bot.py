@@ -9,6 +9,7 @@ import aiomysql
 import discord
 from discord.ext import commands
 from gtts.lang import tts_langs
+import psutil
 from classes import Cache, EmoticonGenerator, MyTranslator
 import stuff
 import data
@@ -78,6 +79,8 @@ class PoxBot(commands.AutoShardedBot):
             "others", "websockets"
         ]
         self.bot_servers_limit = 90
+        self.pid = stuff.get_pid()
+        self.proc = psutil.Process(self.pid)
     
     async def setup_hook(self):
         stuff.setup_database("./leaderboard.db")
@@ -415,7 +418,7 @@ class PoxBot(commands.AutoShardedBot):
     async def on_interaction(self,inter: discord.Interaction):
         if inter.type == discord.InteractionType.application_command:
             self.processed_interactions += 1
-            logger.info(f"\"{inter.user.display_name}\" used {inter.command.qualified_name if inter.command else "Unknown"} on '{inter.guild.name if inter.guild and inter.guild.name.strip() is not None else "Unknown"}'.")
+            logger.info(f"\"{inter.user.display_name}\" used {inter.command.qualified_name.strip() if inter.command and inter.command.qualified_name.strip() else "Unknown / Private"} on '{inter.guild.name if inter.guild and inter.guild.name.strip() is not None else "Unknown"}'.")
             if inter.command_failed:
                 self.failed_interactions += 1
                 logger.error("The requested command thrown error!")
