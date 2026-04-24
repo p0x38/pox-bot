@@ -38,7 +38,7 @@ class FeedbackModal(ui.Modal):
             owner_id = self.bot.owner_id
             if not owner_id: return
             
-            owner = self.bot.get_user(owner_id)
+            owner = self.bot.get_user(owner_id) or await self.bot.fetch_user(owner_id)
             if not owner: raise Exception("Why's owner not found")
             
             embed = Embed(title=f"Bot feedback received from {interaction.user.name}", color=Color.blurple())
@@ -66,8 +66,17 @@ class DynamicInfoView(discord.ui.View):
         self.cog = cog
         self.bot: PoxBot = bot
         
-        url_button = discord.ui.Button(label='Visit source code', style=ButtonStyle.link, url="https://github.com/noteswiper/pox-bot")
+        
+        url_button = discord.ui.Button(
+            label='Visit source code',
+            style=ButtonStyle.link,
+            url="https://github.com/p0x38/pox-bot"
+        )
         self.add_item(url_button)
+    
+    @ui.button(label="Submit your suggestions", style=ButtonStyle.primary)
+    async def suggest_button(self, interaction: Interaction, button: ui.Button):
+        await interaction.response.send_modal(FeedbackModal(self.bot))
     
     async def get_stats_data(self, interaction: Interaction):
         cpu_usage = await asyncio.to_thread(psutil.cpu_percent, interval=0.1)
@@ -213,14 +222,14 @@ class Info(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
-    group = app_commands.Group(name="info", description="Informations.")
+    group = app_commands.Group(name=app_commands.locale_str("command.info.name"), description=app_commands.locale_str("command.info.description"))
     
     def make_bar(self, percent, length=10):
         filled_length = int(length*percent/100)
         bar = '#' * filled_length + '_' * (length - filled_length)
         return f"[`{bar}`] {percent}%"
     
-    @group.command(name="sync", description="syncs command if panic mode")
+    @group.command(name=app_commands.locale_str("command.info.sync.name"), description=app_commands.locale_str("command.info.sync.description"))
     @app_commands.check(stuff.is_bot_owner)
     @commands.guild_only()
     async def sync_commands(self,ctx: Interaction):

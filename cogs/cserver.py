@@ -120,8 +120,6 @@ class GuildGroup(commands.Cog):
 
             if guild.icon:
                 e.set_thumbnail(url=guild.icon.url)
-            
-            e.description = "\n".join(lines)
             return await interaction.followup.send(embed=e)
         else:
             return await interaction.followup.send("Guild not found.")

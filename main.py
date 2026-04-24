@@ -1,19 +1,18 @@
-import asyncio
 import sys
 import subprocess
+from typing import Optional
 
+from aiohttp.web_fileresponse import extension
 import stuff
 stuff.create_dir_if_not_exists("./logs")
-
 import os
 import discord
-
 from datetime import UTC, datetime
 from discord.ext import commands
 from discord import Color, Embed, Forbidden, HTTPException, Interaction, MissingApplicationID, app_commands
-
 from bot import PoxBot
 from logger import logger
+from src.translator import translator_instance
 
 import psutil
 process_ps = psutil.Process(os.getpid())
@@ -40,11 +39,14 @@ tree = bot.tree
 async def reload_cogs(interaction: Interaction):
     loaded_extension = 0
     failed_extension = 0
+    
     await interaction.response.defer()
+    
+    translation_success = translator_instance.refresh()
+    
     for fname in os.listdir('./cogs'):
         if fname.endswith('.py'):
             logger.debug(f"Loading extension {fname[:-3]}.")
-
             if fname[:-3] in bot.EXCLUDE_EXTENSIONS:
                 logger.warning("This extension has excluded from loading.")
                 continue
@@ -72,7 +74,7 @@ async def reload_cogs(interaction: Interaction):
     try:
         synched = await bot.tree.sync()
         logger.info(f"Synchronized {len(synched)} commands, with {loaded_extension} loaded extensions and {failed_extension} failed.")
-        return await interaction.followup.send(f"Synchronized {len(synched)} commands, with {loaded_extension} loaded extensions and {failed_extension} failed.")
+        return await interaction.followup.send(f"Synchronized {len(synched)} commands, with {loaded_extension} loaded extensions and {failed_extension} failed. (Translation: {translation_success})")
     except app_commands.CommandSyncFailure:
         logger.exception("CommandSyncFailure: Invalid command data")
         return await interaction.followup.send("Failed to sync commands. It seems some commands has invalid data.")
@@ -92,14 +94,47 @@ async def reload_cogs(interaction: Interaction):
 
 async def try_returnerror(interaction: Interaction, embed: Embed):
     try:
-        if interaction.response.is_done:
-            await interaction.followup.send(embed=embed, ephemeral=True)
-        else:
+        if not interaction.response.is_done():
             await interaction.response.send_message(embed=embed, ephemeral=True)
+        else:
+            await interaction.followup.send(embed=embed, ephemeral=True)
+    except HTTPException as e:
+        logger.error(f"Could not send error embed due to network/Discord error: {e}")
     except Exception as e:
-        logger.exception(f"Failed to attempt send embed: {e}")
+        logger.exception(f"Unexpected failure in try_returnerror: {e}")
 
 @tree.error
+async def on_app_command_error(interaction: Interaction, error: app_commands.AppCommandError):
+    loc = interaction.locale
+    
+    error_name = error.__class__.__name__
+    key = f"error.exceptions.{error_name}"
+    
+    kwargs = {"e": str(error)}
+    
+    if isinstance(error, app_commands.CommandOnCooldown):
+        kwargs["remaining"] = str(round(error.retry_after, 2))
+    
+    if isinstance(error, (app_commands.CommandInvokeError, app_commands.TransformerError)):
+        logger.exception(f"Critical Error in /{interaction.command.qualified_name if interaction.command else "unknown_command"}: {error}")
+    else:
+        logger.warning(f"User Error in /{interaction.command.qualified_name if interaction.command else "unknown_command"}: {error}")
+    
+    description = translator_instance.translate(key, loc, **kwargs)
+    
+    if description == key:
+        description = translator_instance.translate("error.exceptions.AppCommandError", loc)
+    
+    embed = Embed(
+        title=f"Error thrown: {error_name}",
+        description=description,
+        color=Color.red(),
+        timestamp=datetime.now()
+    )
+    
+    return await try_returnerror(interaction, embed)
+
+""" @tree.error
 async def on_app_command_error(interaction: Interaction, error: app_commands.AppCommandError) -> None:
     if isinstance(error, app_commands.AppCommandError):
         embed = Embed(title="Error thrown!", color=Color.red(), timestamp=datetime.now())
@@ -156,7 +191,7 @@ async def on_app_command_error(interaction: Interaction, error: app_commands.App
         return await try_returnerror(interaction, embed)
     else:
         logger.exception(f"An unexpected error occurred: {error}")
-        return
+        return """
 
 def start_monitor():
     return subprocess.Popen([sys.executable, "src/performance_gui.py"])

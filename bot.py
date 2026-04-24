@@ -22,6 +22,8 @@ from discord import Color, Embed, Forbidden, HTTPException, MissingApplicationID
 import aiofiles
 import json
 
+from src.translator import CustomDiscordTranslator, translator_instance
+
 DB_CONFIG = {
     'host': 'localhost',
     'port': 3306,
@@ -83,6 +85,7 @@ class PoxBot(commands.AutoShardedBot):
         self.proc = psutil.Process(self.pid)
     
     async def setup_hook(self):
+        await self.tree.set_translator(CustomDiscordTranslator(translator_instance))
         stuff.setup_database("./leaderboard.db")
         # set a translator for app commands (async API)
         try:

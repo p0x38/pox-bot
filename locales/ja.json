@@ -1,0 +1,23 @@
+{
+    "command.info.name": "情報",
+    "command.info.description": "情報専用",
+    "command.info.sync.name": "同期",
+    "command.info.sync.description": "コマンドを同期する",
+    "error.exceptions.CommandInvokeError": "コマンドの実行中にエラーが発生しました。",
+    "error.exceptions.TransformerError": "コマンド引数の処理中にエラーが発生しました。",
+    "error.exceptions.TranslationError": "コマンドの翻訳中にエラーが発生しました。",
+    "error.exceptions.CheckFailure": "このコマンドを実行する権限がありません。",
+    "error.exceptions.NoPrivateMessage": "このコマンドはプライベートチャンネルでは使えません。",
+    "error.exceptions.MissingRole": "このコマンドを実行するのに必要なロールがありません。",
+    "error.exceptions.MissingAnyRole": "このコマンドを実行するのに必要なロールが一つもありません。",
+    "error.exceptions.MissingPermissions": "このコマンドを実行するのに必要な権限がありません。",
+    "error.exceptions.BotMissingPermissions": "コマンドを実行するのに必要な権限が私にはありません。",
+    "error.exceptions.CommandOnCooldown": "このコマンドは現在クールダウン中です。{remaining}秒後にもう一度お試しください。",
+    "error.exceptions.CommandLimitReached": "このコマンドは現在コマンド数の制限により使うことができません。",
+    "error.exceptions.CommandAlreadyRegistered": "このコマンドはすでに登録されています。",
+    "error.exceptions.CommandSignatureMismatch": "このコマンドは未同期であるか、シグネチャーが違います。",
+    "error.exceptions.CommandNotFound": "このコマンドは存在しません。",
+    "error.exceptions.CommandSyncFailure": "コマンドを同期するのに失敗しました。",
+    "error.exceptions.AppCommandError": "不明なコマンドエラーが発生しました。",
+    "error.exceptions.Unknown": "まだ処理されていない例外が発生しました。 {e}"
+}
