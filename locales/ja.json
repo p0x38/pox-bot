@@ -1,23 +1,203 @@
 {
-    "command.info.name": "情報",
-    "command.info.description": "情報専用",
-    "command.info.sync.name": "同期",
-    "command.info.sync.description": "コマンドを同期する",
-    "error.exceptions.CommandInvokeError": "コマンドの実行中にエラーが発生しました。",
-    "error.exceptions.TransformerError": "コマンド引数の処理中にエラーが発生しました。",
-    "error.exceptions.TranslationError": "コマンドの翻訳中にエラーが発生しました。",
-    "error.exceptions.CheckFailure": "このコマンドを実行する権限がありません。",
-    "error.exceptions.NoPrivateMessage": "このコマンドはプライベートチャンネルでは使えません。",
-    "error.exceptions.MissingRole": "このコマンドを実行するのに必要なロールがありません。",
-    "error.exceptions.MissingAnyRole": "このコマンドを実行するのに必要なロールが一つもありません。",
-    "error.exceptions.MissingPermissions": "このコマンドを実行するのに必要な権限がありません。",
-    "error.exceptions.BotMissingPermissions": "コマンドを実行するのに必要な権限が私にはありません。",
-    "error.exceptions.CommandOnCooldown": "このコマンドは現在クールダウン中です。{remaining}秒後にもう一度お試しください。",
-    "error.exceptions.CommandLimitReached": "このコマンドは現在コマンド数の制限により使うことができません。",
-    "error.exceptions.CommandAlreadyRegistered": "このコマンドはすでに登録されています。",
-    "error.exceptions.CommandSignatureMismatch": "このコマンドは未同期であるか、シグネチャーが違います。",
-    "error.exceptions.CommandNotFound": "このコマンドは存在しません。",
-    "error.exceptions.CommandSyncFailure": "コマンドを同期するのに失敗しました。",
-    "error.exceptions.AppCommandError": "不明なコマンドエラーが発生しました。",
-    "error.exceptions.Unknown": "まだ処理されていない例外が発生しました。 {e}"
+    "ja": {
+        "command": {
+            "info": {
+                "name": "info",
+                "description": "BOT情報等",
+                "sync": {
+                    "name": "sync",
+                    "description": "コマンドを同期させる"
+                },
+                "os_info": {
+                    "name": "os_info",
+                    "description": "ボットをホストしているPCのOSを表示する",
+                    "embed": {
+                        "title": "OS情報"
+                    }
+                },
+                "invite": {
+                    "name": "invite",
+                    "description": "アプリケーションURLを使ってBOTを招待",
+                    "embed": {
+                        "title": "TongueBotを招待",
+                        "status": {
+                            "one": "容量: **{formatted}** サーバー",
+                            "other": "容量: **{formatted}** サーバー"
+                        },
+                        "description": "{prefix}\n\n[このリンク]({invite_url})を使って私を招待することができます。",
+                        "footer": "※最大限の機能を使用する場合、高度な権限を必要とします。そしてサーバー招待はDiscordの制限により90サーバーに制限しています。"
+                    },
+                    "error": {
+                        "hardlimited": "現在招待されているサーバー数が90に達しているため、招待はできません。"
+                    }
+                },
+                "timedate": {
+                    "name": "timedate",
+                    "description": "特定のタイムゾーンに合わせた時刻を表示する",
+                    "embed": {
+                        "description": "{timezone_name}では、現在時刻は**{timedate}**です。"
+                    }
+                },
+                "ping": {
+                    "name": "ping",
+                    "description": "ポン!",
+                    "embed": {
+                        "title": "ポン! ({latency} ms)"
+                    }
+                },
+                "commit_data": {
+                    "name": "commit_data",
+                    "description": "ボットの最新のコミットメッセージを表示"
+                },
+                "retrieve": {
+                    "name": "retrieve",
+                    "description": "BOT情報を表示",
+                    "embed": {
+                        "title": "BOT情報",
+                        "description": "下のドロップダウンから特定のカテゴリーを選択すると、その内容を見ることができます。",
+                        "footer": "システム: {platform}"
+                    }
+                }
+            }
+        },
+        "error": {
+            "exceptions": {
+                "CommandInvokeError": "コマンド処理中にエラーが発生しました。",
+                "TransformerError": "コマンドの引数を処理しているときにエラーが発生しました。",
+                "TranslationError": "コマンドを翻訳しているときにエラーが発生しました。",
+                "CheckFailure": "あなたはこのコマンドを使用する権限がありません。",
+                "NoPrivateMessage": "このコマンドは、サーバー限定です。",
+                "MissingRole": "このコマンドを使用するのに必要なロールが付与されていません。",
+                "MissingAnyRole": "このコマンドを使用するのに必要なロールがどれも付与されていません。",
+                "MissingPermissions": "このコマンドを使用するのに必要な権限が付与されていません。",
+                "BotMissingPermissions": "このコマンドを実行するのに私に必要な権限が不足しています。",
+                "CommandOnCooldown": "現在このコマンドはクールダウン中です。{remaining}秒後にもう一度やり直してください。",
+                "CommandLimitReached": "最大コマンド登録数を超えているため、このコマンドは使用できません。",
+                "CommandAlreadyRegistered": "このコマンドはすでに登録されています。",
+                "CommandSignatureMismatch": "コマンド定義がコード内の定義と異なります。おそらく、古いものを使用しているか、Discordのデータが同期されていません。",
+                "CommandNotFound": "このコマンドは存在しません。",
+                "CommandSyncFailure": "コマンド同期させるのに失敗しました。",
+                "AppCommandError": "おそらく不明なコマンドエラーがスローされました。",
+                "Unknown": "まだキャッチされていない例外がスローされました: {e}"
+            },
+            "custom": {
+                "no_git_commithash": "コミットハッシュ取得に失敗しました",
+                "no_git_lastcommit": "コミットメッセージ取得に失敗しました",
+                "unknown_signature": "不明なシグネチャー",
+                "missing_category": "このカテゴリは存在しないようです",
+                "guild_only": "このコマンドはサーバーでのみ使用できます。"
+            }
+        },
+        "modal": {
+            "DynamicInfoView": {
+                "data": {
+                    "identity": {
+                        "title": "基本的",
+                        "uuid": {
+                            "display": "セッションUUID"
+                        },
+                        "version": {
+                            "display": "BOTバージョン"
+                        },
+                        "signature": {
+                            "display": "シグネチャー"
+                        },
+                        "uptime": {
+                            "display": "BOTの起動期間"
+                        },
+                        "latency": {
+                            "display": "Ping値"
+                        },
+                        "owner": {
+                            "display": "このBOTを作った人"
+                        }
+                    },
+                    "stats": {
+                        "title": "BOT情報",
+                        "guilds": {
+                            "display": "サーバー数"
+                        },
+                        "users": {
+                            "display": "ユーザー数"
+                        },
+                        "msgs": {
+                            "display": "メッセージ数"
+                        },
+                        "channels": {
+                            "display": "チャンネル数"
+                        },
+                        "interactions": {
+                            "display": "インタラクション数"
+                        },
+                        "cached_values": {
+                            "display": "キャッシュされた数"
+                        }
+                    },
+                    "hardware": {
+                        "title": "技術的",
+                        "platform": {
+                            "display": "プラットフォーム"
+                        },
+                        "cpu": {
+                            "display": "CPU使用率 (合計)"
+                        },
+                        "cpu_own": {
+                            "display": "CPU使用率 (本体)"
+                        },
+                        "ram": {
+                            "display": "メモリ使用率 (合計)"
+                        },
+                        "ram_own": {
+                            "display": "メモリ使用率 (本体)"
+                        },
+                        "disk": {
+                            "display": "ディスク使用可能な容量"
+                        },
+                        "ram_details": {
+                            "display": "詳細なメモリ情報"
+                        }
+                    },
+                    "context": {
+                        "title": "ローカルAI",
+                        "muted": {
+                            "display": "彼はミュートされているか"
+                        },
+                        "memory": {
+                            "display": "コンテキスト情報"
+                        },
+                        "mode": {
+                            "display": "現在の表情"
+                        }
+                    }
+                },
+                "options": {
+                    "identity": {
+                        "label": "基本的な情報"
+                    },
+                    "stats": {
+                        "label": "BOTに関する情報"
+                    },
+                    "hardware": {
+                        "label": "ハードウェアに関する技術的な情報"
+                    },
+                    "context": {
+                        "label": "ローカルAI情報"
+                    },
+                    "placeholder": "カテゴリを選択してください..."
+                }
+            }
+        },
+        "text": {
+            "unknown": "不明",
+            "command_synchronized": "コマンドが同期されました。",
+            "boolean": {
+                "true": "はい",
+                "false": "いいえ"
+            },
+            "linux_distribution": "Linuxディストリビューション",
+            "platform": "プラットフォーム",
+            "standalone": "スタンドアロン",
+            "idk": "知らん"
+        }
+    }
 }

@@ -1,57 +1,54 @@
-import json
+import i18n
 import os
-import pathlib
-from typing import Callable, Optional
+from typing import Optional
 import discord
-from discord import app_commands
-
+from discord import Locale, app_commands
 from logger import logger
 
-class Translator:
-    def __init__(self):
-        self.translations = {}
-        self.base_path = pathlib.Path(__file__).parent.parent / "locales"
-        self.refresh()
-
-    def refresh(self):
-        temp_translations = {}
+class I18nTranslator:
+    def __init__(self, locales_path: str = "locales"):
+        self.locales_path = os.path.abspath(locales_path)
         
+        i18n.load_path.append(self.locales_path)
+        i18n.set('file_format', 'json')
+        i18n.set('filename_format', '{locale}.{format}')
+        i18n.set('fallback', 'en')
+        
+        i18n.set('on_missing_translation', 'return_key_on_missing_translation')
+    
+    def _normalize_locale(self, locale: str) -> str:
+        return str(locale)
+    
+    def translate_string(self, text: str, locale: str, **kwargs) -> str:
+        lang = self._normalize_locale(locale)
         try:
-            for file in self.base_path.glob("*.json"):
-                locale_name = file.stem
-                with open(file, 'r', encoding='utf-8') as f:
-                    temp_translations[locale_name] = json.load(f)
-            
-            self.translations = temp_translations
-            logger.info(f"Locale data refreshed successfully: {list(self.translations.keys())}")
-            return True
-        except (json.JSONDecodeError, OSError) as e:
-            logger.exception(f"Failed to refresh translations: {e}")
-            logger.warning("Reverting locale data.")
-            return False
-
-    def translate(self, key: str, locale: discord.Locale, **kwargs) -> str:
-        lang = str(locale)
-
-        lang_data = self.translations.get(lang, self.translations.get("en-US", {}))
-        text = lang_data.get(key, self.translations.get("en-US", {}).get(key, key))
-
-        try:
-            return text.format(**kwargs)
-        except KeyError as e:
-            logger.warning(f"Missing placeholder {e} for key '{key}' in '{lang}'")
+            return i18n.t(text, locale=lang, **kwargs)
+        except Exception as e:
+            logger.error(f"Translation error for '{text}' in {lang}: {e}")
             return text
+    
+    def translate_plural(self, key: str, count: int, locale: str, **kwargs) -> str:
+        return i18n.t(key, count=count, locale=locale, **kwargs)
+    
+    def T(self, text: str, locale: str, **kwargs) -> str:
+        return self.translate_string(text, locale, **kwargs)
 
-translator_instance = Translator()
-
-class CustomDiscordTranslator(app_commands.Translator):
-    def __init__(self, internal_translator):
+class DiscordI18nTranslator(app_commands.Translator):
+    def __init__(self, internal_translator: I18nTranslator):
         self.internal = internal_translator
     
-    async def translate(self, string: app_commands.locale_str, locale: discord.Locale, context: app_commands.TranslationContext) -> Optional[str]:
-        translated = self.internal.translate(string.message, locale)
+    async def load(self):
+        pass
+    
+    async def translate(self, string: app_commands.locale_str, locale: Locale, context: app_commands.TranslationContext) -> Optional[str]:
+        key = string.message if string.message is not None else str(string)
         
-        if translated == string.message:
+        translated = self.internal.translate_string(key, str(locale))
+        
+        if translated == key:
             return None
         
         return translated
+
+translator_instance = I18nTranslator(locales_path="locales")
+discord_translator = DiscordI18nTranslator(translator_instance)

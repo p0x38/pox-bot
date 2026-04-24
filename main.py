@@ -42,8 +42,6 @@ async def reload_cogs(interaction: Interaction):
     
     await interaction.response.defer()
     
-    translation_success = translator_instance.refresh()
-    
     for fname in os.listdir('./cogs'):
         if fname.endswith('.py'):
             logger.debug(f"Loading extension {fname[:-3]}.")
@@ -74,7 +72,7 @@ async def reload_cogs(interaction: Interaction):
     try:
         synched = await bot.tree.sync()
         logger.info(f"Synchronized {len(synched)} commands, with {loaded_extension} loaded extensions and {failed_extension} failed.")
-        return await interaction.followup.send(f"Synchronized {len(synched)} commands, with {loaded_extension} loaded extensions and {failed_extension} failed. (Translation: {translation_success})")
+        return await interaction.followup.send(f"Synchronized {len(synched)} commands, with {loaded_extension} loaded extensions and {failed_extension} failed.")
     except app_commands.CommandSyncFailure:
         logger.exception("CommandSyncFailure: Invalid command data")
         return await interaction.followup.send("Failed to sync commands. It seems some commands has invalid data.")
@@ -120,10 +118,10 @@ async def on_app_command_error(interaction: Interaction, error: app_commands.App
     else:
         logger.warning(f"User Error in /{interaction.command.qualified_name if interaction.command else "unknown_command"}: {error}")
     
-    description = translator_instance.translate(key, loc, **kwargs)
+    description = translator_instance.T(key, str(loc), **kwargs)
     
     if description == key:
-        description = translator_instance.translate("error.exceptions.AppCommandError", loc)
+        description = translator_instance.T("error.exceptions.AppCommandError", str(loc))
     
     embed = Embed(
         title=f"Error thrown: {error_name}",

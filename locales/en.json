@@ -1,0 +1,203 @@
+{
+    "en": {
+        "command": {
+            "info": {
+                "name": "info",
+                "description": "A group for information",
+                "sync": {
+                    "name": "sync",
+                    "description": "Synchronizes commands"
+                },
+                "os_info": {
+                    "name": "os_info",
+                    "description": "Shows operating system information.",
+                    "embed": {
+                        "title": "Operating System Information"
+                    }
+                },
+                "invite": {
+                    "name": "invite",
+                    "description": "Invites the bot to server by application url. (LIMITED TO 90)",
+                    "embed": {
+                        "title": "Invite TongueBot",
+                        "status": {
+                            "one": "Capacity: **{formatted}** server",
+                            "other": "Capacity: **{formatted}** servers"
+                        },
+                        "description": "{prefix}\n\nYou can add me to your server using [this link.]({invite_url})",
+                        "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation."
+                    },
+                    "error": {
+                        "hardlimited": "You can't invite TongueBot right now, since count hit the limit."
+                    }
+                },
+                "timedate": {
+                    "name": "timedate",
+                    "description": "Shows time in specified timezone",
+                    "embed": {
+                        "description": "In {timezone_name}, it's **{timedate}**."
+                    }
+                },
+                "ping": {
+                    "name": "ping",
+                    "description": "Pong!",
+                    "embed": {
+                        "title": "Pong! ({latency} ms)"
+                    }
+                },
+                "commit_data": {
+                    "name": "commit_data",
+                    "description": "Shows bot's latest git commit."
+                },
+                "retrieve": {
+                    "name": "retrieve",
+                    "description": "Retrieves bot information.",
+                    "embed": {
+                        "title": "Bot Information",
+                        "description": "Select a category below to view specific details.",
+                        "footer": "System: {platform}"
+                    }
+                }
+            }
+        },
+        "error": {
+            "exceptions": {
+                "CommandInvokeError": "An error occured while executing the command.",
+                "TransformerError": "An error occured while processing command arguments.",
+                "TranslationError": "An error occured while translating the command.",
+                "CheckFailure": "You do not have permission to use this command.",
+                "NoPrivateMessage": "The command cannot be used on private messages.",
+                "MissingRole": "You do not have required role to use it.",
+                "MissingAnyRole": "You do not have any of required roles to use it.",
+                "MissingPermissions": "You do not have required permissions to use it.",
+                "BotMissingPermissions": "I do not have the required permissions to execute it.",
+                "CommandOnCooldown": "The command has on cooldown. Please try again after passing {remaining} more seconds.",
+                "CommandLimitReached": "The command usage is currently limited due to command limitation.",
+                "CommandAlreadyRegistered": "The command were already registered before.",
+                "CommandSignatureMismatch": "The command has out of sync from latest one.",
+                "CommandNotFound": "The command was not found.",
+                "CommandSyncFailure": "Failed to synchronize command(s).",
+                "AppCommandError": "Unknown Command error were thrown!",
+                "Unknown": "Uncaught error were thrown! {e}"
+            },
+            "custom": {
+                "no_git_commithash": "No commit hash found",
+                "no_git_lastcommit": "No commit message found",
+                "unknown_signature": "Unknown Signature",
+                "missing_category": "Missing Category",
+                "guild_only": "The command is usable only in Guild."
+            }
+        },
+        "modal": {
+            "DynamicInfoView": {
+                "data": {
+                    "identity": {
+                        "title": "Identity & Version",
+                        "uuid": {
+                            "display": "Session UUID"
+                        },
+                        "version": {
+                            "display": "Bot Version"
+                        },
+                        "signature": {
+                            "display": "Signature"
+                        },
+                        "uptime": {
+                            "display": "Bot Uptime"
+                        },
+                        "latency": {
+                            "display": "Network Latency"
+                        },
+                        "owner": {
+                            "display": "Bot Developer"
+                        }
+                    },
+                    "stats": {
+                        "title": "Bot Statistics",
+                        "guilds": {
+                            "display": "Servers"
+                        },
+                        "users": {
+                            "display": "Users"
+                        },
+                        "msgs": {
+                            "display": "Messages Seen"
+                        },
+                        "channels": {
+                            "display": "Channels"
+                        },
+                        "interactions": {
+                            "display": "Interactions"
+                        },
+                        "cached_values": {
+                            "display": "Caches"
+                        }
+                    },
+                    "hardware": {
+                        "title": "Technical Details",
+                        "platform": {
+                            "display": "Platform"
+                        },
+                        "cpu": {
+                            "display": "CPU Usage (total)"
+                        },
+                        "cpu_own": {
+                            "display": "CPU Usage (program)"
+                        },
+                        "ram": {
+                            "display": "Memory Usage (total)"
+                        },
+                        "ram_own": {
+                            "display": "Memory Usage (program)"
+                        },
+                        "disk": {
+                            "display": "Disk Usage"
+                        },
+                        "ram_details": {
+                            "display": "Memory Details"
+                        }
+                    },
+                    "context": {
+                        "title": "Local Brain Data",
+                        "muted": {
+                            "display": "Is Jim muted?"
+                        },
+                        "memory": {
+                            "display": "Context Usage"
+                        },
+                        "mode": {
+                            "display": "Current Mood"
+                        }
+                    }
+                },
+                "options": {
+                    "identity": {
+                        "label": "General Information"
+                    },
+                    "stats": {
+                        "label": "Statistics"
+                    },
+                    "hardware": {
+                        "label": "Hardware Information"
+                    },
+                    "context": {
+                        "label": "Local Brain Data"
+                    },
+                    "placeholder": "Choose category..."
+                }
+            }
+        },
+        "text": {
+            "unknown": "Unknown",
+            "command_synchronized": "Commands has been synchronized now.",
+            "boolean": {
+                "true": "Yes",
+                "false": "No"
+            },
+            "linux_distribution": "Linux Distribution",
+            "platform": "Platform",
+            "standalone": "Standalone",
+            "idk": "IDK"
+        }
+    }
+}
