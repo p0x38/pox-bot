@@ -1,58 +1,106 @@
 {
     "_metadata": {
-        "display_name": "Tiếng Việt"
+        "display_name": "English"
     },
     "command": {
-        "8ball": {
-            "description": "Cung cấp câu trả lời 8 quả bóng ma thuật cổ điển, ngẫu nhiên cho câu hỏi của người dùng.",
-            "embeds": {
-                "default": {
-                    "title": "Trả lời '%{question}'"
+        "welcome": {
+            "description": "A group for WelcomeCog",
+            "set_channel": {
+                "description": "Set channel to send join / leave message.",
+                "embeds": {
+                    "disabled": {
+                        "description": "Welcome notification feature has been disabled."
+                    },
+                    "enabled": {
+                        "description": "Welcome notification feature has been enabled.\n The welcome message will appear at %{target_mention}."
+                    }
                 }
             },
-            "name": "8ball"
+            "test": {
+                "description": "Run a test for welcome channel",
+                "embeds": {
+                    "sent": {
+                        "description": "Test successfully sent to welcome channel!"
+                    },
+                    "unconfigured": {
+                        "description": "Welcome channel hasn't configured in this guild."
+                    }
+                }
+            },
+            "set_rules_channel": {
+                "description": "Sets rule channel for adding link in it.",
+                "embeds": {
+                    "success": {
+                        "description": "Rules channel for welcome message has been set to %{target_mention}."
+                    },
+                    "disabled": {
+                        "description": "Rules channel for welcome message has been removed."
+                    }
+                }
+            },
+            "embeds": {
+                "join": {
+                    "title": "Welcome to %{guild}!",
+                    "description": "Welcome, %{mention}! Please check out the rules in %{rules_mention}.",
+                    "description_no_rules": "Welcome to the server, %{mention}!",
+                    "footer": "We now have %{count} members."
+                },
+                "left": {
+                    "title": "Member %{display} has left %{guild}!",
+                    "description": "Goodbye, %{display}!"
+                }
+            }
+        },
+        "8ball": {
+            "name": "8ball",
+            "description": "Gives a random, classic magic 8-ball response to a user's question.",
+            "embeds": {
+                "default": {
+                    "title": "Answer to '%{question}'"
+                }
+            }
         },
         "channel": {
-            "description": "Một nhóm cho các kênh.",
+            "description": "A group for channels.",
             "info": {
-                "description": "Hiển thị thông tin kênh.",
+                "description": "Shows channel information.",
                 "embeds": {
                     "default": {
-                        "title": "Thông tin của %{name}"
+                        "title": "Information of %{name}"
                     }
                 },
                 "name": "info"
             },
             "name": "channel",
             "slowmode": {
-                "description": "Đặt độ trễ chế độ chậm",
+                "description": "Sets slowmode delay",
                 "embeds": {
                     "successful": {
-                        "description": "Đã đặt thành công chế độ chậm thành **%{seconds}** cho %{mention}.",
-                        "title": "Đã cập nhật chế độ chậm"
+                        "description": "Successfully set slowmode to **%{seconds}** for %{mention}.",
+                        "title": "Slowmode Updated"
                     }
                 },
                 "name": "slowmode"
             }
         },
         "contributors": {
-            "description": "Một nhóm dành cho những người đóng góp.",
+            "description": "A group for contributors.",
             "list": {
-                "description": "Liệt kê tất cả những người đóng góp.",
+                "description": "Lists all contributors.",
                 "embeds": {
                     "default": {
-                        "description": "Đây là danh sách những người đóng góp đã giúp đỡ bot của tôi! :3",
-                        "title": "Người đóng góp"
+                        "description": "Here's a list of contributors who helped my bot! :3",
+                        "title": "Contributors"
                     }
                 },
                 "name": "list"
             },
             "name": "contributors",
             "view": {
-                "description": "Hiển thị người đóng góp.",
+                "description": "Shows contributor information.",
                 "embeds": {
                     "default": {
-                        "title": "Thông tin người đóng góp của %{contributor}"
+                        "title": "Contributor Information of %{contributor}"
                     }
                 },
                 "name": "view"
@@ -60,523 +108,572 @@
         },
         "info": {
             "commit_data": {
-                "description": "Hiển thị cam kết git mới nhất của bot.",
+                "description": "Shows bot's latest git commit.",
                 "name": "commit_data"
             },
-            "description": "Nhóm cung cấp thông tin",
+            "description": "A group for information",
             "invite": {
-                "description": "Mời bot đến máy chủ bằng url ứng dụng. \n(GIỚI HẠN Ở 90)",
+                "description": "Invites the bot to server by application url. (LIMITED TO 90)",
                 "embed": {
-                    "description": "%{prefix}\n\n\nBạn có thể thêm tôi vào máy chủ của mình bằng [liên kết này.](%{invite_url})",
-                    "footer": "Lưu ý: Yêu cầu quyền nâng cao để có đầy đủ chức năng và lời mời được giới hạn ở 90 máy chủ do giới hạn bất hòa.",
+                    "description": "%{prefix}\n\nYou can add me to your server using [this link.](%{invite_url})",
+                    "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation.",
                     "status": {
-                        "one": "Dung lượng: **%{formatted}** máy chủ",
-                        "other": "Dung lượng: **%{formatted}** máy chủ"
+                        "one": "Capacity: **%{formatted}** server",
+                        "other": "Capacity: **%{formatted}** servers"
                     },
-                    "title": "Mời TongueBot"
+                    "title": "Invite TongueBot"
                 },
                 "error": {
-                    "hardlimited": "Bạn không thể mời TongueBot ngay bây giờ vì số lượng đã đạt đến giới hạn."
+                    "hardlimited": "You can't invite TongueBot right now, since the limit has been reached."
                 },
                 "name": "invite"
             },
             "name": "info",
             "os_info": {
-                "description": "Hiển thị thông tin hệ điều hành.",
+                "description": "Shows operating system information.",
                 "embed": {
-                    "title": "Thông tin hệ điều hành"
+                    "title": "Operating System Information"
                 },
                 "name": "os_info"
             },
             "ping": {
                 "description": "Pong!",
                 "embed": {
-                    "title": "Pong! \n(%{latency} mili giây)"
+                    "title": "Pong! (%{latency} ms)"
                 },
                 "name": "ping"
             },
             "retrieve": {
-                "description": "Truy xuất thông tin bot.",
+                "description": "Retrieves bot information.",
                 "embed": {
-                    "description": "Chọn một danh mục bên dưới để xem chi tiết cụ thể.",
-                    "footer": "Hệ thống: %{platform}",
-                    "title": "Thông tin bot"
+                    "description": "Select a category below to view specific details.",
+                    "footer": "System: %{platform}",
+                    "title": "Bot Information"
                 },
                 "error": {
-                    "forbidden": "Tôi không có quyền **Quản lý kênh** để làm điều đó."
+                    "forbidden": "I do not have the **Manage Channels** permission to do that."
                 },
                 "name": "retrieve"
             },
             "sync": {
-                "description": "Đồng bộ hóa lệnh",
+                "description": "Synchronizes commands",
                 "name": "sync"
             },
             "timedate": {
-                "description": "Hiển thị thời gian theo múi giờ được chỉ định",
+                "description": "Shows time in specified timezone",
                 "embed": {
-                    "description": "Trong %{timezone_name}, đó là **%{timedate}**."
+                    "description": "In %{timezone_name}, it's **%{timedate}**."
                 },
                 "name": "timedate"
             }
         },
         "roblox": {
+            "description": "A group for roblox APIs.",
             "avatar": {
-                "description": "Nhận hình đại diện của người dùng Roblox theo tên người dùng.",
+                "description": "Gets Roblox user's avatar by username.",
                 "embeds": {
                     "default": {
-                        "title": "Hình đại diện của người dùng Roblox %{username}"
+                        "title": "Roblox user %{username}'s Avatar"
                     }
                 }
             },
-            "description": "Một nhóm dành cho API roblox.",
             "user": {
-                "description": "Nhận thông tin người dùng Roblox theo tên người dùng.",
+                "description": "Get Roblox user info by username.",
                 "embeds": {
                     "default": {
-                        "title": "Thông tin của người dùng %{username}"
+                        "title": "User %{username}'s Information"
                     }
                 }
             }
         },
         "tts": {
-            "description": "Trung tâm nội dung TTS",
+            "name": "tts",
+            "description": "Center of TTS stuff",
+            "google_translate": {
+                "name": "google_translate",
+                "description": "Generates TTS from Google Translate."
+            },
             "embeds": {
                 "default": {
-                    "description": "Đã tạo! \n>:Đ",
-                    "footer": "Loại: %{tts_type}; \nĐầu vào: %{input}",
-                    "title": "Chuyển đổi TTS"
+                    "title": "TTS Conversion",
+                    "description": "Generated! >:D",
+                    "footer": "Type: %{tts_type}; Input: %{input}"
                 }
-            },
-            "google_translate": {
-                "description": "Tạo TTS từ Google Dịch.",
-                "name": "google_translate"
-            },
-            "name": "tts"
+            }
         },
         "user": {
-            "description": "Một nhóm cho người dùng.",
+            "name": "user",
+            "description": "A group for users.",
             "info": {
-                "description": "Truy xuất thông tin của người dùng.",
+                "name": "info",
+                "description": "Retrieves user's information.",
                 "embeds": {
                     "default": {
-                        "title": "Thông tin cho %{user}"
+                        "title": "Information for %{user}"
+                    }
+                }
+            },
+            "avatar": {
+                "description": "Shows Discord user's avatar.",
+                "embeds": {
+                    "default": {
+                        "title": "User %{user}'s avatar",
+                        "footer": "Requested by %{author}, the result is cached for a minute."
+                    }
+                }
+            },
+            "set_nick": {
+                "description": "Sets user's nickname.",
+                "embeds": {
+                    "changed": {
+                        "description": "%{author} Changed %{user}'s nickname to **%{new_nickname}**."
+                    },
+                    "reset": {
+                        "description": "%{author} Reseted %{user}'s nickname."
                     }
                 },
-                "name": "info"
+                "reasons": {
+                    "changed": "Nickname changed by %{user} via /user nick",
+                    "reset": "Nickname reseted by %{user} via /user nick"
+                }
             },
-            "name": "user"
+            "status": {
+                "description": "Retrieves user's status.",
+                "embeds": {
+                    "default": {
+                        "title": "%{user}'s Discord status"
+                    }
+                }
+            }
         }
     },
     "context_menu": {
-        "ban_member": {
-            "name": "Cấm"
-        },
         "kick_member": {
-            "name": "Khai trừ"
+            "name": "Kick"
+        },
+        "ban_member": {
+            "name": "Ban"
         },
         "timeout_member": {
-            "name": "Cho tạm dừng"
+            "name": "Timeout"
         }
+    },
+    "messages": {
+        "timed_out_user": "%{user} has been timed out for %{length}.",
+        "ban_user": "%{user} has been banned.",
+        "kick_user": "%{user} has been kicked.",
+        "warn_user": "%{user} has been warned."
     },
     "error": {
         "custom": {
-            "cannot_timeout_higher": "Vai trò của tôi không đủ cao để hết thời gian chờ cho người dùng này.",
-            "channel_has_no_slowmode_property": "Kênh này không có thuộc tính để đặt độ trễ chế độ chậm.",
-            "forbidden_timeout": "Tôi không có quyền cho các thành viên hết thời gian chờ.",
-            "guild_only": "Lệnh này chỉ có thể sử dụng được trong Guild.",
-            "insufficient_permission_ban": "Bạn không có quyền cấm thành viên %{user}.",
-            "insufficient_permission_kick": "Bạn không có quyền đá thành viên %{user}.",
-            "invalidated_cache": "Lệnh này chỉ hoạt động trên bang hội do vấn đề với bộ đệm.",
-            "missing_category": "Thiếu danh mục",
-            "no_git_commithash": "Không tìm thấy hàm băm cam kết",
-            "no_git_lastcommit": "Không tìm thấy thông báo cam kết",
-            "roblox_failed_retrieve_avatar": "Không thể truy xuất hình đại diện của người dùng Roblox %{username}.",
-            "roblox_forbidden": "Không thể truy xuất dữ liệu từ API Roblox vì khách hàng không có hoặc sử dụng Mã thông báo CSRF không hợp lệ.",
-            "roblox_user_not_found": "Người dùng Roblox có tên '%{username}' không tồn tại.",
-            "timeout_duration_lessflow": "Thời lượng phải lớn hơn 0",
-            "tried_to_timeout_higher": "Vai trò của bạn không đủ cao để khiến người dùng hết thời gian chờ.",
-            "tried_to_timeout_himself": "Bạn không thể tự mình hết thời gian",
-            "tried_to_timeout_owner": "Bạn không thể hết thời gian chờ chủ sở hữu máy chủ",
-            "unknown_signature": "Chữ ký không xác định",
-            "unsupported_channel": "Kênh không được bot hỗ trợ.",
-            "user_not_found": "Không tìm thấy người dùng."
+            "channel_has_no_slowmode_property": "This channel has no property to set slowmode delay.",
+            "guild_only": "The command is usable only in Guild.",
+            "missing_category": "Missing Category",
+            "no_git_commithash": "No commit hash found",
+            "no_git_lastcommit": "No commit message found",
+            "unknown_signature": "Unknown Signature",
+            "unsupported_channel": "The channel isn't supported by bot.",
+            "timeout_duration_lessflow": "Duration must be greater than 0",
+            "tried_to_timeout_himself": "You cannot timeout yourself",
+            "tried_to_timeout_owner": "You cannot timeout the server owner",
+            "tried_to_timeout_higher": "Your role is not high enough to timeout the user.",
+            "forbidden_timeout": "I don't have permission to timeout members.",
+            "cannot_timeout_higher": "My role is not high enough to timeout this user.",
+            "insufficient_permission_kick": "You do not have permission to kick member %{user}.",
+            "insufficient_permission_ban": "You do not have permission to ban member %{user}.",
+            "user_not_found": "User not found.",
+            "invalidated_cache": "The command only works on guild because of the issue with caches.",
+            "roblox_forbidden": "Couldn't retrieve data from Roblox API because the client doesn't have, or using invalid CSRF Token.",
+            "roblox_user_not_found": "A Roblox user named '%{username}' doesn't exist.",
+            "roblox_failed_retrieve_avatar": "Failed trying to retrieve Roblox user %{username}'s avatar."
         },
         "embed": {
             "contributor_not_found": {
-                "description": "Không tìm thấy người đóng góp %{contributor}.",
-                "title": "Không tìm thấy người đóng góp"
-            },
-            "edge_tts_not_installed": {
-                "description": "Máy chủ không có gói để tạo giọng nói từ edge-tts.",
-                "title": "Edge TTS chưa được cài đặt"
+                "description": "The contributor %{contributor} has been not found.",
+                "title": "Contributor not found"
             },
             "guild_only": {
-                "description": "Lệnh này chỉ dành cho máy chủ.",
-                "title": "Bối cảnh chạy không hợp lệ"
-            },
-            "send_error": {
-                "description": "Đã xảy ra lỗi khi cố gắng gửi: %{e}",
-                "title": "Gửi lỗi"
+                "description": "This command is only for guild.",
+                "title": "Invalid run context"
             },
             "slowmode_out_of_range": {
-                "description": "Độ trễ của chế độ chậm phải nằm trong khoảng từ 0 đến 21600 giây.",
-                "title": "Ngoài phạm vi"
-            },
-            "tts_generation_error": {
-                "description": "Đã xảy ra lỗi khi cố gắng tạo giọng nói: %{e}",
-                "title": "Lỗi tạo TTS"
-            },
-            "tts_no_text": {
-                "description": "Bạn đã đặt đầu vào trống. \nthử lại sau bằng đầu vào.",
-                "title": "Đầu vào không được trống"
+                "description": "Slowmode delay must be between 0 and 21600 seconds.",
+                "title": "Out of range"
             },
             "unsupported_channel_slowmode": {
-                "description": "Kênh %{channel} không hỗ trợ chế độ chậm.",
-                "title": "Kênh không được hỗ trợ"
+                "description": "Channel %{channel} doesn't support slowmode.",
+                "title": "Unsupported channel"
             },
             "unsupported_channel_type": {
-                "description": "Bạn đã chọn một kênh không được hỗ trợ.",
-                "title": "Loại kênh không được hỗ trợ"
+                "description": "You have chose a channel that is unsupported.",
+                "title": "Unsupported channel type"
+            },
+            "tts_no_text": {
+                "title": "Input must be not empty",
+                "description": "You've set input empty. Retry again later with input."
+            },
+            "send_error": {
+                "title": "Send error",
+                "description": "An error thrown while trying to send: %{e}"
+            },
+            "tts_generation_error": {
+                "title": "TTS Generation Error",
+                "description": "An error thrown while trying to generate speech: %{e}"
+            },
+            "edge_tts_not_installed": {
+                "title": "Edge TTS not installed",
+                "description": "Server has no package to generate speech from edge-tts."
+            },
+            "welcome_channel_not_enabled": {
+                "title": "Welcome channel not enabled",
+                "description": "Welcome channel has not enabled in this guild. Make sure to set welcome channel to use this command."
             }
         },
         "exceptions": {
-            "AppCommandError": "Lỗi lệnh không xác định đã được đưa ra!",
-            "BotMissingPermissions": "Tôi không có quyền cần thiết để thực hiện nó.",
-            "CheckFailure": "Bạn không có quyền sử dụng lệnh này.",
-            "CommandAlreadyRegistered": "Lệnh đã được đăng ký trước đó.",
-            "CommandInvokeError": "Đã xảy ra lỗi khi thực hiện lệnh.",
-            "CommandLimitReached": "Việc sử dụng lệnh hiện bị hạn chế do giới hạn lệnh.",
-            "CommandNotFound": "Lệnh không được tìm thấy.",
-            "CommandOnCooldown": "Lệnh có thời gian hồi chiêu. \nVui lòng thử lại sau khi vượt qua %{remaining} giây nữa.",
-            "CommandSignatureMismatch": "Lệnh không đồng bộ với lệnh mới nhất.",
-            "CommandSyncFailure": "Không thể đồng bộ hóa (các) lệnh.",
-            "HTTPException": "Thao tác không thành công do Lỗi HTTP.",
-            "MissingAnyRole": "Bạn không có bất kỳ vai trò bắt buộc nào để sử dụng nó.",
-            "MissingPermissions": "Bạn không có quyền cần thiết để sử dụng nó.",
-            "MissingRole": "Bạn không có vai trò cần thiết để sử dụng nó.",
-            "NoPrivateMessage": "Lệnh này không thể được sử dụng trên tin nhắn riêng tư.",
-            "TransformerError": "Đã xảy ra lỗi khi xử lý đối số lệnh.",
-            "TranslationError": "Đã xảy ra lỗi khi dịch lệnh.",
-            "Unknown": "Lỗi chưa được xử lý đã được ném! \n%{e}"
+            "AppCommandError": "Unknown Command error was thrown!",
+            "BotMissingPermissions": "I do not have the required permissions to execute it.",
+            "CheckFailure": "You do not have permission to use this command.",
+            "CommandAlreadyRegistered": "The command were already registered before.",
+            "CommandInvokeError": "An error occured while executing the command.",
+            "CommandLimitReached": "The command usage is currently limited due to command limitation.",
+            "CommandNotFound": "The command was not found.",
+            "CommandOnCooldown": "The command is on cooldown. Please try again after passing %{remaining} more seconds.",
+            "CommandSignatureMismatch": "The command has out of sync from latest one.",
+            "CommandSyncFailure": "Failed to synchronize command(s).",
+            "MissingAnyRole": "You do not have any of required roles to use it.",
+            "MissingPermissions": "You do not have required permissions to use it.",
+            "MissingRole": "You do not have required role to use it.",
+            "NoPrivateMessage": "The command cannot be used on private messages.",
+            "TransformerError": "An error occured while processing command arguments.",
+            "TranslationError": "An error occured while translating the command.",
+            "HTTPException": "The operation has failed due to HTTP Error.",
+            "Unknown": "An Uncaught error was thrown! %{e}"
         },
         "http": {
-            "400": "Lỗi 400: Yêu cầu không hợp lệ. \nĐầu vào chứa cú pháp không hợp lệ.",
-            "403": "Lỗi 403: Bị cấm. \nBạn không có quyền truy cập tài nguyên.",
-            "404": "Lỗi 404: Không tìm thấy. \nKhông có tập tin nào tồn tại.",
-            "429": "Đã vượt quá giới hạn yêu cầu. Vui lòng thử lại sau.",
-            "500": "Lỗi 500: Lỗi máy chủ nội bộ. \nMáy chủ đã gặp phải lỗi không xác định trong khi xử lý."
+            "400": "Error 400: Bad Request. Input contains invalid syntax.",
+            "403": "Error 403: Forbidden. You do not have permission to access the resource.",
+            "404": "Error 404: Not Found. There's no file exist.",
+            "429": "Error 429: Too Many Requests. API has ratelimit client. Try again later.",
+            "500": "Error 500: Internal Server Error. Server has encountered unknown error while processing."
         }
     },
     "label": {
-        "answer": "Trả lời",
-        "channel_bitrate": "Tốc độ bit âm thanh",
-        "channel_category": "Loại",
-        "channel_channels": "Kênh",
-        "channel_creation": "Được tạo vào lúc",
-        "channel_instance_running": "Phiên bản có đang chạy không",
-        "channel_listeners": "Thành viên trong kênh",
-        "channel_name": "Tên kênh",
-        "channel_nsfw": "là NSFW",
-        "channel_position": "Vị trí kênh",
-        "channel_requesting_to_speak": "Các thành viên yêu cầu phát biểu",
-        "channel_slowmode": "Độ trễ chế độ chậm",
-        "channel_threads": "chủ đề",
-        "channel_topic": "Chủ đề kênh",
-        "channel_type": "Loại kênh",
-        "channel_userlimit": "Giới hạn người dùng",
-        "non_nitro": "Người dùng không dùng nitro",
-        "roblox_user_banned": "Đã bị cấm",
-        "roblox_user_created": "Được tạo vào lúc",
-        "roblox_user_display": "Tên hiển thị",
-        "roblox_user_id": "ID người dùng Roblox",
-        "roblox_user_name": "Tên người dùng",
-        "user_bot": "là bot",
-        "user_creation": "Được tạo vào lúc",
-        "user_highest_role": "Vai trò cao nhất",
-        "user_id": "ID người dùng",
-        "user_join": "Đã tham gia tại",
-        "user_message_count": "Tin nhắn tôi đã xem",
-        "user_message_count_value": "%{messages} tin nhắn",
-        "user_name": "Tên",
-        "user_nitro": "Nitro kể từ đó",
-        "user_roles": "Vai trò",
-        "user_status": "Trạng thái"
-    },
-    "messages": {
-        "ban_user": "%{user} đã bị cấm.",
-        "kick_user": "%{user} đã bị đá.",
-        "timed_out_user": "%{user} đã hết thời gian chờ cho %{length}.",
-        "warn_user": "%{user} đã được cảnh báo."
+        "channel_bitrate": "Audio Bitrate",
+        "channel_category": "Category",
+        "channel_channels": "Channels",
+        "channel_creation": "Created at",
+        "channel_instance_running": "Is Instance running",
+        "channel_listeners": "Members in-channel",
+        "channel_name": "Channel Name",
+        "channel_nsfw": "Is NSFW",
+        "channel_position": "Channel Position",
+        "channel_requesting_to_speak": "Members who request to speak",
+        "channel_slowmode": "Slowmode Delay",
+        "channel_threads": "Threads",
+        "channel_topic": "Channel Topic",
+        "channel_type": "Channel Type",
+        "channel_userlimit": "User limit",
+        "user_id": "User ID",
+        "user_name": "Name",
+        "user_bot": "Is bot",
+        "user_creation": "Created at",
+        "user_highest_role": "Highest Role",
+        "user_status": "Status",
+        "user_nitro": "Nitro since",
+        "user_join": "Joined at",
+        "user_roles": "Roles",
+        "non_nitro": "Non-nitro user",
+        "roblox_user_id": "Roblox User ID",
+        "roblox_user_name": "Username",
+        "roblox_user_display": "Display name",
+        "roblox_user_banned": "Has banned",
+        "roblox_user_created": "Created at",
+        "user_message_count": "Messages I seen",
+        "user_message_count_value": "%{messages} messages",
+        "answer": "Answer"
     },
     "modal": {
         "DynamicInfoView": {
-            "buttons": {
-                "suggest_button": {
-                    "label": "Gửi đề xuất"
-                },
-                "url_button": {
-                    "label": "Truy cập kho lưu trữ GitHub"
-                }
-            },
             "data": {
                 "context": {
                     "memory": {
-                        "display": "Sử dụng bối cảnh"
+                        "display": "Context Usage"
                     },
                     "mode": {
-                        "display": "Tâm trạng hiện tại"
+                        "display": "Current Mood"
                     },
                     "muted": {
-                        "display": "Jim có bị tắt tiếng không?"
+                        "display": "Is Jim muted?"
                     },
-                    "title": "Dữ liệu não cục bộ"
+                    "title": "Local Brain Data"
                 },
                 "hardware": {
                     "cpu": {
-                        "display": "Mức sử dụng CPU (tổng cộng)"
+                        "display": "CPU Usage (total)"
                     },
                     "cpu_own": {
-                        "display": "Mức sử dụng CPU (chương trình)"
+                        "display": "CPU Usage (program)"
                     },
                     "disk": {
-                        "display": "Sử dụng đĩa"
+                        "display": "Disk Usage"
                     },
                     "platform": {
-                        "display": "Nền tảng"
+                        "display": "Platform"
                     },
                     "ram": {
-                        "display": "Mức sử dụng bộ nhớ (tổng cộng)"
+                        "display": "Memory Usage (total)"
                     },
                     "ram_details": {
-                        "display": "Chi tiết bộ nhớ"
+                        "display": "Memory Details"
                     },
                     "ram_own": {
-                        "display": "Sử dụng bộ nhớ (chương trình)"
+                        "display": "Memory Usage (program)"
                     },
-                    "title": "Chi tiết kỹ thuật"
+                    "title": "Technical Details"
                 },
                 "identity": {
                     "latency": {
-                        "display": "Độ trễ mạng"
+                        "display": "Network Latency"
                     },
                     "owner": {
-                        "display": "Nhà phát triển bot"
+                        "display": "Bot Developer"
                     },
                     "signature": {
-                        "display": "Chữ ký"
+                        "display": "Signature"
                     },
-                    "title": "Danh tính",
+                    "title": "Identity & Version",
                     "uptime": {
-                        "display": "Thời gian hoạt động của bot"
+                        "display": "Bot Uptime"
                     },
                     "uuid": {
-                        "display": "UUID phiên"
+                        "display": "Session UUID"
                     },
                     "version": {
-                        "display": "Phiên bản bot"
+                        "display": "Bot Version"
                     }
                 },
                 "stats": {
                     "cached_values": {
-                        "display": "Bộ nhớ đệm"
+                        "display": "Caches"
                     },
                     "channels": {
-                        "display": "Kênh"
+                        "display": "Channels"
                     },
                     "guilds": {
-                        "display": "Máy chủ"
+                        "display": "Servers"
                     },
                     "interactions": {
-                        "display": "Tương tác"
+                        "display": "Interactions"
                     },
                     "msgs": {
-                        "display": "Tin nhắn đã xem"
+                        "display": "Messages Seen"
                     },
-                    "title": "Thống kê bot",
+                    "title": "Bot Statistics",
                     "users": {
-                        "display": "Người dùng"
+                        "display": "Users"
                     }
                 }
             },
             "options": {
                 "context": {
-                    "label": "Dữ liệu não cục bộ"
+                    "label": "Local Brain Data"
                 },
                 "hardware": {
-                    "label": "Thông tin phần cứng"
+                    "label": "Hardware Information"
                 },
                 "identity": {
-                    "label": "Thông tin chung"
+                    "label": "General Information"
                 },
-                "placeholder": "Chọn danh mục...",
+                "placeholder": "Choose category...",
                 "stats": {
-                    "label": "Thống kê"
+                    "label": "Statistics"
+                }
+            },
+            "buttons": {
+                "url_button": {
+                    "label": "Visit the GitHub repository"
+                },
+                "suggest_button": {
+                    "label": "Submit suggestions"
                 }
             }
         }
     },
     "settings": {
+        "title": "User Settings",
+        "header_description": "User settings",
         "fields": {
-            "embed_color": "**Màu nhúng**: %{hex}",
-            "locale": "**Ngôn ngữ hiển thị**: %{lang_code}"
-        },
-        "header_description": "Cài đặt người dùng",
-        "title": "Cài đặt người dùng"
+            "locale": "**Display Language**: %{lang_code}",
+            "embed_color": "**Embed Color**: %{hex}"
+        }
     },
     "text": {
-        "8ball_words": {
-            "1": "Không.",
-            "10": "Có lẽ không, ừ.",
-            "100": "Theo Google thì có.",
-            "101": "Theo Google không.",
-            "102": "Lấy tiền của bạn và đặt nó trở lại. \nĐúng.",
-            "103": "Ừm... tôi thật ngốc.",
-            "104": "Không ngu ngốc.",
-            "105": "Ai quan tâm.",
-            "106": "Bạn không nên biết điều đó.",
-            "107": "Đừng hỏi tôi điều đó.",
-            "108": "Bạn là ai?",
-            "109": "Tôi chỉ là một quả bóng.",
-            "11": "Có lẽ không.",
-            "110": "Những người khác sẽ trả lời điều đó.",
-            "111": "Bạn sẽ bị bỏng.",
-            "112": "Hãy thối rữa trong địa ngục.",
-            "113": "Câm miệng.",
-            "114": "Có gì trong não bạn thế?",
-            "12": "Có thể là tiêu cực.",
-            "13": "Tôi đoán là không.",
-            "14": "Tôi đoán là không.",
-            "15": "Tôi đoán là không.",
-            "16": "Tôi đoán là không, uh.",
-            "17": "Tôi đoán là không.",
-            "18": "Tôi đoán là tiêu cực.",
-            "19": "Đúng.",
-            "2": "KHÔNG.",
-            "20": "Vâng.",
-            "21": "Vâng.",
-            "22": "Chuẩn rồi.",
-            "23": "Ờ ừ.",
-            "24": "Có lẽ là có.",
-            "25": "Có lẽ đúng vậy.",
-            "26": "Có lẽ đúng vậy.",
-            "27": "Có lẽ đúng vậy.",
-            "28": "Có lẽ ừ ừ.",
-            "29": "Tôi đoán là có.",
-            "3": "Không.",
-            "30": "Tôi đoán là có.",
-            "31": "Tôi đoán là có.",
-            "32": "Tôi đoán là có.",
-            "33": "Tôi đoán là ừ ừ.",
-            "34": "Tích cực.",
-            "35": "Chắc chắn là có.",
-            "36": "Chắc chắn.",
-            "37": "Chắc chắn là không.",
-            "38": "Tôi không nghĩ vậy.",
-            "39": "Tôi nghĩ vậy.",
-            "4": "Không, ừ.",
-            "40": "Tôi không biết.",
-            "41": "Có một phần.",
-            "42": "Một phần thì không.",
-            "43": "Chắc chắn là không.",
-            "44": "Không phải vậy.",
-            "45": "Đúng vậy.",
-            "46": "Ừm.",
-            "47": "Ừm.",
-            "48": "Khả thi.",
-            "49": "Có lẽ.",
-            "5": "Không.",
-            "50": "Có vẻ như vậy.",
-            "51": "Có vẻ như không.",
-            "52": "Có chuyện gì vậy? \ntôi không nghĩ vậy",
-            "53": "Có chuyện gì vậy? \nlẽ ra phải là có.",
-            "54": "Có chuyện gì vậy? \nlẽ ra nó không phải là có.",
-            "55": "Đó là điều chắc chắn.",
-            "56": "Chắc chắn là như vậy.",
-            "57": "Không còn nghi ngờ gì nữa.",
-            "58": "Có chắc chắn.",
-            "59": "Bạn có thể dựa vào nó.",
-            "6": "Tiêu cực.",
-            "60": "Theo tôi thấy thì có.",
-            "61": "Rất có thể.",
-            "62": "Trả lời mơ hồ thử lại.",
-            "63": "Hãy hỏi lại sau.",
-            "64": "Tốt nhất là đừng nói với bạn lần này.",
-            "65": "Không thể dự đoán ngay bây giờ.",
-            "66": "Tập trung và hỏi lại.",
-            "67": "Đừng tin vào nó.",
-            "68": "Câu trả lời của tôi là không.",
-            "69": "Nguồn tin của tôi nói không.",
-            "7": "Có lẽ không.",
-            "70": "Triển vọng không tốt lắm.",
-            "71": "Rất nghi ngờ.",
-            "72": "Triển vọng tốt.",
-            "73": "Đúng.",
-            "74": "Dấu hiệu chỉ ra có.",
-            "75": "Chúng tôi sẽ làm cho nó xảy ra.",
-            "76": "Từ.",
-            "77": "Đó là trong ngân sách.",
-            "78": "👍",
-            "79": "Có, với giá 5 nghìn đô la khác.",
-            "8": "Có lẽ không.",
-            "80": "AI nói có.",
-            "81": "Chúng tôi sẽ sửa nó trong bài viết.",
-            "82": "Đúng. \nchờ đã KHÔNG-",
-            "83": "Ngoài phạm vi.",
-            "84": "Peter nói không.",
-            "85": "Đó là thương hiệu.",
-            "86": "Ra khỏi văn phòng.",
-            "87": "Đó có phải là trong ngân sách của bạn?",
-            "88": "Lỗi 404: Không tìm thấy",
-            "89": "Thảo luận về đồ uống?",
-            "9": "Có lẽ không.",
-            "90": "Hết bộ nhớ.",
-            "91": "Kiểm tra Slack của bạn.",
-            "92": "à.",
-            "93": "nè.",
-            "94": "Câu trả lời là đi vệ sinh.",
-            "95": "Tôi đang ăn bánh bánh mì kẹp. \nthử sau.",
-            "96": "Quả bóng.",
-            "97": "Tuyệt đối.",
-            "98": "Tích cực.",
-            "99": "Rõ ràng."
+        "boolean": {
+            "false": "No",
+            "true": "Yes"
         },
         "activity_type": {
-            "competing": "Cạnh tranh %{hoạt động}",
-            "game": "Đang phát %{activity} trên %{platform}",
-            "listening": "Đang nghe %{hoạt động}",
-            "playing": "Đang phát %{hoạt động}",
-            "spotify": "Đang nghe %{title} của %{artist} trong %{album}",
-            "stream": "Đang phát trực tuyến %{activity} tại %{platform}",
-            "streaming": "Đang truyền phát %{hoạt động}",
-            "watching": "Đang xem %{hoạt động}"
+            "playing": "Playing %{activity}",
+            "streaming": "Streaming %{activity}",
+            "listening": "Listening to %{activity}",
+            "watching": "Watching %{activity}",
+            "competing": "Competing %{activity}",
+            "game": "Playing %{activity} on %{platform}",
+            "stream": "Streaming %{activity} at %{platform}",
+            "spotify": "Listening %{title} by %{artist} in %{album}"
         },
-        "boolean": {
-            "false": "KHÔNG",
-            "true": "Đúng"
+        "possible_map": {
+            "1": "Nuh uh.",
+            "2": "Nah.",
+            "3": "Maybe nah.",
+            "4": "I guess nah.",
+            "5": "Possible not.",
+            "6": "I don't know.",
+            "7": "Possible.",
+            "8": "i guess yuh.",
+            "9": "maybe yes.",
+            "10": "yuh",
+            "11": "yuh uh"
+        },
+        "8ball_words": {
+            "1": "Nope.",
+            "2": "No.",
+            "3": "Nah.",
+            "4": "Nuh uh.",
+            "5": "Nuh.",
+            "6": "Negative.",
+            "7": "Maybe nope.",
+            "8": "Maybe no.",
+            "9": "Maybe nah.",
+            "10": "Maybe nuh uh.",
+            "11": "Maybe nuh.",
+            "12": "Maybe negative.",
+            "13": "I guess nope.",
+            "14": "I guess no.",
+            "15": "I guess nah.",
+            "16": "I guess nuh uh.",
+            "17": "I guess nuh.",
+            "18": "I guess negative.",
+            "19": "Yes.",
+            "20": "Yeah.",
+            "21": "Yea.",
+            "22": "Yup.",
+            "23": "Yuh uh.",
+            "24": "Maybe yes.",
+            "25": "Maybe yeah.",
+            "26": "Maybe yea.",
+            "27": "Maybe yup.",
+            "28": "Maybe yuh uh.",
+            "29": "I guess yes.",
+            "30": "I guess yeah.",
+            "31": "I guess yea.",
+            "32": "I guess yup.",
+            "33": "I guess yuh uh.",
+            "34": "Positive.",
+            "35": "Definitely yes.",
+            "36": "Definitely.",
+            "37": "Definitely no.",
+            "38": "I don't think so.",
+            "39": "I think so.",
+            "40": "I don't know.",
+            "41": "Partially yes.",
+            "42": "Partially not.",
+            "43": "Definitely not.",
+            "44": "It's not.",
+            "45": "It is.",
+            "46": "Mhm.",
+            "47": "Yuh.",
+            "48": "Possible.",
+            "49": "Maybe.",
+            "50": "Kinda yes.",
+            "51": "Kinda not.",
+            "52": "What matter? i don't think so.",
+            "53": "What matter? it supposed to be yes.",
+            "54": "What matter? it not supposed to be yes.",
+            "55": "It is certain.",
+            "56": "It is decidedly so.",
+            "57": "Without a doubt.",
+            "58": "Yes definitely.",
+            "59": "You may rely on it.",
+            "60": "As I see it yes.",
+            "61": "Most likely.",
+            "62": "Reply hazy try again.",
+            "63": "Ask again later.",
+            "64": "Better not tell you this time.",
+            "65": "Cannot predict right now.",
+            "66": "Concentrate and ask again.",
+            "67": "Don't count on it.",
+            "68": "My reply is no.",
+            "69": "My sources say no.",
+            "70": "Outlook not so good.",
+            "71": "Very doubtful.",
+            "72": "Outlook good.",
+            "73": "Yes.",
+            "74": "Signs point to yes.",
+            "75": "We'll make it happen.",
+            "76": "Word.",
+            "77": "That's in budget.",
+            "78": "👍",
+            "79": "Yes for another $5k.",
+            "80": "AI says yes.",
+            "81": "We'll fix it in post.",
+            "82": "Yes. wait NO-",
+            "83": "Out of scope.",
+            "84": "Peter says no.",
+            "85": "That's off brand.",
+            "86": "Out of the office.",
+            "87": "Is that in your budget?",
+            "88": "Error 404: Not Found",
+            "89": "Discuss over drinks?",
+            "90": "Out of memory.",
+            "91": "Check your Slack.",
+            "92": "ja.",
+            "93": "ne.",
+            "94": "The answer goes to toilet.",
+            "95": "I'm eating sandwich. Try later.",
+            "96": "Ball.",
+            "97": "Absolutely.",
+            "98": "Positively.",
+            "99": "Unequivocally.",
+            "100": "According to Google yes.",
+            "101": "According to Google no.",
+            "102": "Get your money and put it back. Yes.",
+            "103": "Hmmm... I'm idiot.",
+            "104": "No stupid.",
+            "105": "Who cares.",
+            "106": "You shouldn't know that.",
+            "107": "Don't ask me that.",
+            "108": "Who tf are you.",
+            "109": "I'm just a ball.",
+            "110": "Others guys will be answer to that.",
+            "111": "You will be burn.",
+            "112": "Rot in hell.",
+            "113": "Shut up.",
+            "114": "What's in your brain?"
         },
         "coinflip": {
-            "false": "Đuôi",
-            "true": "đầu"
+            "true": "Heads",
+            "false": "Tails"
         },
-        "command_synchronized": "Các lệnh đã được đồng bộ hóa bây giờ.",
+        "status": {
+            "online": "Online",
+            "offline": "Offline",
+            "idle": "Idling",
+            "dnd": "Do Not Disturb"
+        },
+        "device": {
+            "mobile": "Mobile",
+            "desktop": "Desktop",
+            "website": "Website"
+        },
+        "command_synchronized": "Commands has been synchronized now.",
         "idk": "IDK",
-        "linux_distribution": "Phân phối Linux",
-        "platform": "Nền tảng",
-        "possible_map": {
-            "1": "Không, ừ.",
-            "10": "ừ",
-            "11": "ừ ừ",
-            "2": "Không.",
-            "3": "Có lẽ không.",
-            "4": "Tôi đoán là không.",
-            "5": "Có thể là không.",
-            "6": "Tôi không biết.",
-            "7": "Khả thi.",
-            "8": "tôi đoán là vậy.",
-            "9": "có lẽ là có."
-        },
-        "standalone": "Độc lập",
-        "unknown": "Không xác định",
-        "unknown_join": "Không thể tìm thấy ngày người anh em này tham gia."
+        "linux_distribution": "Linux Distribution",
+        "platform": "Platform",
+        "standalone": "Standalone",
+        "unknown": "Unknown",
+        "unknown_join": "Cannot find the date when this bro joined.",
+        "joined": "Joined",
+        "left": "Left"
     }
 }
