@@ -4,103 +4,103 @@
     },
     "command": {
         "welcome": {
-            "description": "A group for WelcomeCog",
+            "description": "Группа для WelcomeCog",
             "set_channel": {
-                "description": "Set channel to send join / leave message.",
+                "description": "Установить канал для отправки входящих/оставленных сообщений.",
                 "embeds": {
                     "disabled": {
-                        "description": "Welcome notification feature has been disabled."
+                        "description": "Функция приветствия отключена."
                     },
                     "enabled": {
-                        "description": "Welcome notification feature has been enabled.\n The welcome message will appear at %{target_mention}."
+                        "description": "Функция приветственных уведомлений включена.\nПриветственное сообщение появится по адресу %{target_mention}."
                     }
                 }
             },
             "test": {
-                "description": "Run a test for welcome channel",
+                "description": "Запустить тест для канала приветствия",
                 "embeds": {
                     "sent": {
-                        "description": "Test successfully sent to welcome channel!"
+                        "description": "Тест успешно отправлен на приветственный канал!"
                     },
                     "unconfigured": {
-                        "description": "Welcome channel hasn't configured in this guild."
+                        "description": "Канал Welcome не настроен в этой гильдии."
                     }
                 }
             },
             "set_rules_channel": {
-                "description": "Sets rule channel for adding link in it.",
+                "description": "Устанавливает канал правил для добавления ссылки в нем.",
                 "embeds": {
                     "success": {
-                        "description": "Rules channel for welcome message has been set to %{target_mention}."
+                        "description": "Канал правил для приветственного сообщения был установлен в %{target_mention}."
                     },
                     "disabled": {
-                        "description": "Rules channel for welcome message has been removed."
+                        "description": "Канал правил для приветственного сообщения был удален."
                     }
                 }
             },
             "embeds": {
                 "join": {
-                    "title": "Welcome to %{guild}!",
-                    "description": "Welcome, %{mention}! Please check out the rules in %{rules_mention}.",
-                    "description_no_rules": "Welcome to the server, %{mention}!",
-                    "footer": "We now have %{count} members."
+                    "title": "Добро пожаловать в %{guild}!",
+                    "description": "Добро пожаловать, %{mention}! Пожалуйста, проверьте правила в %{rules_mention}.",
+                    "description_no_rules": "Добро пожаловать на сервер, %{mention}!",
+                    "footer": "Теперь у нас есть %{count} участники."
                 },
                 "left": {
-                    "title": "Member %{display} has left %{guild}!",
-                    "description": "Goodbye, %{display}!"
+                    "title": "Член %{display} покинул %{guild}!",
+                    "description": "Прощай, %{display}!"
                 }
             }
         },
         "8ball": {
             "name": "8ball",
-            "description": "Gives a random, classic magic 8-ball response to a user's question.",
+            "description": "Дает случайный классический ответ в виде волшебной восьмерки на вопрос пользователя.",
             "embeds": {
                 "default": {
-                    "title": "Answer to '%{question}'"
+                    "title": "Ответ на '%{question}'"
                 }
             }
         },
         "channel": {
-            "description": "A group for channels.",
+            "description": "Группа для каналов.",
             "info": {
-                "description": "Shows channel information.",
+                "description": "Показывает информацию о канале.",
                 "embeds": {
                     "default": {
-                        "title": "Information of %{name}"
+                        "title": "Информация о %{name}"
                     }
                 },
                 "name": "info"
             },
             "name": "channel",
             "slowmode": {
-                "description": "Sets slowmode delay",
+                "description": "Устанавливает задержку в медленном режиме",
                 "embeds": {
                     "successful": {
-                        "description": "Successfully set slowmode to **%{seconds}** for %{mention}.",
-                        "title": "Slowmode Updated"
+                        "description": "Успешно установлено значение **%{seconds}** для медленного режима для %{mention}.",
+                        "title": "Медленный режим обновлен"
                     }
                 },
                 "name": "slowmode"
             }
         },
         "contributors": {
-            "description": "A group for contributors.",
+            "description": "Группа для авторов.",
             "list": {
-                "description": "Lists all contributors.",
+                "description": "Перечисляет всех участников.",
                 "embeds": {
                     "default": {
-                        "description": "Here's a list of contributors who helped my bot! :3",
-                        "title": "Contributors"
+                        "description": "Вот список участников, которые помогли моему боту! :3",
+                        "title": "Авторы"
                     }
                 },
                 "name": "list"
             },
             "name": "contributors",
             "view": {
-                "description": "Shows contributor information.",
+                "description": "Показывает участника.",
                 "embeds": {
                     "default": {
-                        "title": "Contributor Information of %{contributor}"
+                        "title": "Информация об участниках %{contributor}"
                     }
                 },
                 "name": "view"
@@ -108,137 +108,137 @@
         },
         "info": {
             "commit_data": {
-                "description": "Shows bot's latest git commit.",
+                "description": "Показывает последний git-коммит бота.",
                 "name": "commit_data"
             },
-            "description": "A group for information",
+            "description": "Группа для информации",
             "invite": {
-                "description": "Invites the bot to server by application url. (LIMITED TO 90)",
+                "description": "Приглашает бота на сервер по URL приложения. \n(ОГРАНИЧЕНО 90)",
                 "embed": {
-                    "description": "%{prefix}\n\nYou can add me to your server using [this link.](%{invite_url})",
-                    "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation.",
+                    "description": "%{prefix}\n\n\nВы можете добавить меня на свой сервер, используя [эту ссылку.](%{invite_url})",
+                    "footer": "Примечание. Для полной функциональности требуются расширенные разрешения, а приглашение ограничено 90 серверами из-за ограничений разногласий.",
                     "status": {
-                        "one": "Capacity: **%{formatted}** server",
-                        "other": "Capacity: **%{formatted}** servers"
+                        "one": "Емкость: **%{formatted}** сервер",
+                        "other": "Емкость: **%{formatted}** серверов"
                     },
-                    "title": "Invite TongueBot"
+                    "title": "Пригласить TongueBot"
                 },
                 "error": {
-                    "hardlimited": "You can't invite TongueBot right now, since the limit has been reached."
+                    "hardlimited": "Вы не можете пригласить TongueBot прямо сейчас, так как количество участников достигло предела."
                 },
                 "name": "invite"
             },
             "name": "info",
             "os_info": {
-                "description": "Shows operating system information.",
+                "description": "Показывает информацию об операционной системе.",
                 "embed": {
-                    "title": "Operating System Information"
+                    "title": "Информация об операционной системе"
                 },
                 "name": "os_info"
             },
             "ping": {
-                "description": "Pong!",
+                "description": "Понг!",
                 "embed": {
-                    "title": "Pong! (%{latency} ms)"
+                    "title": "Понг! \n(%{latency} мс)"
                 },
                 "name": "ping"
             },
             "retrieve": {
-                "description": "Retrieves bot information.",
+                "description": "Получает информацию о боте.",
                 "embed": {
-                    "description": "Select a category below to view specific details.",
-                    "footer": "System: %{platform}",
-                    "title": "Bot Information"
+                    "description": "Выберите категорию ниже, чтобы просмотреть подробную информацию.",
+                    "footer": "Система: %{platform}",
+                    "title": "Информация о боте"
                 },
                 "error": {
-                    "forbidden": "I do not have the **Manage Channels** permission to do that."
+                    "forbidden": "У меня нет разрешения **Управление каналами** для этого."
                 },
                 "name": "retrieve"
             },
             "sync": {
-                "description": "Synchronizes commands",
+                "description": "Синхронизирует команды",
                 "name": "sync"
             },
             "timedate": {
-                "description": "Shows time in specified timezone",
+                "description": "Показывает время в указанном часовом поясе",
                 "embed": {
-                    "description": "In %{timezone_name}, it's **%{timedate}**."
+                    "description": "В %{timezone_name} сейчас **%{timedate}**."
                 },
                 "name": "timedate"
             }
         },
         "roblox": {
-            "description": "A group for roblox APIs.",
+            "description": "Группа для API Roblox.",
             "avatar": {
-                "description": "Gets Roblox user's avatar by username.",
+                "description": "Получает аватар пользователя Roblox по имени пользователя.",
                 "embeds": {
                     "default": {
-                        "title": "Roblox user %{username}'s Avatar"
+                        "title": "Аватар пользователя Roblox %{username}"
                     }
                 }
             },
             "user": {
-                "description": "Get Roblox user info by username.",
+                "description": "Получите информацию о пользователе Roblox по имени пользователя.",
                 "embeds": {
                     "default": {
-                        "title": "User %{username}'s Information"
+                        "title": "Информация пользователя %{username}"
                     }
                 }
             }
         },
         "tts": {
             "name": "tts",
-            "description": "Center of TTS stuff",
+            "description": "Центр вещей ТТС",
             "google_translate": {
                 "name": "google_translate",
-                "description": "Generates TTS from Google Translate."
+                "description": "Генерирует TTS из Google Translate."
             },
             "embeds": {
                 "default": {
-                    "title": "TTS Conversion",
-                    "description": "Generated! >:D",
-                    "footer": "Type: %{tts_type}; Input: %{input}"
+                    "title": "Преобразование TTS",
+                    "description": "Сгенерировано! \n>:Д",
+                    "footer": "Тип: %{tts_type}; \nВвод: %{input}"
                 }
             }
         },
         "user": {
             "name": "user",
-            "description": "A group for users.",
+            "description": "Группа для пользователя.",
             "info": {
                 "name": "info",
-                "description": "Retrieves user's information.",
+                "description": "Получает информацию о пользователе.",
                 "embeds": {
                     "default": {
-                        "title": "Information for %{user}"
+                        "title": "Информация для %{user}"
                     }
                 }
             },
             "avatar": {
-                "description": "Shows Discord user's avatar.",
+                "description": "Показывает аватар пользователя Discord.",
                 "embeds": {
                     "default": {
-                        "title": "User %{user}'s avatar",
-                        "footer": "Requested by %{author}, the result is cached for a minute."
+                        "title": "Аватар пользователя %{user}",
+                        "footer": "Запрошен %{author}, результат кэшируется на минуту."
                     }
                 }
             },
             "set_nick": {
-                "description": "Sets user's nickname.",
+                "description": "Устанавливает имя пользователя.",
                 "embeds": {
                     "changed": {
-                        "description": "%{author} Changed %{user}'s nickname to **%{new_nickname}**."
+                        "description": "%{author} Изменил прозвище %{user}на **%{new_nickname}**."
                     },
                     "reset": {
-                        "description": "%{author} Reseted %{user}'s nickname."
+                        "description": "%{author} переслал псевдоним %{user}."
                     }
                 },
                 "reasons": {
-                    "changed": "Nickname changed by %{user} via /user nick",
-                    "reset": "Nickname reseted by %{user} via /user nick"
+                    "changed": "Псевдоним изменен %{user} через /user nick",
+                    "reset": "Ник сброшен %{user} через /user nick"
                 }
             },
             "status": {
-                "description": "Retrieves user's status.",
+                "description": "Получает статус пользователя.",
                 "embeds": {
                     "default": {
                         "title": "%{user}'s Discord status"
@@ -249,431 +249,431 @@
     },
     "context_menu": {
         "kick_member": {
-            "name": "Kick"
+            "name": "Исключить"
         },
         "ban_member": {
-            "name": "Ban"
+            "name": "Забанить"
         },
         "timeout_member": {
-            "name": "Timeout"
+            "name": "Отправить в тайм-аут"
         }
     },
     "messages": {
-        "timed_out_user": "%{user} has been timed out for %{length}.",
-        "ban_user": "%{user} has been banned.",
-        "kick_user": "%{user} has been kicked.",
-        "warn_user": "%{user} has been warned."
+        "timed_out_user": "У %{user} истекло время ожидания %{length}.",
+        "ban_user": "%{user} забанен.",
+        "kick_user": "%{user} исключен.",
+        "warn_user": "%{user} получил предупреждение."
     },
     "error": {
         "custom": {
-            "channel_has_no_slowmode_property": "This channel has no property to set slowmode delay.",
-            "guild_only": "The command is usable only in Guild.",
-            "missing_category": "Missing Category",
-            "no_git_commithash": "No commit hash found",
-            "no_git_lastcommit": "No commit message found",
-            "unknown_signature": "Unknown Signature",
-            "unsupported_channel": "The channel isn't supported by bot.",
-            "timeout_duration_lessflow": "Duration must be greater than 0",
-            "tried_to_timeout_himself": "You cannot timeout yourself",
-            "tried_to_timeout_owner": "You cannot timeout the server owner",
-            "tried_to_timeout_higher": "Your role is not high enough to timeout the user.",
-            "forbidden_timeout": "I don't have permission to timeout members.",
-            "cannot_timeout_higher": "My role is not high enough to timeout this user.",
-            "insufficient_permission_kick": "You do not have permission to kick member %{user}.",
-            "insufficient_permission_ban": "You do not have permission to ban member %{user}.",
-            "user_not_found": "User not found.",
-            "invalidated_cache": "The command only works on guild because of the issue with caches.",
-            "roblox_forbidden": "Couldn't retrieve data from Roblox API because the client doesn't have, or using invalid CSRF Token.",
-            "roblox_user_not_found": "A Roblox user named '%{username}' doesn't exist.",
-            "roblox_failed_retrieve_avatar": "Failed trying to retrieve Roblox user %{username}'s avatar."
+            "channel_has_no_slowmode_property": "Этот канал не имеет свойства устанавливать задержку в медленном режиме.",
+            "guild_only": "Команда доступна только в Гильдии.",
+            "missing_category": "Отсутствует категория",
+            "no_git_commithash": "Хэш коммита не найден",
+            "no_git_lastcommit": "Сообщение о фиксации не найдено",
+            "unknown_signature": "Неизвестная подпись",
+            "unsupported_channel": "Канал не поддерживается ботом.",
+            "timeout_duration_lessflow": "Продолжительность должна быть больше 0.",
+            "tried_to_timeout_himself": "Вы не можете тайм-аут себя",
+            "tried_to_timeout_owner": "Вы не можете отключить владельца сервера",
+            "tried_to_timeout_higher": "Ваша роль недостаточно высока, чтобы отключить пользователя.",
+            "forbidden_timeout": "выдавать тайм-аут участникам",
+            "cannot_timeout_higher": "Моя роль недостаточно высока, чтобы отключить этого пользователя.",
+            "insufficient_permission_kick": "У вас нет разрешения исключать участника %{user}.",
+            "insufficient_permission_ban": "У вас нет разрешения на блокировку участника %{user}.",
+            "user_not_found": "Пользователь не найден.",
+            "invalidated_cache": "Команда работает только с гильдией из-за проблемы с кэшем.",
+            "roblox_forbidden": "Не удалось получить данные из API Roblox, поскольку у клиента нет или используется недопустимый токен CSRF.",
+            "roblox_user_not_found": "Пользователь Roblox с именем «%{username}» не существует.",
+            "roblox_failed_retrieve_avatar": "Не удалось получить аватар пользователя Roblox %{username}."
         },
         "embed": {
             "contributor_not_found": {
-                "description": "The contributor %{contributor} has been not found.",
-                "title": "Contributor not found"
+                "description": "Участник %{contributor} не найден.",
+                "title": "Соавтор не найден"
             },
             "guild_only": {
-                "description": "This command is only for guild.",
-                "title": "Invalid run context"
+                "description": "Эта команда предназначена только для гильдии.",
+                "title": "Неверный контекст запуска"
             },
             "slowmode_out_of_range": {
-                "description": "Slowmode delay must be between 0 and 21600 seconds.",
-                "title": "Out of range"
+                "description": "Задержка медленного режима должна находиться в диапазоне от 0 до 21600 секунд.",
+                "title": "Вне диапазона"
             },
             "unsupported_channel_slowmode": {
-                "description": "Channel %{channel} doesn't support slowmode.",
-                "title": "Unsupported channel"
+                "description": "Канал %{channel} не поддерживает медленный режим.",
+                "title": "Неподдерживаемый канал"
             },
             "unsupported_channel_type": {
-                "description": "You have chose a channel that is unsupported.",
-                "title": "Unsupported channel type"
+                "description": "Вы выбрали канал, который не поддерживается.",
+                "title": "Неподдерживаемый тип канала"
             },
             "tts_no_text": {
-                "title": "Input must be not empty",
-                "description": "You've set input empty. Retry again later with input."
+                "title": "Ввод не должен быть пустым",
+                "description": "Вы установили поле ввода пустым. \nповторите попытку позже с вводом."
             },
             "send_error": {
-                "title": "Send error",
-                "description": "An error thrown while trying to send: %{e}"
+                "title": "Ошибка отправки",
+                "description": "Ошибка при попытке отправить: %{e}"
             },
             "tts_generation_error": {
-                "title": "TTS Generation Error",
-                "description": "An error thrown while trying to generate speech: %{e}"
+                "title": "Ошибка генерации TTS",
+                "description": "Ошибка при попытке генерации речи: %{e}"
             },
             "edge_tts_not_installed": {
-                "title": "Edge TTS not installed",
-                "description": "Server has no package to generate speech from edge-tts."
+                "title": "Edge TTS не установлен",
+                "description": "На сервере нет пакета для генерации речи из Edge-TTS."
             },
             "welcome_channel_not_enabled": {
-                "title": "Welcome channel not enabled",
-                "description": "Welcome channel has not enabled in this guild. Make sure to set welcome channel to use this command."
+                "title": "Канал приветствия не включен",
+                "description": "Канал Welcome не включен в этой гильдии. Убедитесь, что настроен приветственный канал, чтобы использовать эту команду."
             }
         },
         "exceptions": {
-            "AppCommandError": "Unknown Command error was thrown!",
-            "BotMissingPermissions": "I do not have the required permissions to execute it.",
-            "CheckFailure": "You do not have permission to use this command.",
-            "CommandAlreadyRegistered": "The command were already registered before.",
-            "CommandInvokeError": "An error occured while executing the command.",
-            "CommandLimitReached": "The command usage is currently limited due to command limitation.",
-            "CommandNotFound": "The command was not found.",
-            "CommandOnCooldown": "The command is on cooldown. Please try again after passing %{remaining} more seconds.",
-            "CommandSignatureMismatch": "The command has out of sync from latest one.",
-            "CommandSyncFailure": "Failed to synchronize command(s).",
-            "MissingAnyRole": "You do not have any of required roles to use it.",
-            "MissingPermissions": "You do not have required permissions to use it.",
-            "MissingRole": "You do not have required role to use it.",
-            "NoPrivateMessage": "The command cannot be used on private messages.",
-            "TransformerError": "An error occured while processing command arguments.",
-            "TranslationError": "An error occured while translating the command.",
-            "HTTPException": "The operation has failed due to HTTP Error.",
-            "Unknown": "An Uncaught error was thrown! %{e}"
+            "AppCommandError": "Выдалась неизвестная ошибка команды!",
+            "BotMissingPermissions": "У меня нет необходимых разрешений для его выполнения.",
+            "CheckFailure": "У вас нет разрешения на использование этой команды.",
+            "CommandAlreadyRegistered": "Команда уже была зарегистрирована ранее.",
+            "CommandInvokeError": "При выполнении команды произошла ошибка.",
+            "CommandLimitReached": "Использование команд в настоящее время ограничено из-за ограничения команд.",
+            "CommandNotFound": "Команда не найдена.",
+            "CommandOnCooldown": "Команда находится на перезарядке. \nПовторите попытку, когда пройдет еще %{remaining} секунд.",
+            "CommandSignatureMismatch": "Команда не синхронизирована с последней.",
+            "CommandSyncFailure": "Не удалось синхронизировать команды.",
+            "MissingAnyRole": "У вас нет ни одной из необходимых ролей для его использования.",
+            "MissingPermissions": "У вас нет необходимых разрешений для его использования.",
+            "MissingRole": "У вас нет необходимой роли для его использования.",
+            "NoPrivateMessage": "Эту команду нельзя использовать в личных сообщениях.",
+            "TransformerError": "Произошла ошибка при обработке аргументов команды.",
+            "TranslationError": "При переводе команды произошла ошибка.",
+            "HTTPException": "Операция не удалась из-за ошибки HTTP.",
+            "Unknown": "Выдалась необнаруженная ошибка! \n%{е}"
         },
         "http": {
-            "400": "Error 400: Bad Request. Input contains invalid syntax.",
-            "403": "Error 403: Forbidden. You do not have permission to access the resource.",
-            "404": "Error 404: Not Found. There's no file exist.",
-            "429": "Error 429: Too Many Requests. API has ratelimit client. Try again later.",
-            "500": "Error 500: Internal Server Error. Server has encountered unknown error while processing."
+            "400": "Ошибка 400: неверный запрос. \nВходные данные содержат неверный синтаксис.",
+            "403": "Ошибка 403: Запрещено. \nУ вас нет разрешения на доступ к ресурсу.",
+            "404": "Ошибка 404: Не найден. \nФайл не существует.",
+            "429": "Превышен лимит запросов. Пожалуйста, попробуйте позже.",
+            "500": "Ошибка 500: Внутренняя ошибка сервера. \nСервер обнаружил неизвестную ошибку во время обработки."
         }
     },
     "label": {
-        "channel_bitrate": "Audio Bitrate",
-        "channel_category": "Category",
-        "channel_channels": "Channels",
-        "channel_creation": "Created at",
-        "channel_instance_running": "Is Instance running",
-        "channel_listeners": "Members in-channel",
-        "channel_name": "Channel Name",
-        "channel_nsfw": "Is NSFW",
-        "channel_position": "Channel Position",
-        "channel_requesting_to_speak": "Members who request to speak",
-        "channel_slowmode": "Slowmode Delay",
-        "channel_threads": "Threads",
-        "channel_topic": "Channel Topic",
-        "channel_type": "Channel Type",
-        "channel_userlimit": "User limit",
-        "user_id": "User ID",
-        "user_name": "Name",
-        "user_bot": "Is bot",
-        "user_creation": "Created at",
-        "user_highest_role": "Highest Role",
-        "user_status": "Status",
-        "user_nitro": "Nitro since",
-        "user_join": "Joined at",
-        "user_roles": "Roles",
-        "non_nitro": "Non-nitro user",
-        "roblox_user_id": "Roblox User ID",
-        "roblox_user_name": "Username",
-        "roblox_user_display": "Display name",
-        "roblox_user_banned": "Has banned",
-        "roblox_user_created": "Created at",
-        "user_message_count": "Messages I seen",
-        "user_message_count_value": "%{messages} messages",
-        "answer": "Answer"
+        "channel_bitrate": "Битрейт аудио",
+        "channel_category": "Категория",
+        "channel_channels": "Каналы",
+        "channel_creation": "Создано в",
+        "channel_instance_running": "Экземпляр запущен?",
+        "channel_listeners": "Участники в канале",
+        "channel_name": "Название канала",
+        "channel_nsfw": "Является ли NSFW",
+        "channel_position": "Позиция канала",
+        "channel_requesting_to_speak": "Участники, которые просят выступить",
+        "channel_slowmode": "Задержка в медленном режиме",
+        "channel_threads": "Темы",
+        "channel_topic": "Тема канала",
+        "channel_type": "Тип канала",
+        "channel_userlimit": "Лимит пользователя",
+        "user_id": "ID пользователя",
+        "user_name": "Имя",
+        "user_bot": "Это бот",
+        "user_creation": "Создано в",
+        "user_highest_role": "Высшая роль",
+        "user_status": "Статус",
+        "user_nitro": "Нитро с тех пор",
+        "user_join": "Присоединился в",
+        "user_roles": "Роли",
+        "non_nitro": "Пользователь, не использующий нитро",
+        "roblox_user_id": "Идентификатор пользователя Роблокс",
+        "roblox_user_name": "Имя пользователя",
+        "roblox_user_display": "Отображаемое имя",
+        "roblox_user_banned": "Забанил",
+        "roblox_user_created": "Создано в",
+        "user_message_count": "Сообщения, которые я видел",
+        "user_message_count_value": "%{messages} сообщений",
+        "answer": "Отвечать"
     },
     "modal": {
         "DynamicInfoView": {
             "data": {
                 "context": {
                     "memory": {
-                        "display": "Context Usage"
+                        "display": "Использование контекста"
                     },
                     "mode": {
-                        "display": "Current Mood"
+                        "display": "Текущее настроение"
                     },
                     "muted": {
-                        "display": "Is Jim muted?"
+                        "display": "Джим отключил звук?"
                     },
-                    "title": "Local Brain Data"
+                    "title": "Локальные данные мозга"
                 },
                 "hardware": {
                     "cpu": {
-                        "display": "CPU Usage (total)"
+                        "display": "Загрузка ЦП (всего)"
                     },
                     "cpu_own": {
-                        "display": "CPU Usage (program)"
+                        "display": "Загрузка ЦП (программа)"
                     },
                     "disk": {
-                        "display": "Disk Usage"
+                        "display": "Использование диска"
                     },
                     "platform": {
-                        "display": "Platform"
+                        "display": "Платформа"
                     },
                     "ram": {
-                        "display": "Memory Usage (total)"
+                        "display": "Использование памяти (всего)"
                     },
                     "ram_details": {
-                        "display": "Memory Details"
+                        "display": "Детали памяти"
                     },
                     "ram_own": {
-                        "display": "Memory Usage (program)"
+                        "display": "Использование памяти (программа)"
                     },
-                    "title": "Technical Details"
+                    "title": "Технические детали"
                 },
                 "identity": {
                     "latency": {
-                        "display": "Network Latency"
+                        "display": "Задержка сети"
                     },
                     "owner": {
-                        "display": "Bot Developer"
+                        "display": "Разработчик ботов"
                     },
                     "signature": {
-                        "display": "Signature"
+                        "display": "Подпись"
                     },
-                    "title": "Identity & Version",
+                    "title": "Личность",
                     "uptime": {
-                        "display": "Bot Uptime"
+                        "display": "Время работы бота"
                     },
                     "uuid": {
-                        "display": "Session UUID"
+                        "display": "UUID сеанса"
                     },
                     "version": {
-                        "display": "Bot Version"
+                        "display": "Версия бота"
                     }
                 },
                 "stats": {
                     "cached_values": {
-                        "display": "Caches"
+                        "display": "Тайники"
                     },
                     "channels": {
-                        "display": "Channels"
+                        "display": "Каналы"
                     },
                     "guilds": {
-                        "display": "Servers"
+                        "display": "Серверы"
                     },
                     "interactions": {
-                        "display": "Interactions"
+                        "display": "Взаимодействия"
                     },
                     "msgs": {
-                        "display": "Messages Seen"
+                        "display": "Просмотрено сообщений"
                     },
-                    "title": "Bot Statistics",
+                    "title": "Статистика ботов",
                     "users": {
-                        "display": "Users"
+                        "display": "Пользователи"
                     }
                 }
             },
             "options": {
                 "context": {
-                    "label": "Local Brain Data"
+                    "label": "Локальные данные мозга"
                 },
                 "hardware": {
-                    "label": "Hardware Information"
+                    "label": "Информация об оборудовании"
                 },
                 "identity": {
-                    "label": "General Information"
+                    "label": "Общая информация"
                 },
-                "placeholder": "Choose category...",
+                "placeholder": "Выберите категорию...",
                 "stats": {
-                    "label": "Statistics"
+                    "label": "Статистика"
                 }
             },
             "buttons": {
                 "url_button": {
-                    "label": "Visit the GitHub repository"
+                    "label": "Посетите репозиторий GitHub"
                 },
                 "suggest_button": {
-                    "label": "Submit suggestions"
+                    "label": "Отправить предложения"
                 }
             }
         }
     },
     "settings": {
-        "title": "User Settings",
-        "header_description": "User settings",
+        "title": "Пользовательские настройки",
+        "header_description": "Настройки пользователя",
         "fields": {
-            "locale": "**Display Language**: %{lang_code}",
-            "embed_color": "**Embed Color**: %{hex}"
+            "locale": "**Язык дисплея**: %{lang_code}",
+            "embed_color": "**Встроить цвет**: %{hex}"
         }
     },
     "text": {
         "boolean": {
-            "false": "No",
-            "true": "Yes"
+            "false": "Нет",
+            "true": "Да"
         },
         "activity_type": {
-            "playing": "Playing %{activity}",
-            "streaming": "Streaming %{activity}",
-            "listening": "Listening to %{activity}",
-            "watching": "Watching %{activity}",
-            "competing": "Competing %{activity}",
-            "game": "Playing %{activity} on %{platform}",
-            "stream": "Streaming %{activity} at %{platform}",
-            "spotify": "Listening %{title} by %{artist} in %{album}"
+            "playing": "Игра %{activity}",
+            "streaming": "Трансляция %{activity}",
+            "listening": "Прослушивание %{activity}",
+            "watching": "Просмотр %{activity}",
+            "competing": "Конкурирующая %{activity}",
+            "game": "Игра в %{activity} на %{platform}",
+            "stream": "Трансляция %{activity} на %{platform}",
+            "spotify": "Прослушивание %{title} от %{artist} в %{album}"
         },
         "possible_map": {
-            "1": "Nuh uh.",
-            "2": "Nah.",
-            "3": "Maybe nah.",
-            "4": "I guess nah.",
-            "5": "Possible not.",
-            "6": "I don't know.",
-            "7": "Possible.",
-            "8": "i guess yuh.",
-            "9": "maybe yes.",
-            "10": "yuh",
-            "11": "yuh uh"
+            "1": "Нууууу.",
+            "2": "Нет.",
+            "3": "Может быть, нет.",
+            "4": "Я думаю, нет.",
+            "5": "Возможно нет.",
+            "6": "Я не знаю.",
+            "7": "Возможный.",
+            "8": "я думаю, да.",
+            "9": "возможно, да.",
+            "10": "да",
+            "11": "дааааа"
         },
         "8ball_words": {
-            "1": "Nope.",
-            "2": "No.",
-            "3": "Nah.",
-            "4": "Nuh uh.",
-            "5": "Nuh.",
-            "6": "Negative.",
-            "7": "Maybe nope.",
-            "8": "Maybe no.",
-            "9": "Maybe nah.",
-            "10": "Maybe nuh uh.",
-            "11": "Maybe nuh.",
-            "12": "Maybe negative.",
-            "13": "I guess nope.",
-            "14": "I guess no.",
-            "15": "I guess nah.",
-            "16": "I guess nuh uh.",
-            "17": "I guess nuh.",
-            "18": "I guess negative.",
-            "19": "Yes.",
-            "20": "Yeah.",
-            "21": "Yea.",
-            "22": "Yup.",
-            "23": "Yuh uh.",
-            "24": "Maybe yes.",
-            "25": "Maybe yeah.",
-            "26": "Maybe yea.",
-            "27": "Maybe yup.",
-            "28": "Maybe yuh uh.",
-            "29": "I guess yes.",
-            "30": "I guess yeah.",
-            "31": "I guess yea.",
-            "32": "I guess yup.",
-            "33": "I guess yuh uh.",
-            "34": "Positive.",
-            "35": "Definitely yes.",
-            "36": "Definitely.",
-            "37": "Definitely no.",
-            "38": "I don't think so.",
-            "39": "I think so.",
-            "40": "I don't know.",
-            "41": "Partially yes.",
-            "42": "Partially not.",
-            "43": "Definitely not.",
-            "44": "It's not.",
-            "45": "It is.",
-            "46": "Mhm.",
-            "47": "Yuh.",
-            "48": "Possible.",
-            "49": "Maybe.",
-            "50": "Kinda yes.",
-            "51": "Kinda not.",
-            "52": "What matter? i don't think so.",
-            "53": "What matter? it supposed to be yes.",
-            "54": "What matter? it not supposed to be yes.",
-            "55": "It is certain.",
-            "56": "It is decidedly so.",
-            "57": "Without a doubt.",
-            "58": "Yes definitely.",
-            "59": "You may rely on it.",
-            "60": "As I see it yes.",
-            "61": "Most likely.",
-            "62": "Reply hazy try again.",
-            "63": "Ask again later.",
-            "64": "Better not tell you this time.",
-            "65": "Cannot predict right now.",
-            "66": "Concentrate and ask again.",
-            "67": "Don't count on it.",
-            "68": "My reply is no.",
-            "69": "My sources say no.",
-            "70": "Outlook not so good.",
-            "71": "Very doubtful.",
-            "72": "Outlook good.",
-            "73": "Yes.",
-            "74": "Signs point to yes.",
-            "75": "We'll make it happen.",
-            "76": "Word.",
-            "77": "That's in budget.",
+            "1": "Неа.",
+            "2": "Нет.",
+            "3": "Нет.",
+            "4": "Нууууу.",
+            "5": "Нух.",
+            "6": "Отрицательный.",
+            "7": "Может быть, нет.",
+            "8": "Может быть, нет.",
+            "9": "Может быть, нет.",
+            "10": "Может быть, ну, ух.",
+            "11": "Может быть, нух.",
+            "12": "Возможно, отрицательный.",
+            "13": "Думаю, нет.",
+            "14": "Думаю, нет.",
+            "15": "Я думаю, нет.",
+            "16": "Я думаю, ну, ух.",
+            "17": "Я думаю, ну.",
+            "18": "Думаю, отрицательно.",
+            "19": "Да.",
+            "20": "Ага.",
+            "21": "Да.",
+            "22": "Ага.",
+            "23": "Да, ух.",
+            "24": "Может быть, да.",
+            "25": "Может быть, да.",
+            "26": "Может быть, да.",
+            "27": "Может быть, да.",
+            "28": "Может быть, да.",
+            "29": "Думаю, да.",
+            "30": "Думаю, да.",
+            "31": "Я думаю, да.",
+            "32": "Я думаю, да.",
+            "33": "Я думаю, да.",
+            "34": "Позитивный.",
+            "35": "Определенно да.",
+            "36": "Определенно.",
+            "37": "Определенно нет.",
+            "38": "Я так не думаю.",
+            "39": "Я так думаю.",
+            "40": "Я не знаю.",
+            "41": "Частично да.",
+            "42": "Частично нет.",
+            "43": "Определенно нет.",
+            "44": "Это не.",
+            "45": "Это.",
+            "46": "Ммм.",
+            "47": "Ага.",
+            "48": "Возможный.",
+            "49": "Может быть.",
+            "50": "Вроде да.",
+            "51": "Вроде нет.",
+            "52": "Какое значение? \nя так не думаю.",
+            "53": "Какое значение? \nдолжно быть да.",
+            "54": "Какое значение? \nэто не должно быть да.",
+            "55": "Это несомненно.",
+            "56": "Это определенно так.",
+            "57": "Без сомнения.",
+            "58": "Да, определенно.",
+            "59": "Вы можете на это положиться.",
+            "60": "Насколько я понимаю, да.",
+            "61": "Вероятно.",
+            "62": "Ответ туманный, попробуйте еще раз.",
+            "63": "Спросите еще раз позже.",
+            "64": "На этот раз лучше тебе не говорить.",
+            "65": "Не могу сейчас предсказать.",
+            "66": "Сосредоточьтесь и спросите еще раз.",
+            "67": "Не рассчитывайте на это.",
+            "68": "Мой ответ — нет.",
+            "69": "Мои источники говорят, что нет.",
+            "70": "Перспективы не очень хорошие.",
+            "71": "Очень сомнительно.",
+            "72": "Перспектива хорошая.",
+            "73": "Да.",
+            "74": "Знаки указывают на да.",
+            "75": "Мы сделаем это возможным.",
+            "76": "Слово.",
+            "77": "Это в бюджете.",
             "78": "👍",
-            "79": "Yes for another $5k.",
-            "80": "AI says yes.",
-            "81": "We'll fix it in post.",
-            "82": "Yes. wait NO-",
-            "83": "Out of scope.",
-            "84": "Peter says no.",
-            "85": "That's off brand.",
-            "86": "Out of the office.",
-            "87": "Is that in your budget?",
-            "88": "Error 404: Not Found",
-            "89": "Discuss over drinks?",
-            "90": "Out of memory.",
-            "91": "Check your Slack.",
-            "92": "ja.",
-            "93": "ne.",
-            "94": "The answer goes to toilet.",
-            "95": "I'm eating sandwich. Try later.",
-            "96": "Ball.",
-            "97": "Absolutely.",
-            "98": "Positively.",
-            "99": "Unequivocally.",
-            "100": "According to Google yes.",
-            "101": "According to Google no.",
-            "102": "Get your money and put it back. Yes.",
-            "103": "Hmmm... I'm idiot.",
-            "104": "No stupid.",
-            "105": "Who cares.",
-            "106": "You shouldn't know that.",
-            "107": "Don't ask me that.",
-            "108": "Who tf are you.",
-            "109": "I'm just a ball.",
-            "110": "Others guys will be answer to that.",
-            "111": "You will be burn.",
-            "112": "Rot in hell.",
-            "113": "Shut up.",
-            "114": "What's in your brain?"
+            "79": "Да, еще за 5 тысяч долларов.",
+            "80": "ИИ говорит да.",
+            "81": "Исправим в посте.",
+            "82": "Да. \nподожди НЕТ-",
+            "83": "Вне сферы действия.",
+            "84": "Питер говорит нет.",
+            "85": "Это не бренд.",
+            "86": "Вышел из офиса.",
+            "87": "Это входит в ваш бюджет?",
+            "88": "Ошибка 404: Не найдено",
+            "89": "Обсудить за выпивкой?",
+            "90": "Недостаточно памяти.",
+            "91": "Проверьте свой Slack.",
+            "92": "да.",
+            "93": "нэ.",
+            "94": "Ответ идет в туалет.",
+            "95": "Я ем сэндвич. \nпопробуйте позже.",
+            "96": "Мяч.",
+            "97": "Абсолютно.",
+            "98": "Положительно.",
+            "99": "Однозначно.",
+            "100": "По данным Google да.",
+            "101": "По данным Google нет.",
+            "102": "Получите свои деньги и положите их обратно. \nДа.",
+            "103": "Хммм... Я идиот.",
+            "104": "Никакой глупости.",
+            "105": "Какая разница.",
+            "106": "Вам не следует этого знать.",
+            "107": "Не спрашивайте меня об этом.",
+            "108": "Кто ты такой.",
+            "109": "Я просто мяч.",
+            "110": "На это ответят другие ребята.",
+            "111": "Ты будешь гореть.",
+            "112": "Гнить в аду.",
+            "113": "Замолчи.",
+            "114": "Что у тебя в мозгу?"
         },
         "coinflip": {
-            "true": "Heads",
-            "false": "Tails"
+            "true": "Орёл",
+            "false": "Решка"
         },
         "status": {
-            "online": "Online",
-            "offline": "Offline",
-            "idle": "Idling",
-            "dnd": "Do Not Disturb"
+            "online": "Онлайн",
+            "offline": "Оффлайн",
+            "idle": "Фарм",
+            "dnd": "Не беспокоить"
         },
         "device": {
-            "mobile": "Mobile",
-            "desktop": "Desktop",
-            "website": "Website"
+            "mobile": "Мобильный",
+            "desktop": "Рабочий стол",
+            "website": "Сайт"
         },
-        "command_synchronized": "Commands has been synchronized now.",
-        "idk": "IDK",
-        "linux_distribution": "Linux Distribution",
-        "platform": "Platform",
-        "standalone": "Standalone",
-        "unknown": "Unknown",
-        "unknown_join": "Cannot find the date when this bro joined.",
-        "joined": "Joined",
-        "left": "Left"
+        "command_synchronized": "Команды теперь синхронизированы.",
+        "idk": "Я НЕ ЗНАЮ",
+        "linux_distribution": "дистрибутив Linux",
+        "platform": "Платформа",
+        "standalone": "Автономный",
+        "unknown": "Неизвестный",
+        "unknown_join": "Не могу найти дату, когда этот брат присоединился.",
+        "joined": "Присоединился",
+        "left": "Слева"
     }
 }

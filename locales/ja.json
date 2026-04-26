@@ -4,103 +4,103 @@
     },
     "command": {
         "welcome": {
-            "description": "A group for WelcomeCog",
+            "description": "WelcomeCog のためのグループ",
             "set_channel": {
-                "description": "Set channel to send join / leave message.",
+                "description": "参加/退出メッセージを送信するチャンネルを設定します。",
                 "embeds": {
                     "disabled": {
-                        "description": "Welcome notification feature has been disabled."
+                        "description": "Welcome通知機能が無効になりました。"
                     },
                     "enabled": {
-                        "description": "Welcome notification feature has been enabled.\n The welcome message will appear at %{target_mention}."
+                        "description": "ウェルカム通知機能が有効になりました。\n ウェルカムメッセージは %{target_mention} に表示されます。"
                     }
                 }
             },
             "test": {
-                "description": "Run a test for welcome channel",
+                "description": "ウェルカムチャンネルのテストを実行",
                 "embeds": {
                     "sent": {
-                        "description": "Test successfully sent to welcome channel!"
+                        "description": "テストが正常にウェルカムチャンネルに送信されました！"
                     },
                     "unconfigured": {
-                        "description": "Welcome channel hasn't configured in this guild."
+                        "description": "このギルドでは、Welcome通知チャンネルが設定されていません。"
                     }
                 }
             },
             "set_rules_channel": {
-                "description": "Sets rule channel for adding link in it.",
+                "description": "通知メッセージにルールチャンネルを設定します。",
                 "embeds": {
                     "success": {
-                        "description": "Rules channel for welcome message has been set to %{target_mention}."
+                        "description": "ウェルカムメッセージのルールチャンネルが %{target_mention}に設定されました。"
                     },
                     "disabled": {
-                        "description": "Rules channel for welcome message has been removed."
+                        "description": "ウェルカムメッセージのルールチャンネルが削除されました。"
                     }
                 }
             },
             "embeds": {
                 "join": {
-                    "title": "Welcome to %{guild}!",
-                    "description": "Welcome, %{mention}! Please check out the rules in %{rules_mention}.",
-                    "description_no_rules": "Welcome to the server, %{mention}!",
-                    "footer": "We now have %{count} members."
+                    "title": "%{guild} へようこそ！",
+                    "description": "ようこそ、%{mention}さん! %{rules_mention}にてルールを確認してください。",
+                    "description_no_rules": "サーバーへようこそ、 %{mention}さん！",
+                    "footer": "現在、メンバーは%{count}人います。"
                 },
                 "left": {
-                    "title": "Member %{display} has left %{guild}!",
-                    "description": "Goodbye, %{display}!"
+                    "title": "メンバー %{display} が %{guild} を離れました！",
+                    "description": "さようなら、 %{display}！"
                 }
             }
         },
         "8ball": {
             "name": "8ball",
-            "description": "Gives a random, classic magic 8-ball response to a user's question.",
+            "description": "ユーザーの質問に対して、ランダムで古典的なマジック 8 ボールの応答を返します。",
             "embeds": {
                 "default": {
-                    "title": "Answer to '%{question}'"
+                    "title": "「%{question}」への回答"
                 }
             }
         },
         "channel": {
-            "description": "A group for channels.",
+            "description": "チャンネル用のグループ。",
             "info": {
-                "description": "Shows channel information.",
+                "description": "チャンネルの情報を表示する。",
                 "embeds": {
                     "default": {
-                        "title": "Information of %{name}"
+                        "title": "%{name}の情報"
                     }
                 },
                 "name": "info"
             },
             "name": "channel",
             "slowmode": {
-                "description": "Sets slowmode delay",
+                "description": "低速モードの設定をする。",
                 "embeds": {
                     "successful": {
-                        "description": "Successfully set slowmode to **%{seconds}** for %{mention}.",
-                        "title": "Slowmode Updated"
+                        "description": "%{mention}の低速モードの値を**%{seconds}**に設定しました。",
+                        "title": "低速モードの変更"
                     }
                 },
                 "name": "slowmode"
             }
         },
         "contributors": {
-            "description": "A group for contributors.",
+            "description": "貢献者用のグループ。",
             "list": {
-                "description": "Lists all contributors.",
+                "description": "すべての貢献者を表示する。",
                 "embeds": {
                     "default": {
-                        "description": "Here's a list of contributors who helped my bot! :3",
-                        "title": "Contributors"
+                        "description": "こいつらは俺のBOTに貢献をしてくれた人たちだよ! :3",
+                        "title": "貢献者一覧"
                     }
                 },
                 "name": "list"
             },
             "name": "contributors",
             "view": {
-                "description": "Shows contributor information.",
+                "description": "貢献者情報を取得する。",
                 "embeds": {
                     "default": {
-                        "title": "Contributor Information of %{contributor}"
+                        "title": "%{contributor}の貢献者情報"
                     }
                 },
                 "name": "view"
@@ -108,140 +108,140 @@
         },
         "info": {
             "commit_data": {
-                "description": "Shows bot's latest git commit.",
+                "description": "ボットの最新のコミットメッセージを表示",
                 "name": "commit_data"
             },
-            "description": "A group for information",
+            "description": "BOT情報等",
             "invite": {
-                "description": "Invites the bot to server by application url. (LIMITED TO 90)",
+                "description": "アプリケーションURLを使ってBOTを招待",
                 "embed": {
-                    "description": "%{prefix}\n\nYou can add me to your server using [this link.](%{invite_url})",
-                    "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation.",
+                    "description": "%{prefix}\n\n[このリンク](%{invite_url})を使って私を招待することができます。",
+                    "footer": "※最大限の機能を使用する場合、高度な権限を必要とします。そしてサーバー招待はDiscordの制限により90サーバーに制限しています。",
                     "status": {
-                        "one": "Capacity: **%{formatted}** server",
-                        "other": "Capacity: **%{formatted}** servers"
+                        "one": "容量: **%{formatted}** サーバー",
+                        "other": "容量: **%{formatted}** サーバー"
                     },
-                    "title": "Invite TongueBot"
+                    "title": "TongueBotを招待"
                 },
                 "error": {
-                    "hardlimited": "You can't invite TongueBot right now, since the limit has been reached."
+                    "hardlimited": "現在招待されているサーバー数が90に達しているため、招待はできません。"
                 },
                 "name": "invite"
             },
             "name": "info",
             "os_info": {
-                "description": "Shows operating system information.",
+                "description": "ボットをホストしているPCのOSを表示する",
                 "embed": {
-                    "title": "Operating System Information"
+                    "title": "OS情報"
                 },
                 "name": "os_info"
             },
             "ping": {
-                "description": "Pong!",
+                "description": "ポン!",
                 "embed": {
-                    "title": "Pong! (%{latency} ms)"
+                    "title": "ポン! (%{latency} ms)"
                 },
                 "name": "ping"
             },
             "retrieve": {
-                "description": "Retrieves bot information.",
+                "description": "BOT情報を表示",
                 "embed": {
-                    "description": "Select a category below to view specific details.",
-                    "footer": "System: %{platform}",
-                    "title": "Bot Information"
+                    "description": "下のドロップダウンから特定のカテゴリーを選択すると、その内容を見ることができます。",
+                    "footer": "システム: %{platform}",
+                    "title": "BOT情報"
                 },
                 "error": {
-                    "forbidden": "I do not have the **Manage Channels** permission to do that."
+                    "forbidden": "その操作を行うための『チャンネルの管理』権限がありません。"
                 },
                 "name": "retrieve"
             },
             "sync": {
-                "description": "Synchronizes commands",
+                "description": "コマンドを同期させる",
                 "name": "sync"
             },
             "timedate": {
-                "description": "Shows time in specified timezone",
+                "description": "特定のタイムゾーンに合わせた時刻を表示する",
                 "embed": {
-                    "description": "In %{timezone_name}, it's **%{timedate}**."
+                    "description": "%{timezone_name}では、現在時刻は**%{timedate}**です。"
                 },
                 "name": "timedate"
             }
         },
         "roblox": {
-            "description": "A group for roblox APIs.",
+            "description": "Roblox API のグループ。",
             "avatar": {
-                "description": "Gets Roblox user's avatar by username.",
+                "description": "Roblox ユーザーのアバターをユーザー名で取得します。",
                 "embeds": {
                     "default": {
-                        "title": "Roblox user %{username}'s Avatar"
+                        "title": "Roblox ユーザー %{username} のアバター"
                     }
                 }
             },
             "user": {
-                "description": "Get Roblox user info by username.",
+                "description": "ユーザー名からRoblox ユーザー情報を取得します。",
                 "embeds": {
                     "default": {
-                        "title": "User %{username}'s Information"
+                        "title": "Roblox ユーザー %{username} の情報"
                     }
                 }
             }
         },
         "tts": {
             "name": "tts",
-            "description": "Center of TTS stuff",
+            "description": "TTS関連の中心",
             "google_translate": {
                 "name": "google_translate",
-                "description": "Generates TTS from Google Translate."
+                "description": "Google翻訳からTTSを生成します。"
             },
             "embeds": {
                 "default": {
-                    "title": "TTS Conversion",
-                    "description": "Generated! >:D",
-                    "footer": "Type: %{tts_type}; Input: %{input}"
+                    "title": "TTS変換",
+                    "description": "生成されました！ >:D",
+                    "footer": "TTSエンジン: %{tts_type};\n入力: %{input}"
                 }
             }
         },
         "user": {
             "name": "user",
-            "description": "A group for users.",
+            "description": "ユーザー用のグループ。",
             "info": {
                 "name": "info",
-                "description": "Retrieves user's information.",
+                "description": "ユーザーの情報を取得します。",
                 "embeds": {
                     "default": {
-                        "title": "Information for %{user}"
+                        "title": "%{user}の情報"
                     }
                 }
             },
             "avatar": {
-                "description": "Shows Discord user's avatar.",
+                "description": "Discordユーザーのアバターを表示する。",
                 "embeds": {
                     "default": {
-                        "title": "User %{user}'s avatar",
-                        "footer": "Requested by %{author}, the result is cached for a minute."
+                        "title": "ユーザー %{user}のアバター",
+                        "footer": "%{author}からリクエストされた結果は1分間キャッシュされます。"
                     }
                 }
             },
             "set_nick": {
-                "description": "Sets user's nickname.",
+                "description": "ユーザーのニックネームを設定する。",
                 "embeds": {
                     "changed": {
-                        "description": "%{author} Changed %{user}'s nickname to **%{new_nickname}**."
+                        "description": "%{author}が%{user}のニックネームを**%{new_nickname}**に変更しました。"
                     },
                     "reset": {
-                        "description": "%{author} Reseted %{user}'s nickname."
+                        "description": "%{author} は %{user}のニックネームをリセットしました。"
                     }
                 },
                 "reasons": {
-                    "changed": "Nickname changed by %{user} via /user nick",
-                    "reset": "Nickname reseted by %{user} via /user nick"
+                    "changed": "/user nick で %{user} によってニックネームが変更されました",
+                    "reset": "/user nick で %{user} によってニックネームがリセットされました"
                 }
             },
             "status": {
-                "description": "Retrieves user's status.",
+                "description": "ユーザーのステータスを取得する。",
                 "embeds": {
                     "default": {
-                        "title": "%{user}'s Discord status"
+                        "title": "%{user}のDiscordステータス"
                     }
                 }
             }
@@ -249,431 +249,431 @@
     },
     "context_menu": {
         "kick_member": {
-            "name": "Kick"
+            "name": "メンバーを追放"
         },
         "ban_member": {
-            "name": "Ban"
+            "name": "メンバーをBAN"
         },
         "timeout_member": {
-            "name": "Timeout"
+            "name": "メンバーをタイムアウト"
         }
     },
     "messages": {
-        "timed_out_user": "%{user} has been timed out for %{length}.",
-        "ban_user": "%{user} has been banned.",
-        "kick_user": "%{user} has been kicked.",
-        "warn_user": "%{user} has been warned."
+        "timed_out_user": "%{user}を%{length}秒間タイムアウトしました。",
+        "ban_user": "%{user}をBANしました。",
+        "kick_user": "%{user}を追放しました。",
+        "warn_user": "%{user}に警告を送信しました。"
     },
     "error": {
         "custom": {
-            "channel_has_no_slowmode_property": "This channel has no property to set slowmode delay.",
-            "guild_only": "The command is usable only in Guild.",
-            "missing_category": "Missing Category",
-            "no_git_commithash": "No commit hash found",
-            "no_git_lastcommit": "No commit message found",
-            "unknown_signature": "Unknown Signature",
-            "unsupported_channel": "The channel isn't supported by bot.",
-            "timeout_duration_lessflow": "Duration must be greater than 0",
-            "tried_to_timeout_himself": "You cannot timeout yourself",
-            "tried_to_timeout_owner": "You cannot timeout the server owner",
-            "tried_to_timeout_higher": "Your role is not high enough to timeout the user.",
-            "forbidden_timeout": "I don't have permission to timeout members.",
-            "cannot_timeout_higher": "My role is not high enough to timeout this user.",
-            "insufficient_permission_kick": "You do not have permission to kick member %{user}.",
-            "insufficient_permission_ban": "You do not have permission to ban member %{user}.",
-            "user_not_found": "User not found.",
-            "invalidated_cache": "The command only works on guild because of the issue with caches.",
-            "roblox_forbidden": "Couldn't retrieve data from Roblox API because the client doesn't have, or using invalid CSRF Token.",
-            "roblox_user_not_found": "A Roblox user named '%{username}' doesn't exist.",
-            "roblox_failed_retrieve_avatar": "Failed trying to retrieve Roblox user %{username}'s avatar."
+            "channel_has_no_slowmode_property": "このチャンネルには低速モードのプロパティがありません。",
+            "guild_only": "このコマンドはサーバーでのみ使用できます。",
+            "missing_category": "このカテゴリは存在しないようです",
+            "no_git_commithash": "コミットハッシュ取得に失敗しました",
+            "no_git_lastcommit": "コミットメッセージ取得に失敗しました",
+            "unknown_signature": "不明なシグネチャー",
+            "unsupported_channel": "このチャンネルはまだ未対応です。",
+            "timeout_duration_lessflow": "長さは0秒以上にしか指定できません。",
+            "tried_to_timeout_himself": "あなた自身をタイムアウトすることはできません。",
+            "tried_to_timeout_owner": "サーバー管理者をタイムアウトすることはできません。",
+            "tried_to_timeout_higher": "あなたはこのユーザーをタイムアウトするのに十分な役割を持っていません。",
+            "forbidden_timeout": "ユーザーをタイムアウトする権限がありません。",
+            "cannot_timeout_higher": "私はユーザーをタイムアウトするために十分な役割を持っていません。",
+            "insufficient_permission_kick": "あなたは%{user}を追放する権限が付与されていません。",
+            "insufficient_permission_ban": "あなたは%{user}をBANする権限が付与されていません。",
+            "user_not_found": "ユーザーが見つかりませんでした。",
+            "invalidated_cache": "このコマンドはキャッシュの問題でサーバー上でしか使えません。",
+            "roblox_forbidden": "クライアントが無効な CSRF トークンを持っていないか、無効な CSRF トークンを使用しているため、Roblox API からデータを取得できませんでした。",
+            "roblox_user_not_found": "「%{username}」という名前の Roblox ユーザーは存在しません。",
+            "roblox_failed_retrieve_avatar": "Roblox ユーザー %{username} のアバターを取得しようとして失敗しました。"
         },
         "embed": {
             "contributor_not_found": {
-                "description": "The contributor %{contributor} has been not found.",
-                "title": "Contributor not found"
+                "description": "貢献者%{contributor}は存在しません。",
+                "title": "貢献者が見つかりませんでした"
             },
             "guild_only": {
-                "description": "This command is only for guild.",
-                "title": "Invalid run context"
+                "description": "このコマンドはサーバー専用です。",
+                "title": "無効な実行コンテキスト"
             },
             "slowmode_out_of_range": {
-                "description": "Slowmode delay must be between 0 and 21600 seconds.",
-                "title": "Out of range"
+                "description": "低速モードは0から21600秒の範囲でしか指定できません。",
+                "title": "値が範囲外です"
             },
             "unsupported_channel_slowmode": {
-                "description": "Channel %{channel} doesn't support slowmode.",
-                "title": "Unsupported channel"
+                "description": "チャンネル%{channel}は低速モードをサポートしていません。",
+                "title": "サポートされていないチャンネル"
             },
             "unsupported_channel_type": {
-                "description": "You have chose a channel that is unsupported.",
-                "title": "Unsupported channel type"
+                "description": "サポートされていないチャンネルタイプです。",
+                "title": "サポートされていないチャンネルタイプ"
             },
             "tts_no_text": {
-                "title": "Input must be not empty",
-                "description": "You've set input empty. Retry again later with input."
+                "title": "入力は空であってはなりません",
+                "description": "入力を空に設定しました。\n後で入力して再試行してください。"
             },
             "send_error": {
-                "title": "Send error",
-                "description": "An error thrown while trying to send: %{e}"
+                "title": "送信エラー",
+                "description": "送信しようとしたときにエラーがスローされました: %{e}"
             },
             "tts_generation_error": {
-                "title": "TTS Generation Error",
-                "description": "An error thrown while trying to generate speech: %{e}"
+                "title": "TTS 生成エラー",
+                "description": "音声を生成しようとしたときにスローされたエラー: %{e}"
             },
             "edge_tts_not_installed": {
-                "title": "Edge TTS not installed",
-                "description": "Server has no package to generate speech from edge-tts."
+                "title": "Edge TTSが未インストールです",
+                "description": "サーバーには、edge-tts から音声を生成するパッケージがありません。"
             },
             "welcome_channel_not_enabled": {
-                "title": "Welcome channel not enabled",
-                "description": "Welcome channel has not enabled in this guild. Make sure to set welcome channel to use this command."
+                "title": "Welcomeチャンネルが有効ではありません",
+                "description": "Welcomeチャンネルがこのギルドで有効になっていません。このコマンドを使用するには、welcomeチャンネルを設定してください。"
             }
         },
         "exceptions": {
-            "AppCommandError": "Unknown Command error was thrown!",
-            "BotMissingPermissions": "I do not have the required permissions to execute it.",
-            "CheckFailure": "You do not have permission to use this command.",
-            "CommandAlreadyRegistered": "The command were already registered before.",
-            "CommandInvokeError": "An error occured while executing the command.",
-            "CommandLimitReached": "The command usage is currently limited due to command limitation.",
-            "CommandNotFound": "The command was not found.",
-            "CommandOnCooldown": "The command is on cooldown. Please try again after passing %{remaining} more seconds.",
-            "CommandSignatureMismatch": "The command has out of sync from latest one.",
-            "CommandSyncFailure": "Failed to synchronize command(s).",
-            "MissingAnyRole": "You do not have any of required roles to use it.",
-            "MissingPermissions": "You do not have required permissions to use it.",
-            "MissingRole": "You do not have required role to use it.",
-            "NoPrivateMessage": "The command cannot be used on private messages.",
-            "TransformerError": "An error occured while processing command arguments.",
-            "TranslationError": "An error occured while translating the command.",
+            "AppCommandError": "おそらく不明なコマンドエラーがスローされました。",
+            "BotMissingPermissions": "このコマンドを実行するのに私に必要な権限が不足しています。",
+            "CheckFailure": "あなたはこのコマンドを使用する権限がありません。",
+            "CommandAlreadyRegistered": "このコマンドはすでに登録されています。",
+            "CommandInvokeError": "コマンド処理中にエラーが発生しました。",
+            "CommandLimitReached": "最大コマンド登録数を超えているため、このコマンドは使用できません。",
+            "CommandNotFound": "このコマンドは存在しません。",
+            "CommandOnCooldown": "現在このコマンドはクールダウン中です。%{remaining}秒後にもう一度やり直してください。",
+            "CommandSignatureMismatch": "コマンド定義がコード内の定義と異なります。おそらく、古いものを使用しているか、Discordのデータが同期されていません。",
+            "CommandSyncFailure": "コマンド同期させるのに失敗しました。",
+            "MissingAnyRole": "このコマンドを使用するのに必要なロールがどれも付与されていません。",
+            "MissingPermissions": "このコマンドを使用するのに必要な権限が付与されていません。",
+            "MissingRole": "このコマンドを使用するのに必要なロールが付与されていません。",
+            "NoPrivateMessage": "このコマンドは、サーバー限定です。",
+            "TransformerError": "コマンドの引数を処理しているときにエラーが発生しました。",
+            "TranslationError": "コマンドを翻訳しているときにエラーが発生しました。",
             "HTTPException": "The operation has failed due to HTTP Error.",
-            "Unknown": "An Uncaught error was thrown! %{e}"
+            "Unknown": "まだキャッチされていない例外がスローされました: %{e}"
         },
         "http": {
-            "400": "Error 400: Bad Request. Input contains invalid syntax.",
-            "403": "Error 403: Forbidden. You do not have permission to access the resource.",
-            "404": "Error 404: Not Found. There's no file exist.",
-            "429": "Error 429: Too Many Requests. API has ratelimit client. Try again later.",
-            "500": "Error 500: Internal Server Error. Server has encountered unknown error while processing."
+            "400": "エラー 400: リクエストが不正です。\n入力に無効な構文が含まれています。",
+            "403": "エラー 403: 禁止されています。\nリソースにアクセスする権限がありません。",
+            "404": "エラー 404: 見つかりません。\nファイルが存在しません。",
+            "429": "エラー 429: リクエスト回数が制限を超えました。\nしばらく時間をおいてから再度お試しください。",
+            "500": "エラー 500: 内部サーバー エラー。\nサーバーの処理中に不明なエラーが発生しました。"
         }
     },
     "label": {
-        "channel_bitrate": "Audio Bitrate",
-        "channel_category": "Category",
-        "channel_channels": "Channels",
-        "channel_creation": "Created at",
-        "channel_instance_running": "Is Instance running",
-        "channel_listeners": "Members in-channel",
-        "channel_name": "Channel Name",
-        "channel_nsfw": "Is NSFW",
-        "channel_position": "Channel Position",
-        "channel_requesting_to_speak": "Members who request to speak",
-        "channel_slowmode": "Slowmode Delay",
-        "channel_threads": "Threads",
-        "channel_topic": "Channel Topic",
-        "channel_type": "Channel Type",
-        "channel_userlimit": "User limit",
-        "user_id": "User ID",
-        "user_name": "Name",
-        "user_bot": "Is bot",
-        "user_creation": "Created at",
-        "user_highest_role": "Highest Role",
-        "user_status": "Status",
-        "user_nitro": "Nitro since",
-        "user_join": "Joined at",
-        "user_roles": "Roles",
-        "non_nitro": "Non-nitro user",
-        "roblox_user_id": "Roblox User ID",
-        "roblox_user_name": "Username",
-        "roblox_user_display": "Display name",
-        "roblox_user_banned": "Has banned",
-        "roblox_user_created": "Created at",
-        "user_message_count": "Messages I seen",
-        "user_message_count_value": "%{messages} messages",
-        "answer": "Answer"
+        "channel_bitrate": "オーディオビットレート",
+        "channel_category": "カテゴリ",
+        "channel_channels": "チャンネル数",
+        "channel_creation": "作られた日時",
+        "channel_instance_running": "インスタンスが存在しているか",
+        "channel_listeners": "チャンネル内のメンバー数",
+        "channel_name": "チャンネル名",
+        "channel_nsfw": "NSFWであるか",
+        "channel_position": "チャンネル位置",
+        "channel_requesting_to_speak": "ステージで話しているメンバー数",
+        "channel_slowmode": "低速モードの値",
+        "channel_threads": "スレッド数",
+        "channel_topic": "チャンネルトピック",
+        "channel_type": "チャンネルの種類",
+        "channel_userlimit": "参加できる最大のユーザー数",
+        "user_id": "ユーザーID",
+        "user_name": "名前",
+        "user_bot": "BOTであるか",
+        "user_creation": "Discordに参加した日時",
+        "user_highest_role": "最も高い役割",
+        "user_status": "ステータス",
+        "user_nitro": "Nitroを購読した日時",
+        "user_join": "サーバーに参加した日時",
+        "user_roles": "役割",
+        "non_nitro": "非Nitroユーザー",
+        "roblox_user_id": "Roblox ユーザー ID",
+        "roblox_user_name": "ユーザー名",
+        "roblox_user_display": "表示名",
+        "roblox_user_banned": "禁止しています",
+        "roblox_user_created": "で作成されました",
+        "user_message_count": "見たメッセージ",
+        "user_message_count_value": "%{messages} 件のメッセージ",
+        "answer": "答え"
     },
     "modal": {
         "DynamicInfoView": {
             "data": {
                 "context": {
                     "memory": {
-                        "display": "Context Usage"
+                        "display": "コンテキスト情報"
                     },
                     "mode": {
-                        "display": "Current Mood"
+                        "display": "現在の表情"
                     },
                     "muted": {
-                        "display": "Is Jim muted?"
+                        "display": "彼はミュートされているか"
                     },
-                    "title": "Local Brain Data"
+                    "title": "ローカルAI"
                 },
                 "hardware": {
                     "cpu": {
-                        "display": "CPU Usage (total)"
+                        "display": "CPU使用率 (合計)"
                     },
                     "cpu_own": {
-                        "display": "CPU Usage (program)"
+                        "display": "CPU使用率 (本体)"
                     },
                     "disk": {
-                        "display": "Disk Usage"
+                        "display": "ディスク使用可能な容量"
                     },
                     "platform": {
-                        "display": "Platform"
+                        "display": "プラットフォーム"
                     },
                     "ram": {
-                        "display": "Memory Usage (total)"
+                        "display": "メモリ使用率 (合計)"
                     },
                     "ram_details": {
-                        "display": "Memory Details"
+                        "display": "詳細なメモリ情報"
                     },
                     "ram_own": {
-                        "display": "Memory Usage (program)"
+                        "display": "メモリ使用率 (本体)"
                     },
-                    "title": "Technical Details"
+                    "title": "技術的"
                 },
                 "identity": {
                     "latency": {
-                        "display": "Network Latency"
+                        "display": "Ping値"
                     },
                     "owner": {
-                        "display": "Bot Developer"
+                        "display": "このBOTを作った人"
                     },
                     "signature": {
-                        "display": "Signature"
+                        "display": "シグネチャー"
                     },
-                    "title": "Identity & Version",
+                    "title": "基本的",
                     "uptime": {
-                        "display": "Bot Uptime"
+                        "display": "BOTの起動期間"
                     },
                     "uuid": {
-                        "display": "Session UUID"
+                        "display": "セッションUUID"
                     },
                     "version": {
-                        "display": "Bot Version"
+                        "display": "BOTバージョン"
                     }
                 },
                 "stats": {
                     "cached_values": {
-                        "display": "Caches"
+                        "display": "キャッシュされた数"
                     },
                     "channels": {
-                        "display": "Channels"
+                        "display": "チャンネル数"
                     },
                     "guilds": {
-                        "display": "Servers"
+                        "display": "サーバー数"
                     },
                     "interactions": {
-                        "display": "Interactions"
+                        "display": "インタラクション数"
                     },
                     "msgs": {
-                        "display": "Messages Seen"
+                        "display": "メッセージ数"
                     },
-                    "title": "Bot Statistics",
+                    "title": "BOT情報",
                     "users": {
-                        "display": "Users"
+                        "display": "ユーザー数"
                     }
                 }
             },
             "options": {
                 "context": {
-                    "label": "Local Brain Data"
+                    "label": "ローカルAI情報"
                 },
                 "hardware": {
-                    "label": "Hardware Information"
+                    "label": "ハードウェアに関する技術的な情報"
                 },
                 "identity": {
-                    "label": "General Information"
+                    "label": "基本的な情報"
                 },
-                "placeholder": "Choose category...",
+                "placeholder": "カテゴリを選択してください...",
                 "stats": {
-                    "label": "Statistics"
+                    "label": "BOTに関する情報"
                 }
             },
             "buttons": {
                 "url_button": {
-                    "label": "Visit the GitHub repository"
+                    "label": "GitHub リポジトリにアクセスする"
                 },
                 "suggest_button": {
-                    "label": "Submit suggestions"
+                    "label": "提案を送信する"
                 }
             }
         }
     },
     "settings": {
-        "title": "User Settings",
-        "header_description": "User settings",
+        "title": "ユーザー設定",
+        "header_description": "ユーザー設定",
         "fields": {
-            "locale": "**Display Language**: %{lang_code}",
-            "embed_color": "**Embed Color**: %{hex}"
+            "locale": "**表示言語**: %{lang_code}",
+            "embed_color": "**埋め込みカラー**: %{hex}"
         }
     },
     "text": {
         "boolean": {
-            "false": "No",
-            "true": "Yes"
+            "false": "いいえ",
+            "true": "はい"
         },
         "activity_type": {
-            "playing": "Playing %{activity}",
-            "streaming": "Streaming %{activity}",
-            "listening": "Listening to %{activity}",
-            "watching": "Watching %{activity}",
-            "competing": "Competing %{activity}",
-            "game": "Playing %{activity} on %{platform}",
-            "stream": "Streaming %{activity} at %{platform}",
-            "spotify": "Listening %{title} by %{artist} in %{album}"
+            "playing": "%{activity}をプレイ中",
+            "streaming": "%{activity}を配信中",
+            "listening": "%{activity}を再生中",
+            "watching": "%{activity}を視聴中",
+            "competing": "%{activity}で競合中",
+            "game": "%{platform}で%{activity}をプレイ中",
+            "stream": "%{platform}上で%{activity}を配信中",
+            "spotify": "%{artist}の%{album} - %{title}を再生中"
         },
         "possible_map": {
-            "1": "Nuh uh.",
-            "2": "Nah.",
-            "3": "Maybe nah.",
-            "4": "I guess nah.",
-            "5": "Possible not.",
-            "6": "I don't know.",
-            "7": "Possible.",
-            "8": "i guess yuh.",
-            "9": "maybe yes.",
-            "10": "yuh",
-            "11": "yuh uh"
+            "1": "いやあ。",
+            "2": "いや。",
+            "3": "たぶんね。",
+            "4": "そうですね。",
+            "5": "そうではない可能性があります。",
+            "6": "わからない。",
+            "7": "可能。",
+            "8": "そうですね。",
+            "9": "たぶんそうです。",
+            "10": "そうだね",
+            "11": "うんうん"
         },
         "8ball_words": {
-            "1": "Nope.",
-            "2": "No.",
-            "3": "Nah.",
-            "4": "Nuh uh.",
-            "5": "Nuh.",
-            "6": "Negative.",
-            "7": "Maybe nope.",
-            "8": "Maybe no.",
-            "9": "Maybe nah.",
-            "10": "Maybe nuh uh.",
-            "11": "Maybe nuh.",
-            "12": "Maybe negative.",
-            "13": "I guess nope.",
-            "14": "I guess no.",
-            "15": "I guess nah.",
-            "16": "I guess nuh uh.",
-            "17": "I guess nuh.",
-            "18": "I guess negative.",
-            "19": "Yes.",
-            "20": "Yeah.",
-            "21": "Yea.",
-            "22": "Yup.",
-            "23": "Yuh uh.",
-            "24": "Maybe yes.",
-            "25": "Maybe yeah.",
-            "26": "Maybe yea.",
-            "27": "Maybe yup.",
-            "28": "Maybe yuh uh.",
-            "29": "I guess yes.",
-            "30": "I guess yeah.",
-            "31": "I guess yea.",
-            "32": "I guess yup.",
-            "33": "I guess yuh uh.",
-            "34": "Positive.",
-            "35": "Definitely yes.",
-            "36": "Definitely.",
-            "37": "Definitely no.",
-            "38": "I don't think so.",
-            "39": "I think so.",
-            "40": "I don't know.",
-            "41": "Partially yes.",
-            "42": "Partially not.",
-            "43": "Definitely not.",
-            "44": "It's not.",
-            "45": "It is.",
-            "46": "Mhm.",
-            "47": "Yuh.",
-            "48": "Possible.",
-            "49": "Maybe.",
-            "50": "Kinda yes.",
-            "51": "Kinda not.",
-            "52": "What matter? i don't think so.",
-            "53": "What matter? it supposed to be yes.",
-            "54": "What matter? it not supposed to be yes.",
-            "55": "It is certain.",
-            "56": "It is decidedly so.",
-            "57": "Without a doubt.",
-            "58": "Yes definitely.",
-            "59": "You may rely on it.",
-            "60": "As I see it yes.",
-            "61": "Most likely.",
-            "62": "Reply hazy try again.",
-            "63": "Ask again later.",
-            "64": "Better not tell you this time.",
-            "65": "Cannot predict right now.",
-            "66": "Concentrate and ask again.",
-            "67": "Don't count on it.",
-            "68": "My reply is no.",
-            "69": "My sources say no.",
-            "70": "Outlook not so good.",
-            "71": "Very doubtful.",
-            "72": "Outlook good.",
-            "73": "Yes.",
-            "74": "Signs point to yes.",
-            "75": "We'll make it happen.",
-            "76": "Word.",
-            "77": "That's in budget.",
+            "1": "いいえ。",
+            "2": "いいえ。",
+            "3": "いや。",
+            "4": "いやあ。",
+            "5": "うーん。",
+            "6": "ネガティブ。",
+            "7": "いやかもしれない。",
+            "8": "たぶん、そうではありません。",
+            "9": "たぶんね。",
+            "10": "うーん... たぶん。",
+            "11": "たぶんね。",
+            "12": "もしかしたら否定的かもしれない。",
+            "13": "いや、違うと思うっす。",
+            "14": "違うと思います。",
+            "15": "そうですね。",
+            "16": "うーん、そうっすね。",
+            "17": "いや、そうだと思います。",
+            "18": "否定的だと思います。",
+            "19": "はい。",
+            "20": "うん。",
+            "21": "そうだね。",
+            "22": "うん。",
+            "23": "うーん。",
+            "24": "たぶんそうです。",
+            "25": "そうかもしれない。",
+            "26": "そうかもしれん。",
+            "27": "たぶんそうだね。",
+            "28": "たぶん、うんうん。",
+            "29": "そうだと思います。",
+            "30": "そうだと思います。",
+            "31": "そうだと思います。",
+            "32": "そうですね。",
+            "33": "そうでしょうね。",
+            "34": "肯定的です。",
+            "35": "確かにそうです。",
+            "36": "絶対に。",
+            "37": "絶対に違います。",
+            "38": "いや、私はそうとは思わない。",
+            "39": "そう思います。",
+            "40": "わからない。",
+            "41": "部分的にはそうです。",
+            "42": "部分的にはそうではありません。",
+            "43": "絶対に違います。",
+            "44": "そうではありません。",
+            "45": "そうです。",
+            "46": "うーん。",
+            "47": "うーん。",
+            "48": "可能。",
+            "49": "多分。",
+            "50": "そうですね。",
+            "51": "ちょっと違います。",
+            "52": "何の問題？\n私はそうは思わない。",
+            "53": "何の問題？\nそれは「はい」であるはずです。",
+            "54": "何の問題？\nそれは「はい」であるべきではありません。",
+            "55": "それは確かです。",
+            "56": "それは間違いなくそうです。",
+            "57": "間違いなく。",
+            "58": "はい、確かに。",
+            "59": "頼りにしてもいいでしょう。",
+            "60": "私が見た限り、そうです。",
+            "61": "最も可能性が高い。",
+            "62": "ぼんやりと返信して、もう一度試してください。",
+            "63": "後でもう一度質問してください。",
+            "64": "今度は言わないほうがいいよ。",
+            "65": "現時点では予測できません。",
+            "66": "集中してもう一度質問してください。",
+            "67": "当てにしないでください。",
+            "68": "私の答えはノーです。",
+            "69": "私の情報筋はノーと言っています。",
+            "70": "見通しはあまり良くありません。",
+            "71": "非常に疑わしい。",
+            "72": "見通しは良好です。",
+            "73": "はい。",
+            "74": "標識は「はい」を指します。",
+            "75": "私たちがそれを実現させます。",
+            "76": "言葉。",
+            "77": "それは予算内です。",
             "78": "👍",
-            "79": "Yes for another $5k.",
-            "80": "AI says yes.",
-            "81": "We'll fix it in post.",
-            "82": "Yes. wait NO-",
-            "83": "Out of scope.",
-            "84": "Peter says no.",
-            "85": "That's off brand.",
-            "86": "Out of the office.",
-            "87": "Is that in your budget?",
-            "88": "Error 404: Not Found",
-            "89": "Discuss over drinks?",
-            "90": "Out of memory.",
-            "91": "Check your Slack.",
-            "92": "ja.",
-            "93": "ne.",
-            "94": "The answer goes to toilet.",
-            "95": "I'm eating sandwich. Try later.",
-            "96": "Ball.",
-            "97": "Absolutely.",
-            "98": "Positively.",
-            "99": "Unequivocally.",
-            "100": "According to Google yes.",
-            "101": "According to Google no.",
-            "102": "Get your money and put it back. Yes.",
-            "103": "Hmmm... I'm idiot.",
-            "104": "No stupid.",
-            "105": "Who cares.",
-            "106": "You shouldn't know that.",
-            "107": "Don't ask me that.",
-            "108": "Who tf are you.",
-            "109": "I'm just a ball.",
-            "110": "Others guys will be answer to that.",
-            "111": "You will be burn.",
-            "112": "Rot in hell.",
-            "113": "Shut up.",
-            "114": "What's in your brain?"
+            "79": "はい、さらに 5,000 ドルです。",
+            "80": "AIは「はい」と答えます。",
+            "81": "郵送で修正させていただきます。",
+            "82": "はい。\nいや待って、だめ-",
+            "83": "普通に範囲外です。",
+            "84": "ピーターはノーと言います。",
+            "85": "それはオフブランドです。",
+            "86": "オフィスを出ました。",
+            "87": "それは予算内ですか？",
+            "88": "エラー 404: 見つかりません",
+            "89": "飲み物を飲みながら話し合いますか？",
+            "90": "メモリ不足です。",
+            "91": "Slack を確認してください。",
+            "92": "ジャ。",
+            "93": "ね。",
+            "94": "答えはトイレにあります。",
+            "95": "サンドイッチを食べてるから後でにしてくれ。",
+            "96": "ボール。",
+            "97": "絶対に。",
+            "98": "積極的に。",
+            "99": "間違いなく。",
+            "100": "Googleによると、そうです。",
+            "101": "Googleによると、いいえだそうです。",
+            "102": "お金を受け取って、元に戻してください。はい。",
+            "103": "うーん…普通にバカです。",
+            "104": "バカじゃないよ。",
+            "105": "誰が気にする。",
+            "106": "それは知るべきではありません。",
+            "107": "そんなことは私に聞かないでください。",
+            "108": "あなたは誰ですか。",
+            "109": "私はただのボールです。",
+            "110": "他の人がそれに答えるでしょう。",
+            "111": "火傷してしまいます。",
+            "112": "地獄で腐れ。",
+            "113": "黙れ。",
+            "114": "あなたの脳には何が入っているのですか？"
         },
         "coinflip": {
-            "true": "Heads",
-            "false": "Tails"
+            "true": "表",
+            "false": "裏"
         },
         "status": {
-            "online": "Online",
-            "offline": "Offline",
-            "idle": "Idling",
-            "dnd": "Do Not Disturb"
+            "online": "オンライン中",
+            "offline": "オフライン",
+            "idle": "待機中",
+            "dnd": "取り込み中"
         },
         "device": {
-            "mobile": "Mobile",
-            "desktop": "Desktop",
-            "website": "Website"
+            "mobile": "携帯",
+            "desktop": "デスクトップ",
+            "website": "ウェブサイト"
         },
-        "command_synchronized": "Commands has been synchronized now.",
-        "idk": "IDK",
-        "linux_distribution": "Linux Distribution",
-        "platform": "Platform",
-        "standalone": "Standalone",
-        "unknown": "Unknown",
-        "unknown_join": "Cannot find the date when this bro joined.",
-        "joined": "Joined",
-        "left": "Left"
+        "command_synchronized": "コマンドが同期されました。",
+        "idk": "知らんがな",
+        "linux_distribution": "Linuxディストリビューション",
+        "platform": "プラットフォーム",
+        "standalone": "スタンドアロン",
+        "unknown": "不明",
+        "unknown_join": "こいつがいつ入ったのかは分からん",
+        "joined": "参加",
+        "left": "去った"
     }
 }
