@@ -1,5 +1,6 @@
 from discord.ext import commands
 from discord import Embed, Interaction, app_commands
+from stuff import cmd_locale
 
 from bot import PoxBot
 

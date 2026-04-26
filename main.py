@@ -103,7 +103,7 @@ async def try_returnerror(interaction: Interaction, embed: Embed):
 
 @tree.error
 async def on_app_command_error(interaction: Interaction, error: app_commands.AppCommandError):
-    loc = interaction.locale
+    loc = await bot.settings_db.get_locale(interaction) if bot.settings_db else interaction.locale
     
     error_name = error.__class__.__name__
     key = f"error.exceptions.{error_name}"
@@ -118,7 +118,7 @@ async def on_app_command_error(interaction: Interaction, error: app_commands.App
     else:
         logger.warning(f"User Error in /{interaction.command.qualified_name if interaction.command else "unknown_command"}: {error}")
     
-    description = translator_instance.T(key, str(loc), **kwargs)
+    description = translator_instance.T(key, loc, kwargs)
     
     if description == key:
         description = translator_instance.T("error.exceptions.AppCommandError", str(loc))

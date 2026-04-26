@@ -1,6 +1,13 @@
+from pathlib import Path
+from typing import Any
+
 from discord.ext.commands import Cog
 from discord import Color, app_commands, Embed, Interaction, File
 from os.path import dirname, join
+
+from prompt_toolkit import contrib
+
+from src.translator import translator_instance
 
 from bot import PoxBot
 import data
@@ -8,26 +15,83 @@ import data
 class Contributors(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
-        self.contributor_list = data.get_contributors()
+        self.contributor_list: list[dict[str, Any]] = data.get_contributors_v2()
 
-    group = app_commands.Group(name="contributors", description="Contributors.")
+    group = app_commands.Group(name=app_commands.locale_str("contributors", message="command.contributors.name"), description=app_commands.locale_str("A group for contributors.", message="command.contributors.description"))
     
-    @group.command(name="list", description="Lists all contributors.")
+    @group.command(name=app_commands.locale_str("list", message="command.contributors.list.name"), description=app_commands.locale_str("Lists all contributors.", message="command.contributors.list.description"))
     async def list_contributors(self, interaction: Interaction):
-        embed = Embed(title="Contributors", description="Here is a list of contributors who have helped with this bot :3")
-
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
+        embed = Embed(title=translator_instance.T("command.contributors.list.embeds.default.title", loc), description=translator_instance.T("command.contributors.list.embds.default.description", loc))
+        
+        await interaction.response.defer()
+        
         hmmm = []
 
         for contributor in self.contributor_list:
-            name = contributor.get("name", "Unknown")
-            contribution = contributor.get("contribution", "[...]")
+            user_id = contributor.get("id", None)
+            if not user_id: continue
+            
+            user = self.bot.get_user(user_id)
+            
+            display_name = user.display_name if user else translator_instance.T("text.unknown", loc)
+            
+            name = contributor.get("name", translator_instance.T("text.unknown", loc))
+            contribution = contributor.get("description", translator_instance.T("text.unknown", loc))
 
             hmmm.append(f"**{name}**: {contribution}")
         
         embed.description = "\n".join(hmmm)
         embed.color = Color.blue()
         
-        return await interaction.response.send_message(embed=embed)
+        return await interaction.followup.send(embed=embed)
+    
+    async def contributor_autocomplete(self, interaction: Interaction, current: str) -> list[app_commands.Choice[str]]:
+        return [
+            app_commands.Choice(name=contributor['command'], value=contributor['command'])
+            for contributor in self.contributor_list
+            if not contributor.get("command")
+        ]
+    
+    @group.command(name=app_commands.locale_str("view", message="command.contributors.view.name"), description=app_commands.locale_str("Shows contributor.", message="command.contributors.view.description"))
+    @app_commands.autocomplete(contributor_id=contributor_autocomplete)
+    async def view_contributor(self, interaction: Interaction, contributor_id: str):
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
+        embed = Embed(title=translator_instance.T("command.contributors.view.embeds.default.title", loc, {"contributor": contributor_id}))
+        
+        await interaction.response.defer()
+        
+        contributor_data = next((d for d in self.contributor_list if d.get("command") == contributor_id), None)
+        
+        if contributor_data:
+            embed.set_footer(text=contributor_data.get("quote"))
+            
+            rows = [
+                contributor_data.get("description", translator_instance.T("text.unknown", loc)), "\n\n",
+            ]
+            
+            if contributor_data.get("content"):
+                rows.append(contributor_data['content'])
+            
+            pic = None
+            
+            if contributor_data.get("thumbnail_url"):
+                thumbnail_url = contributor_data['thumbnail_url']
+                
+                if thumbnail_url.startswith("file:"):
+                    path = Path(__file__).parent / thumbnail_url.replace("file:", "", 1)
+                    
+                    if path.exists() and path.is_file():
+                        pic = File(fp=path.resolve(), filename=path.name)
+            
+            if pic:
+                embed.set_thumbnail(url="attachment://" + pic.filename)
+                return await interaction.followup.send(embed=embed, file=pic)
+            else:
+                return await interaction.followup.send(embed=embed)
+        else:
+            embed.title = translator_instance.T("error.embed.contributor_not_found.title", loc)
+            embed.title = translator_instance.T("error.embed.contributor_not_found.description", loc, {"contributor": contributor_id})
     
     @group.command(name="spy_thesinglerunc", description="Special thanks to codigoerror10014")
     async def spy_thesinglerunc(self, interaction: Interaction):

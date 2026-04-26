@@ -50,6 +50,9 @@ yesno_words = [
     "Nuh"
 ]
 
+possible_map_keys = [f"text.possible_map.{i}" for i in range(1, 11)]
+possibility_words_keys = [f"text.8ball_words.{i}" for i in range(1, 114)]
+
 possibility_words = [
     "Nope.",
     "No.",

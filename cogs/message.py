@@ -44,7 +44,7 @@ class MessageGroup(commands.Cog):
         self.bot: PoxBot = bot
 
     group = app_commands.Group(name="message", description="An group for messages.")
-
+    
     @group.command(name="say", description="Makes the bot say something in current channel.")
     @app_commands.guild_only()
     async def say_something(self, ctx: Interaction, *, msg: str):

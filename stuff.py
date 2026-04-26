@@ -11,11 +11,14 @@ import re
 import base64
 import aiofiles
 import dotenv
+import urllib.parse
 from typing import Optional
+
+from src.translator import translator_instance
 
 dotenv.load_dotenv()
 
-from discord import Interaction
+from discord import Interaction, app_commands
 
 import data
 
@@ -43,6 +46,22 @@ def get_mysql_credentials():
     user = os.getenv('MYSQL_USER')
     password = os.getenv('MYSQL_PASS')
     return user, password
+
+def get_postgresql_dsn():
+    logger.debug("Retrieving PostgreSQL credentials to DSN...")
+    user = os.getenv('POSTGRESQL_USER')
+    password = os.getenv('POSTGRESQL_PASS')
+    database_name = os.getenv('POSTGRESQL_DATABASE')
+    host = os.getenv('POSTGRESQL_HOST')
+    dsn = os.getenv('POSTGRESQL_DSN')
+    
+    if any(v is None for v in [user, password, database_name, host]):
+        required = [i for i, v in {"POSTGRESQL_USER": user, "POSTGRESQL_PASS": password, "POSTGRESQL_DATABASE": database_name, "POSTGRESQL_HOST": host}.items() if v is None]
+        raise Exception(f"Requires {', '.join(required)} are not empty.")
+    
+    password = urllib.parse.quote_plus(str(password))
+    
+    return dsn if dsn else f"postgresql://{user}:{password}@{host}/{database_name}"
 
 def get_pid():
     return os.getpid()
@@ -630,3 +649,6 @@ def format_seconds(i: Optional[int]):
     if not i: return "???"
     suffix = "seconds" if i > 1 else "second"
     return f"{i} {suffix}"
+
+def cmd_locale(path: str, default: str):
+    return app_commands.locale_str(default, message=f"command.{path}")

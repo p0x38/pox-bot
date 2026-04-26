@@ -4,13 +4,18 @@ import random
 import re
 import subprocess
 from time import time
+from typing import Optional
 import uuid
 import aiomysql
+from asyncpg import pool
+import asyncpg
 import discord
 from discord.ext import commands
 from gtts.lang import tts_langs
 import psutil
-from classes import Cache, EmoticonGenerator, MyTranslator
+from src.utils.cache import Cache
+from classes import EmoticonGenerator, MyTranslator
+from src.database.modules import SettingsDatabase, StatsDatabase
 import stuff
 import data
 import aiosqlite
@@ -18,10 +23,8 @@ import profanityfilter
 import roblox
 from logger import logger
 from discord import Color, Embed, Forbidden, HTTPException, MissingApplicationID, app_commands
-
 import aiofiles
 import json
-
 from src.translator import discord_translator
 
 DB_CONFIG = {
@@ -40,6 +43,8 @@ class PoxBot(commands.AutoShardedBot):
         self.launch_time2 = time()
         self.handled_messages = 0
         self.db_connection = None
+        self.settings_db: Optional[SettingsDatabase] = None
+        self.stats_db: Optional[StatsDatabase] = None
         self.mysql = None
         self.commit_hash = ""
         self.session_uuid = uuid.uuid4()
@@ -86,13 +91,26 @@ class PoxBot(commands.AutoShardedBot):
     def _(self, s): return s
     
     async def setup_hook(self):
-        await self.tree.set_translator(discord_translator)
         stuff.setup_database("./leaderboard.db")
-        # set a translator for app commands (async API)
+        
+        dsn = stuff.get_postgresql_dsn()
+        
+        if not dsn:
+            raise Exception("No DSN specified.")
+        
+        self.settings_db = SettingsDatabase(dsn)
+        self.stats_db = StatsDatabase(dsn)
+        
+        await self.settings_db.connect()
+        
+        self.stats_db.pool = self.settings_db.pool
+        
+        await self.settings_db.setup_table()
+        await self.stats_db.setup_table()
+        
         try:
-            await self.tree.set_translator(MyTranslator())
+            await self.tree.set_translator(discord_translator)
         except Exception:
-            # ignore if setting translator fails for any reason
             logger.exception("Failed to set command translator")
         
         self.db_connection = await aiosqlite.connect("./leaderboard.db")

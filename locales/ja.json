@@ -1,203 +1,527 @@
 {
-    "ja": {
-        "command": {
-            "info": {
-                "name": "info",
-                "description": "BOT情報等",
-                "sync": {
-                    "name": "sync",
-                    "description": "コマンドを同期させる"
-                },
-                "os_info": {
-                    "name": "os_info",
-                    "description": "ボットをホストしているPCのOSを表示する",
-                    "embed": {
-                        "title": "OS情報"
-                    }
-                },
-                "invite": {
-                    "name": "invite",
-                    "description": "アプリケーションURLを使ってBOTを招待",
-                    "embed": {
-                        "title": "TongueBotを招待",
-                        "status": {
-                            "one": "容量: **{formatted}** サーバー",
-                            "other": "容量: **{formatted}** サーバー"
-                        },
-                        "description": "{prefix}\n\n[このリンク]({invite_url})を使って私を招待することができます。",
-                        "footer": "※最大限の機能を使用する場合、高度な権限を必要とします。そしてサーバー招待はDiscordの制限により90サーバーに制限しています。"
-                    },
-                    "error": {
-                        "hardlimited": "現在招待されているサーバー数が90に達しているため、招待はできません。"
-                    }
-                },
-                "timedate": {
-                    "name": "timedate",
-                    "description": "特定のタイムゾーンに合わせた時刻を表示する",
-                    "embed": {
-                        "description": "{timezone_name}では、現在時刻は**{timedate}**です。"
-                    }
-                },
-                "ping": {
-                    "name": "ping",
-                    "description": "ポン!",
-                    "embed": {
-                        "title": "ポン! ({latency} ms)"
-                    }
-                },
-                "commit_data": {
-                    "name": "commit_data",
-                    "description": "ボットの最新のコミットメッセージを表示"
-                },
-                "retrieve": {
-                    "name": "retrieve",
-                    "description": "BOT情報を表示",
-                    "embed": {
-                        "title": "BOT情報",
-                        "description": "下のドロップダウンから特定のカテゴリーを選択すると、その内容を見ることができます。",
-                        "footer": "システム: {platform}"
-                    }
-                }
-            }
+  "command": {
+    "8ball": {
+      "description": "ユーザーの質問に対して、ランダムで古典的なマジック 8 ボールの応答を返します。",
+      "embeds": {
+        "default": {
+          "title": "「%{question}」への回答"
+        }
+      },
+      "name": "8ball"
+    },
+    "channel": {
+      "description": "チャンネル用のグループ。",
+      "info": {
+        "description": "チャンネルの情報を表示する。",
+        "embeds": {
+          "default": {
+            "title": "%{name}の情報"
+          }
+        },
+        "name": "info"
+      },
+      "name": "channel",
+      "slowmode": {
+        "description": "低速モードの設定をする。",
+        "embeds": {
+          "successful": {
+            "description": "%{mention}の低速モードの値を**%{seconds}**に設定しました。",
+            "title": "低速モードの変更"
+          }
+        },
+        "name": "slowmode"
+      }
+    },
+    "contributors": {
+      "description": "貢献者用のグループ。",
+      "list": {
+        "description": "すべての貢献者を表示する。",
+        "embeds": {
+          "default": {
+            "description": "こいつらは俺のBOTに貢献をしてくれた人たちだよ! :3",
+            "title": "貢献者一覧"
+          }
+        },
+        "name": "list"
+      },
+      "name": "contributors",
+      "view": {
+        "description": "貢献者情報を取得する。",
+        "embeds": {
+          "default": {
+            "title": "%{contributor}の貢献者情報"
+          }
+        },
+        "name": "view"
+      }
+    },
+    "info": {
+      "commit_data": {
+        "description": "ボットの最新のコミットメッセージを表示",
+        "name": "commit_data"
+      },
+      "description": "BOT情報等",
+      "invite": {
+        "description": "アプリケーションURLを使ってBOTを招待",
+        "embed": {
+          "description": "%{prefix}\n\n[このリンク](%{invite_url})を使って私を招待することができます。",
+          "footer": "※最大限の機能を使用する場合、高度な権限を必要とします。そしてサーバー招待はDiscordの制限により90サーバーに制限しています。",
+          "status": {
+            "one": "容量: **%{formatted}** サーバー",
+            "other": "容量: **%{formatted}** サーバー"
+          },
+          "title": "TongueBotを招待"
         },
         "error": {
-            "exceptions": {
-                "CommandInvokeError": "コマンド処理中にエラーが発生しました。",
-                "TransformerError": "コマンドの引数を処理しているときにエラーが発生しました。",
-                "TranslationError": "コマンドを翻訳しているときにエラーが発生しました。",
-                "CheckFailure": "あなたはこのコマンドを使用する権限がありません。",
-                "NoPrivateMessage": "このコマンドは、サーバー限定です。",
-                "MissingRole": "このコマンドを使用するのに必要なロールが付与されていません。",
-                "MissingAnyRole": "このコマンドを使用するのに必要なロールがどれも付与されていません。",
-                "MissingPermissions": "このコマンドを使用するのに必要な権限が付与されていません。",
-                "BotMissingPermissions": "このコマンドを実行するのに私に必要な権限が不足しています。",
-                "CommandOnCooldown": "現在このコマンドはクールダウン中です。{remaining}秒後にもう一度やり直してください。",
-                "CommandLimitReached": "最大コマンド登録数を超えているため、このコマンドは使用できません。",
-                "CommandAlreadyRegistered": "このコマンドはすでに登録されています。",
-                "CommandSignatureMismatch": "コマンド定義がコード内の定義と異なります。おそらく、古いものを使用しているか、Discordのデータが同期されていません。",
-                "CommandNotFound": "このコマンドは存在しません。",
-                "CommandSyncFailure": "コマンド同期させるのに失敗しました。",
-                "AppCommandError": "おそらく不明なコマンドエラーがスローされました。",
-                "Unknown": "まだキャッチされていない例外がスローされました: {e}"
-            },
-            "custom": {
-                "no_git_commithash": "コミットハッシュ取得に失敗しました",
-                "no_git_lastcommit": "コミットメッセージ取得に失敗しました",
-                "unknown_signature": "不明なシグネチャー",
-                "missing_category": "このカテゴリは存在しないようです",
-                "guild_only": "このコマンドはサーバーでのみ使用できます。"
-            }
+          "hardlimited": "現在招待されているサーバー数が90に達しているため、招待はできません。"
         },
-        "modal": {
-            "DynamicInfoView": {
-                "data": {
-                    "identity": {
-                        "title": "基本的",
-                        "uuid": {
-                            "display": "セッションUUID"
-                        },
-                        "version": {
-                            "display": "BOTバージョン"
-                        },
-                        "signature": {
-                            "display": "シグネチャー"
-                        },
-                        "uptime": {
-                            "display": "BOTの起動期間"
-                        },
-                        "latency": {
-                            "display": "Ping値"
-                        },
-                        "owner": {
-                            "display": "このBOTを作った人"
-                        }
-                    },
-                    "stats": {
-                        "title": "BOT情報",
-                        "guilds": {
-                            "display": "サーバー数"
-                        },
-                        "users": {
-                            "display": "ユーザー数"
-                        },
-                        "msgs": {
-                            "display": "メッセージ数"
-                        },
-                        "channels": {
-                            "display": "チャンネル数"
-                        },
-                        "interactions": {
-                            "display": "インタラクション数"
-                        },
-                        "cached_values": {
-                            "display": "キャッシュされた数"
-                        }
-                    },
-                    "hardware": {
-                        "title": "技術的",
-                        "platform": {
-                            "display": "プラットフォーム"
-                        },
-                        "cpu": {
-                            "display": "CPU使用率 (合計)"
-                        },
-                        "cpu_own": {
-                            "display": "CPU使用率 (本体)"
-                        },
-                        "ram": {
-                            "display": "メモリ使用率 (合計)"
-                        },
-                        "ram_own": {
-                            "display": "メモリ使用率 (本体)"
-                        },
-                        "disk": {
-                            "display": "ディスク使用可能な容量"
-                        },
-                        "ram_details": {
-                            "display": "詳細なメモリ情報"
-                        }
-                    },
-                    "context": {
-                        "title": "ローカルAI",
-                        "muted": {
-                            "display": "彼はミュートされているか"
-                        },
-                        "memory": {
-                            "display": "コンテキスト情報"
-                        },
-                        "mode": {
-                            "display": "現在の表情"
-                        }
-                    }
-                },
-                "options": {
-                    "identity": {
-                        "label": "基本的な情報"
-                    },
-                    "stats": {
-                        "label": "BOTに関する情報"
-                    },
-                    "hardware": {
-                        "label": "ハードウェアに関する技術的な情報"
-                    },
-                    "context": {
-                        "label": "ローカルAI情報"
-                    },
-                    "placeholder": "カテゴリを選択してください..."
-                }
-            }
+        "name": "invite"
+      },
+      "name": "info",
+      "os_info": {
+        "description": "ボットをホストしているPCのOSを表示する",
+        "embed": {
+          "title": "OS情報"
         },
-        "text": {
-            "unknown": "不明",
-            "command_synchronized": "コマンドが同期されました。",
-            "boolean": {
-                "true": "はい",
-                "false": "いいえ"
-            },
-            "linux_distribution": "Linuxディストリビューション",
-            "platform": "プラットフォーム",
-            "standalone": "スタンドアロン",
-            "idk": "知らん"
+        "name": "os_info"
+      },
+      "ping": {
+        "description": "ポン!",
+        "embed": {
+          "title": "ポン! (%{latency} ms)"
+        },
+        "name": "ping"
+      },
+      "retrieve": {
+        "description": "BOT情報を表示",
+        "embed": {
+          "description": "下のドロップダウンから特定のカテゴリーを選択すると、その内容を見ることができます。",
+          "footer": "システム: %{platform}",
+          "title": "BOT情報"
+        },
+        "error": {
+          "forbidden": "I do not have the **Manage Channels** permission to do that."
+        },
+        "name": "retrieve"
+      },
+      "sync": {
+        "description": "コマンドを同期させる",
+        "name": "sync"
+      },
+      "timedate": {
+        "description": "特定のタイムゾーンに合わせた時刻を表示する",
+        "embed": {
+          "description": "%{timezone_name}では、現在時刻は**%{timedate}**です。"
+        },
+        "name": "timedate"
+      }
+    },
+    "tts": {
+      "description": "TTS関連の中心",
+      "embeds": {
+        "default": {
+          "description": "生成されました！ >:D",
+          "footer": "タイプ: %{tts_type};\n入力: %{input}",
+          "title": "TTS変換"
         }
+      },
+      "google_translate": {
+        "description": "Google翻訳からTTSを生成します。",
+        "name": "google_translate"
+      },
+      "name": "tts"
+    },
+    "user": {
+      "description": "ユーザー用のグループ。",
+      "info": {
+        "description": "ユーザーの情報を取得します。",
+        "embeds": {
+          "default": {
+            "title": "%{user}の情報"
+          }
+        },
+        "name": "info"
+      },
+      "name": "user"
     }
+  },
+  "context_menu": {
+    "ban_member": {
+      "name": "Ban"
+    },
+    "kick_member": {
+      "name": "Kick"
+    },
+    "timeout_member": {
+      "name": "Timeout"
+    }
+  },
+  "error": {
+    "custom": {
+      "cannot_timeout_higher": "私はユーザーをタイムアウトするために十分な役割を持っていません。",
+      "channel_has_no_slowmode_property": "このチャンネルには低速モードのプロパティがありません。",
+      "forbidden_timeout": "ユーザーをタイムアウトする権限がありません。",
+      "guild_only": "このコマンドはサーバーでのみ使用できます。",
+      "insufficient_permission_ban": "あなたは%{user}をBANする権限が付与されていません。",
+      "insufficient_permission_kick": "あなたは%{user}を追放する権限が付与されていません。",
+      "invalidated_cache": "このコマンドはキャッシュの問題でサーバー上でしか使えません。",
+      "missing_category": "このカテゴリは存在しないようです",
+      "no_git_commithash": "コミットハッシュ取得に失敗しました",
+      "no_git_lastcommit": "コミットメッセージ取得に失敗しました",
+      "timeout_duration_lessflow": "長さは0秒以上にしか指定できません。",
+      "tried_to_timeout_higher": "あなたはこのユーザーをタイムアウトするのに十分な役割を持っていません。",
+      "tried_to_timeout_himself": "あなた自身をタイムアウトすることはできません。",
+      "tried_to_timeout_owner": "サーバー管理者をタイムアウトすることはできません。",
+      "unknown_signature": "不明なシグネチャー",
+      "unsupported_channel": "このチャンネルはまだ未対応です。",
+      "user_not_found": "ユーザーが見つかりませんでした。"
+    },
+    "embed": {
+      "contributor_not_found": {
+        "description": "貢献者%{contributor}は存在しません。",
+        "title": "貢献者が見つかりませんでした"
+      },
+      "edge_tts_not_installed": {
+        "description": "サーバーには、edge-tts から音声を生成するパッケージがありません。",
+        "title": "Edge TTSが未インストールです"
+      },
+      "guild_only": {
+        "description": "このコマンドはサーバー専用です。",
+        "title": "無効な実行コンテキスト"
+      },
+      "send_error": {
+        "description": "送信しようとしたときにエラーがスローされました: %{e}",
+        "title": "送信エラー"
+      },
+      "slowmode_out_of_range": {
+        "description": "低速モードは0から21600秒の範囲でしか指定できません。",
+        "title": "値が範囲外です"
+      },
+      "tts_generation_error": {
+        "description": "音声を生成しようとしたときにスローされたエラー: %{e}",
+        "title": "TTS 生成エラー"
+      },
+      "tts_no_text": {
+        "description": "入力を空に設定しました。\n後で入力して再試行してください。",
+        "title": "入力は空であってはなりません"
+      },
+      "unsupported_channel_slowmode": {
+        "description": "チャンネル%{channel}は低速モードをサポートしていません。",
+        "title": "サポートされていないチャンネル"
+      },
+      "unsupported_channel_type": {
+        "description": "サポートされていないチャンネルタイプです。",
+        "title": "サポートされていないチャンネルタイプ"
+      }
+    },
+    "exceptions": {
+      "AppCommandError": "おそらく不明なコマンドエラーがスローされました。",
+      "BotMissingPermissions": "このコマンドを実行するのに私に必要な権限が不足しています。",
+      "CheckFailure": "あなたはこのコマンドを使用する権限がありません。",
+      "CommandAlreadyRegistered": "このコマンドはすでに登録されています。",
+      "CommandInvokeError": "コマンド処理中にエラーが発生しました。",
+      "CommandLimitReached": "最大コマンド登録数を超えているため、このコマンドは使用できません。",
+      "CommandNotFound": "このコマンドは存在しません。",
+      "CommandOnCooldown": "現在このコマンドはクールダウン中です。%{remaining}秒後にもう一度やり直してください。",
+      "CommandSignatureMismatch": "コマンド定義がコード内の定義と異なります。おそらく、古いものを使用しているか、Discordのデータが同期されていません。",
+      "CommandSyncFailure": "コマンド同期させるのに失敗しました。",
+      "HTTPException": "The operation has failed due to HTTP Error.",
+      "MissingAnyRole": "このコマンドを使用するのに必要なロールがどれも付与されていません。",
+      "MissingPermissions": "このコマンドを使用するのに必要な権限が付与されていません。",
+      "MissingRole": "このコマンドを使用するのに必要なロールが付与されていません。",
+      "NoPrivateMessage": "このコマンドは、サーバー限定です。",
+      "TransformerError": "コマンドの引数を処理しているときにエラーが発生しました。",
+      "TranslationError": "コマンドを翻訳しているときにエラーが発生しました。",
+      "Unknown": "まだキャッチされていない例外がスローされました: %{e}"
+    }
+  },
+  "label": {
+    "answer": "答え",
+    "channel_bitrate": "オーディオビットレート",
+    "channel_category": "カテゴリ",
+    "channel_channels": "チャンネル数",
+    "channel_creation": "作られた日時",
+    "channel_instance_running": "インスタンスが存在しているか",
+    "channel_listeners": "チャンネル内のメンバー数",
+    "channel_name": "チャンネル名",
+    "channel_nsfw": "NSFWであるか",
+    "channel_position": "チャンネル位置",
+    "channel_requesting_to_speak": "ステージで話しているメンバー数",
+    "channel_slowmode": "低速モードの値",
+    "channel_threads": "スレッド数",
+    "channel_topic": "チャンネルトピック",
+    "channel_type": "チャンネルの種類",
+    "channel_userlimit": "参加できる最大のユーザー数",
+    "non_nitro": "非Nitroユーザー",
+    "user_bot": "BOTであるか",
+    "user_creation": "Discordに参加した日時",
+    "user_highest_role": "最も高い役割",
+    "user_id": "ユーザーID",
+    "user_join": "サーバーに参加した日時",
+    "user_name": "名前",
+    "user_nitro": "Nitroを購読した日時",
+    "user_roles": "役割",
+    "user_status": "ステータス"
+  },
+  "messages": {
+    "ban_user": "%{user}をBANしました。",
+    "kick_user": "%{user}を追放しました。",
+    "timed_out_user": "%{user}を%{length}秒間タイムアウトしました。",
+    "warn_user": "%{user}に警告を送信しました。"
+  },
+  "modal": {
+    "DynamicInfoView": {
+      "data": {
+        "context": {
+          "memory": {
+            "display": "コンテキスト情報"
+          },
+          "mode": {
+            "display": "現在の表情"
+          },
+          "muted": {
+            "display": "彼はミュートされているか"
+          },
+          "title": "ローカルAI"
+        },
+        "hardware": {
+          "cpu": {
+            "display": "CPU使用率 (合計)"
+          },
+          "cpu_own": {
+            "display": "CPU使用率 (本体)"
+          },
+          "disk": {
+            "display": "ディスク使用可能な容量"
+          },
+          "platform": {
+            "display": "プラットフォーム"
+          },
+          "ram": {
+            "display": "メモリ使用率 (合計)"
+          },
+          "ram_details": {
+            "display": "詳細なメモリ情報"
+          },
+          "ram_own": {
+            "display": "メモリ使用率 (本体)"
+          },
+          "title": "技術的"
+        },
+        "identity": {
+          "latency": {
+            "display": "Ping値"
+          },
+          "owner": {
+            "display": "このBOTを作った人"
+          },
+          "signature": {
+            "display": "シグネチャー"
+          },
+          "title": "基本的",
+          "uptime": {
+            "display": "BOTの起動期間"
+          },
+          "uuid": {
+            "display": "セッションUUID"
+          },
+          "version": {
+            "display": "BOTバージョン"
+          }
+        },
+        "stats": {
+          "cached_values": {
+            "display": "キャッシュされた数"
+          },
+          "channels": {
+            "display": "チャンネル数"
+          },
+          "guilds": {
+            "display": "サーバー数"
+          },
+          "interactions": {
+            "display": "インタラクション数"
+          },
+          "msgs": {
+            "display": "メッセージ数"
+          },
+          "title": "BOT情報",
+          "users": {
+            "display": "ユーザー数"
+          }
+        }
+      },
+      "options": {
+        "context": {
+          "label": "ローカルAI情報"
+        },
+        "hardware": {
+          "label": "ハードウェアに関する技術的な情報"
+        },
+        "identity": {
+          "label": "基本的な情報"
+        },
+        "placeholder": "カテゴリを選択してください...",
+        "stats": {
+          "label": "BOTに関する情報"
+        }
+      }
+    }
+  },
+  "text": {
+    "8ball_words": {
+      "1": "いいえ。",
+      "10": "うーん... たぶん。",
+      "100": "Googleによると、そうです。",
+      "101": "Googleによると、いいえだそうです。",
+      "102": "お金を受け取って、元に戻してください。はい。",
+      "103": "うーん…普通にバカです。",
+      "104": "バカじゃないよ。",
+      "105": "誰が気にする。",
+      "106": "それは知るべきではありません。",
+      "107": "そんなことは私に聞かないでください。",
+      "108": "あなたは誰ですか。",
+      "109": "私はただのボールです。",
+      "11": "たぶんね。",
+      "110": "他の人がそれに答えるでしょう。",
+      "111": "火傷してしまいます。",
+      "112": "地獄で腐れ。",
+      "113": "黙れ。",
+      "114": "あなたの脳には何が入っているのですか？",
+      "12": "もしかしたら否定的かもしれない。",
+      "13": "いや、違うと思うっす。",
+      "14": "違うと思います。",
+      "15": "そうですね。",
+      "16": "うーん、そうっすね。",
+      "17": "いや、そうだと思います。",
+      "18": "否定的だと思います。",
+      "19": "はい。",
+      "2": "いいえ。",
+      "20": "うん。",
+      "21": "そうだね。",
+      "22": "うん。",
+      "23": "うーん。",
+      "24": "たぶんそうです。",
+      "25": "そうかもしれない。",
+      "26": "そうかもしれん。",
+      "27": "たぶんそうだね。",
+      "28": "たぶん、うんうん。",
+      "29": "そうだと思います。",
+      "3": "いや。",
+      "30": "そうだと思います。",
+      "31": "そうだと思います。",
+      "32": "そうですね。",
+      "33": "そうでしょうね。",
+      "34": "肯定的です。",
+      "35": "確かにそうです。",
+      "36": "絶対に。",
+      "37": "絶対に違います。",
+      "38": "いや、私はそうとは思わない。",
+      "39": "そう思います。",
+      "4": "いやあ。",
+      "40": "わからない。",
+      "41": "部分的にはそうです。",
+      "42": "部分的にはそうではありません。",
+      "43": "絶対に違います。",
+      "44": "そうではありません。",
+      "45": "そうです。",
+      "46": "うーん。",
+      "47": "うーん。",
+      "48": "可能。",
+      "49": "多分。",
+      "5": "うーん。",
+      "50": "そうですね。",
+      "51": "ちょっと違います。",
+      "52": "何の問題？\n私はそうは思わない。",
+      "53": "何の問題？\nそれは「はい」であるはずです。",
+      "54": "何の問題？\nそれは「はい」であるべきではありません。",
+      "55": "それは確かです。",
+      "56": "それは間違いなくそうです。",
+      "57": "間違いなく。",
+      "58": "はい、確かに。",
+      "59": "頼りにしてもいいでしょう。",
+      "6": "ネガティブ。",
+      "60": "私が見た限り、そうです。",
+      "61": "最も可能性が高い。",
+      "62": "ぼんやりと返信して、もう一度試してください。",
+      "63": "後でもう一度質問してください。",
+      "64": "今度は言わないほうがいいよ。",
+      "65": "現時点では予測できません。",
+      "66": "集中してもう一度質問してください。",
+      "67": "当てにしないでください。",
+      "68": "私の答えはノーです。",
+      "69": "私の情報筋はノーと言っています。",
+      "7": "いやかもしれない。",
+      "70": "見通しはあまり良くありません。",
+      "71": "非常に疑わしい。",
+      "72": "見通しは良好です。",
+      "73": "はい。",
+      "74": "標識は「はい」を指します。",
+      "75": "私たちがそれを実現させます。",
+      "76": "言葉。",
+      "77": "それは予算内です。",
+      "78": "👍",
+      "79": "はい、さらに 5,000 ドルです。",
+      "8": "たぶん、そうではありません。",
+      "80": "AIは「はい」と答えます。",
+      "81": "郵送で修正させていただきます。",
+      "82": "はい。\nいや待って、だめ-",
+      "83": "普通に範囲外です。",
+      "84": "ピーターはノーと言います。",
+      "85": "それはオフブランドです。",
+      "86": "オフィスを出ました。",
+      "87": "それは予算内ですか？",
+      "88": "エラー 404: 見つかりません",
+      "89": "飲み物を飲みながら話し合いますか？",
+      "9": "たぶんね。",
+      "90": "メモリ不足です。",
+      "91": "Slack を確認してください。",
+      "92": "ジャ。",
+      "93": "ね。",
+      "94": "答えはトイレにあります。",
+      "95": "サンドイッチを食べてるから後でにしてくれ。",
+      "96": "ボール。",
+      "97": "絶対に。",
+      "98": "積極的に。",
+      "99": "間違いなく。"
+    },
+    "activity_type": {
+      "competing": "%{activity}で競合中",
+      "game": "%{platform}で%{activity}をプレイ中",
+      "listening": "%{activity}を再生中",
+      "playing": "%{activity}をプレイ中",
+      "spotify": "%{artist}の%{album} - %{title}を再生中",
+      "stream": "%{platform}上で%{activity}を配信中",
+      "streaming": "%{activity}を配信中",
+      "watching": "%{activity}を視聴中"
+    },
+    "boolean": {
+      "false": "いいえ",
+      "true": "はい"
+    },
+    "coinflip": {
+      "false": "裏",
+      "true": "表"
+    },
+    "command_synchronized": "コマンドが同期されました。",
+    "idk": "知らんがな",
+    "linux_distribution": "Linuxディストリビューション",
+    "platform": "プラットフォーム",
+    "possible_map": {
+      "1": "いやあ。",
+      "10": "そうだね",
+      "11": "うんうん",
+      "2": "いや。",
+      "3": "たぶんね。",
+      "4": "そうですね。",
+      "5": "そうではない可能性があります。",
+      "6": "わからない。",
+      "7": "可能。",
+      "8": "そうですね。",
+      "9": "たぶんそうです。"
+    },
+    "standalone": "スタンドアロン",
+    "unknown": "不明",
+    "unknown_join": "こいつがいつ入ったのかは分からん"
+  }
 }

@@ -2,5 +2,39 @@
     "python-envs.defaultEnvManager": "ms-python.python:venv",
     "python-envs.pythonProjects": [],
     "todo-tree.tree.scanMode": "workspace",
-    "python.REPL.enableREPLSmartSend": false
+    "python.REPL.enableREPLSmartSend": false,
+    "i18n-ally.localesPaths": ["locales"],
+    "i18n-ally.pathMatcher": "{locale}.json",
+    "i18n-ally.keystyle": "nested",
+    "i18n-ally.enabledFrameworks": ["custom"],
+    "i18n-ally.regex.usageMatch": [
+        "%\\{([\\w]+)\\}",
+        "T\\(\\s*['\"]([^'\"]+)['\"]"
+    ],
+    "i18n-ally.sourceLanguage": "en",
+    "i18n-ally.sortKeys": true,
+    "i18n-ally.keepFulfilled": true,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/.history": true,
+        "**/.venv": true,
+        "**/__pycache__": true
+    },
+    "files.watcherExclude": {
+        ".git/objects/**": true,
+        ".git/subtree-cache/**": true,
+        ".hg/store/**": true,
+        "*/.git/objects/**": true,
+        "*/.git/subtree-cache/**": true,
+        "*/.hg/store/**": true,
+        "resources/voices/**": true,
+        "resources/imgs/**": true,
+        "resources/fonts/**": true,
+        "logs/**": true,
+        "data/**": true
+    }
 }

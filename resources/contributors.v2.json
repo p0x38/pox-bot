@@ -6,7 +6,8 @@
         "quote": "What You Do To Me",
         "content": [
             "He's a cat"
-        ]
+        ],
+        "thumbnail_url": "file:../resources/cat_anna.jpg"
     },
     {
         "id": 1463235459974168668,
@@ -15,6 +16,7 @@
         "quote": "67",
         "content": [
             "She has silly face maybe"
-        ]
+        ],
+        "thumbnail_url": "file:../resources/cat_spy.png"
     }
 ]
