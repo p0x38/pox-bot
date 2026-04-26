@@ -1,0 +1,27 @@
+[
+    {
+        "code": "en",
+        "display": "English",
+        "path": "/locales/en.json"
+    },
+    {
+        "code": "es",
+        "display": "Español",
+        "path": "/locales/es.json"
+    },
+    {
+        "code": "ja",
+        "display": "日本語",
+        "path": "/locales/ja.json"
+    },
+    {
+        "code": "vi",
+        "display": "Tiếng Việt",
+        "path": "/locales/vi.json"
+    },
+    {
+        "code": "ru",
+        "display": "Русский",
+        "path": "/locales/ru.json"
+    }
+]

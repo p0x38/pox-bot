@@ -1,7 +1,4 @@
 {
-    "_metadata": {
-        "display_name": "Tiếng Việt"
-    },
     "command": {
         "8ball": {
             "description": "Cung cấp câu trả lời 8 quả bóng ma thuật cổ điển, ngẫu nhiên cho câu hỏi của người dùng.",

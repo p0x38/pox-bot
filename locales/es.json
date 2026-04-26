@@ -1,7 +1,4 @@
 {
-  "_metadata": {
-    "display_name": "Español"
-  },
   "command": {
     "8ball": {
       "description": "Da una respuesta aleatoria y clásica de 8 bolas mágicas a la pregunta de un usuario.",

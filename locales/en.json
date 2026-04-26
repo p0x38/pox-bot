@@ -1,7 +1,4 @@
 {
-    "_metadata": {
-        "display_name": "English"
-    },
     "command": {
         "welcome": {
             "description": "A group for WelcomeCog",

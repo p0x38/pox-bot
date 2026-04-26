@@ -1,7 +1,4 @@
 {
-    "_metadata": {
-        "display_name": "日本語"
-    },
     "command": {
         "8ball": {
             "description": "ユーザーの質問に対して、ランダムで古典的なマジック 8 ボールの応答を返します。",
