@@ -1,7 +1,4 @@
 {
-    "_metadata": {
-        "display_name": "Español"
-    },
     "command": {
         "welcome": {
             "description": "Un grupo para Welcome. Cog",
