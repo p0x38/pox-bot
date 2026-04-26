@@ -1,0 +1,7 @@
+project_id: "892724"
+api_token_env: CROWDIN_PERSONAL_TOKEN
+base_path: "."
+
+files:
+  - source: /locale/en.json
+    translation: /locale/%two_letters_code%.json

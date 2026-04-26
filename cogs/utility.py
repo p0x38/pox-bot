@@ -8,7 +8,7 @@ from bot import PoxBot
 import data
 
 from logger import logger
-from src.translator import translator_instance
+from src.translator import translator_instance as i18n
 
 class Utility(commands.Cog):
     def __init__(self, bot):
@@ -22,8 +22,8 @@ class Utility(commands.Cog):
         choice = random.choice(data.possibility_words_keys)
         embed = Embed(color=Color.random())
         
-        embed.title = translator_instance.T("command.8ball.embeds.default.title", loc, {"question": question})
-        embed.add_field(name=translator_instance.T("label.answer", loc), value=translator_instance.T(choice, loc), inline=True)
+        embed.title = i18n.T("command.8ball.embeds.default.title", loc, {"question": question})
+        embed.add_field(name=i18n.T("label.answer", loc), value=i18n.T(choice, loc), inline=True)
         
         return await interaction.followup.send(embed=embed)
 
@@ -44,7 +44,7 @@ class Utility(commands.Cog):
     async def coin_flip(self, interaction: Interaction, input: Optional[str] = None):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         await interaction.response.defer()
-        result = translator_instance.T("text.coinflip.true" if random.randint(0, 1) == 1 else "text.coinflip.false")
+        result = i18n.T("text.coinflip.true" if random.randint(0, 1) == 1 else "text.coinflip.false")
 
         e = Embed(color=Color.random())
 

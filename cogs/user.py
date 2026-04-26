@@ -3,9 +3,9 @@ from datetime import datetime, timedelta
 import math
 import random
 import re
-from typing import Optional
+from typing import Optional, Union
 from discord.ext import commands
-from discord import Activity, ActivityType, ClientStatus, Color, CustomActivity, Embed, Forbidden, Game, HTTPException, Interaction, Member, Role, Spotify, Status, Streaming, TextChannel, TextStyle, User, app_commands, ui
+from discord import Activity, ActivityType, ClientStatus, Color, CustomActivity, Embed, Forbidden, Game, HTTPException, Interaction, Locale, Member, Role, Spotify, Status, Streaming, TextChannel, TextStyle, User, app_commands, ui
 from aiocache import cached
 
 from bot import PoxBot
@@ -13,25 +13,19 @@ from bot import PoxBot
 from logger import logger
 from textwrap import shorten
 
-from src.translator import translator_instance
+from src.translator import translator_instance as i18n
 
 from stuff import crop_word
 
-def format_status(client_status: ClientStatus):
+def format_status(client_status: ClientStatus, locale: Union[Locale, str]):
     result = ""
     if isinstance(client_status.status, Status):
         status = client_status.status
 
-        if status.name in ("dnd", "do_not_disturb"):
-            result = "Do not Disturb"
-        elif status.name in ("invisible", "offline"):
-            result = "Offline"
-        elif status.name == "idle":
-            result = "Idle"
-        elif status.name == "online":
-            result = "Online"
+        if status == Status.do_not_disturb:
+            result = i18n.T("text.status.dnd", locale)
         else:
-            result = "Unknown"
+            result = i18n.T(f"text.status.{status.name}", locale)
     elif isinstance(client_status.status, str):
         result = client_status.status
     elif client_status.raw_status.strip() is not None:
@@ -39,9 +33,9 @@ def format_status(client_status: ClientStatus):
     
     platforms = []
 
-    if client_status.mobile is str: platforms.append("Mobile")
-    if client_status.desktop is str: platforms.append("Desktop")
-    if client_status.web is str: platforms.append("Website")
+    if client_status.mobile is str: platforms.append(i18n.T("text.device.mobile", locale))
+    if client_status.desktop is str: platforms.append(i18n.T("text.device.desktop", locale))
+    if client_status.web is str: platforms.append(i18n.T("text.device.website", locale))
 
     if platforms:
         result = result + f" ({', '.join(platforms)})"
@@ -122,31 +116,31 @@ class TimeoutModal(ui.Modal, title="User timeout"):
             td = parse_duration(self.duration.value)
             
             if td.total_seconds() <= 0:
-                raise ValueError(translator_instance.T("error.custom.timeout_duration_lessflow", loc))
+                raise ValueError(i18n.T("error.custom.timeout_duration_lessflow", loc))
             
             if td > MAX_TIMEOUT:
                 td = MAX_TIMEOUT
             
             if not interaction.guild:
-                raise Exception(translator_instance.T("error.custom.guild_only", loc))
+                raise Exception(i18n.T("error.custom.guild_only", loc))
             
             if isinstance(interaction.user, User):
                 raise Exception()
             
             if self.target == interaction.user:
-                raise Exception(translator_instance.T("error.custom.tried_to_timeout_himself", loc))
+                raise Exception(i18n.T("error.custom.tried_to_timeout_himself", loc))
             
             if self.target == interaction.guild.owner:
-                raise Exception(translator_instance.T("error.custom.tried_to_timeout_owner", loc))
+                raise Exception(i18n.T("error.custom.tried_to_timeout_owner", loc))
             
             if self.target.top_role >= interaction.user.top_role:
-                raise Exception(translator_instance.T("error.custom.tried_to_timeout_higher", loc))
+                raise Exception(i18n.T("error.custom.tried_to_timeout_higher", loc))
             
             if not interaction.guild.me.guild_permissions.moderate_members:
-                raise Exception(translator_instance.T("error.custom.forbidden_timeout", loc))
+                raise Exception(i18n.T("error.custom.forbidden_timeout", loc))
             
             if self.target.top_role >= interaction.guild.me.top_role:
-                raise Exception(translator_instance.T("error.custom.cannot_timeout_higher", loc))
+                raise Exception(i18n.T("error.custom.cannot_timeout_higher", loc))
             
             try:
                 timeout_reason = self.reason.value or "No reason specified from executor"
@@ -157,7 +151,7 @@ class TimeoutModal(ui.Modal, title="User timeout"):
                 await interaction.response.send_message(embed=self.embed)
                 return
             
-            self.embed.description = translator_instance.T("messages.timed_out_user", loc, {"user": self.target.mention, "length": td})
+            self.embed.description = i18n.T("messages.timed_out_user", loc, {"user": self.target.mention, "length": td})
             
             await interaction.response.send_message(embed=self.embed)
         except Exception as e:
@@ -181,13 +175,13 @@ class UserGroup(commands.Cog):
 
             try:
                 await member.kick(reason=f"{interaction.user.display_name} kicked user via Context menu")
-                embed.description = translator_instance.T("messages.kick_user", loc, {"user": member.display_name})
+                embed.description = i18n.T("messages.kick_user", loc, {"user": member.display_name})
             except Forbidden:
-                embed.description = translator_instance.T("error.custom.insufficient_permission_kick", loc, {"user": member.display_name})
+                embed.description = i18n.T("error.custom.insufficient_permission_kick", loc, {"user": member.display_name})
             except HTTPException:
-                embed.description = translator_instance.T("error.exceptions.HTTPException", loc)
+                embed.description = i18n.T("error.exceptions.HTTPException", loc)
             except Exception as e:
-                embed.description = translator_instance.T("error.exceptions.Unknown", loc, {"e": e})
+                embed.description = i18n.T("error.exceptions.Unknown", loc, {"e": e})
             finally:
                 return await interaction.followup.send(embed=embed)
         
@@ -202,13 +196,13 @@ class UserGroup(commands.Cog):
             
             try:
                 await member.ban(reason=f"{interaction.user.display_name} banned user via Context menu")
-                embed.description = translator_instance.T("messages.ban_user", loc, {"user": member.display_name})
+                embed.description = i18n.T("messages.ban_user", loc, {"user": member.display_name})
             except Forbidden:
-                embed.description = translator_instance.T("error.custom.insufficient_permission_ban", loc, {"user": member.display_name})
+                embed.description = i18n.T("error.custom.insufficient_permission_ban", loc, {"user": member.display_name})
             except HTTPException:
-                embed.description = translator_instance.T("error.exceptions.HTTPException", loc)
+                embed.description = i18n.T("error.exceptions.HTTPException", loc)
             except Exception as e:
-                embed.description = translator_instance.T("error.exceptions.Unknown", loc, {"e": e})
+                embed.description = i18n.T("error.exceptions.Unknown", loc, {"e": e})
             finally:
                 return await interaction.followup.send(embed=embed)
         
@@ -261,16 +255,16 @@ class UserGroup(commands.Cog):
                     temp1 = {
                         'user_id': user.id,
                         'user_name': f"`{user.display_name}`",
-                        'user_bot': translator_instance.T("text.boolean.true" if user.bot else "text.boolean.false", loc),
+                        'user_bot': i18n.T("text.boolean.true" if user.bot else "text.boolean.false", loc),
                         'user_creation': user.created_at.strftime("%Y-%m-%d %H:%M:%S") + f" (<t:{int(user.created_at.timestamp())}:R>)",
                         'user_highest_role': f"<@&{user.top_role.id}>",
-                        'user_status': format_status(user.client_status),
-                        'user_nitro': user.premium_since.strftime("%Y-%m-%d %H:%M:%S") if user.premium_since else translator_instance.T("label.non_nitro", loc),
-                        'user_join': user.joined_at.strftime("%Y-%m-%d %H:%M:%S") + f" (<t:{int(user.joined_at.timestamp())}:R>)" if user.joined_at else translator_instance.T("text.unknown_join", loc),
+                        'user_status': format_status(user.client_status, loc),
+                        'user_nitro': user.premium_since.strftime("%Y-%m-%d %H:%M:%S") if user.premium_since else i18n.T("label.non_nitro", loc),
+                        'user_join': user.joined_at.strftime("%Y-%m-%d %H:%M:%S") + f" (<t:{int(user.joined_at.timestamp())}:R>)" if user.joined_at else i18n.T("text.unknown_join", loc),
                         'user_roles': ", ".join([f"<@&{role.id}>" for role in roles]),
                     }
                     
-                    temp1 = translator_instance.translate_map(temp1, loc)
+                    temp1 = i18n.translate_map(temp1, loc)
 
                     if user.activities:
                         index_activity = 0
@@ -282,19 +276,19 @@ class UserGroup(commands.Cog):
                                     case ActivityType.custom:
                                         info = activity.name
                                     case _:
-                                        info = translator_instance.T(f"text.activity_type.{activity.type.name}", loc, {"activity": activity.name})
+                                        info = i18n.T(f"text.activity_type.{activity.type.name}", loc, {"activity": activity.name})
                                 
                                 temp1[f'Activity #{index_activity}'] = f"{info} ({activity.state})"
                             elif isinstance(activity, Game):
-                                temp1[f'Activity #{index_activity}'] = translator_instance.T("text.activity_type.game", loc, {"activity": activity.name, "platform": activity.platform})
+                                temp1[f'Activity #{index_activity}'] = i18n.T("text.activity_type.game", loc, {"activity": activity.name, "platform": activity.platform})
                             elif isinstance(activity, Streaming):
-                                temp1[f'Activity #{index_activity}'] = translator_instance.T("text.activity_type.stream", loc, {"activity": activity.name, "platform": activity.platform})
+                                temp1[f'Activity #{index_activity}'] = i18n.T("text.activity_type.stream", loc, {"activity": activity.name, "platform": activity.platform})
                             elif isinstance(activity, CustomActivity):
                                 temp1[f'Activity #{index_activity}'] = activity.name
                             elif isinstance(activity, Spotify):
-                                temp1[f'Activity #{index_activity}'] = translator_instance.T("text.activity_type.spotify", loc, {"title": activity.title, "artist": activity.artist, "album": activity.album})
+                                temp1[f'Activity #{index_activity}'] = i18n.T("text.activity_type.spotify", loc, {"title": activity.title, "artist": activity.artist, "album": activity.album})
                             else:
-                                temp1[f'Activity #{index_activity}'] = translator_instance.T("text.unknown", loc)
+                                temp1[f'Activity #{index_activity}'] = i18n.T("text.unknown", loc)
                     
                     if self.bot.stats_db and self.bot.stats_db.pool:
                         async with self.bot.stats_db.pool.acquire() as conn:
@@ -304,9 +298,9 @@ class UserGroup(commands.Cog):
                             )
                         
                         count = row['message_count'] if row else 0
-                        temp1['user_message_count'] = translator_instance.T("label.user_message_count_value", loc, {"messages": count})
+                        temp1['user_message_count'] = i18n.T("label.user_message_count_value", loc, {"messages": count})
                     
-                    e = Embed(title=translator_instance.T("command.user.info.embeds.default.title", loc, {"user": user.display_name}))
+                    e = Embed(title=i18n.T("command.user.info.embeds.default.title", loc, {"user": user.display_name}))
 
                     for key,value in temp1.items():
                         e.add_field(name=key, value=value, inline=True)
@@ -318,22 +312,23 @@ class UserGroup(commands.Cog):
 
                     return await interaction.followup.send(embed=e)
                 else:
-                    return await interaction.followup.send(translator_instance.T("error.custom.user_not_found", loc))
+                    return await interaction.followup.send(i18n.T("error.custom.user_not_found", loc))
             else:
-                return await interaction.followup.send(translator_instance.T("error.custom.invalidated_cache", loc))
+                return await interaction.followup.send(i18n.T("error.custom.invalidated_cache", loc))
         except Exception as e:
             logger.error(f"Error: {e}")
             return await interaction.followup.send(f"Error. {e}")
     
     @cached(60)
-    @group.command(name="avatar", description="Display user's avatar in discord.")
+    @group.command(name="avatar", description=app_commands.locale_str("Shows Discord user's avatar.", message="command.user.avatar.description"))
     @app_commands.guild_only()
     async def get_user_avatar(self, interaction: Interaction, member: Member):
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         await interaction.response.defer()
 
-        embed = Embed(title=f"{member.display_name}'s Avatar")
+        embed = Embed(title=i18n.T("command.user.avatar.embeds.default.title", loc, {"user": member.name}))
         embed.set_image(url=member.display_avatar.url if member.display_avatar else member.default_avatar.url)
-        embed.set_footer(text=f"Requested by {interaction.user.name}, the result is cached for a minute.", icon_url=interaction.user.display_avatar.url if interaction.user.display_avatar else interaction.user.default_avatar.url)
+        embed.set_footer(text=i18n.T("command.user.avatar.embeds.default.footer", loc, {"author": interaction.user.display_name}), icon_url=interaction.user.display_avatar.url if interaction.user.display_avatar else interaction.user.default_avatar.url)
 
         return await interaction.followup.send(embed=embed)
     
@@ -348,13 +343,13 @@ class UserGroup(commands.Cog):
         embed = Embed()
         try:
             await member.kick(reason=(reason if reason is not None else "Reason not provided by issuer."))
-            embed.description = translator_instance.T("messages.kick_user", loc, {"user": member.display_name})
+            embed.description = i18n.T("messages.kick_user", loc, {"user": member.display_name})
         except Forbidden:
-            embed.description = translator_instance.T("error.custom.insufficient_permission_kick", loc, {"user": member.display_name})
+            embed.description = i18n.T("error.custom.insufficient_permission_kick", loc, {"user": member.display_name})
         except HTTPException:
-            embed.description = translator_instance.T("error.exceptions.HTTPException", loc)
+            embed.description = i18n.T("error.exceptions.HTTPException", loc)
         except Exception as e:
-            embed.description = translator_instance.T("error.exceptions.Unknown", loc, {"e": e})
+            embed.description = i18n.T("error.exceptions.Unknown", loc, {"e": e})
         finally:
             return await interaction.followup.send(embed=embed)
 
@@ -430,29 +425,38 @@ class UserGroup(commands.Cog):
 
         return await interaction.followup.send(embed=embed)
 
-    @group.command(name="set_nick", description="Sets user's nickname")
+    @group.command(name="set_nick", description=app_commands.locale_str("Sets user's nickname.", message="command.user.set_nick.description"))
     @app_commands.guild_only()
     async def change_nickname(self, interaction: Interaction, member: Member, new_nick: Optional[str] = None):
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
+        await interaction.response.defer()
+        
+        embed = Embed()
+
         if new_nick is None:
-            await member.edit(nick=None, reason=f"Nickname removed by {interaction.user.name}")
-            return await interaction.response.send_message(f"Removed {member.name}'s Nickname.")
+            await member.edit(nick=None, reason=i18n.T("command.user.set_nick.reasons.reset", loc, {"user": member.mention, "author": interaction.user.name}))
+            embed.description = i18n.T("command.user.set_nick.embeds.reset.description", loc, {"user": member.mention})
+            return await interaction.followup.send(embed=embed)
         else:
-            await member.edit(nick=new_nick, reason=f"Nickname changed by {interaction.user.name} via /user nick")
-            return await interaction.response.send_message(f"Changed {member.name}'s Nickname to **{new_nick}**.")
+            await member.edit(nick=None, reason=i18n.T("command.user.set_nick.reasons.changed", loc, {"user": member.mention, "author": interaction.user.name}))
+            embed.description = i18n.T("command.user.set_nick.embeds.changed.description", loc, {"user": member.mention, "new_nickname": new_nick})
+            return await interaction.followup.send(embed=embed)
     
-    @group.command(name="status", description="Checks member's status.")
+    @group.command(name="status", description=app_commands.locale_str("Retrieves user's status.", message="command.user.status.description"))
     @app_commands.guild_only()
     async def get_user_status(self, interaction: Interaction, member: Member):
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         await interaction.response.defer()
-        result = ""
+        result = i18n.T("text.unknown", loc)
         
         if interaction.guild:
             member2 = interaction.guild.get_member(member.id)
             if member2:
-                result = member2.status
+                result = member2.client_status
 
-        e = Embed(title=f"`{member.name}`'s status",description=f"<@{member.id}> is {result}!")
-
+        e = Embed()
+        e.title = i18n.T("command.user.status.embeds.default.title", loc, {"user": member.display_name})
+        e.description = format_status(result, loc) if isinstance(result, ClientStatus) else result
         return await interaction.followup.send(embed=e)
     
     @group.command(name="to_reachgoal", description="Returns remaining members to reach a goal value.")

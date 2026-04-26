@@ -1,5 +1,56 @@
 {
+    "_metadata": {
+        "display_name": "English"
+    },
     "command": {
+        "welcome": {
+            "description": "A group for WelcomeCog",
+            "set_channel": {
+                "description": "Set channel to send join / leave message.",
+                "embeds": {
+                    "disabled": {
+                        "description": "Welcome notification feature has been disabled."
+                    },
+                    "enabled": {
+                        "description": "Welcome notification feature has been enabled.\n The welcome message will appear at %{target_mention}."
+                    }
+                }
+            },
+            "test": {
+                "description": "Run a test for welcome channel",
+                "embeds": {
+                    "sent": {
+                        "description": "Test successfully sent to welcome channel!"
+                    },
+                    "unconfigured": {
+                        "description": "Welcome channel hasn't configured in this guild."
+                    }
+                }
+            },
+            "set_rules_channel": {
+                "description": "Sets rule channel for adding link in it.",
+                "embeds": {
+                    "success": {
+                        "description": "Rules channel for welcome message has been set to %{target_mention}."
+                    },
+                    "disabled": {
+                        "description": "Rules channel for welcome message has been removed."
+                    }
+                }
+            },
+            "embeds": {
+                "join": {
+                    "title": "Welcome to %{guild}!",
+                    "description": "Welcome, %{mention}! Please check out the rules in %{rules_mention}.",
+                    "description_no_rules": "Welcome to the server, %{mention}!",
+                    "footer": "We now have %{count} members."
+                },
+                "left": {
+                    "title": "Member %{display} has left %{guild}!",
+                    "description": "Goodbye, %{display}!"
+                }
+            }
+        },
         "8ball": {
             "name": "8ball",
             "description": "Gives a random, classic magic 8-ball response to a user's question.",
@@ -121,7 +172,7 @@
             "avatar": {
                 "description": "Gets Roblox user's avatar by username.",
                 "embeds": {
-                    "defsult": {
+                    "default": {
                         "title": "Roblox user %{username}'s Avatar"
                     }
                 }
@@ -130,7 +181,7 @@
                 "description": "Get Roblox user info by username.",
                 "embeds": {
                     "default": {
-                        "title": "User {username}'s Information"
+                        "title": "User %{username}'s Information"
                     }
                 }
             }
@@ -159,6 +210,38 @@
                 "embeds": {
                     "default": {
                         "title": "Information for %{user}"
+                    }
+                }
+            },
+            "avatar": {
+                "description": "Shows Discord user's avatar.",
+                "embeds": {
+                    "default": {
+                        "title": "User %{user}'s avatar",
+                        "footer": "Requested by %{author}, the result is cached for a minute."
+                    }
+                }
+            },
+            "set_nick": {
+                "description": "Sets user's nickname.",
+                "embeds": {
+                    "changed": {
+                        "description": "%{author} Changed %{user}'s nickname to **%{new_nickname}**."
+                    },
+                    "reset": {
+                        "description": "%{author} Reseted %{user}'s nickname."
+                    }
+                },
+                "reasons": {
+                    "changed": "Nickname changed by %{user} via /user nick",
+                    "reset": "Nickname reseted by %{user} via /user nick"
+                }
+            },
+            "status": {
+                "description": "Retrieves user's status.",
+                "embeds": {
+                    "default": {
+                        "title": "%{user}'s Discord status"
                     }
                 }
             }
@@ -240,6 +323,10 @@
             "edge_tts_not_installed": {
                 "title": "Edge TTS not installed",
                 "description": "Server has no package to generate speech from edge-tts."
+            },
+            "welcome_channel_not_enabled": {
+                "title": "Welcome channel not enabled",
+                "description": "Welcome channel has not enabled in this guild. Make sure to set welcome channel to use this command."
             }
         },
         "exceptions": {
@@ -568,12 +655,25 @@
             "true": "Heads",
             "false": "Tails"
         },
+        "status": {
+            "online": "Online",
+            "offline": "Offline",
+            "idle": "Idling",
+            "dnd": "Do Not Disturb"
+        },
+        "device": {
+            "mobile": "Mobile",
+            "desktop": "Desktop",
+            "website": "Website"
+        },
         "command_synchronized": "Commands has been synchronized now.",
         "idk": "IDK",
         "linux_distribution": "Linux Distribution",
         "platform": "Platform",
         "standalone": "Standalone",
         "unknown": "Unknown",
-        "unknown_join": "Cannot find the date when this bro joined."
+        "unknown_join": "Cannot find the date when this bro joined.",
+        "joined": "Joined",
+        "left": "Left"
     }
 }

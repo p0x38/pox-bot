@@ -1,4 +1,7 @@
 {
+  "_metadata": {
+    "display_name": "Español"
+  },
   "command": {
     "8ball": {
       "description": "Da una respuesta aleatoria y clásica de 8 bolas mágicas a la pregunta de un usuario.",
@@ -7,7 +10,7 @@
           "title": "Respuesta a '%{question}'"
         }
       },
-      "name": "bola8"
+      "name": "8ball"
     },
     "channel": {
       "description": "Un grupo de canales.",
@@ -20,16 +23,16 @@
         },
         "name": "info"
       },
-      "name": "canal",
+      "name": "channel",
       "slowmode": {
         "description": "Establece el retraso del modo lento",
         "embeds": {
           "successful": {
-            "description": "Se configuró correctamente el modo lento en **%{seconds}** para %{member}.",
+            "description": "Se configuró correctamente el modo lento en **%{seconds}** para %{mention}.",
             "title": "Modo lento actualizado"
           }
         },
-        "name": "modolento"
+        "name": "slowmode"
       }
     },
     "contributors": {
@@ -42,9 +45,9 @@
             "title": "Colaboradores"
           }
         },
-        "name": "lista"
+        "name": "list"
       },
-      "name": "contribuyentes",
+      "name": "contributors",
       "view": {
         "description": "Muestra colaborador.",
         "embeds": {
@@ -52,13 +55,13 @@
             "title": "Información del colaborador de %{contributor}"
           }
         },
-        "name": "vista"
+        "name": "view"
       }
     },
     "info": {
       "commit_data": {
         "description": "Muestra la última confirmación de git del bot.",
-        "name": "confirmar_datos"
+        "name": "commit_data"
       },
       "description": "Un grupo para informarse.",
       "invite": {
@@ -75,7 +78,7 @@
         "error": {
           "hardlimited": "No puedes invitar a TongueBot en este momento, ya que el recuento alcanzó el límite."
         },
-        "name": "invitar"
+        "name": "invite"
       },
       "name": "info",
       "os_info": {
@@ -102,18 +105,37 @@
         "error": {
           "forbidden": "No tengo el permiso **Administrar canales** para hacer eso."
         },
-        "name": "recuperar"
+        "name": "retrieve"
       },
       "sync": {
         "description": "Sincroniza comandos",
-        "name": "sincronizar"
+        "name": "sync"
       },
       "timedate": {
         "description": "Muestra la hora en la zona horaria especificada",
         "embed": {
           "description": "En %{timezone_name}, es **%{timedate}**."
         },
-        "name": "fecha_y_hora"
+        "name": "timedate"
+      }
+    },
+    "roblox": {
+      "avatar": {
+        "description": "Obtiene el avatar del usuario de Roblox por nombre de usuario.",
+        "embeds": {
+          "default": {
+            "title": "Avatar del usuario de Roblox %{username}"
+          }
+        }
+      },
+      "description": "Un grupo para API de Roblox.",
+      "user": {
+        "description": "Obtenga información de usuario de Roblox por nombre de usuario.",
+        "embeds": {
+          "default": {
+            "title": "Información del usuario %{username}"
+          }
+        }
       }
     },
     "tts": {
@@ -142,7 +164,7 @@
         },
         "name": "info"
       },
-      "name": "usuario"
+      "name": "user"
     }
   },
   "context_menu": {
@@ -150,10 +172,10 @@
       "name": "Prohibición"
     },
     "kick_member": {
-      "name": "Patada"
+      "name": "Expulsar"
     },
     "timeout_member": {
-      "name": "Se acabó el tiempo"
+      "name": "Silenciar"
     }
   },
   "error": {
@@ -164,10 +186,13 @@
       "guild_only": "El comando solo se puede utilizar en Guild.",
       "insufficient_permission_ban": "No tienes permiso para prohibir al miembro %{user}.",
       "insufficient_permission_kick": "No tienes permiso para expulsar al miembro %{user}.",
-      "invalidated_cache": "El comando solo funciona en gremio debido al problema con los cachés.",
+      "invalidated_cache": "El comando solo funciona en servidor debido al problema con los cachés.",
       "missing_category": "Categoría faltante",
       "no_git_commithash": "No se encontró ningún hash de confirmación",
       "no_git_lastcommit": "No se encontró ningún mensaje de confirmación",
+      "roblox_failed_retrieve_avatar": "No se pudo recuperar el avatar del usuario de Roblox %{username}.",
+      "roblox_forbidden": "No se pudieron recuperar datos de la API de Roblox porque el cliente no tiene un token CSRF no válido o lo utiliza.",
+      "roblox_user_not_found": "Un usuario de Roblox llamado '%{username}' no existe.",
       "timeout_duration_lessflow": "La duración debe ser mayor que 0.",
       "tried_to_timeout_higher": "Su rol no es lo suficientemente alto como para agotar el tiempo de espera del usuario.",
       "tried_to_timeout_himself": "No puedes pausar tu tiempo",
@@ -186,7 +211,7 @@
         "title": "Edge TTS no instalado"
       },
       "guild_only": {
-        "description": "Este comando es sólo para el gremio.",
+        "description": "Este comando es sólo para el servidor.",
         "title": "Contexto de ejecución no válido"
       },
       "send_error": {
@@ -233,6 +258,13 @@
       "TransformerError": "Se produjo un error al procesar los argumentos del comando.",
       "TranslationError": "Se produjo un error al traducir el comando.",
       "Unknown": "¡Se arrojaron errores no detectados! \n%{e}"
+    },
+    "http": {
+      "400": "Error 400: Solicitud incorrecta. \nLa entrada contiene una sintaxis no válida.",
+      "403": "Error 403: Prohibido. \nNo tienes permiso para acceder al recurso.",
+      "404": "Error 404: No encontrado. \nNo existe ningún archivo.",
+      "429": "Límite de solicitudes excedido. Inténtalo de nuevo más tarde.",
+      "500": "Error 500: Error interno del servidor. \nEl servidor ha encontrado un error desconocido durante el procesamiento."
     }
   },
   "label": {
@@ -253,11 +285,18 @@
     "channel_type": "Tipo de canal",
     "channel_userlimit": "Límite de usuarios",
     "non_nitro": "Usuario no nitro",
+    "roblox_user_banned": "ha prohibido",
+    "roblox_user_created": "Creado en",
+    "roblox_user_display": "Nombre para mostrar",
+    "roblox_user_id": "ID de usuario de Roblox",
+    "roblox_user_name": "Nombre de usuario",
     "user_bot": "es robot",
     "user_creation": "Creado en",
     "user_highest_role": "Papel más alto",
     "user_id": "ID de usuario",
     "user_join": "Se unió a",
+    "user_message_count": "Mensajes que vi",
+    "user_message_count_value": "%{messages} mensajes",
     "user_name": "Nombre",
     "user_nitro": "Nitro desde",
     "user_roles": "Roles",
@@ -271,6 +310,14 @@
   },
   "modal": {
     "DynamicInfoView": {
+      "buttons": {
+        "suggest_button": {
+          "label": "Enviar sugerencias"
+        },
+        "url_button": {
+          "label": "Visita el repositorio de GitHub"
+        }
+      },
       "data": {
         "context": {
           "memory": {
@@ -367,6 +414,14 @@
         }
       }
     }
+  },
+  "settings": {
+    "fields": {
+      "embed_color": "**Color para incrustar**: %{hex}",
+      "locale": "**Idioma para mostrar**: %{lang_code}"
+    },
+    "header_description": "Configuraciones de usuario",
+    "title": "Configuración de usuario"
   },
   "text": {
     "8ball_words": {

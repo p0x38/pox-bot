@@ -18,7 +18,7 @@ from logger import logger
 from stuff import get_formatted_from_seconds
 import stuff
 
-from src.translator import translator_instance
+from src.translator import translator_instance as i18n
 
 def _(s): return s
 
@@ -72,20 +72,20 @@ class DynamicInfoView(discord.ui.View):
         self.bot: PoxBot = bot
         
         self.select_callback.options = [
-            SelectOption(label=translator_instance.T("modal.DynamicInfoView.options.identity.label", locale), value="identity", emoji="🛠️"),
-            SelectOption(label=translator_instance.T("modal.DynamicInfoView.options.stats.label", locale), value="stats", emoji="📈"),
-            SelectOption(label=translator_instance.T("modal.DynamicInfoView.options.hardware.label", locale), value="hardware", emoji="🔧"),
-            SelectOption(label=translator_instance.T("modal.DynamicInfoView.options.context.label", locale), value="context", emoji="🗣️")
+            SelectOption(label=i18n.T("modal.DynamicInfoView.options.identity.label", locale), value="identity", emoji="🛠️"),
+            SelectOption(label=i18n.T("modal.DynamicInfoView.options.stats.label", locale), value="stats", emoji="📈"),
+            SelectOption(label=i18n.T("modal.DynamicInfoView.options.hardware.label", locale), value="hardware", emoji="🔧"),
+            SelectOption(label=i18n.T("modal.DynamicInfoView.options.context.label", locale), value="context", emoji="🗣️")
         ]
-        self.select_callback.placeholder = translator_instance.T("modal.DynamicInfoView.options.placeholder", locale)
+        self.select_callback.placeholder = i18n.T("modal.DynamicInfoView.options.placeholder", locale)
         
         url_button = discord.ui.Button(
             label='Visit source code',
             style=ButtonStyle.link,
             url="https://github.com/p0x38/pox-bot"
         )
-        url_button.label = translator_instance.T("modal.DynamicInfoView.buttons.url_button.label", locale)
-        self.suggest_button.label = translator_instance.T("modal.DynamicInfoView.buttons.suggest_button.label", locale)
+        url_button.label = i18n.T("modal.DynamicInfoView.buttons.url_button.label", locale)
+        self.suggest_button.label = i18n.T("modal.DynamicInfoView.buttons.suggest_button.label", locale)
         self.add_item(url_button)
     
     @ui.button(label="Submit your suggestions", style=ButtonStyle.primary)
@@ -101,7 +101,7 @@ class DynamicInfoView(discord.ui.View):
         own_cpuusage = await asyncio.to_thread(self.bot.proc.cpu_percent, interval=0.1)
         own_memusage = await asyncio.to_thread(self.bot.proc.memory_percent)
         
-        uptime = translator_instance.T("text.unknown", loc)
+        uptime = i18n.T("text.unknown", loc)
         if self.bot.launch_time2:
             uptime = stuff.get_formatted_from_seconds(round(time.time() - self.bot.launch_time2))
         
@@ -120,92 +120,92 @@ class DynamicInfoView(discord.ui.View):
         
         temp = {
             "identity": {
-                "title": translator_instance.T("modal.DynamicInfoView.data.identity.title", loc),
+                "title": i18n.T("modal.DynamicInfoView.data.identity.title", loc),
                 "fields": {
                     "uuid": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.identity.uuid.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.identity.uuid.display", loc),
                         "value": f"{self.bot.session_uuid}"
                     },
                     "version": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.identity.version.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.identity.version.display", loc),
                         "value": f"git+{self.bot.commit_hash or 'No commit hash found'} {self.bot.last_commit or 'No commit message found'}"
                     },
                     "signature": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.identity.signature.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.identity.signature.display", loc),
                         "value": self.bot.name_signature or "Unknown signature"
                     },
                     "uptime": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.identity.uptime.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.identity.uptime.display", loc),
                         "value": f"{uptime}",
                     },
                     "latency": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.identity.latency.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.identity.latency.display", loc),
                         "value": f"{self.bot.latency * 1000:.2f}ms"
                     },
                     "owner": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.identity.owner.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.identity.owner.display", loc),
                         "value": "\\_\\_\\_\\_\\_"
                     }
                 }
             },
             "stats": {
-                "title": translator_instance.T("modal.DynamicInfoView.data.stats.title", loc),
+                "title": i18n.T("modal.DynamicInfoView.data.stats.title", loc),
                 "fields": {
                     "guilds": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.stats.guilds.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.stats.guilds.display", loc),
                         "value": f"{len(self.bot.guilds):,}",
                     },
                     "users": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.stats.users.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.stats.users.display", loc),
                         "value": f"{len(self.bot.users):,}",
                     },
                     "msgs": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.stats.msgs.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.stats.msgs.display", loc),
                         "value": f"{self.bot.handled_messages:,}",
                     },
                     "channels": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.stats.channels.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.stats.channels.display", loc),
                         "value": f"{len(list(self.bot.get_all_channels())):,}",
                     },
                     "interactions": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.stats.interactions.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.stats.interactions.display", loc),
                         "value": f"P: {self.bot.processed_interactions} | F: {self.bot.failed_interactions}"
                     },
                     "cached_values": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.stats.cached_values.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.stats.cached_values.display", loc),
                         "value": f"{self.bot.cache.get_count():,}"
                     }
                 }
             },
             "hardware": {
-                "title": translator_instance.T("modal.DynamicInfoView.data.hardware.title", loc),
+                "title": i18n.T("modal.DynamicInfoView.data.hardware.title", loc),
                 "fields": {
                     "platform": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.hardware.platform.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.hardware.platform.display", loc),
                         "value": platform_info
                     },
                     "cpu": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.hardware.cpu.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.hardware.cpu.display", loc),
                         "value": self.cog.make_bar(cpu_usage),
                     },
                     "cpu_own": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.hardware.cpu_own.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.hardware.cpu_own.display", loc),
                         "value": self.cog.make_bar(own_cpuusage),
                     },
                     "ram": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.hardware.ram.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.hardware.ram.display", loc),
                         "value": self.cog.make_bar(mem.percent),
                     },
                     "ram_own": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.hardware.ram_own.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.hardware.ram_own.display", loc),
                         "value": self.cog.make_bar(own_memusage),
                     },
                     "disk": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.hardware.disk.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.hardware.disk.display", loc),
                         "value": self.cog.make_bar(disk.percent)
                     },
                     "ram_details": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.hardware.ram_details.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.hardware.ram_details.display", loc),
                         "value": f"{mem.used // (1024**2)}MB / {mem.total // (1024**2)}MB"
                     }
                 }
@@ -214,23 +214,23 @@ class DynamicInfoView(discord.ui.View):
         
         if chatbot_cog and isinstance(chatbot_cog, ChatbotCog):
             chan_info = chatbot_cog.channel_data.get(channel_id, {"muted_until": 0}) if chatbot_cog else {}
-            is_muted = translator_instance.T("text.boolean.true", loc) if time.time() < chan_info.get("muted_until", 0) else translator_instance.T("text.boolean.false", loc)
+            is_muted = i18n.T("text.boolean.true", loc) if time.time() < chan_info.get("muted_until", 0) else i18n.T("text.boolean.false", loc)
             
             temp.update({
             "context": {
-                "title": translator_instance.T("modal.DynamicInfoView.data.context.title", loc),
+                "title": i18n.T("modal.DynamicInfoView.data.context.title", loc),
                 "fields": {
                     "muted": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.context.muted.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.context.muted.display", loc),
                         "value": is_muted
                     },
                     "memory": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.context.memory.display", loc),
+                        "display": i18n.T("modal.DynamicInfoView.data.context.memory.display", loc),
                         "value": f"{len(chatbot_cog.history.get(channel_id, []))} / 10 messages"
                     },
                     "mode": {
-                        "display": translator_instance.T("modal.DynamicInfoView.data.context.mode.display", loc),
-                        "value": translator_instance.T("text.idk", loc)
+                        "display": i18n.T("modal.DynamicInfoView.data.context.mode.display", loc),
+                        "value": i18n.T("text.idk", loc)
                     },
                 }
             }})
@@ -249,7 +249,7 @@ class DynamicInfoView(discord.ui.View):
         full_data = await self.get_stats_data(interaction)
         category = full_data.get(select.values[0], {})
         
-        e = Embed(title=f"Bot information - {category.get('title', translator_instance.T("error.custom.missing_category", loc))}")
+        e = Embed(title=f"Bot information - {category.get('title', i18n.T("error.custom.missing_category", loc))}")
         
         for field_id, info in category.get('fields', {}).items():
             is_inline = info.get('inline', True)
@@ -294,8 +294,8 @@ class Info(commands.Cog):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         
         view = DynamicInfoView(self, self.bot, loc)
-        e = Embed(title=translator_instance.T("command.info.retrieve.embed.title", loc), description=translator_instance.T("command.info.retrieve.embed.description", loc))
-        e.set_footer(text=translator_instance.T("command.info.retrieve.embed.footer", loc, {"platform": platform.system()}))
+        e = Embed(title=i18n.T("command.info.retrieve.embed.title", loc), description=i18n.T("command.info.retrieve.embed.description", loc))
+        e.set_footer(text=i18n.T("command.info.retrieve.embed.footer", loc, {"platform": platform.system()}))
         
         await interaction.followup.send(embed=e, view=view)
     
@@ -360,8 +360,8 @@ class Info(commands.Cog):
         await interaction.response.defer(thinking=True)
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         
-        commit_hash = self.bot.commit_hash or translator_instance.T("error.custom.no_git_commithash", loc)
-        last_commit_message = self.bot.last_commit or translator_instance.T("error.custom.no_git_lastcommit", loc)
+        commit_hash = self.bot.commit_hash or i18n.T("error.custom.no_git_commithash", loc)
+        last_commit_message = self.bot.last_commit or i18n.T("error.custom.no_git_lastcommit", loc)
         temp1 = {
             'Commit Hash': commit_hash,
             'Commit Message': last_commit_message,
@@ -381,11 +381,11 @@ class Info(commands.Cog):
         await interaction.response.defer()
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         
-        e = Embed(title=translator_instance.T("command.info.ping.embed.title", loc, {"latency": str(round(self.bot.latency * 10000) / 100)}))
+        e = Embed(title=i18n.T("command.info.ping.embed.title", loc, {"latency": str(round(self.bot.latency * 10000) / 100)}))
         
         rows_to_add = {
-            'Shard ID': self.bot.shard_id or translator_instance.T("text.standalone", loc),
-            'Shards': self.bot.shard_count or translator_instance.T("text.standalone", loc)
+            'Shard ID': self.bot.shard_id or i18n.T("text.standalone", loc),
+            'Shards': self.bot.shard_count or i18n.T("text.standalone", loc)
 		}
         
         for k,v in rows_to_add.items():
@@ -421,7 +421,7 @@ class Info(commands.Cog):
         try:
             tz = pytz.timezone(timezone)
             timec = datetime.strftime(datetime.now(tz), '%Y.%m.%d, %H:%M:%S with the UTC offset %z')
-            embed.description = translator_instance.T("command.info.timedate.embed.description", loc, {"timezone_name": timezone, "timedate": timec})
+            embed.description = i18n.T("command.info.timedate.embed.description", loc, {"timezone_name": timezone, "timedate": timec})
             await interaction.followup.send(embed=embed)
         except Exception as e:
             await interaction.followup.send(f"An error occurred: {str(e)}", ephemeral=True)
@@ -435,7 +435,7 @@ class Info(commands.Cog):
             guild_count = len(self.bot.guilds)
             limit = self.bot.bot_servers_limit
             
-            status_msg = translator_instance.T("command.info.invite.embed.status", loc, {"formatted": f"{guild_count}/{limit}"}, count=limit)
+            status_msg = i18n.T("command.info.invite.embed.status", loc, {"formatted": f"{guild_count}/{limit}"}, count=limit)
             
             scopes = "bot%20applications.commands"
             perms = 1395868252224
@@ -445,15 +445,15 @@ class Info(commands.Cog):
             invite_url = f"https://discord.com/oauth2/authorize?client_id={client_id}&permissions={perms}&scope={scopes}"
             
             embed = Embed(
-                title=translator_instance.T("command.info.invite.embed.title", loc),
-                description=translator_instance.T("command.info.invite.embed.description", loc, {"invite_url": invite_url}),
+                title=i18n.T("command.info.invite.embed.title", loc),
+                description=i18n.T("command.info.invite.embed.description", loc, {"invite_url": invite_url}),
                 color=Color.red() if guild_count >= limit else Color.blurple()
             )
             
             if guild_count >= limit:
-                embed.description = translator_instance.T("command.info.invite.error.hardlimited", loc)
+                embed.description = i18n.T("command.info.invite.error.hardlimited", loc)
             
-            embed.set_footer(text=translator_instance.T("command.info.invite.embed.footer", loc))
+            embed.set_footer(text=i18n.T("command.info.invite.embed.footer", loc))
             
             await interaction.followup.send(embed=embed)
         except Exception as e:
@@ -493,7 +493,7 @@ class Info(commands.Cog):
         await interaction.response.defer()
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         
-        e = discord.Embed(title=translator_instance.T("command.info.os_info.embed.title", loc))
+        e = discord.Embed(title=i18n.T("command.info.os_info.embed.title", loc))
 
         system = platform.system()
 
@@ -504,15 +504,15 @@ class Info(commands.Cog):
                 if os_type == "ubuntu":
                     distro_name = distro.name()
                     distro_version = distro.version()
-                    e.add_field(name=translator_instance.T("text.linux_distibution", loc), value=f"{distro_name} {distro_version}")
+                    e.add_field(name=i18n.T("text.linux_distibution", loc), value=f"{distro_name} {distro_version}")
                 else:
-                    e.add_field(name=translator_instance.T("text.platform", loc), value=f"{platform.platform(aliased=True)} ({os_type})")
+                    e.add_field(name=i18n.T("text.platform", loc), value=f"{platform.platform(aliased=True)} ({os_type})")
             else:
-                e.add_field(name=translator_instance.T("text.platform", loc), value=platform.platform(aliased=True))
+                e.add_field(name=i18n.T("text.platform", loc), value=platform.platform(aliased=True))
         elif platform.system() == "Windows":
-            e.add_field(name=translator_instance.T("text.platform", loc), value="Windows " + " ".join(list(platform.win32_ver())))
+            e.add_field(name=i18n.T("text.platform", loc), value="Windows " + " ".join(list(platform.win32_ver())))
         else:
-            e.add_field(name=translator_instance.T("text.platform", loc), value=platform.platform(aliased=True))
+            e.add_field(name=i18n.T("text.platform", loc), value=platform.platform(aliased=True))
         
         await interaction.followup.send(embed=e)
     
