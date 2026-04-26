@@ -1,13 +1,61 @@
 {
     "command": {
+        "welcome": {
+            "description": "WelcomeCog のためのグループ",
+            "set_channel": {
+                "description": "参加/退出メッセージを送信するチャンネルを設定します。",
+                "embeds": {
+                    "disabled": {
+                        "description": "Welcome通知機能が無効になりました。"
+                    },
+                    "enabled": {
+                        "description": "ウェルカム通知機能が有効になりました。\n ウェルカムメッセージは %{target_mention} に表示されます。"
+                    }
+                }
+            },
+            "test": {
+                "description": "ウェルカムチャンネルのテストを実行",
+                "embeds": {
+                    "sent": {
+                        "description": "テストが正常にウェルカムチャンネルに送信されました！"
+                    },
+                    "unconfigured": {
+                        "description": "このギルドでは、Welcome通知チャンネルが設定されていません。"
+                    }
+                }
+            },
+            "set_rules_channel": {
+                "description": "通知メッセージにルールチャンネルを設定します。",
+                "embeds": {
+                    "success": {
+                        "description": "ウェルカムメッセージのルールチャンネルが %{target_mention}に設定されました。"
+                    },
+                    "disabled": {
+                        "description": "ウェルカムメッセージのルールチャンネルが削除されました。"
+                    }
+                }
+            },
+            "embeds": {
+                "join": {
+                    "title": "%{guild} へようこそ！",
+                    "description": "ようこそ、%{mention}さん! %{rules_mention}にてルールを確認してください。",
+                    "description_no_rules": "サーバーへようこそ、 %{mention}さん！",
+                    "footer": "現在、メンバーは%{count}人います。"
+                },
+                "left": {
+                    "title": "メンバー %{display} が %{guild} を離れました！",
+                    "description": "さようなら、 %{display}！"
+                }
+            }
+        },
         "8ball": {
+            "name": "8ball",
             "description": "ユーザーの質問に対して、ランダムで古典的なマジック 8 ボールの応答を返します。",
             "embeds": {
                 "default": {
                     "title": "「%{question}」への回答"
                 }
-            },
-            "name": "8ball"
+            }
         },
         "channel": {
             "description": "チャンネル用のグループ。",
@@ -117,6 +165,7 @@
             }
         },
         "roblox": {
+            "description": "Roblox API のグループ。",
             "avatar": {
                 "description": "Roblox ユーザーのアバターをユーザー名で取得します。",
                 "embeds": {
@@ -125,7 +174,6 @@
                     }
                 }
             },
-            "description": "Roblox API のグループ。",
             "user": {
                 "description": "ユーザー名からRoblox ユーザー情報を取得します。",
                 "embeds": {
@@ -136,96 +184,118 @@
             }
         },
         "tts": {
+            "name": "tts",
             "description": "TTS関連の中心",
+            "google_translate": {
+                "name": "google_translate",
+                "description": "Google翻訳からTTSを生成します。"
+            },
             "embeds": {
                 "default": {
+                    "title": "TTS変換",
                     "description": "生成されました！ >:D",
-                    "footer": "TTSエンジン: %{tts_type};\n入力: %{input}",
-                    "title": "TTS変換"
+                    "footer": "TTSエンジン: %{tts_type};\n入力: %{input}"
                 }
-            },
-            "google_translate": {
-                "description": "Google翻訳からTTSを生成します。",
-                "name": "google_translate"
-            },
-            "name": "tts"
+            }
         },
         "user": {
+            "name": "user",
             "description": "ユーザー用のグループ。",
             "info": {
+                "name": "info",
                 "description": "ユーザーの情報を取得します。",
                 "embeds": {
                     "default": {
                         "title": "%{user}の情報"
                     }
-                },
-                "name": "info"
+                }
             },
-            "name": "user"
+            "avatar": {
+                "description": "Discordユーザーのアバターを表示する。",
+                "embeds": {
+                    "default": {
+                        "title": "ユーザー %{user}のアバター",
+                        "footer": "%{author}からリクエストされた結果は1分間キャッシュされます。"
+                    }
+                }
+            },
+            "set_nick": {
+                "description": "ユーザーのニックネームを設定する。",
+                "embeds": {
+                    "changed": {
+                        "description": "%{author}が%{user}のニックネームを**%{new_nickname}**に変更しました。"
+                    },
+                    "reset": {
+                        "description": "%{author} は %{user}のニックネームをリセットしました。"
+                    }
+                },
+                "reasons": {
+                    "changed": "/user nick で %{user} によってニックネームが変更されました",
+                    "reset": "/user nick で %{user} によってニックネームがリセットされました"
+                }
+            },
+            "status": {
+                "description": "ユーザーのステータスを取得する。",
+                "embeds": {
+                    "default": {
+                        "title": "%{user}のDiscordステータス"
+                    }
+                }
+            }
         }
     },
     "context_menu": {
-        "ban_member": {
-            "name": "メンバーをBAN"
-        },
         "kick_member": {
             "name": "メンバーを追放"
+        },
+        "ban_member": {
+            "name": "メンバーをBAN"
         },
         "timeout_member": {
             "name": "メンバーをタイムアウト"
         }
     },
+    "messages": {
+        "timed_out_user": "%{user}を%{length}秒間タイムアウトしました。",
+        "ban_user": "%{user}をBANしました。",
+        "kick_user": "%{user}を追放しました。",
+        "warn_user": "%{user}に警告を送信しました。"
+    },
     "error": {
         "custom": {
-            "cannot_timeout_higher": "私はユーザーをタイムアウトするために十分な役割を持っていません。",
             "channel_has_no_slowmode_property": "このチャンネルには低速モードのプロパティがありません。",
-            "forbidden_timeout": "ユーザーをタイムアウトする権限がありません。",
             "guild_only": "このコマンドはサーバーでのみ使用できます。",
-            "insufficient_permission_ban": "あなたは%{user}をBANする権限が付与されていません。",
-            "insufficient_permission_kick": "あなたは%{user}を追放する権限が付与されていません。",
-            "invalidated_cache": "このコマンドはキャッシュの問題でサーバー上でしか使えません。",
             "missing_category": "このカテゴリは存在しないようです",
             "no_git_commithash": "コミットハッシュ取得に失敗しました",
             "no_git_lastcommit": "コミットメッセージ取得に失敗しました",
-            "roblox_failed_retrieve_avatar": "Roblox ユーザー %{username} のアバターを取得しようとして失敗しました。",
-            "roblox_forbidden": "クライアントが無効な CSRF トークンを持っていないか、無効な CSRF トークンを使用しているため、Roblox API からデータを取得できませんでした。",
-            "roblox_user_not_found": "「%{username}」という名前の Roblox ユーザーは存在しません。",
-            "timeout_duration_lessflow": "長さは0秒以上にしか指定できません。",
-            "tried_to_timeout_higher": "あなたはこのユーザーをタイムアウトするのに十分な役割を持っていません。",
-            "tried_to_timeout_himself": "あなた自身をタイムアウトすることはできません。",
-            "tried_to_timeout_owner": "サーバー管理者をタイムアウトすることはできません。",
             "unknown_signature": "不明なシグネチャー",
             "unsupported_channel": "このチャンネルはまだ未対応です。",
-            "user_not_found": "ユーザーが見つかりませんでした。"
+            "timeout_duration_lessflow": "長さは0秒以上にしか指定できません。",
+            "tried_to_timeout_himself": "あなた自身をタイムアウトすることはできません。",
+            "tried_to_timeout_owner": "サーバー管理者をタイムアウトすることはできません。",
+            "tried_to_timeout_higher": "あなたはこのユーザーをタイムアウトするのに十分な役割を持っていません。",
+            "forbidden_timeout": "ユーザーをタイムアウトする権限がありません。",
+            "cannot_timeout_higher": "私はユーザーをタイムアウトするために十分な役割を持っていません。",
+            "insufficient_permission_kick": "あなたは%{user}を追放する権限が付与されていません。",
+            "insufficient_permission_ban": "あなたは%{user}をBANする権限が付与されていません。",
+            "user_not_found": "ユーザーが見つかりませんでした。",
+            "invalidated_cache": "このコマンドはキャッシュの問題でサーバー上でしか使えません。",
+            "roblox_forbidden": "クライアントが無効な CSRF トークンを持っていないか、無効な CSRF トークンを使用しているため、Roblox API からデータを取得できませんでした。",
+            "roblox_user_not_found": "「%{username}」という名前の Roblox ユーザーは存在しません。",
+            "roblox_failed_retrieve_avatar": "Roblox ユーザー %{username} のアバターを取得しようとして失敗しました。"
         },
         "embed": {
             "contributor_not_found": {
                 "description": "貢献者%{contributor}は存在しません。",
                 "title": "貢献者が見つかりませんでした"
             },
-            "edge_tts_not_installed": {
-                "description": "サーバーには、edge-tts から音声を生成するパッケージがありません。",
-                "title": "Edge TTSが未インストールです"
-            },
             "guild_only": {
                 "description": "このコマンドはサーバー専用です。",
                 "title": "無効な実行コンテキスト"
             },
-            "send_error": {
-                "description": "送信しようとしたときにエラーがスローされました: %{e}",
-                "title": "送信エラー"
-            },
             "slowmode_out_of_range": {
                 "description": "低速モードは0から21600秒の範囲でしか指定できません。",
                 "title": "値が範囲外です"
-            },
-            "tts_generation_error": {
-                "description": "音声を生成しようとしたときにスローされたエラー: %{e}",
-                "title": "TTS 生成エラー"
-            },
-            "tts_no_text": {
-                "description": "入力を空に設定しました。\n後で入力して再試行してください。",
-                "title": "入力は空であってはなりません"
             },
             "unsupported_channel_slowmode": {
                 "description": "チャンネル%{channel}は低速モードをサポートしていません。",
@@ -234,6 +304,26 @@
             "unsupported_channel_type": {
                 "description": "サポートされていないチャンネルタイプです。",
                 "title": "サポートされていないチャンネルタイプ"
+            },
+            "tts_no_text": {
+                "title": "入力は空であってはなりません",
+                "description": "入力を空に設定しました。\n後で入力して再試行してください。"
+            },
+            "send_error": {
+                "title": "送信エラー",
+                "description": "送信しようとしたときにエラーがスローされました: %{e}"
+            },
+            "tts_generation_error": {
+                "title": "TTS 生成エラー",
+                "description": "音声を生成しようとしたときにスローされたエラー: %{e}"
+            },
+            "edge_tts_not_installed": {
+                "title": "Edge TTSが未インストールです",
+                "description": "サーバーには、edge-tts から音声を生成するパッケージがありません。"
+            },
+            "welcome_channel_not_enabled": {
+                "title": "Welcomeチャンネルが有効ではありません",
+                "description": "Welcomeチャンネルがこのギルドで有効になっていません。このコマンドを使用するには、welcomeチャンネルを設定してください。"
             }
         },
         "exceptions": {
@@ -247,13 +337,13 @@
             "CommandOnCooldown": "現在このコマンドはクールダウン中です。%{remaining}秒後にもう一度やり直してください。",
             "CommandSignatureMismatch": "コマンド定義がコード内の定義と異なります。おそらく、古いものを使用しているか、Discordのデータが同期されていません。",
             "CommandSyncFailure": "コマンド同期させるのに失敗しました。",
-            "HTTPException": "The operation has failed due to HTTP Error.",
             "MissingAnyRole": "このコマンドを使用するのに必要なロールがどれも付与されていません。",
             "MissingPermissions": "このコマンドを使用するのに必要な権限が付与されていません。",
             "MissingRole": "このコマンドを使用するのに必要なロールが付与されていません。",
             "NoPrivateMessage": "このコマンドは、サーバー限定です。",
             "TransformerError": "コマンドの引数を処理しているときにエラーが発生しました。",
             "TranslationError": "コマンドを翻訳しているときにエラーが発生しました。",
+            "HTTPException": "The operation has failed due to HTTP Error.",
             "Unknown": "まだキャッチされていない例外がスローされました: %{e}"
         },
         "http": {
@@ -265,7 +355,6 @@
         }
     },
     "label": {
-        "answer": "答え",
         "channel_bitrate": "オーディオビットレート",
         "channel_category": "カテゴリ",
         "channel_channels": "チャンネル数",
@@ -281,40 +370,27 @@
         "channel_topic": "チャンネルトピック",
         "channel_type": "チャンネルの種類",
         "channel_userlimit": "参加できる最大のユーザー数",
-        "non_nitro": "非Nitroユーザー",
-        "roblox_user_banned": "禁止しています",
-        "roblox_user_created": "で作成されました",
-        "roblox_user_display": "表示名",
-        "roblox_user_id": "Roblox ユーザー ID",
-        "roblox_user_name": "ユーザー名",
+        "user_id": "ユーザーID",
+        "user_name": "名前",
         "user_bot": "BOTであるか",
         "user_creation": "Discordに参加した日時",
         "user_highest_role": "最も高い役割",
-        "user_id": "ユーザーID",
+        "user_status": "ステータス",
+        "user_nitro": "Nitroを購読した日時",
         "user_join": "サーバーに参加した日時",
+        "user_roles": "役割",
+        "non_nitro": "非Nitroユーザー",
+        "roblox_user_id": "Roblox ユーザー ID",
+        "roblox_user_name": "ユーザー名",
+        "roblox_user_display": "表示名",
+        "roblox_user_banned": "禁止しています",
+        "roblox_user_created": "で作成されました",
         "user_message_count": "見たメッセージ",
         "user_message_count_value": "%{messages} 件のメッセージ",
-        "user_name": "名前",
-        "user_nitro": "Nitroを購読した日時",
-        "user_roles": "役割",
-        "user_status": "ステータス"
-    },
-    "messages": {
-        "ban_user": "%{user}をBANしました。",
-        "kick_user": "%{user}を追放しました。",
-        "timed_out_user": "%{user}を%{length}秒間タイムアウトしました。",
-        "warn_user": "%{user}に警告を送信しました。"
+        "answer": "答え"
     },
     "modal": {
         "DynamicInfoView": {
-            "buttons": {
-                "suggest_button": {
-                    "label": "提案を送信する"
-                },
-                "url_button": {
-                    "label": "GitHub リポジトリにアクセスする"
-                }
-            },
             "data": {
                 "context": {
                     "memory": {
@@ -409,37 +485,65 @@
                 "stats": {
                     "label": "BOTに関する情報"
                 }
+            },
+            "buttons": {
+                "url_button": {
+                    "label": "GitHub リポジトリにアクセスする"
+                },
+                "suggest_button": {
+                    "label": "提案を送信する"
+                }
             }
         }
     },
     "settings": {
-        "fields": {
-            "embed_color": "**埋め込みカラー**: %{hex}",
-            "locale": "**表示言語**: %{lang_code}"
-        },
+        "title": "ユーザー設定",
         "header_description": "ユーザー設定",
-        "title": "ユーザー設定"
+        "fields": {
+            "locale": "**表示言語**: %{lang_code}",
+            "embed_color": "**埋め込みカラー**: %{hex}"
+        }
     },
     "text": {
+        "boolean": {
+            "false": "いいえ",
+            "true": "はい"
+        },
+        "activity_type": {
+            "playing": "%{activity}をプレイ中",
+            "streaming": "%{activity}を配信中",
+            "listening": "%{activity}を再生中",
+            "watching": "%{activity}を視聴中",
+            "competing": "%{activity}で競合中",
+            "game": "%{platform}で%{activity}をプレイ中",
+            "stream": "%{platform}上で%{activity}を配信中",
+            "spotify": "%{artist}の%{album} - %{title}を再生中"
+        },
+        "possible_map": {
+            "1": "いやあ。",
+            "2": "いや。",
+            "3": "たぶんね。",
+            "4": "そうですね。",
+            "5": "そうではない可能性があります。",
+            "6": "わからない。",
+            "7": "可能。",
+            "8": "そうですね。",
+            "9": "たぶんそうです。",
+            "10": "そうだね",
+            "11": "うんうん"
+        },
         "8ball_words": {
             "1": "いいえ。",
+            "2": "いいえ。",
+            "3": "いや。",
+            "4": "いやあ。",
+            "5": "うーん。",
+            "6": "ネガティブ。",
+            "7": "いやかもしれない。",
+            "8": "たぶん、そうではありません。",
+            "9": "たぶんね。",
             "10": "うーん... たぶん。",
-            "100": "Googleによると、そうです。",
-            "101": "Googleによると、いいえだそうです。",
-            "102": "お金を受け取って、元に戻してください。はい。",
-            "103": "うーん…普通にバカです。",
-            "104": "バカじゃないよ。",
-            "105": "誰が気にする。",
-            "106": "それは知るべきではありません。",
-            "107": "そんなことは私に聞かないでください。",
-            "108": "あなたは誰ですか。",
-            "109": "私はただのボールです。",
             "11": "たぶんね。",
-            "110": "他の人がそれに答えるでしょう。",
-            "111": "火傷してしまいます。",
-            "112": "地獄で腐れ。",
-            "113": "黙れ。",
-            "114": "あなたの脳には何が入っているのですか？",
             "12": "もしかしたら否定的かもしれない。",
             "13": "いや、違うと思うっす。",
             "14": "違うと思います。",
@@ -448,7 +552,6 @@
             "17": "いや、そうだと思います。",
             "18": "否定的だと思います。",
             "19": "はい。",
-            "2": "いいえ。",
             "20": "うん。",
             "21": "そうだね。",
             "22": "うん。",
@@ -459,7 +562,6 @@
             "27": "たぶんそうだね。",
             "28": "たぶん、うんうん。",
             "29": "そうだと思います。",
-            "3": "いや。",
             "30": "そうだと思います。",
             "31": "そうだと思います。",
             "32": "そうですね。",
@@ -470,7 +572,6 @@
             "37": "絶対に違います。",
             "38": "いや、私はそうとは思わない。",
             "39": "そう思います。",
-            "4": "いやあ。",
             "40": "わからない。",
             "41": "部分的にはそうです。",
             "42": "部分的にはそうではありません。",
@@ -481,7 +582,6 @@
             "47": "うーん。",
             "48": "可能。",
             "49": "多分。",
-            "5": "うーん。",
             "50": "そうですね。",
             "51": "ちょっと違います。",
             "52": "何の問題？\n私はそうは思わない。",
@@ -492,7 +592,6 @@
             "57": "間違いなく。",
             "58": "はい、確かに。",
             "59": "頼りにしてもいいでしょう。",
-            "6": "ネガティブ。",
             "60": "私が見た限り、そうです。",
             "61": "最も可能性が高い。",
             "62": "ぼんやりと返信して、もう一度試してください。",
@@ -503,7 +602,6 @@
             "67": "当てにしないでください。",
             "68": "私の答えはノーです。",
             "69": "私の情報筋はノーと言っています。",
-            "7": "いやかもしれない。",
             "70": "見通しはあまり良くありません。",
             "71": "非常に疑わしい。",
             "72": "見通しは良好です。",
@@ -514,7 +612,6 @@
             "77": "それは予算内です。",
             "78": "👍",
             "79": "はい、さらに 5,000 ドルです。",
-            "8": "たぶん、そうではありません。",
             "80": "AIは「はい」と答えます。",
             "81": "郵送で修正させていただきます。",
             "82": "はい。\nいや待って、だめ-",
@@ -525,7 +622,6 @@
             "87": "それは予算内ですか？",
             "88": "エラー 404: 見つかりません",
             "89": "飲み物を飲みながら話し合いますか？",
-            "9": "たぶんね。",
             "90": "メモリ不足です。",
             "91": "Slack を確認してください。",
             "92": "ジャ。",
@@ -535,45 +631,46 @@
             "96": "ボール。",
             "97": "絶対に。",
             "98": "積極的に。",
-            "99": "間違いなく。"
-        },
-        "activity_type": {
-            "competing": "%{activity}で競合中",
-            "game": "%{platform}で%{activity}をプレイ中",
-            "listening": "%{activity}を再生中",
-            "playing": "%{activity}をプレイ中",
-            "spotify": "%{artist}の%{album} - %{title}を再生中",
-            "stream": "%{platform}上で%{activity}を配信中",
-            "streaming": "%{activity}を配信中",
-            "watching": "%{activity}を視聴中"
-        },
-        "boolean": {
-            "false": "いいえ",
-            "true": "はい"
+            "99": "間違いなく。",
+            "100": "Googleによると、そうです。",
+            "101": "Googleによると、いいえだそうです。",
+            "102": "お金を受け取って、元に戻してください。はい。",
+            "103": "うーん…普通にバカです。",
+            "104": "バカじゃないよ。",
+            "105": "誰が気にする。",
+            "106": "それは知るべきではありません。",
+            "107": "そんなことは私に聞かないでください。",
+            "108": "あなたは誰ですか。",
+            "109": "私はただのボールです。",
+            "110": "他の人がそれに答えるでしょう。",
+            "111": "火傷してしまいます。",
+            "112": "地獄で腐れ。",
+            "113": "黙れ。",
+            "114": "あなたの脳には何が入っているのですか？"
         },
         "coinflip": {
-            "false": "裏",
-            "true": "表"
+            "true": "表",
+            "false": "裏"
+        },
+        "status": {
+            "online": "オンライン中",
+            "offline": "オフライン",
+            "idle": "待機中",
+            "dnd": "取り込み中"
+        },
+        "device": {
+            "mobile": "携帯",
+            "desktop": "デスクトップ",
+            "website": "ウェブサイト"
         },
         "command_synchronized": "コマンドが同期されました。",
         "idk": "知らんがな",
         "linux_distribution": "Linuxディストリビューション",
         "platform": "プラットフォーム",
-        "possible_map": {
-            "1": "いやあ。",
-            "10": "そうだね",
-            "11": "うんうん",
-            "2": "いや。",
-            "3": "たぶんね。",
-            "4": "そうですね。",
-            "5": "そうではない可能性があります。",
-            "6": "わからない。",
-            "7": "可能。",
-            "8": "そうですね。",
-            "9": "たぶんそうです。"
-        },
         "standalone": "スタンドアロン",
         "unknown": "不明",
-        "unknown_join": "こいつがいつ入ったのかは分からん"
+        "unknown_join": "こいつがいつ入ったのかは分からん",
+        "joined": "参加",
+        "left": "去った"
     }
 }

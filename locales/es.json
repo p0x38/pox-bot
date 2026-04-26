@@ -1,579 +1,679 @@
 {
-  "command": {
-    "8ball": {
-      "description": "Da una respuesta aleatoria y clásica de 8 bolas mágicas a la pregunta de un usuario.",
-      "embeds": {
-        "default": {
-          "title": "Respuesta a '%{question}'"
+    "_metadata": {
+        "display_name": "Español"
+    },
+    "command": {
+        "welcome": {
+            "description": "Un grupo para Welcome. Cog",
+            "set_channel": {
+                "description": "Establecer el canal para enviar mensaje de Unión/Salida.",
+                "embeds": {
+                    "disabled": {
+                        "description": "La función de notificación de bienvenida ha sido desactivada."
+                    },
+                    "enabled": {
+                        "description": "Se ha activado la función de notificación de bienvenida.\n El mensaje de bienvenida aparecerá en %{target_mention}."
+                    }
+                }
+            },
+            "test": {
+                "description": "Ejecutar una prueba para el canal de bienvenida",
+                "embeds": {
+                    "sent": {
+                        "description": "¡Prueba enviada con éxito al canal de bienvenida!"
+                    },
+                    "unconfigured": {
+                        "description": "El canal de bienvenida no ha configurado en este gremio."
+                    }
+                }
+            },
+            "set_rules_channel": {
+                "description": "Establece el canal de reglas para añadir un enlace.",
+                "embeds": {
+                    "success": {
+                        "description": "El canal de reglas para el mensaje de bienvenida se ha establecido en %{target_mention}."
+                    },
+                    "disabled": {
+                        "description": "Se ha eliminado el canal de reglas para el mensaje de bienvenida."
+                    }
+                }
+            },
+            "embeds": {
+                "join": {
+                    "title": "¡Bienvenido a %{guild}!",
+                    "description": "¡Bienvenido, %{mention}! Por favor, revisa las reglas en %{rules_mention}.",
+                    "description_no_rules": "¡Bienvenido al servidor, %{mention}!",
+                    "footer": "Ahora tenemos miembros %{count}."
+                },
+                "left": {
+                    "title": "¡El miembro %{display} ha salido de %{guild}!",
+                    "description": "¡Audido, %{display}!"
+                }
+            }
+        },
+        "8ball": {
+            "name": "8ball",
+            "description": "Da una respuesta aleatoria y clásica de 8 bolas mágicas a la pregunta de un usuario.",
+            "embeds": {
+                "default": {
+                    "title": "Respuesta a '%{question}'"
+                }
+            }
+        },
+        "channel": {
+            "description": "Un grupo de canales.",
+            "info": {
+                "description": "Muestra información del canal.",
+                "embeds": {
+                    "default": {
+                        "title": "Información de %{name}"
+                    }
+                },
+                "name": "info"
+            },
+            "name": "channel",
+            "slowmode": {
+                "description": "Establece el retraso del modo lento",
+                "embeds": {
+                    "successful": {
+                        "description": "Se configuró correctamente el modo lento en **%{seconds}** para %{mention}.",
+                        "title": "Modo lento actualizado"
+                    }
+                },
+                "name": "slowmode"
+            }
+        },
+        "contributors": {
+            "description": "Un grupo para contribuyentes.",
+            "list": {
+                "description": "Enumera todos los contribuyentes.",
+                "embeds": {
+                    "default": {
+                        "description": "¡Aquí hay una lista de contribuyentes que ayudaron a mi bot! :3",
+                        "title": "Colaboradores"
+                    }
+                },
+                "name": "list"
+            },
+            "name": "contributors",
+            "view": {
+                "description": "Muestra colaborador.",
+                "embeds": {
+                    "default": {
+                        "title": "Información del colaborador de %{contributor}"
+                    }
+                },
+                "name": "view"
+            }
+        },
+        "info": {
+            "commit_data": {
+                "description": "Muestra la última confirmación de git del bot.",
+                "name": "commit_data"
+            },
+            "description": "Un grupo para informarse.",
+            "invite": {
+                "description": "Invita al bot al servidor mediante la URL de la aplicación. \n(LIMITADO A 90)",
+                "embed": {
+                    "description": "%{prefix}\n\n\nPuedes agregarme a tu servidor usando [este enlace.](%{invite_url})",
+                    "footer": "Nota: Requiere permisos avanzados para una funcionalidad completa y la invitación está limitada a 90 servidores debido a la limitación de la discordia.",
+                    "status": {
+                        "one": "Capacidad: **%{formatted}** servidor",
+                        "other": "Capacidad: **%{formatted}** servidores"
+                    },
+                    "title": "Invitar a TongueBot"
+                },
+                "error": {
+                    "hardlimited": "No puedes invitar a TongueBot en este momento, ya que el recuento alcanzó el límite."
+                },
+                "name": "invite"
+            },
+            "name": "info",
+            "os_info": {
+                "description": "Muestra información del sistema operativo.",
+                "embed": {
+                    "title": "Información del sistema operativo"
+                },
+                "name": "os_info"
+            },
+            "ping": {
+                "description": "Pong!",
+                "embed": {
+                    "title": "Pong! \n(%{latency} ms)"
+                },
+                "name": "ping"
+            },
+            "retrieve": {
+                "description": "Recupera información del bot.",
+                "embed": {
+                    "description": "Seleccione una de las siguientes categorías para ver detalles específicos.",
+                    "footer": "Sistema: %{platform}",
+                    "title": "Información del robot"
+                },
+                "error": {
+                    "forbidden": "No tengo el permiso **Administrar canales** para hacer eso."
+                },
+                "name": "retrieve"
+            },
+            "sync": {
+                "description": "Sincroniza comandos",
+                "name": "sync"
+            },
+            "timedate": {
+                "description": "Muestra la hora en la zona horaria especificada",
+                "embed": {
+                    "description": "En %{timezone_name}, es **%{timedate}**."
+                },
+                "name": "timedate"
+            }
+        },
+        "roblox": {
+            "description": "Un grupo para API de Roblox.",
+            "avatar": {
+                "description": "Obtiene el avatar del usuario de Roblox por nombre de usuario.",
+                "embeds": {
+                    "default": {
+                        "title": "Avatar del usuario de Roblox %{username}"
+                    }
+                }
+            },
+            "user": {
+                "description": "Obtenga información de usuario de Roblox por nombre de usuario.",
+                "embeds": {
+                    "default": {
+                        "title": "Información del usuario %{username}"
+                    }
+                }
+            }
+        },
+        "tts": {
+            "name": "tts",
+            "description": "Centro de cosas TTS",
+            "google_translate": {
+                "name": "googletts",
+                "description": "Genera TTS desde Google Translate."
+            },
+            "embeds": {
+                "default": {
+                    "title": "Conversión TTS",
+                    "description": "¡Generado! \n>:D",
+                    "footer": "Tipo: %{tts_type}; \nEntrada: %{input}"
+                }
+            }
+        },
+        "user": {
+            "name": "user",
+            "description": "Un grupo para usuarios.",
+            "info": {
+                "name": "info",
+                "description": "Recupera la información del usuario.",
+                "embeds": {
+                    "default": {
+                        "title": "Información para %{user}"
+                    }
+                }
+            },
+            "avatar": {
+                "description": "Muestra el avatar del usuario de Discord.",
+                "embeds": {
+                    "default": {
+                        "title": "Avatar del usuario %{user}",
+                        "footer": "Solicitado por %{author}, el resultado se almacena en caché por un minuto."
+                    }
+                }
+            },
+            "set_nick": {
+                "description": "Establece el nick del usuario.",
+                "embeds": {
+                    "changed": {
+                        "description": "%{author} cambió el apodo de %{user}a **%{new_nickname}**."
+                    },
+                    "reset": {
+                        "description": "%{author} cambió el apodo de %{user}."
+                    }
+                },
+                "reasons": {
+                    "changed": "Nombre cambiado por %{user} vía /user nick",
+                    "reset": "Apodo restablecido por %{user} a través de /user nick"
+                }
+            },
+            "status": {
+                "description": "Recuperar el estado del usuario.",
+                "embeds": {
+                    "default": {
+                        "title": "%{user}'s Discord status"
+                    }
+                }
+            }
         }
-      },
-      "name": "8ball"
     },
-    "channel": {
-      "description": "Un grupo de canales.",
-      "info": {
-        "description": "Muestra información del canal.",
-        "embeds": {
-          "default": {
-            "title": "Información de %{name}"
-          }
+    "context_menu": {
+        "kick_member": {
+            "name": "Expulsar"
         },
-        "name": "info"
-      },
-      "name": "channel",
-      "slowmode": {
-        "description": "Establece el retraso del modo lento",
-        "embeds": {
-          "successful": {
-            "description": "Se configuró correctamente el modo lento en **%{seconds}** para %{mention}.",
-            "title": "Modo lento actualizado"
-          }
+        "ban_member": {
+            "name": "Prohibición"
         },
-        "name": "slowmode"
-      }
-    },
-    "contributors": {
-      "description": "Un grupo para contribuyentes.",
-      "list": {
-        "description": "Enumera todos los contribuyentes.",
-        "embeds": {
-          "default": {
-            "description": "¡Aquí hay una lista de contribuyentes que ayudaron a mi bot! :3",
-            "title": "Colaboradores"
-          }
-        },
-        "name": "list"
-      },
-      "name": "contributors",
-      "view": {
-        "description": "Muestra colaborador.",
-        "embeds": {
-          "default": {
-            "title": "Información del colaborador de %{contributor}"
-          }
-        },
-        "name": "view"
-      }
-    },
-    "info": {
-      "commit_data": {
-        "description": "Muestra la última confirmación de git del bot.",
-        "name": "commit_data"
-      },
-      "description": "Un grupo para informarse.",
-      "invite": {
-        "description": "Invita al bot al servidor mediante la URL de la aplicación. \n(LIMITADO A 90)",
-        "embed": {
-          "description": "%{prefix}\n\n\nPuedes agregarme a tu servidor usando [este enlace.](%{invite_url})",
-          "footer": "Nota: Requiere permisos avanzados para una funcionalidad completa y la invitación está limitada a 90 servidores debido a la limitación de la discordia.",
-          "status": {
-            "one": "Capacidad: **%{formatted}** servidor",
-            "other": "Capacidad: **%{formatted}** servidores"
-          },
-          "title": "Invitar a TongueBot"
-        },
-        "error": {
-          "hardlimited": "No puedes invitar a TongueBot en este momento, ya que el recuento alcanzó el límite."
-        },
-        "name": "invite"
-      },
-      "name": "info",
-      "os_info": {
-        "description": "Muestra información del sistema operativo.",
-        "embed": {
-          "title": "Información del sistema operativo"
-        },
-        "name": "os_info"
-      },
-      "ping": {
-        "description": "Pong!",
-        "embed": {
-          "title": "Pong! \n(%{latency} ms)"
-        },
-        "name": "ping"
-      },
-      "retrieve": {
-        "description": "Recupera información del bot.",
-        "embed": {
-          "description": "Seleccione una de las siguientes categorías para ver detalles específicos.",
-          "footer": "Sistema: %{platform}",
-          "title": "Información del robot"
-        },
-        "error": {
-          "forbidden": "No tengo el permiso **Administrar canales** para hacer eso."
-        },
-        "name": "retrieve"
-      },
-      "sync": {
-        "description": "Sincroniza comandos",
-        "name": "sync"
-      },
-      "timedate": {
-        "description": "Muestra la hora en la zona horaria especificada",
-        "embed": {
-          "description": "En %{timezone_name}, es **%{timedate}**."
-        },
-        "name": "timedate"
-      }
-    },
-    "roblox": {
-      "avatar": {
-        "description": "Obtiene el avatar del usuario de Roblox por nombre de usuario.",
-        "embeds": {
-          "default": {
-            "title": "Avatar del usuario de Roblox %{username}"
-          }
+        "timeout_member": {
+            "name": "Silenciar"
         }
-      },
-      "description": "Un grupo para API de Roblox.",
-      "user": {
-        "description": "Obtenga información de usuario de Roblox por nombre de usuario.",
-        "embeds": {
-          "default": {
-            "title": "Información del usuario %{username}"
-          }
-        }
-      }
     },
-    "tts": {
-      "description": "Centro de cosas TTS",
-      "embeds": {
-        "default": {
-          "description": "¡Generado! \n>:D",
-          "footer": "Tipo: %{tts_type}; \nEntrada: %{input}",
-          "title": "Conversión TTS"
-        }
-      },
-      "google_translate": {
-        "description": "Genera TTS desde Google Translate.",
-        "name": "googletts"
-      },
-      "name": "tts"
+    "messages": {
+        "timed_out_user": "Se ha agotado el tiempo de espera de %{user} para %{length}.",
+        "ban_user": "%{user} ha sido baneado.",
+        "kick_user": "%{user} ha sido expulsado.",
+        "warn_user": "%{user} ha sido advertido."
     },
-    "user": {
-      "description": "Un grupo para usuarios.",
-      "info": {
-        "description": "Recupera la información del usuario.",
-        "embeds": {
-          "default": {
-            "title": "Información para %{user}"
-          }
+    "error": {
+        "custom": {
+            "channel_has_no_slowmode_property": "Este canal no tiene propiedad para configurar el retraso en modo lento.",
+            "guild_only": "El comando solo se puede utilizar en Guild.",
+            "missing_category": "Categoría faltante",
+            "no_git_commithash": "No se encontró ningún hash de confirmación",
+            "no_git_lastcommit": "No se encontró ningún mensaje de confirmación",
+            "unknown_signature": "Firma desconocida",
+            "unsupported_channel": "El canal no es compatible con el bot.",
+            "timeout_duration_lessflow": "La duración debe ser mayor que 0.",
+            "tried_to_timeout_himself": "No puedes pausar tu tiempo",
+            "tried_to_timeout_owner": "No se puede agotar el tiempo de espera del propietario del servidor.",
+            "tried_to_timeout_higher": "Su rol no es lo suficientemente alto como para agotar el tiempo de espera del usuario.",
+            "forbidden_timeout": "No tengo permiso para suspender el tiempo de espera de los miembros.",
+            "cannot_timeout_higher": "Mi rol no es lo suficientemente alto como para agotar el tiempo de espera de este usuario.",
+            "insufficient_permission_kick": "No tienes permiso para expulsar al miembro %{user}.",
+            "insufficient_permission_ban": "No tienes permiso para prohibir al miembro %{user}.",
+            "user_not_found": "Usuario no encontrado.",
+            "invalidated_cache": "El comando solo funciona en servidor debido al problema con los cachés.",
+            "roblox_forbidden": "No se pudieron recuperar datos de la API de Roblox porque el cliente no tiene un token CSRF no válido o lo utiliza.",
+            "roblox_user_not_found": "Un usuario de Roblox llamado '%{username}' no existe.",
+            "roblox_failed_retrieve_avatar": "No se pudo recuperar el avatar del usuario de Roblox %{username}."
         },
-        "name": "info"
-      },
-      "name": "user"
+        "embed": {
+            "contributor_not_found": {
+                "description": "No se ha encontrado el colaborador %{contributor}.",
+                "title": "Colaborador no encontrado"
+            },
+            "guild_only": {
+                "description": "Este comando es sólo para el servidor.",
+                "title": "Contexto de ejecución no válido"
+            },
+            "slowmode_out_of_range": {
+                "description": "El retraso del modo lento debe estar entre 0 y 21600 segundos.",
+                "title": "Fuera de rango"
+            },
+            "unsupported_channel_slowmode": {
+                "description": "El canal %{channel} no admite el modo lento.",
+                "title": "Canal no soportado"
+            },
+            "unsupported_channel_type": {
+                "description": "Has elegido un canal que no es compatible.",
+                "title": "Tipo de canal no admitido"
+            },
+            "tts_no_text": {
+                "title": "La entrada no debe estar vacía.",
+                "description": "Has configurado la entrada vacía. \nVuelva a intentarlo más tarde con la entrada."
+            },
+            "send_error": {
+                "title": "enviar error",
+                "description": "Se produjo un error al intentar enviar: %{e}"
+            },
+            "tts_generation_error": {
+                "title": "Error de generación de TTS",
+                "description": "Se produjo un error al intentar generar voz: %{e}"
+            },
+            "edge_tts_not_installed": {
+                "title": "Edge TTS no instalado",
+                "description": "El servidor no tiene ningún paquete para generar voz desde edge-tts."
+            },
+            "welcome_channel_not_enabled": {
+                "title": "Canal de bienvenida no activado",
+                "description": "El canal de bienvenida no ha sido activado en este gremio. Asegúrate de establecer el canal de bienvenida para usar este comando."
+            }
+        },
+        "exceptions": {
+            "AppCommandError": "¡Se produjo un error de comando desconocido!",
+            "BotMissingPermissions": "No tengo los permisos necesarios para ejecutarlo.",
+            "CheckFailure": "No tienes permiso para utilizar este comando.",
+            "CommandAlreadyRegistered": "El comando ya estaba registrado antes.",
+            "CommandInvokeError": "Se produjo un error al ejecutar el comando.",
+            "CommandLimitReached": "El uso del comando está actualmente limitado debido a la limitación del comando.",
+            "CommandNotFound": "El comando no fue encontrado.",
+            "CommandOnCooldown": "El comando tiene tiempo de reutilización. \nInténtelo de nuevo después de pasar %{remaining} segundos más.",
+            "CommandSignatureMismatch": "El comando no está sincronizado con el último.",
+            "CommandSyncFailure": "No se pudieron sincronizar los comandos.",
+            "MissingAnyRole": "No tienes ninguno de los roles requeridos para usarlo.",
+            "MissingPermissions": "No tiene los permisos necesarios para usarlo.",
+            "MissingRole": "No tienes el rol requerido para usarlo.",
+            "NoPrivateMessage": "El comando no se puede utilizar en mensajes privados.",
+            "TransformerError": "Se produjo un error al procesar los argumentos del comando.",
+            "TranslationError": "Se produjo un error al traducir el comando.",
+            "HTTPException": "La operación falló debido a un error HTTP.",
+            "Unknown": "¡Se arrojaron errores no detectados! \n%{e}"
+        },
+        "http": {
+            "400": "Error 400: Solicitud incorrecta. \nLa entrada contiene una sintaxis no válida.",
+            "403": "Error 403: Prohibido. \nNo tienes permiso para acceder al recurso.",
+            "404": "Error 404: No encontrado. \nNo existe ningún archivo.",
+            "429": "Límite de solicitudes excedido. Inténtalo de nuevo más tarde.",
+            "500": "Error 500: Error interno del servidor. \nEl servidor ha encontrado un error desconocido durante el procesamiento."
+        }
+    },
+    "label": {
+        "channel_bitrate": "Velocidad de bits de audio",
+        "channel_category": "Categoría",
+        "channel_channels": "Canales",
+        "channel_creation": "Creado en",
+        "channel_instance_running": "¿Se está ejecutando la instancia?",
+        "channel_listeners": "Miembros en el canal",
+        "channel_name": "Nombre del canal",
+        "channel_nsfw": "es NSFW",
+        "channel_position": "Posición del canal",
+        "channel_requesting_to_speak": "Miembros que solicitan hablar",
+        "channel_slowmode": "Retraso de modo lento",
+        "channel_threads": "Trapos",
+        "channel_topic": "Tema del canal",
+        "channel_type": "Tipo de canal",
+        "channel_userlimit": "Límite de usuarios",
+        "user_id": "ID de usuario",
+        "user_name": "Nombre",
+        "user_bot": "es robot",
+        "user_creation": "Creado en",
+        "user_highest_role": "Papel más alto",
+        "user_status": "Estado",
+        "user_nitro": "Nitro desde",
+        "user_join": "Se unió a",
+        "user_roles": "Roles",
+        "non_nitro": "Usuario no nitro",
+        "roblox_user_id": "ID de usuario de Roblox",
+        "roblox_user_name": "Nombre de usuario",
+        "roblox_user_display": "Nombre para mostrar",
+        "roblox_user_banned": "ha prohibido",
+        "roblox_user_created": "Creado en",
+        "user_message_count": "Mensajes que vi",
+        "user_message_count_value": "%{messages} mensajes",
+        "answer": "Respuesta"
+    },
+    "modal": {
+        "DynamicInfoView": {
+            "data": {
+                "context": {
+                    "memory": {
+                        "display": "Uso del contexto"
+                    },
+                    "mode": {
+                        "display": "Estado de ánimo actual"
+                    },
+                    "muted": {
+                        "display": "¿Jim está silenciado?"
+                    },
+                    "title": "Datos cerebrales locales"
+                },
+                "hardware": {
+                    "cpu": {
+                        "display": "Uso de CPU (total)"
+                    },
+                    "cpu_own": {
+                        "display": "Uso de CPU (programa)"
+                    },
+                    "disk": {
+                        "display": "Uso del disco"
+                    },
+                    "platform": {
+                        "display": "Plataforma"
+                    },
+                    "ram": {
+                        "display": "Uso de memoria (total)"
+                    },
+                    "ram_details": {
+                        "display": "Detalles de la memoria"
+                    },
+                    "ram_own": {
+                        "display": "Uso de memoria (programa)"
+                    },
+                    "title": "Detalles técnicos"
+                },
+                "identity": {
+                    "latency": {
+                        "display": "Latencia de red"
+                    },
+                    "owner": {
+                        "display": "Desarrollador de robots"
+                    },
+                    "signature": {
+                        "display": "Firma"
+                    },
+                    "title": "Identidad",
+                    "uptime": {
+                        "display": "Tiempo de actividad del robot"
+                    },
+                    "uuid": {
+                        "display": "UUID de sesión"
+                    },
+                    "version": {
+                        "display": "Versión de robot"
+                    }
+                },
+                "stats": {
+                    "cached_values": {
+                        "display": "cachés"
+                    },
+                    "channels": {
+                        "display": "Canales"
+                    },
+                    "guilds": {
+                        "display": "Servidores"
+                    },
+                    "interactions": {
+                        "display": "Interacciones"
+                    },
+                    "msgs": {
+                        "display": "Mensajes vistos"
+                    },
+                    "title": "Estadísticas de robots",
+                    "users": {
+                        "display": "Usuarios"
+                    }
+                }
+            },
+            "options": {
+                "context": {
+                    "label": "Datos cerebrales locales"
+                },
+                "hardware": {
+                    "label": "Información de hardware"
+                },
+                "identity": {
+                    "label": "Información general"
+                },
+                "placeholder": "Elige categoría...",
+                "stats": {
+                    "label": "Estadística"
+                }
+            },
+            "buttons": {
+                "url_button": {
+                    "label": "Visita el repositorio de GitHub"
+                },
+                "suggest_button": {
+                    "label": "Enviar sugerencias"
+                }
+            }
+        }
+    },
+    "settings": {
+        "title": "Configuración de usuario",
+        "header_description": "Configuraciones de usuario",
+        "fields": {
+            "locale": "**Idioma para mostrar**: %{lang_code}",
+            "embed_color": "**Color para incrustar**: %{hex}"
+        }
+    },
+    "text": {
+        "boolean": {
+            "false": "No",
+            "true": "Sí"
+        },
+        "activity_type": {
+            "playing": "Jugando %{activity}",
+            "streaming": "Transmitiendo %{activity}",
+            "listening": "Escuchando %{activity}",
+            "watching": "Viendo %{activity}",
+            "competing": "%{activity} competidora",
+            "game": "Jugando %{activity} en %{platform}",
+            "stream": "Transmitiendo %{activity} en %{platform}",
+            "spotify": "Escuchando %{title} de %{artist} en %{album}"
+        },
+        "possible_map": {
+            "1": "No, eh.",
+            "2": "No.",
+            "3": "Quizás no.",
+            "4": "Supongo que no.",
+            "5": "Posible que no.",
+            "6": "No sé.",
+            "7": "Posible.",
+            "8": "Supongo que sí.",
+            "9": "tal vez sí.",
+            "10": "sí",
+            "11": "sí, eh"
+        },
+        "8ball_words": {
+            "1": "No.",
+            "2": "No.",
+            "3": "No.",
+            "4": "No, eh.",
+            "5": "No.",
+            "6": "Negativo.",
+            "7": "Quizás no.",
+            "8": "Quizás no.",
+            "9": "Quizás no.",
+            "10": "Quizás no, eh.",
+            "11": "Quizás no.",
+            "12": "Quizás negativo.",
+            "13": "Supongo que no.",
+            "14": "Supongo que no.",
+            "15": "Supongo que no.",
+            "16": "Supongo que no, eh.",
+            "17": "Supongo que no.",
+            "18": "Supongo que negativo.",
+            "19": "Sí.",
+            "20": "Sí.",
+            "21": "Sí.",
+            "22": "Sí.",
+            "23": "Sí, eh.",
+            "24": "Quizás sí.",
+            "25": "Quizás sí.",
+            "26": "Quizás sí.",
+            "27": "Quizás sí.",
+            "28": "Quizás sí.",
+            "29": "Supongo que sí.",
+            "30": "Supongo que sí.",
+            "31": "Supongo que sí.",
+            "32": "Supongo que sí.",
+            "33": "Supongo que sí.",
+            "34": "Positivo.",
+            "35": "Definitivamente sí.",
+            "36": "Definitivamente.",
+            "37": "Definitivamente no.",
+            "38": "No me parece.",
+            "39": "Creo que sí.",
+            "40": "No sé.",
+            "41": "Parcialmente si.",
+            "42": "Parcialmente no.",
+            "43": "Definitivamente no.",
+            "44": "Que no es.",
+            "45": "Es.",
+            "46": "Mmmm.",
+            "47": "Sí.",
+            "48": "Posible.",
+            "49": "Tal vez.",
+            "50": "Más o menos sí.",
+            "51": "Más o menos no.",
+            "52": "¿Qué importa? \nno me parece.",
+            "53": "¿Qué importa? \nse supone que si.",
+            "54": "¿Qué importa? \nNo se supone que sea sí.",
+            "55": "Es seguro.",
+            "56": "Es decididamente así.",
+            "57": "Sin duda.",
+            "58": "Sí definitivamente.",
+            "59": "Puedes confiar en ello.",
+            "60": "Como yo lo veo si.",
+            "61": "Lo más probable es que.",
+            "62": "Responde confusamente inténtalo de nuevo.",
+            "63": "Pregunta nuevamente más tarde.",
+            "64": "Mejor no te lo digo esta vez.",
+            "65": "No puedo predecirlo ahora.",
+            "66": "Concéntrate y pregunta de nuevo.",
+            "67": "No cuentes con ello.",
+            "68": "Mi respuesta es no.",
+            "69": "Mis fuentes dicen que no.",
+            "70": "Las perspectivas no son tan buenas.",
+            "71": "Muy dudoso.",
+            "72": "Buenas perspectivas.",
+            "73": "Sí.",
+            "74": "Las señales apuntan a que sí.",
+            "75": "Lo haremos realidad.",
+            "76": "Palabra.",
+            "77": "Eso está en el presupuesto.",
+            "78": "👍",
+            "79": "Sí, por otros 5.000 dólares.",
+            "80": "La IA dice que sí.",
+            "81": "Lo arreglaremos en la publicación.",
+            "82": "Sí. \nespera NO-",
+            "83": "Fuera de alcance.",
+            "84": "Pedro dice que no.",
+            "85": "Eso está fuera de marca.",
+            "86": "Fuera de la oficina.",
+            "87": "¿Está eso en tu presupuesto?",
+            "88": "Error 404: no encontrado",
+            "89": "¿Discutir mientras tomamos unas copas?",
+            "90": "Sin memoria.",
+            "91": "Revisa tu Slack.",
+            "92": "ja.",
+            "93": "nordeste.",
+            "94": "La respuesta va al baño.",
+            "95": "Estoy comiendo sándwich. \ninténtalo más tarde.",
+            "96": "Pelota.",
+            "97": "Absolutamente.",
+            "98": "Afirmativamente.",
+            "99": "Inequívocamente.",
+            "100": "Según Google sí.",
+            "101": "Según Google núm.",
+            "102": "Obtenga su dinero y devuélvalo. \nSí.",
+            "103": "Mmm... soy idiota.",
+            "104": "No estúpido.",
+            "105": "A quién le importa.",
+            "106": "No deberías saberlo.",
+            "107": "No me preguntes eso.",
+            "108": "¿Quién eres?",
+            "109": "Sólo soy una pelota.",
+            "110": "Otros muchachos responderán a eso.",
+            "111": "Te quemarás.",
+            "112": "Púdrete en el infierno.",
+            "113": "Callarse la boca.",
+            "114": "¿Qué hay en tu cerebro?"
+        },
+        "coinflip": {
+            "true": "Cara",
+            "false": "Cruz"
+        },
+        "status": {
+            "online": "En línea",
+            "offline": "Desconectado",
+            "idle": "Extraordinario",
+            "dnd": "No molestar"
+        },
+        "device": {
+            "mobile": "Móvil",
+            "desktop": "Escritorio",
+            "website": "Sitio web"
+        },
+        "command_synchronized": "Los comandos se han sincronizado ahora.",
+        "idk": "NO SÉ",
+        "linux_distribution": "Distribución de Linux",
+        "platform": "Plataforma",
+        "standalone": "Autónomo",
+        "unknown": "Desconocido",
+        "unknown_join": "No puedo encontrar la fecha en que se unió este hermano.",
+        "joined": "Se unió",
+        "left": "Queda"
     }
-  },
-  "context_menu": {
-    "ban_member": {
-      "name": "Prohibición"
-    },
-    "kick_member": {
-      "name": "Expulsar"
-    },
-    "timeout_member": {
-      "name": "Silenciar"
-    }
-  },
-  "error": {
-    "custom": {
-      "cannot_timeout_higher": "Mi rol no es lo suficientemente alto como para agotar el tiempo de espera de este usuario.",
-      "channel_has_no_slowmode_property": "Este canal no tiene propiedad para configurar el retraso en modo lento.",
-      "forbidden_timeout": "No tengo permiso para suspender el tiempo de espera de los miembros.",
-      "guild_only": "El comando solo se puede utilizar en Guild.",
-      "insufficient_permission_ban": "No tienes permiso para prohibir al miembro %{user}.",
-      "insufficient_permission_kick": "No tienes permiso para expulsar al miembro %{user}.",
-      "invalidated_cache": "El comando solo funciona en servidor debido al problema con los cachés.",
-      "missing_category": "Categoría faltante",
-      "no_git_commithash": "No se encontró ningún hash de confirmación",
-      "no_git_lastcommit": "No se encontró ningún mensaje de confirmación",
-      "roblox_failed_retrieve_avatar": "No se pudo recuperar el avatar del usuario de Roblox %{username}.",
-      "roblox_forbidden": "No se pudieron recuperar datos de la API de Roblox porque el cliente no tiene un token CSRF no válido o lo utiliza.",
-      "roblox_user_not_found": "Un usuario de Roblox llamado '%{username}' no existe.",
-      "timeout_duration_lessflow": "La duración debe ser mayor que 0.",
-      "tried_to_timeout_higher": "Su rol no es lo suficientemente alto como para agotar el tiempo de espera del usuario.",
-      "tried_to_timeout_himself": "No puedes pausar tu tiempo",
-      "tried_to_timeout_owner": "No se puede agotar el tiempo de espera del propietario del servidor.",
-      "unknown_signature": "Firma desconocida",
-      "unsupported_channel": "El canal no es compatible con el bot.",
-      "user_not_found": "Usuario no encontrado."
-    },
-    "embed": {
-      "contributor_not_found": {
-        "description": "No se ha encontrado el colaborador %{contributor}.",
-        "title": "Colaborador no encontrado"
-      },
-      "edge_tts_not_installed": {
-        "description": "El servidor no tiene ningún paquete para generar voz desde edge-tts.",
-        "title": "Edge TTS no instalado"
-      },
-      "guild_only": {
-        "description": "Este comando es sólo para el servidor.",
-        "title": "Contexto de ejecución no válido"
-      },
-      "send_error": {
-        "description": "Se produjo un error al intentar enviar: %{e}",
-        "title": "enviar error"
-      },
-      "slowmode_out_of_range": {
-        "description": "El retraso del modo lento debe estar entre 0 y 21600 segundos.",
-        "title": "Fuera de rango"
-      },
-      "tts_generation_error": {
-        "description": "Se produjo un error al intentar generar voz: %{e}",
-        "title": "Error de generación de TTS"
-      },
-      "tts_no_text": {
-        "description": "Has configurado la entrada vacía. \nVuelva a intentarlo más tarde con la entrada.",
-        "title": "La entrada no debe estar vacía."
-      },
-      "unsupported_channel_slowmode": {
-        "description": "El canal %{channel} no admite el modo lento.",
-        "title": "Canal no soportado"
-      },
-      "unsupported_channel_type": {
-        "description": "Has elegido un canal que no es compatible.",
-        "title": "Tipo de canal no admitido"
-      }
-    },
-    "exceptions": {
-      "AppCommandError": "¡Se produjo un error de comando desconocido!",
-      "BotMissingPermissions": "No tengo los permisos necesarios para ejecutarlo.",
-      "CheckFailure": "No tienes permiso para utilizar este comando.",
-      "CommandAlreadyRegistered": "El comando ya estaba registrado antes.",
-      "CommandInvokeError": "Se produjo un error al ejecutar el comando.",
-      "CommandLimitReached": "El uso del comando está actualmente limitado debido a la limitación del comando.",
-      "CommandNotFound": "El comando no fue encontrado.",
-      "CommandOnCooldown": "El comando tiene tiempo de reutilización. \nInténtelo de nuevo después de pasar %{remaining} segundos más.",
-      "CommandSignatureMismatch": "El comando no está sincronizado con el último.",
-      "CommandSyncFailure": "No se pudieron sincronizar los comandos.",
-      "HTTPException": "La operación falló debido a un error HTTP.",
-      "MissingAnyRole": "No tienes ninguno de los roles requeridos para usarlo.",
-      "MissingPermissions": "No tiene los permisos necesarios para usarlo.",
-      "MissingRole": "No tienes el rol requerido para usarlo.",
-      "NoPrivateMessage": "El comando no se puede utilizar en mensajes privados.",
-      "TransformerError": "Se produjo un error al procesar los argumentos del comando.",
-      "TranslationError": "Se produjo un error al traducir el comando.",
-      "Unknown": "¡Se arrojaron errores no detectados! \n%{e}"
-    },
-    "http": {
-      "400": "Error 400: Solicitud incorrecta. \nLa entrada contiene una sintaxis no válida.",
-      "403": "Error 403: Prohibido. \nNo tienes permiso para acceder al recurso.",
-      "404": "Error 404: No encontrado. \nNo existe ningún archivo.",
-      "429": "Límite de solicitudes excedido. Inténtalo de nuevo más tarde.",
-      "500": "Error 500: Error interno del servidor. \nEl servidor ha encontrado un error desconocido durante el procesamiento."
-    }
-  },
-  "label": {
-    "answer": "Respuesta",
-    "channel_bitrate": "Velocidad de bits de audio",
-    "channel_category": "Categoría",
-    "channel_channels": "Canales",
-    "channel_creation": "Creado en",
-    "channel_instance_running": "¿Se está ejecutando la instancia?",
-    "channel_listeners": "Miembros en el canal",
-    "channel_name": "Nombre del canal",
-    "channel_nsfw": "es NSFW",
-    "channel_position": "Posición del canal",
-    "channel_requesting_to_speak": "Miembros que solicitan hablar",
-    "channel_slowmode": "Retraso de modo lento",
-    "channel_threads": "Trapos",
-    "channel_topic": "Tema del canal",
-    "channel_type": "Tipo de canal",
-    "channel_userlimit": "Límite de usuarios",
-    "non_nitro": "Usuario no nitro",
-    "roblox_user_banned": "ha prohibido",
-    "roblox_user_created": "Creado en",
-    "roblox_user_display": "Nombre para mostrar",
-    "roblox_user_id": "ID de usuario de Roblox",
-    "roblox_user_name": "Nombre de usuario",
-    "user_bot": "es robot",
-    "user_creation": "Creado en",
-    "user_highest_role": "Papel más alto",
-    "user_id": "ID de usuario",
-    "user_join": "Se unió a",
-    "user_message_count": "Mensajes que vi",
-    "user_message_count_value": "%{messages} mensajes",
-    "user_name": "Nombre",
-    "user_nitro": "Nitro desde",
-    "user_roles": "Roles",
-    "user_status": "Estado"
-  },
-  "messages": {
-    "ban_user": "%{user} ha sido baneado.",
-    "kick_user": "%{user} ha sido expulsado.",
-    "timed_out_user": "Se ha agotado el tiempo de espera de %{user} para %{length}.",
-    "warn_user": "%{user} ha sido advertido."
-  },
-  "modal": {
-    "DynamicInfoView": {
-      "buttons": {
-        "suggest_button": {
-          "label": "Enviar sugerencias"
-        },
-        "url_button": {
-          "label": "Visita el repositorio de GitHub"
-        }
-      },
-      "data": {
-        "context": {
-          "memory": {
-            "display": "Uso del contexto"
-          },
-          "mode": {
-            "display": "Estado de ánimo actual"
-          },
-          "muted": {
-            "display": "¿Jim está silenciado?"
-          },
-          "title": "Datos cerebrales locales"
-        },
-        "hardware": {
-          "cpu": {
-            "display": "Uso de CPU (total)"
-          },
-          "cpu_own": {
-            "display": "Uso de CPU (programa)"
-          },
-          "disk": {
-            "display": "Uso del disco"
-          },
-          "platform": {
-            "display": "Plataforma"
-          },
-          "ram": {
-            "display": "Uso de memoria (total)"
-          },
-          "ram_details": {
-            "display": "Detalles de la memoria"
-          },
-          "ram_own": {
-            "display": "Uso de memoria (programa)"
-          },
-          "title": "Detalles técnicos"
-        },
-        "identity": {
-          "latency": {
-            "display": "Latencia de red"
-          },
-          "owner": {
-            "display": "Desarrollador de robots"
-          },
-          "signature": {
-            "display": "Firma"
-          },
-          "title": "Identidad",
-          "uptime": {
-            "display": "Tiempo de actividad del robot"
-          },
-          "uuid": {
-            "display": "UUID de sesión"
-          },
-          "version": {
-            "display": "Versión de robot"
-          }
-        },
-        "stats": {
-          "cached_values": {
-            "display": "cachés"
-          },
-          "channels": {
-            "display": "Canales"
-          },
-          "guilds": {
-            "display": "Servidores"
-          },
-          "interactions": {
-            "display": "Interacciones"
-          },
-          "msgs": {
-            "display": "Mensajes vistos"
-          },
-          "title": "Estadísticas de robots",
-          "users": {
-            "display": "Usuarios"
-          }
-        }
-      },
-      "options": {
-        "context": {
-          "label": "Datos cerebrales locales"
-        },
-        "hardware": {
-          "label": "Información de hardware"
-        },
-        "identity": {
-          "label": "Información general"
-        },
-        "placeholder": "Elige categoría...",
-        "stats": {
-          "label": "Estadística"
-        }
-      }
-    }
-  },
-  "settings": {
-    "fields": {
-      "embed_color": "**Color para incrustar**: %{hex}",
-      "locale": "**Idioma para mostrar**: %{lang_code}"
-    },
-    "header_description": "Configuraciones de usuario",
-    "title": "Configuración de usuario"
-  },
-  "text": {
-    "8ball_words": {
-      "1": "No.",
-      "10": "Quizás no, eh.",
-      "100": "Según Google sí.",
-      "101": "Según Google núm.",
-      "102": "Obtenga su dinero y devuélvalo. \nSí.",
-      "103": "Mmm... soy idiota.",
-      "104": "No estúpido.",
-      "105": "A quién le importa.",
-      "106": "No deberías saberlo.",
-      "107": "No me preguntes eso.",
-      "108": "¿Quién eres?",
-      "109": "Sólo soy una pelota.",
-      "11": "Quizás no.",
-      "110": "Otros muchachos responderán a eso.",
-      "111": "Te quemarás.",
-      "112": "Púdrete en el infierno.",
-      "113": "Callarse la boca.",
-      "114": "¿Qué hay en tu cerebro?",
-      "12": "Quizás negativo.",
-      "13": "Supongo que no.",
-      "14": "Supongo que no.",
-      "15": "Supongo que no.",
-      "16": "Supongo que no, eh.",
-      "17": "Supongo que no.",
-      "18": "Supongo que negativo.",
-      "19": "Sí.",
-      "2": "No.",
-      "20": "Sí.",
-      "21": "Sí.",
-      "22": "Sí.",
-      "23": "Sí, eh.",
-      "24": "Quizás sí.",
-      "25": "Quizás sí.",
-      "26": "Quizás sí.",
-      "27": "Quizás sí.",
-      "28": "Quizás sí.",
-      "29": "Supongo que sí.",
-      "3": "No.",
-      "30": "Supongo que sí.",
-      "31": "Supongo que sí.",
-      "32": "Supongo que sí.",
-      "33": "Supongo que sí.",
-      "34": "Positivo.",
-      "35": "Definitivamente sí.",
-      "36": "Definitivamente.",
-      "37": "Definitivamente no.",
-      "38": "No me parece.",
-      "39": "Creo que sí.",
-      "4": "No, eh.",
-      "40": "No sé.",
-      "41": "Parcialmente si.",
-      "42": "Parcialmente no.",
-      "43": "Definitivamente no.",
-      "44": "Que no es.",
-      "45": "Es.",
-      "46": "Mmmm.",
-      "47": "Sí.",
-      "48": "Posible.",
-      "49": "Tal vez.",
-      "5": "No.",
-      "50": "Más o menos sí.",
-      "51": "Más o menos no.",
-      "52": "¿Qué importa? \nno me parece.",
-      "53": "¿Qué importa? \nse supone que si.",
-      "54": "¿Qué importa? \nNo se supone que sea sí.",
-      "55": "Es seguro.",
-      "56": "Es decididamente así.",
-      "57": "Sin duda.",
-      "58": "Sí definitivamente.",
-      "59": "Puedes confiar en ello.",
-      "6": "Negativo.",
-      "60": "Como yo lo veo si.",
-      "61": "Lo más probable es que.",
-      "62": "Responde confusamente inténtalo de nuevo.",
-      "63": "Pregunta nuevamente más tarde.",
-      "64": "Mejor no te lo digo esta vez.",
-      "65": "No puedo predecirlo ahora.",
-      "66": "Concéntrate y pregunta de nuevo.",
-      "67": "No cuentes con ello.",
-      "68": "Mi respuesta es no.",
-      "69": "Mis fuentes dicen que no.",
-      "7": "Quizás no.",
-      "70": "Las perspectivas no son tan buenas.",
-      "71": "Muy dudoso.",
-      "72": "Buenas perspectivas.",
-      "73": "Sí.",
-      "74": "Las señales apuntan a que sí.",
-      "75": "Lo haremos realidad.",
-      "76": "Palabra.",
-      "77": "Eso está en el presupuesto.",
-      "78": "👍",
-      "79": "Sí, por otros 5.000 dólares.",
-      "8": "Quizás no.",
-      "80": "La IA dice que sí.",
-      "81": "Lo arreglaremos en la publicación.",
-      "82": "Sí. \nespera NO-",
-      "83": "Fuera de alcance.",
-      "84": "Pedro dice que no.",
-      "85": "Eso está fuera de marca.",
-      "86": "Fuera de la oficina.",
-      "87": "¿Está eso en tu presupuesto?",
-      "88": "Error 404: no encontrado",
-      "89": "¿Discutir mientras tomamos unas copas?",
-      "9": "Quizás no.",
-      "90": "Sin memoria.",
-      "91": "Revisa tu Slack.",
-      "92": "ja.",
-      "93": "nordeste.",
-      "94": "La respuesta va al baño.",
-      "95": "Estoy comiendo sándwich. \ninténtalo más tarde.",
-      "96": "Pelota.",
-      "97": "Absolutamente.",
-      "98": "Afirmativamente.",
-      "99": "Inequívocamente."
-    },
-    "activity_type": {
-      "competing": "%{activity} competidora",
-      "game": "Jugando %{activity} en %{platform}",
-      "listening": "Escuchando %{activity}",
-      "playing": "Jugando %{activity}",
-      "spotify": "Escuchando %{title} de %{artist} en %{album}",
-      "stream": "Transmitiendo %{activity} en %{platform}",
-      "streaming": "Transmitiendo %{activity}",
-      "watching": "Viendo %{activity}"
-    },
-    "boolean": {
-      "false": "No",
-      "true": "Sí"
-    },
-    "coinflip": {
-      "false": "Cruz",
-      "true": "Cara"
-    },
-    "command_synchronized": "Los comandos se han sincronizado ahora.",
-    "idk": "NO SÉ",
-    "linux_distribution": "Distribución de Linux",
-    "platform": "Plataforma",
-    "possible_map": {
-      "1": "No, eh.",
-      "10": "sí",
-      "11": "sí, eh",
-      "2": "No.",
-      "3": "Quizás no.",
-      "4": "Supongo que no.",
-      "5": "Posible que no.",
-      "6": "No sé.",
-      "7": "Posible.",
-      "8": "Supongo que sí.",
-      "9": "tal vez sí."
-    },
-    "standalone": "Autónomo",
-    "unknown": "Desconocido",
-    "unknown_join": "No puedo encontrar la fecha en que se unió este hermano."
-  }
 }
