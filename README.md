@@ -1,5 +1,7 @@
 # pox-bot
 
+[![Crowdin Sync](https://github.com/p0x38/pox-bot/actions/workflows/crowdin.yml/badge.svg)](https://github.com/p0x38/pox-bot/actions/workflows/crowdin.yml)
+
 > [!CAUTION]
 > There is large files that may consume your disk space.
 
