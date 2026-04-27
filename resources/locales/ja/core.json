@@ -1,30 +1,30 @@
 {
     "common": {
-        "comfirm": "Confirm",
-        "cancel": "Cancel",
-        "loading": "Please wait...",
+        "comfirm": "確認する",
+        "cancel": "キャンセル",
+        "loading": "しばらくお待ちください...",
         "status": {
-            "online": "Online",
-            "idle": "Idling",
-            "dnd": "Do Not Disturb"
+            "online": "オンライン中",
+            "idle": "待機中",
+            "dnd": "取り込み中"
         }
     },
     "errors": {
-        "title": "Whoopsie!",
-        "generic": "Something went wrong. Please try again later.",
-        "cooldown": "Please wait %{remaining}s before using this again.",
-        "user_not_found": "I couldn't find that user.",
-        "user_missing_permissions": "You do not have permission to do that.",
-        "bot_missing_permissions": "I don't have permission to do it.",
-        "not_owner": "Only the bot developer can use this command."
+        "title": "おっと！",
+        "generic": "問題が発生しました。後でもう一度お試しください。",
+        "cooldown": "再度使用する前に %{remaining}秒お待ちください。",
+        "user_not_found": "そのユーザーが見つかりませんでした。",
+        "user_missing_permissions": "それを行う権限がありません。",
+        "bot_missing_permissions": "私はそれを行う権限がありません。",
+        "not_owner": "Bot開発者のみがこのコマンドを使用できます。"
     },
     "units": {
         "seconds": {
-            "one": "second",
-            "other": "seconds"
+            "one": "秒",
+            "other": "秒"
         }
     },
     "bot": {
-        "sync_success": "Commands have been synchronized successfully."
+        "sync_success": "コマンドは正常に同期されました。"
     }
 }
