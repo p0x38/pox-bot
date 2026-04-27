@@ -1,0 +1,11 @@
+{
+    "ban_member": {
+        "name": "Cấm"
+    },
+    "kick_member": {
+        "name": "Khai trừ"
+    },
+    "timeout_member": {
+        "name": "Cho tạm dừng"
+    }
+}

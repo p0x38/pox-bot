@@ -1,0 +1,105 @@
+{
+    "custom": {
+        "cannot_timeout_higher": "Vai trò của tôi không đủ cao để hết thời gian chờ cho người dùng này.",
+        "channel_has_no_slowmode_property": "Kênh này không có thuộc tính để đặt độ trễ chế độ chậm.",
+        "forbidden_timeout": "Tôi không có quyền cho các thành viên hết thời gian chờ.",
+        "guild_only": "Lệnh này chỉ có thể sử dụng được trong Guild.",
+        "insufficient_permission_ban": "Bạn không có quyền cấm thành viên %{user}.",
+        "insufficient_permission_kick": "Bạn không có quyền đá thành viên %{user}.",
+        "invalidated_cache": "Lệnh này chỉ hoạt động trên bang hội do vấn đề với bộ đệm.",
+        "missing_category": "Thiếu danh mục",
+        "no_git_commithash": "Không tìm thấy hàm băm cam kết",
+        "no_git_lastcommit": "Không tìm thấy thông báo cam kết",
+        "roblox_failed_retrieve_avatar": "Không thể truy xuất hình đại diện của người dùng Roblox %{username}.",
+        "roblox_forbidden": "Không thể truy xuất dữ liệu từ API Roblox vì khách hàng không có hoặc sử dụng Mã thông báo CSRF không hợp lệ.",
+        "roblox_user_not_found": "Người dùng Roblox có tên '%{username}' không tồn tại.",
+        "timeout_duration_lessflow": "Thời lượng phải lớn hơn 0",
+        "tried_to_timeout_higher": "Vai trò của bạn không đủ cao để khiến người dùng hết thời gian chờ.",
+        "tried_to_timeout_himself": "Bạn không thể tự mình hết thời gian",
+        "tried_to_timeout_owner": "Bạn không thể hết thời gian chờ chủ sở hữu máy chủ",
+        "unknown_signature": "Chữ ký không xác định",
+        "unsupported_channel": "Kênh không được bot hỗ trợ.",
+        "user_not_found": "Không tìm thấy người dùng."
+    },
+    "embed": {
+        "contributor_not_found": {
+            "description": "Không tìm thấy người đóng góp %{contributor}.",
+            "title": "Không tìm thấy người đóng góp"
+        },
+        "database_not_available": {
+            "description": "Database pool hasn't available this time.",
+            "title": "Database not available"
+        },
+        "edge_tts_not_installed": {
+            "description": "Máy chủ không có gói để tạo giọng nói từ edge-tts.",
+            "title": "Edge TTS chưa được cài đặt"
+        },
+        "guild_only": {
+            "description": "Lệnh này chỉ dành cho máy chủ.",
+            "title": "Bối cảnh chạy không hợp lệ"
+        },
+        "only_positive_value": {
+            "description": "Negative value is not allowed for this command.",
+            "title": "Negative value is not allowed"
+        },
+        "send_error": {
+            "description": "Đã xảy ra lỗi khi cố gắng gửi: %{e}",
+            "title": "Gửi lỗi"
+        },
+        "slowmode_out_of_range": {
+            "description": "Độ trễ của chế độ chậm phải nằm trong khoảng từ 0 đến 21600 giây.",
+            "title": "Ngoài phạm vi"
+        },
+        "too_high_value": {
+            "description": "The value mustn't over {max}.",
+            "title": "Value cannot be higher than {max}"
+        },
+        "tts_generation_error": {
+            "description": "Đã xảy ra lỗi khi cố gắng tạo giọng nói: %{e}",
+            "title": "Lỗi tạo TTS"
+        },
+        "tts_no_text": {
+            "description": "Bạn đã đặt đầu vào trống. \nthử lại sau bằng đầu vào.",
+            "title": "Đầu vào không được trống"
+        },
+        "unsupported_channel_slowmode": {
+            "description": "Kênh %{channel} không hỗ trợ chế độ chậm.",
+            "title": "Kênh không được hỗ trợ"
+        },
+        "unsupported_channel_type": {
+            "description": "Bạn đã chọn một kênh không được hỗ trợ.",
+            "title": "Loại kênh không được hỗ trợ"
+        },
+        "welcome_channel_not_enabled": {
+            "description": "Welcome channel has not enabled in this guild. Make sure to set welcome channel to use this command.",
+            "title": "Welcome channel not enabled"
+        }
+    },
+    "exceptions": {
+        "AppCommandError": "Lỗi lệnh không xác định đã được đưa ra!",
+        "BotMissingPermissions": "Tôi không có quyền cần thiết để thực hiện nó.",
+        "CheckFailure": "Bạn không có quyền sử dụng lệnh này.",
+        "CommandAlreadyRegistered": "Lệnh đã được đăng ký trước đó.",
+        "CommandInvokeError": "Đã xảy ra lỗi khi thực hiện lệnh.",
+        "CommandLimitReached": "Việc sử dụng lệnh hiện bị hạn chế do giới hạn lệnh.",
+        "CommandNotFound": "Lệnh không được tìm thấy.",
+        "CommandOnCooldown": "Lệnh có thời gian hồi chiêu. \nVui lòng thử lại sau khi vượt qua %{remaining} giây nữa.",
+        "CommandSignatureMismatch": "Lệnh không đồng bộ với lệnh mới nhất.",
+        "CommandSyncFailure": "Không thể đồng bộ hóa (các) lệnh.",
+        "HTTPException": "Thao tác không thành công do Lỗi HTTP.",
+        "MissingAnyRole": "Bạn không có bất kỳ vai trò bắt buộc nào để sử dụng nó.",
+        "MissingPermissions": "Bạn không có quyền cần thiết để sử dụng nó.",
+        "MissingRole": "Bạn không có vai trò cần thiết để sử dụng nó.",
+        "NoPrivateMessage": "Lệnh này không thể được sử dụng trên tin nhắn riêng tư.",
+        "TransformerError": "Đã xảy ra lỗi khi xử lý đối số lệnh.",
+        "TranslationError": "Đã xảy ra lỗi khi dịch lệnh.",
+        "Unknown": "Lỗi chưa được xử lý đã được ném! \n%{e}"
+    },
+    "http": {
+        "400": "Lỗi 400: Yêu cầu không hợp lệ. \nĐầu vào chứa cú pháp không hợp lệ.",
+        "403": "Lỗi 403: Bị cấm. \nBạn không có quyền truy cập tài nguyên.",
+        "404": "Lỗi 404: Không tìm thấy. \nKhông có tập tin nào tồn tại.",
+        "429": "Đã vượt quá giới hạn yêu cầu. Vui lòng thử lại sau.",
+        "500": "Lỗi 500: Lỗi máy chủ nội bộ. \nMáy chủ đã gặp phải lỗi không xác định trong khi xử lý."
+    }
+}

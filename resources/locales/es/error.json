@@ -1,0 +1,105 @@
+{
+    "custom": {
+        "cannot_timeout_higher": "Mi rol no es lo suficientemente alto como para agotar el tiempo de espera de este usuario.",
+        "channel_has_no_slowmode_property": "Este canal no tiene propiedad para configurar el retraso en modo lento.",
+        "forbidden_timeout": "No tengo permiso para suspender el tiempo de espera de los miembros.",
+        "guild_only": "El comando solo se puede utilizar en Guild.",
+        "insufficient_permission_ban": "No tienes permiso para prohibir al miembro %{user}.",
+        "insufficient_permission_kick": "No tienes permiso para expulsar al miembro %{user}.",
+        "invalidated_cache": "El comando solo funciona en servidor debido al problema con los cachés.",
+        "missing_category": "Categoría faltante",
+        "no_git_commithash": "No se encontró ningún hash de confirmación",
+        "no_git_lastcommit": "No se encontró ningún mensaje de confirmación",
+        "roblox_failed_retrieve_avatar": "No se pudo recuperar el avatar del usuario de Roblox %{username}.",
+        "roblox_forbidden": "No se pudieron recuperar datos de la API de Roblox porque el cliente no tiene un token CSRF no válido o lo utiliza.",
+        "roblox_user_not_found": "Un usuario de Roblox llamado '%{username}' no existe.",
+        "timeout_duration_lessflow": "La duración debe ser mayor que 0.",
+        "tried_to_timeout_higher": "Su rol no es lo suficientemente alto como para agotar el tiempo de espera del usuario.",
+        "tried_to_timeout_himself": "No puedes pausar tu tiempo",
+        "tried_to_timeout_owner": "No se puede agotar el tiempo de espera del propietario del servidor.",
+        "unknown_signature": "Firma desconocida",
+        "unsupported_channel": "El canal no es compatible con el bot.",
+        "user_not_found": "Usuario no encontrado."
+    },
+    "embed": {
+        "contributor_not_found": {
+            "description": "No se ha encontrado el colaborador %{contributor}.",
+            "title": "Colaborador no encontrado"
+        },
+        "database_not_available": {
+            "description": "El pool de bases de datos no está disponible esta vez.",
+            "title": "Base de datos no disponible"
+        },
+        "edge_tts_not_installed": {
+            "description": "El servidor no tiene ningún paquete para generar voz desde edge-tts.",
+            "title": "Edge TTS no instalado"
+        },
+        "guild_only": {
+            "description": "Este comando es sólo para el servidor.",
+            "title": "Contexto de ejecución no válido"
+        },
+        "only_positive_value": {
+            "description": "No se permite el valor negativo para este comando.",
+            "title": "No se permite el valor negativo"
+        },
+        "send_error": {
+            "description": "Se produjo un error al intentar enviar: %{e}",
+            "title": "enviar error"
+        },
+        "slowmode_out_of_range": {
+            "description": "El retraso del modo lento debe estar entre 0 y 21600 segundos.",
+            "title": "Fuera de rango"
+        },
+        "too_high_value": {
+            "description": "El valor no debe sobrepasar {max}.",
+            "title": "El valor no puede ser mayor que {max}"
+        },
+        "tts_generation_error": {
+            "description": "Se produjo un error al intentar generar voz: %{e}",
+            "title": "Error de generación de TTS"
+        },
+        "tts_no_text": {
+            "description": "Has configurado la entrada vacía. \nVuelva a intentarlo más tarde con la entrada.",
+            "title": "La entrada no debe estar vacía."
+        },
+        "unsupported_channel_slowmode": {
+            "description": "El canal %{channel} no admite el modo lento.",
+            "title": "Canal no soportado"
+        },
+        "unsupported_channel_type": {
+            "description": "Has elegido un canal que no es compatible.",
+            "title": "Tipo de canal no admitido"
+        },
+        "welcome_channel_not_enabled": {
+            "description": "El canal de bienvenida no ha sido activado en este gremio. Asegúrate de establecer el canal de bienvenida para usar este comando.",
+            "title": "Canal de bienvenida no activado"
+        }
+    },
+    "exceptions": {
+        "AppCommandError": "¡Se produjo un error de comando desconocido!",
+        "BotMissingPermissions": "No tengo los permisos necesarios para ejecutarlo.",
+        "CheckFailure": "No tienes permiso para utilizar este comando.",
+        "CommandAlreadyRegistered": "El comando ya estaba registrado antes.",
+        "CommandInvokeError": "Se produjo un error al ejecutar el comando.",
+        "CommandLimitReached": "El uso del comando está actualmente limitado debido a la limitación del comando.",
+        "CommandNotFound": "El comando no fue encontrado.",
+        "CommandOnCooldown": "El comando tiene tiempo de reutilización. \nInténtelo de nuevo después de pasar %{remaining} segundos más.",
+        "CommandSignatureMismatch": "El comando no está sincronizado con el último.",
+        "CommandSyncFailure": "No se pudieron sincronizar los comandos.",
+        "HTTPException": "La operación falló debido a un error HTTP.",
+        "MissingAnyRole": "No tienes ninguno de los roles requeridos para usarlo.",
+        "MissingPermissions": "No tiene los permisos necesarios para usarlo.",
+        "MissingRole": "No tienes el rol requerido para usarlo.",
+        "NoPrivateMessage": "El comando no se puede utilizar en mensajes privados.",
+        "TransformerError": "Se produjo un error al procesar los argumentos del comando.",
+        "TranslationError": "Se produjo un error al traducir el comando.",
+        "Unknown": "¡Se arrojaron errores no detectados! \n%{e}"
+    },
+    "http": {
+        "400": "Error 400: Solicitud incorrecta. \nLa entrada contiene una sintaxis no válida.",
+        "403": "Error 403: Prohibido. \nNo tienes permiso para acceder al recurso.",
+        "404": "Error 404: No encontrado. \nNo existe ningún archivo.",
+        "429": "Límite de solicitudes excedido. Inténtalo de nuevo más tarde.",
+        "500": "Error 500: Error interno del servidor. \nEl servidor ha encontrado un error desconocido durante el procesamiento."
+    }
+}
