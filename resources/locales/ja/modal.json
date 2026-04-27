@@ -2,73 +2,73 @@
     "DynamicInfoView": {
         "buttons": {
             "suggest_button": {
-                "label": "提案を送信する"
+                "label": "提案を送る"
             },
             "url_button": {
-                "label": "GitHub リポジトリにアクセスする"
+                "label": "GitHubリポジトリを見る"
             }
         },
         "data": {
             "context": {
                 "memory": {
-                    "display": "コンテキスト情報"
+                    "display": "コンテキスト使用量"
                 },
                 "mode": {
-                    "display": "現在の表情"
+                    "display": "現在のモード"
                 },
                 "muted": {
-                    "display": "彼はミュートされているか"
+                    "display": "Jimはミュート中？"
                 },
-                "title": "ローカルAI情報"
+                "title": "ローカルデータ"
             },
             "hardware": {
                 "cpu": {
-                    "display": "CPU使用率 (合計)"
+                    "display": "CPU使用率（全体）"
                 },
                 "cpu_own": {
-                    "display": "CPU使用率 (本体)"
+                    "display": "CPU使用率（プログラム）"
                 },
                 "disk": {
-                    "display": "ディスク使用可能な容量"
+                    "display": "ディスク使用量"
                 },
                 "platform": {
                     "display": "プラットフォーム"
                 },
                 "ram": {
-                    "display": "メモリ使用率 (合計)"
+                    "display": "メモリ使用量（全体）"
                 },
                 "ram_details": {
-                    "display": "詳細なメモリ情報"
+                    "display": "メモリ詳細"
                 },
                 "ram_own": {
-                    "display": "メモリ使用率 (本体)"
+                    "display": "メモリ使用量（プログラム）"
                 },
-                "title": "技術的"
+                "title": "技術情報"
             },
             "identity": {
                 "latency": {
-                    "display": "Ping値"
+                    "display": "ネットワーク遅延"
                 },
                 "owner": {
-                    "display": "このBOTを作った人"
+                    "display": "開発者"
                 },
                 "signature": {
-                    "display": "シグネチャー"
+                    "display": "シグネチャ"
                 },
-                "title": "基本的",
+                "title": "情報・バージョン",
                 "uptime": {
-                    "display": "BOTの起動期間"
+                    "display": "稼働時間"
                 },
                 "uuid": {
                     "display": "セッションUUID"
                 },
                 "version": {
-                    "display": "BOTバージョン"
+                    "display": "バージョン"
                 }
             },
             "stats": {
                 "cached_values": {
-                    "display": "キャッシュされた数"
+                    "display": "キャッシュ数"
                 },
                 "channels": {
                     "display": "チャンネル数"
@@ -80,9 +80,9 @@
                     "display": "インタラクション数"
                 },
                 "msgs": {
-                    "display": "メッセージ数"
+                    "display": "確認したメッセージ数"
                 },
-                "title": "BOT情報",
+                "title": "ボット統計",
                 "users": {
                     "display": "ユーザー数"
                 }
@@ -90,17 +90,17 @@
         },
         "options": {
             "context": {
-                "label": "ローカルAI情報"
+                "label": "ローカルデータ"
             },
             "hardware": {
-                "label": "ハードウェアに関する技術的な情報"
+                "label": "ハードウェア情報"
             },
             "identity": {
-                "label": "基本的な情報"
+                "label": "基本情報"
             },
-            "placeholder": "カテゴリを選択してください...",
+            "placeholder": "カテゴリを選んでね...",
             "stats": {
-                "label": "BOTに関する情報"
+                "label": "統計"
             }
         }
     }

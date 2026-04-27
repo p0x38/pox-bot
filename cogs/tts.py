@@ -139,7 +139,11 @@ class TextToSpeechCog(commands.Cog):
             embed.title = translator_instance.T("error.embed.send_error.title", loc)
             embed.description = translator_instance.T("error.embed.send_error.description", loc, {"e": e})
             await interaction.followup.send(embed=embed)
-
+    
+    @cached(60)
+    @ttsgroup.command(name="pocket")
+    async def
+    
     @cached(60)
     @ttsgroup.command(name="edge")
     async def edge_text_to_speech(self, interaction: discord.Interaction, text: str, lang: Optional[str], slow: Optional[bool]):

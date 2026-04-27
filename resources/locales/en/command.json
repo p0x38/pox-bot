@@ -9,7 +9,7 @@
         "name": "8ball"
     },
     "channel": {
-        "description": "A group for channels.",
+        "description": "A group for managing ",
         "info": {
             "description": "Shows channel information.",
             "embeds": {
