@@ -12,7 +12,7 @@ from src.translator import translator_instance
 from bot import PoxBot
 import data
 
-class Contributors(Cog):
+class ContributorsCog(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         self.contributor_list: list[dict[str, Any]] = data.get_contributors_v2()
@@ -122,4 +122,4 @@ class Contributors(Cog):
             return await interaction.response.send_message(embed=embed,file=pic)
     
 async def setup(bot):
-    await bot.add_cog(Contributors(bot))
+    await bot.add_cog(ContributorsCog(bot))

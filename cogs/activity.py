@@ -8,7 +8,7 @@ from os.path import exists, join
 from bot import PoxBot
 from logger import logger
 
-class InactivityStatus(commands.Cog):
+class InactivityCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         self.PRIMARY_INACTIVITY_THRESHOLD = 60 * 2.5
@@ -67,4 +67,4 @@ class InactivityStatus(commands.Cog):
     #    )
 
 async def setup(bot):
-    await bot.add_cog(InactivityStatus(bot))
+    await bot.add_cog(InactivityCog(bot))

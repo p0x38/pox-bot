@@ -29,7 +29,7 @@ def ship_names(name1, name2):
     
     return combined.capitalize()
 
-class Fun(Cog):
+class FunCog(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         
@@ -236,4 +236,4 @@ class Fun(Cog):
         await interaction.followup.send(embed=e)
     
 async def setup(bot):
-    await bot.add_cog(Fun(bot))
+    await bot.add_cog(FunCog(bot))

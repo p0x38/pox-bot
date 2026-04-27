@@ -2,7 +2,6 @@ import glob
 from itertools import islice
 import os
 from pathlib import Path
-import tempfile
 from time import time
 import uuid
 from aiocache import cached
@@ -55,7 +54,7 @@ class DiscordProgress(TqdmProgressBarLogger):
 if not hasattr(PIL.Image, 'ANTIALIAS'):
     PIL.Image.ANTIALIAS = PIL.Image.Resampling.LANCZOS # type: ignore
 
-class Generators(Cog):
+class GenerationCog(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         self.target_size_mb = 24
@@ -366,6 +365,9 @@ class Generators(Cog):
         content_type = message.attachments[0].content_type or ""
         await interaction.response.send_message(f"Video request recceived by {interaction.user.mention}! Preparing data...")
         
+        if not os.path.exists("cache"):
+            os.makedirs("cache")
+        
         job_id = uuid.uuid4().hex
         in_name = Path(f"cache/tempin_{job_id}{Path(message.attachments[0].filename).suffix}")
         out_name = Path(f"cache/tempout_{job_id}.mp4")
@@ -377,7 +379,7 @@ class Generators(Cog):
 
             file_size = os.path.getsize(in_name.absolute()) / (1024 * 1024)
 
-            audio = AudioFileClip("resources/fade_music.mp3")
+            audio = AudioFileClip("resources/audio/nocturne.mp3")
 
             dur = min(8, audio.duration)
             audio = audio.set_duration(dur)
@@ -449,4 +451,4 @@ class Generators(Cog):
             except Exception as e:
                 logger.exception(e)
 async def setup(bot):
-    await bot.add_cog(Generators(bot))
+    await bot.add_cog(GenerationCog(bot))

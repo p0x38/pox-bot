@@ -12,7 +12,7 @@ from src.translator import translator_instance as i18n
 from src.translator import translation_manager
 from src.database.modules import SettingsDatabase
 
-from models import SettingsData
+from src.models import SettingsData
 
 class LocalizedSettingsView(ui.View):
     def __init__(self, user_id: int, initial_data: SettingsData, db_manager: SettingsDatabase):

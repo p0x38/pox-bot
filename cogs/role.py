@@ -28,7 +28,7 @@ ALLOWED_PERMISSIONS_TO_EDIT = [
     "priority_speaker",
 ]
 
-class RoleGroup(commands.Cog):
+class RoleCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
@@ -169,4 +169,4 @@ class RoleGroup(commands.Cog):
             logger.exception(f"Uncaught exception: {e}")
             return
 async def setup(bot):
-    await bot.add_cog(RoleGroup(bot))
+    await bot.add_cog(RoleCog(bot))

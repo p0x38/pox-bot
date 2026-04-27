@@ -7,7 +7,7 @@ from thefuzz import process
 
 from stuff import truncate
 
-class SearchIndexMaker(commands.Cog):
+class SearchCog(commands.Cog):
     def __init__(self, bot: PoxBot):
         self.bot: PoxBot = bot
     
@@ -123,4 +123,4 @@ class SearchIndexMaker(commands.Cog):
             await interaction.followup.send("The bot has not connected with Database.")
             return
 async def setup(bot):
-    await bot.add_cog(SearchIndexMaker(bot))
+    await bot.add_cog(SearchCog(bot))

@@ -199,7 +199,7 @@ if __name__ == "__main__":
         logger.critical("You should to put the bot token to 'TOKEN' in .env!")
         exit()
     else:
-        monitor_proc = start_monitor()
+        #monitor_proc = start_monitor()
         
         try:
             bot.run(bot_token, log_handler=None)
@@ -209,5 +209,5 @@ if __name__ == "__main__":
         except Exception as e:
             logger.exception(f"Uncaught exception: {e}")
         finally:
-            monitor_proc.terminate()
+            #monitor_proc.terminate()
             logger.info("Bot has been stopped")

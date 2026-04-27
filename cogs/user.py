@@ -160,7 +160,7 @@ class TimeoutModal(ui.Modal, title="User timeout"):
             await interaction.response.send_message(embed=self.embed)
             
 
-class UserGroup(commands.Cog):
+class UserCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         
@@ -492,7 +492,7 @@ class UserGroup(commands.Cog):
     @app_commands.describe(keyword="Keyword to search for in messages.")
     async def find_first_message_contains(self, interaction: Interaction, member: Member, keyword: str):
         await interaction.response.defer(thinking=True)
-        if interaction.channel is None:
+        if not interaction.channel:
             return await interaction.followup.send("This command can only be used in guild channels.")
         
         first_message = None
@@ -507,7 +507,7 @@ class UserGroup(commands.Cog):
                 
         embed = Embed(title=f"First message by {member.display_name} containing '{keyword}'", description="")
 
-        if first_message:
+        if first_message and first_message.guild:
             embed.description = f"[{first_message.created_at.strftime('%Y-%m-%d %H:%M:%S')}](https://discord.com/channels/{first_message.guild.id}/{first_message.channel.id}/{first_message.id}): {first_message.content}"
             embed.color = Color.blue()
         else:
@@ -571,7 +571,7 @@ class UserGroup(commands.Cog):
         
         embed = Embed(title=f"First message by {member.display_name}", description="")
 
-        if first_message:
+        if first_message and first_message.guild:
             embed.description = f"[{first_message.created_at.strftime('%Y-%m-%d %H:%M:%S')}](https://discord.com/channels/{first_message.guild.id}/{first_message.channel.id}/{first_message.id}): {first_message.content}"
             embed.color = Color.blue()
         else:
@@ -599,7 +599,7 @@ class UserGroup(commands.Cog):
         
         embed = Embed(title=f"Latest message by {member.display_name}", description="")
 
-        if latest_message:
+        if latest_message and latest_message.guild:
             embed.description = f"[{latest_message.created_at.strftime('%Y-%m-%d %H:%M:%S')}](https://discord.com/channels/{latest_message.guild.id}/{latest_message.channel.id}/{latest_message.id}): {latest_message.content}"
             embed.color = Color.blue()
         else:
@@ -658,4 +658,4 @@ class UserGroup(commands.Cog):
         return await interaction.followup.send(embed=e)
 
 async def setup(bot):
-    await bot.add_cog(UserGroup(bot))
+    await bot.add_cog(UserCog(bot))

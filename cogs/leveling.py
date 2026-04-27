@@ -11,7 +11,7 @@ from bot import PoxBot
 import data
 from logger import logger
 
-class XPSystem(commands.Cog):
+class LevelingCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         self.user_data = {}
@@ -174,4 +174,4 @@ class XPSystem(commands.Cog):
         embed.set_footer(text=f"Total XP needed for Lvl {level + 1:,}: {xp_next:,}")
         await interaction.response.send_message(embed=embed)
 async def setup(bot):
-    await bot.add_cog(XPSystem(bot))
+    await bot.add_cog(LevelingCog(bot))

@@ -12,7 +12,7 @@ def get_int(i):
     except ValueError:
         return 0
 
-class WebSocketsServer(commands.Cog):
+class WebsocketCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         self.clients = set()
@@ -78,4 +78,4 @@ class WebSocketsServer(commands.Cog):
         websockets.broadcast(self.clients, payload)
 
 async def setup(bot):
-    await bot.add_cog(WebSocketsServer(bot))
+    await bot.add_cog(WebsocketCog(bot))

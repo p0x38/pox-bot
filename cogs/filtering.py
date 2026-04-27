@@ -3,7 +3,7 @@ from discord import Interaction, app_commands
 
 from bot import PoxBot
 
-class ServerConfig(commands.Cog):
+class FilterCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
@@ -65,4 +65,4 @@ class ServerConfig(commands.Cog):
         return await interaction.followup.send("Operation completed.")
 
 async def setup(bot):
-    await bot.add_cog(ServerConfig(bot))
+    await bot.add_cog(FilterCog(bot))

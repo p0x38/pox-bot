@@ -16,7 +16,7 @@ from logger import logger
 from stuff import get_formatted_from_seconds
 import stuff
     
-class LimitBotInvitation(commands.Cog):
+class BotInvitationLimiterCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         self.max_servers = self.bot.bot_servers_limit
@@ -60,4 +60,4 @@ class LimitBotInvitation(commands.Cog):
             await guild.leave()
     
 async def setup(bot):
-    await bot.add_cog(LimitBotInvitation(bot))
+    await bot.add_cog(BotInvitationLimiterCog(bot))

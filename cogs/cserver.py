@@ -7,6 +7,8 @@ from enum import IntFlag, auto
 from bot import PoxBot
 from logger import logger
 
+from src.translator import translator_instance as i18n
+
 class LoggingView(ui.View):
     def __init__(self, data_dict, user, default):
         super().__init__(timeout=60)
@@ -80,7 +82,7 @@ class LoggingView(ui.View):
             return False
         return True
 
-class GuildGroup(commands.Cog):
+class GuildCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
@@ -89,6 +91,7 @@ class GuildGroup(commands.Cog):
     @checker_group.command(name="info", description="checks current server information")
     @app_commands.guild_only()
     async def check_server_info(self, interaction: Interaction):
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         guild = interaction.guild
         
         await interaction.response.defer(thinking=True)
@@ -324,4 +327,4 @@ class GuildGroup(commands.Cog):
         await interaction.response.send_message(embed=view.create_embed(), view=view)
 
 async def setup(bot):
-    await bot.add_cog(GuildGroup(bot))
+    await bot.add_cog(GuildCog(bot))

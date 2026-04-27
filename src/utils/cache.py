@@ -1,6 +1,5 @@
 import time
 
-
 class Cache:
     def __init__(self, ttl):
         self.ttl = ttl
@@ -47,3 +46,7 @@ class Cache:
     
     def get_rear(self):
         return self.cache[len(self.cache)-1] if len(self.cache) > 0 else None
+    
+    def clear(self):
+        self.cache = {}
+        return True

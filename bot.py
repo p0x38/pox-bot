@@ -7,15 +7,13 @@ from time import time
 from typing import Optional
 import uuid
 import aiomysql
-from asyncpg import pool
-import asyncpg
 import discord
 from discord.ext import commands
 from gtts.lang import tts_langs
 import psutil
 from src.utils.cache import Cache
 from classes import EmoticonGenerator, MyTranslator
-from src.database.modules import SettingsDatabase, StatsDatabase
+from src.database.modules import EconomyDatabase, GuildSettingsDatabase, SettingsDatabase, StatsDatabase
 import stuff
 import data
 import aiosqlite
@@ -45,6 +43,8 @@ class PoxBot(commands.AutoShardedBot):
         self.db_connection = None
         self.settings_db: Optional[SettingsDatabase] = None
         self.stats_db: Optional[StatsDatabase] = None
+        self.economy_db: Optional[EconomyDatabase] = None
+        self.guild_db: Optional[GuildSettingsDatabase] = None
         self.mysql = None
         self.commit_hash = ""
         self.session_uuid = uuid.uuid4()
@@ -100,13 +100,19 @@ class PoxBot(commands.AutoShardedBot):
         
         self.settings_db = SettingsDatabase(dsn)
         self.stats_db = StatsDatabase(dsn)
+        self.economy_db = EconomyDatabase(dsn)
+        self.guild_db = GuildSettingsDatabase(dsn)
         
         await self.settings_db.connect()
         
         self.stats_db.pool = self.settings_db.pool
+        self.economy_db.pool = self.settings_db.pool
+        self.guild_db.pool = self.settings_db.pool
         
-        await self.settings_db.setup_table()
-        await self.stats_db.setup_table()
+        await self.settings_db.setup()
+        await self.stats_db.setup()
+        await self.economy_db.setup()
+        await self.guild_db.setup()
         
         try:
             await self.tree.set_translator(discord_translator)
@@ -243,8 +249,8 @@ class PoxBot(commands.AutoShardedBot):
             logger.error("Forbidden: The bot doesn't have permission to use `application.commands`")
         except MissingApplicationID:
             logger.error("MissingApplicationID: The application ID is empty or missing")
-        except app_commands.TranslationError:
-            logger.exception("TranslationError: Error occured while translating commands")
+        except app_commands.TranslationError as e:
+            logger.exception(f"TranslationError: Error thrown while translating key {str(e.string)} in {e.locale} ({e.context.location.name})")
         except HTTPException:
             logger.error("HTTPException: Failed to sync commands")
 
@@ -454,6 +460,15 @@ class PoxBot(commands.AutoShardedBot):
         if self.server_data2_loaded:
             async with aiofiles.open("data/server_data2.json", 'w+') as f:
                 await f.write(json.dumps(self.server_data2, indent=4))
+
+        if self.settings_db:
+            await self.settings_db.close()
+
+        if self.stats_db:
+            await self.stats_db.close()
+
+        if self.economy_db:
+            await self.economy_db.close()
 
         if self.mysql:
             self.mysql.close()

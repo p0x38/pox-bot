@@ -15,7 +15,6 @@ GIVEAWAYS_FILE = 'data/giveaways.json'
 GIVEAWAYS_EMOJI = "🥳"
 
 class GiveawayCog(commands.Cog):
-
     giveaway = app_commands.Group(name="giveaway", description="Giveaway cog.")
 
     def __init__(self, bot):

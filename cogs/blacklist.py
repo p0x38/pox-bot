@@ -4,7 +4,7 @@ from stuff import cmd_locale
 
 from bot import PoxBot
 
-class Blacklister(commands.Cog):
+class BlackListCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
@@ -81,4 +81,4 @@ class Blacklister(commands.Cog):
 
         await interaction.response.send_message(embed=embed)
 async def setup(bot):
-    await bot.add_cog(Blacklister(bot))
+    await bot.add_cog(BlackListCog(bot))

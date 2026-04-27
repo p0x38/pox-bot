@@ -3,198 +3,368 @@ from discord import Color, Embed, Interaction, app_commands
 from discord.ext import commands
 import aiosqlite
 import time
+from datetime import datetime
 
 from os.path import join
 
+from pytz import UTC
+
 from bot import PoxBot
-from logger import logger
+from src.database.modules import EconomyDatabase
 
-class EconomyUser:
-    def __init__(self, user_id: int, wallet: int, bank: int, last_daily: int):
-        self.user_id = user_id
-        self.wallet = wallet
-        self.bank = bank
-        self.last_daily = last_daily
+from src.translator import translator_instance as i18n
+
+class EconomyCog(commands.Cog):
+    def __init__(self, bot):
+        self.bot: PoxBot = bot
+        self.db: EconomyDatabase = bot.economy_db
     
-    @property
-    def total_money(self) -> int:
-        return self.wallet + self.bank
+    group = app_commands.Group(name="economy", description=app_commands.locale_str("Economy system", message="command.economy.description"))
 
-class EconomyManager:
-    def __init__(self, db_path: str):
-        self.db_path = db_path
+    async def get_loc(self, interaction: Interaction) -> str:
+        if self.bot.settings_db:
+            return await self.bot.settings_db.get_locale(interaction)
+        return "en"
     
-    async def setup(self):
-        async with aiosqlite.connect(self.db_path) as db:
-            await db.execute("""
-                CREATE TABLE IF NOT EXISTS users (
-                    user_id INTEGER PRIMARY KEY,
-                    wallet INTEGER DEFAULT 0,
-                    bank INTEGER DEFAULT 0,
-                    last_daily INTEGER DEFAULT 0
-                )
-            """)
-
-            await db.execute("""
-                CREATE TABLE IF NOT EXISTS transactions (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    user_id INTEGER NOT NULL,
-                    type TEXT NOT NULL,
-                    amount INTEGER NOT NULL,
-                    description TEXT,
-                    timestamp INTEGER NOT NULL
-                )
-            """)
-            await db.commit()
-        logger.info("Economy Database initialized and tables are ready")
-    
-    async def get_user(self, user_id: int) -> EconomyUser:
-        async with aiosqlite.connect(self.db_path) as db:
-            cursor = await db.execute("SELECT * FROM users WHERE user_id = ?", (user_id,))
-            row = await cursor.fetchone()
-
-            if row:
-                user = EconomyUser(user_id=row[0], wallet=row[1], bank=row[2], last_daily=row[3])
-                return user
-            else:
-                await db.execute(
-                    "INSERT INTO users (user_id, wallet, bank, last_daily) VALUES (?, ?, ?, ?)",
-                    (user_id, 0, 0, 0)
-                )
-                await db.commit()
-                return EconomyUser(user_id=user_id, wallet=0, bank=0, last_daily=0)
-
-    async def update_user(self, user: EconomyUser):
-        async with aiosqlite.connect(self.db_path) as db:
-            await db.execute(
-                "UPDATE users SET wallet = ?, bank = ?, last_daily = ? WHERE user_id = ?",
-                (user.wallet, user.bank, user.last_daily, user.user_id)
-            )
-            await db.commit()
-            
-    async def log_transaction(self, user_id: int, tx_type: str, amount: int, description: str):
-        timestamp = int(time.time())
-        async with aiosqlite.connect(self.db_path) as db:
-            await db.execute(
-                "INSERT INTO transactions (user_id, type, amount, description, timestamp) VALUES (?, ?, ?, ?, ?)",
-                (user_id, tx_type, amount, description, timestamp)
-            )
-            await db.commit()
-
-class Economy(commands.Cog):
-    group = app_commands.Group(name="economy", description="Economy Group.")
-    def __init__(self, bot: PoxBot):
-        self.bot = bot
-        self.manager = EconomyManager(join(self.bot.root_path, "data/economy.db"))
-    
-    @commands.Cog.listener()
-    async def on_ready(self):
-        await self.manager.setup()
-        logger.info("Cog is fully loaded and listening.")
-    
-    @group.command(name="balance", description="Get a balance.")
+    @group.command(name="balance", description=app_commands.locale_str("Check your current balance", message="command.economy.balance.description"))
     async def balance(self, interaction: Interaction):
-        user = await self.manager.get_user(interaction.user.id)
+        await interaction.response.defer()
 
-        embed = Embed(
-            title=f"{interaction.user.name}'s Financial Report",
-            color=Color.gold()
-        )
+        loc = await self.get_loc(interaction)
 
-        embed.add_field(name="Wallet", value=f"`{user.wallet:,}` coins", inline=True)
-        embed.add_field(name="Bank", value=f"`{user.bank:,}` coins", inline=True)
-        embed.add_field(name="Total", value=f"`{user.total_money:,}` coins", inline=False)
+        embed = Embed()
 
-        return await interaction.response.send_message(embed=embed, ephemeral=True)
-    
-    
-    @group.command(name='daily')
-    async def daily(self, interaction: Interaction):
-        user = await self.manager.get_user(interaction.user.id)
-        current_time = int(time.time())
-        
-        cooldown_seconds = 60 * 60 * 24 # 24 hours
-        time_since_last_daily = current_time - user.last_daily
-        
-        if time_since_last_daily < cooldown_seconds:
-            remaining_time = cooldown_seconds - time_since_last_daily
-            hours = int(remaining_time // 3600)
-            minutes = int((remaining_time % 3600) // 60)
+        if self.db:
+            user = await self.db.get_user(interaction.user.id)
+
+            embed.title = i18n.T("command.economy.balance.embeds.default.title", loc, {"user": interaction.user.display_name})
+            embed.color = Color.green()
+            embed.timestamp = interaction.created_at
+
+            rows = {
+                'command.economy.balance.fields.wallet': f"{user.wallet:,}",
+                'command.economy.balance.fields.bank': f"{user.bank:,}"
+            }
+
+            for key, value in rows.items():
+                translated = i18n.T(key, loc)
+                embed.add_field(name=translated, value=value, inline=True)
             
-            await interaction.response.send_message(
-                f"Woah there, speedy. You can claim your next daily in **{hours}h {minutes}m**."
-            )
+            embed.set_footer(text=i18n.T('command.economy.balance.embeds.default.footer', loc, {"coins": f"{user.total:,}"}))
+
+            await interaction.followup.send(embed=embed)
         else:
-            reward = random.randint(300,600)
-            user.wallet += reward
-            user.last_daily = current_time
-            
-            await self.manager.update_user(user)
+            embed.title = i18n.T("error.embeds.database_not_available.title", loc)
+            embed.description = i18n.T("error.embeds.database_not_available.description", loc)
+            embed.timestamp = datetime.now(UTC)
+            embed.color = Color.red()
 
-            await self.manager.log_transaction(
-                user_id=interaction.user.id, 
-                tx_type='daily', 
-                amount=reward, 
-                description=f"Claimed daily reward"
-            )
-            
-            await interaction.response.send_message(
-                f"🎉 Congrats, **{interaction.user.name}**! You claimed `{reward:,}` coins for your daily reward."
-            )
+            return interaction.followup.send(embed=embed)
+    
+    @group.command(name="deposit", description=app_commands.locale_str("Move money from wallet to bank.", message="command.economy.deposit.description"))
+    async def deposit(self, interaction: Interaction, amount: int):
+        await interaction.response.defer()
 
-    @group.command(name='work')
+        loc = await self.get_loc(interaction)
+
+        embed = Embed()
+
+        if self.bot.economy_db:
+            user = await self.db.get_user(interaction.user.id)
+            
+            if amount <= 0:
+                embed.title = i18n.T('error.embeds.only_positive_value.title', loc)
+                embed.description = i18n.T('error.embeds.only_positive_value.description', loc)
+                embed.color = Color.red()
+
+                return await interaction.followup.send(embed=embed)
+            
+            if amount > user.wallet:
+                embed.title = i18n.T('error.embeds.too_high_value.title', loc, {"max": user.wallet})
+                embed.description = i18n.T('error.embeds.too_high_value.description', loc, {"max": user.wallet})
+                embed.color = Color.red()
+
+                return await interaction.followup.send(embed=embed)
+            
+            user.wallet -= amount
+            user.bank += amount
+
+            await self.db.save_user(user)
+            await self.db.log_tx(user.user_id, "deposit", amount, "Deposited to bank")
+
+            embed.title = i18n.T('command.economy.deposit.embeds.default.title', loc)
+            embed.description = i18n.T('command.economy.deposit.embeds.default.description', loc)
+            embed.color = Color.green()
+            return await interaction.followup.send(embed=embed)
+        
+    @group.command(name="withdraw", description=app_commands.locale_str("Move money from bank to wallet.", message="command.economy.withdraw.description"))
+    async def withdraw(self, interaction: Interaction, amount: int):
+        await interaction.response.defer()
+
+        loc = await self.get_loc(interaction)
+
+        embed = Embed()
+
+        if self.bot.economy_db:
+            user = await self.db.get_user(interaction.user.id)
+            
+            if amount <= 0:
+                embed.title = i18n.T('error.embeds.only_positive_value.title', loc)
+                embed.description = i18n.T('error.embeds.only_positive_value.description', loc)
+                embed.color = Color.red()
+
+                return await interaction.followup.send(embed=embed)
+            
+            if amount > user.bank:
+                embed.title = i18n.T('error.embeds.too_high_value.title', loc, {"max": user.wallet})
+                embed.description = i18n.T('error.embeds.too_high_value.description', loc, {"max": user.wallet})
+                embed.color = Color.red()
+
+                return await interaction.followup.send(embed=embed)
+            
+            user.wallet -= amount
+            user.bank += amount
+
+            await self.db.save_user(user)
+            await self.db.log_tx(user.user_id, "deposit", amount, "Deposited to bank")
+
+            embed.title = i18n.T('command.economy.withdraw.embeds.default.title', loc)
+            embed.description = i18n.T('command.economy.withdraw.embeds.default.description', loc)
+            embed.color = Color.green()
+            return await interaction.followup.send(embed=embed)
+    
+    @group.command(name="work", description=app_commands.locale_str("Earn some coins by working", message="command.economy.work.description"))
     async def work(self, interaction: Interaction):
-        user = await self.manager.get_user(interaction.user.id)
-        current_time = int(time.time())
-        reward = int(40+((random.random() ** 5)*1000))
-        user.wallet += reward
-        user.last_daily = current_time
-        
-        await self.manager.update_user(user)
-        await self.manager.log_transaction(
-            user_id=interaction.user.id, 
-            tx_type='work', 
-            amount=reward, 
-            description=f"Claimed by getting smth"
-        )
-        
-        await interaction.response.send_message(
-            f"🎉 Congrats, **{interaction.user.name}**! You claimed `{reward:,}` coins for uh yeah."
-        )
+        await interaction.response.defer()
 
+        loc = await self.get_loc(interaction)
 
-    @group.command(name='history')
-    async def history(self, interaction: Interaction, limit: int = 5):
-        
-        limit = max(1, min(10, limit)) 
+        embed = Embed()
 
-        async with aiosqlite.connect(self.manager.db_path) as db:
-            cursor = await db.execute(
-                "SELECT type, amount, timestamp, description FROM transactions WHERE user_id = ? ORDER BY id DESC LIMIT ?",
-                (interaction.user.id, limit)
-            )
-            rows = await cursor.fetchall()
+        if self.bot.economy_db:
+            user = await self.db.get_user(interaction.user.id)
+            now = int(time.time())
+            if now - user.last_work < 3600:
+                rem = int((3600 - (now - user.last_work)) / 60)
+                embed.title = i18n.T('command.economy.work.embeds.tired.title', loc)
+                embed.description = i18n.T('command.economy.work.embeds.tired.description', loc, {"rem": rem})
+                embed.color = Color.yellow()
 
-        if not rows:
-            return await interaction.response.send_message("You haven't made any transactions yet. Get started with `!daily` to see a log entry :P")
-
-        embed = Embed(
-            title=f"{interaction.user.name}'s Transaction History (Last {len(rows)})",
-            color=Color.blue()
-        )
-        embed.set_footer(text="A positive amount means coins were added.")
-
-        for row in rows:
-            tx_type, amount, timestamp, description = row
-            date_str = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
+                return await interaction.followup.send(embed=embed)
             
-            sign = "+" if amount >= 0 else "" 
+            bonus = random.randint(0, 500)
+            earned = random.randint(50, 300)
+            user.wallet += earned
+            user.last_work = now
+            await self.db.save_user(user)
+            await self.db.log_tx(user.user_id, "work", earned, "Salary")
 
-            name = f"[{tx_type.upper()}] | {sign}{amount:,} coins"
-            value = f"**Time:** {date_str} UTC\n**Note:** {description}"
-            embed.add_field(name=name, value=value, inline=False)
+            embed.title = i18n.T("command.economy.work.embeds.default.title", loc)
+            embed.description = i18n.T("command.economy.work.embeds.default.description", loc)
+            embed.color = Color.green()
+
+            await interaction.followup.send(embed=embed)
+    
+    @group.command(name='list', description=app_commands.locale_str("View the item shop", message="command.economy.list.description"))
+    async def list_items(self, interaction: Interaction):
+        await interaction.response.defer()
+
+        loc = await self.get_loc(interaction)
+
+        embed = Embed()
+
+        if self.bot.economy_db:
+            items = await self.db.get_shop_items()
+            if not items:
+                embed.title = i18n.T('command.economy.list.embeds.closed.title', loc)
+                embed.description = i18n.T('command.economy.list.embeds.closed.description', loc)
+                embed.color = Color.red()
+
+                return await interaction.followup.send(embed=embed)
+                
+            embed = Embed(title="PoxBot Shop", color=Color.blue())
+            for i in items:
+                buy_price = i18n.T('command.economy.list.fields.buy_price', loc, {"price": f"{i['buy_price']:,}"}) if i['buy_price'] else i18n.T('command.economy.list.fields.not_sale', loc)
+                embed.add_field(name=f"{i['name']} (ID: {i['id']})", value=f"{buy_price}\n{i['description']}", inline=False)
+            await interaction.response.send_message(embed=embed)
+    
+    @group.command(name="buy", description=app_commands.locale_str("Buy on item from the shop", message="command.economy.buy.description"))
+    async def buy_items(self, interaction: Interaction, item_id: str):
+        await interaction.response.defer()
+
+        loc = await self.get_loc(interaction)
+
+        embed = Embed()
+
+        if self.bot.economy_db:
+            user = await self.db.get_user(interaction.user.id)
+            item = await self.db.get_item(item_id)
+
+            if not item or not item['buy_price']:
+                embed.title = i18n.T('command.economy.buy.embeds.item_unavailable.title', loc)
+                embed.description = i18n.T('command.economy.buy.embeds.item_unavailable.description', loc)
+                embed.color = Color.red()
+
+                return await interaction.followup.send(embed=embed)
+            if user.wallet < item['buy_price']:
+                embed.title = i18n.T('command.economy.buy.embeds.not_afford.title', loc)
+                embed.description = i18n.T('command.economy.buy.embeds.not_afford.description', loc)
+                embed.color = Color.red()
+
+                return await interaction.followup.send(embed=embed)
             
-        await interaction.response.send_message(embed=embed)
+            user.wallet -= item['buy_price']
+            await self.db.save_user(user)
+            await self.db.modify_inventory(user.user_id, item_id, 1)
+            await self.db.log_tx(user.user_id, "purchase", -item['buy_price'], f"Bought {item['name']}")
 
+            embed.title = i18n.T("command.economy.buy.embeds.purchased.title", loc)
+            embed.description = i18n.T("command.economy.buy.embeds.purchased.description", loc, {"item_name": item['name']})
+            embed.color = Color.green()
+
+            await interaction.followup.send(embed=embed)
+    
+    @group.command(name="sell", description=app_commands.locale_str("Sell on item back to the shop", message="command.economy.sell.description"))
+    async def sell_items(self, interaction: Interaction, item_id: str):
+        await interaction.response.defer()
+
+        loc = await self.get_loc(interaction)
+
+        embed = Embed()
+
+        if self.bot.economy_db:
+            item = await self.db.get_item(item_id)
+            if not item or not item['sell_price']:
+                embed.title = i18n.T('command.economy.sell.embeds.unable_to_sell.title', loc)
+                embed.description = i18n.T('command.economy.sell.embeds.unable_to_sell.description', loc)
+                embed.color = Color.red()
+
+                return await interaction.followup.send(embed=embed)
+            
+            user = await self.db.get_user(interaction.user.id)
+            await self.db.modify_inventory(user.user_id, item_id, -1)
+
+            user.wallet += item['sell_price']
+            await self.db.save_user(user)
+            await self.db.log_tx(user.user_id, "sale", item['sell_price'], f"Sold {item['name']}")
+
+            embed.title = i18n.T("command.economy.buy.embeds.purchased.title", loc)
+            embed.description = i18n.T("command.economy.buy.embeds.purchased.description", loc, {"item_name": item['name']})
+            embed.color = Color.green()
+
+            await interaction.followup.send(embed=embed)
+    
+    @group.command(name="inventory", description=app_commands.locale_str("View your items", message="command.economy.inventory.description"))
+    async def inventory(self, interaction: Interaction):
+        await interaction.response.defer()
+
+        loc = await self.get_loc(interaction)
+
+        embed = Embed()
+
+        if self.bot.economy_db:
+            items = await self.db.get_inventory(interaction.user.id)
+            if not items:
+                embed.title = i18n.T('command.economy.inventory.embeds.empty.title', loc)
+                embed.description = i18n.T('command.economy.inventory.embeds.empty.description', loc)
+                embed.color = Color.red()
+
+                return await interaction.followup.send(embed=embed)
+            
+            embed.title = i18n.T("command.economy.inventory.embeds.default.title", loc, {"user": interaction.user.display_name})
+            embed.color = Color.green()
+
+            for i in items:
+                embed.add_field(
+                    name=f"{i['name']} (x{i['quantity']})",
+                    value=i['description'], inline=False
+                )
+            
+            await interaction.response.send_message(embed=embed)
+
+    @group.command(name="daily", description=app_commands.locale_str("Claim your daily reward", message="command.economy.claim.description"))
+    async def daily(self, interaction: Interaction):
+        await interaction.response.defer()
+
+        loc = await self.get_loc(interaction)
+        
+        embed = Embed()
+
+        if self.db:
+            user = await self.db.get_user(interaction.user.id)
+
+            now = int(time.time())
+            cooldown = 86400
+
+            if now - user.last_daily < cooldown:
+                remaining = cooldown - (now - user.last_daily)
+                hours, remainder = divmod(remaining, 3600)
+                minutes, _ = divmod(remainder, 60)
+
+                embed.title = i18n.T("error.embeds.daily_cooldown.title", loc)
+                embed.description = i18n.T("error.embeds.daily_cooldown.description", loc, {"h": hours, "m": minutes})
+                embed.timestamp = datetime.now(UTC)
+                return await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+            reward = random.randint(100, 900)
+            user.wallet += reward
+            user.last_daily = now
+
+            await self.db.save_user(user)
+            await self.db.log_tx(interaction.user.id, "daily", reward, "Claimed daily reward")
+
+            embed.title = i18n.T("command.economy.daily.embeds.default.title", loc)
+            embed.description = i18n.T("command.economy.daily.embeds.default.description", loc, {"amount": reward})
+
+            await interaction.followup.send(embed=embed)
+        else:
+            embed.title = i18n.T("error.embeds.database_not_available.title", loc)
+            embed.description = i18n.T("error.embeds.database_not_available.description", loc)
+            embed.timestamp = datetime.now(UTC)
+            embed.color = Color.red()
+
+            return interaction.followup.send(embed=embed)
+    
+    @group.command(name='history', description=app_commands.locale_str("View your recent transactions", message="command.economy.history.description"))
+    async def history(self, interaction: Interaction, limit: app_commands.Range[int, 1, 12]):
+        await interaction.response.defer()
+
+        loc = await self.get_loc(interaction)
+        
+        limit = max(1, min(12, limit))
+
+        embed = Embed()
+
+        if self.db:
+            rows = await self.db.get_history(interaction.user.id, limit)
+
+            if not rows:
+                embed.title = i18n.T("error.embeds.no_transactions.title", loc)
+                embed.description = i18n.T("error.embeds.no_transactions.description", loc)
+
+                return await interaction.followup.send(embed=embed)
+            
+            embed.description = i18n.T("command.economy.history.embeds.default.description", loc)
+            embed.color = Color.blue()
+
+            for row in rows:
+                date_str = time.strftime('%Y-%m-%d %H:%M', time.localtime(row['timestamp']))
+                sign = "+" if row['amount'] >= 0 else "-"
+
+                embed.add_field(
+                    name=f"[{row['type'].upper()}] {sign}{row['amount']:,}",
+                    value=f"_{date_str}_\n{row['description']}",
+                    inline=False
+                )
+            
+            await interaction.followup.send(embed=embed)
+        else:
+            embed.title = i18n.T("error.embeds.database_not_available.title", loc)
+            embed.description = i18n.T("error.embeds.database_not_available.description", loc)
+            embed.timestamp = datetime.now(UTC)
+            embed.color = Color.red()
+
+            return interaction.followup.send(embed=embed)
+    
 async def setup(bot):
-    await bot.add_cog(Economy(bot))
+    await bot.add_cog(EconomyCog(bot))

@@ -1,0 +1,8 @@
+{
+    "fields": {
+        "embed_color": "**Embed Color**: %{hex}",
+        "locale": "**Display Language**: %{lang_code}"
+    },
+    "header_description": "User settings",
+    "title": "User Settings"
+}

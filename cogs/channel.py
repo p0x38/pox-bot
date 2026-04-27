@@ -11,7 +11,7 @@ import stuff
 
 from src.translator import translator_instance
 
-class ChannelGroup(commands.Cog):
+class ChannelCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
@@ -156,4 +156,4 @@ class ChannelGroup(commands.Cog):
             return await interaction.followup.send(embed=embed)
 
 async def setup(bot):
-    await bot.add_cog(ChannelGroup(bot))
+    await bot.add_cog(ChannelCog(bot))

@@ -24,7 +24,7 @@ def zalgo(text, Z):
     )
     return result
 
-class Converters(commands.Cog):
+class ConversionCog(commands.Cog):
     def __init__(self,bot):
         self.bot: PoxBot = bot
     
@@ -281,4 +281,4 @@ class Converters(commands.Cog):
 # https://colornames.org/search/json/?hex=FF0000
 
 async def setup(bot):
-    await bot.add_cog(Converters(bot))
+    await bot.add_cog(ConversionCog(bot))

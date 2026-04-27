@@ -1,0 +1,353 @@
+{
+    "8ball": {
+        "description": "Gives a random, classic magic 8-ball response to a user's question.",
+        "embeds": {
+            "default": {
+                "title": "Answer to '%{question}'"
+            }
+        },
+        "name": "8ball"
+    },
+    "channel": {
+        "description": "A group for channels.",
+        "info": {
+            "description": "Shows channel information.",
+            "embeds": {
+                "default": {
+                    "title": "Information of %{name}"
+                }
+            },
+            "name": "info"
+        },
+        "name": "channel",
+        "slowmode": {
+            "description": "Sets slowmode delay",
+            "embeds": {
+                "successful": {
+                    "description": "Successfully set slowmode to **%{seconds}** for %{mention}.",
+                    "title": "Slowmode Updated"
+                }
+            },
+            "name": "slowmode"
+        }
+    },
+    "contributors": {
+        "description": "A group for contributors.",
+        "list": {
+            "description": "Lists all contributors.",
+            "embeds": {
+                "default": {
+                    "description": "Here's a list of contributors who helped my bot! :3",
+                    "title": "Contributors"
+                }
+            },
+            "name": "list"
+        },
+        "name": "contributors",
+        "view": {
+            "description": "Shows contributor information.",
+            "embeds": {
+                "default": {
+                    "title": "Contributor Information of %{contributor}"
+                }
+            },
+            "name": "view"
+        }
+    },
+    "economy": {
+        "balance": {
+            "description": "Check your current balance.",
+            "embeds": {
+                "default": {
+                    "footer": "Total Assets: %{coins} coins",
+                    "title": "%{user}'s Balance :3"
+                }
+            },
+            "fields": {
+                "bank": "Bank",
+                "wallet": "Wallets"
+            }
+        },
+        "buy": {
+            "description": "Buy on item from the shop.",
+            "embeds": {
+                "item_unavailable": {
+                    "description": "That item is not available for sale! 3:<",
+                    "title": "Item is unavailable"
+                },
+                "not_afford": {
+                    "description": "You don't have enough coins in your wallet to buy that! 3:<",
+                    "title": "Not enough coins"
+                },
+                "purchased": {
+                    "description": "Successfully bought **%{item_name}**! Check your inventory~ ;3",
+                    "title": "Purchase completed"
+                }
+            }
+        },
+        "daily": {
+            "description": "Claim your daily reward.",
+            "embeds": {
+                "default": {
+                    "description": "You got %{amount} coins by daily rewards! :3",
+                    "title": "You've claimed daily reward!"
+                }
+            }
+        },
+        "deposit": {
+            "description": "Move money from wallet to bank.",
+            "embeds": {
+                "default": {
+                    "description": "Deposited %{amount} coins successfully. :3",
+                    "title": "Deposit success"
+                }
+            }
+        },
+        "description": "A group for Economy system.",
+        "history": {
+            "description": "View your recent transactions."
+        },
+        "inventory": {
+            "description": "View your items.",
+            "embeds": {
+                "default": {
+                    "title": "%{user}'s inventory"
+                },
+                "empty": {
+                    "description": "Your backpack is empty right now. buy something to change this text i guess. :3",
+                    "title": "Empty backpack"
+                }
+            }
+        },
+        "list": {
+            "description": "View the item shop.",
+            "fields": {
+                "buy_price": "Price: %{price} coins",
+                "not_sale": "Not for sale"
+            }
+        },
+        "sell": {
+            "description": "Sell on item back to the shop.",
+            "embeds": {
+                "sold": {
+                    "description": "Sold **%{item_name}",
+                    "title": "Sale completed"
+                },
+                "unable_to_sell": {
+                    "description": "The shop won't buy this back! 3:<",
+                    "title": "Unable to sell"
+                }
+            }
+        },
+        "withdraw": {
+            "description": "Move money from bank to wallet.",
+            "embeds": {
+                "default": {
+                    "description": "Withdrawed %{amount} coins successfully. :3",
+                    "title": "Withdraw success"
+                }
+            }
+        },
+        "work": {
+            "description": "Earn some coins by working.",
+            "embeds": {
+                "default": {
+                    "description": "You got %{amount} coins by working! :3",
+                    "title": "You have worked for money!"
+                },
+                "tired": {
+                    "description": "You need to rest %{rem} more minutes. 3:",
+                    "title": "You can't work right now!"
+                }
+            }
+        }
+    },
+    "info": {
+        "commit_data": {
+            "description": "Shows bot's latest git commit.",
+            "name": "commit_data"
+        },
+        "description": "A group for information",
+        "invite": {
+            "description": "Invites the bot to server by application url. (LIMITED TO 90)",
+            "embed": {
+                "description": "%{prefix}\n\nYou can add me to your server using [this link.](%{invite_url})",
+                "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation.",
+                "status": {
+                    "one": "Capacity: **%{formatted}** server",
+                    "other": "Capacity: **%{formatted}** servers"
+                },
+                "title": "Invite TongueBot"
+            },
+            "error": {
+                "hardlimited": "You can't invite TongueBot right now, since the limit has been reached."
+            },
+            "name": "invite"
+        },
+        "name": "info",
+        "os_info": {
+            "description": "Shows operating system information.",
+            "embed": {
+                "title": "Operating System Information"
+            },
+            "name": "os_info"
+        },
+        "ping": {
+            "description": "Pong!",
+            "embed": {
+                "title": "Pong! (%{latency} ms)"
+            },
+            "name": "ping"
+        },
+        "retrieve": {
+            "description": "Retrieves bot information.",
+            "embed": {
+                "description": "Select a category below to view specific details.",
+                "footer": "System: %{platform}",
+                "title": "Bot Information"
+            },
+            "error": {
+                "forbidden": "I do not have the **Manage Channels** permission to do that."
+            },
+            "name": "retrieve"
+        },
+        "sync": {
+            "description": "Synchronizes commands",
+            "name": "sync"
+        },
+        "timedate": {
+            "description": "Shows time in specified timezone",
+            "embed": {
+                "description": "In %{timezone_name}, it's **%{timedate}**."
+            },
+            "name": "timedate"
+        }
+    },
+    "roblox": {
+        "avatar": {
+            "description": "Gets Roblox user's avatar by username.",
+            "embeds": {
+                "default": {
+                    "title": "Roblox user %{username}'s Avatar"
+                }
+            }
+        },
+        "description": "A group for roblox APIs.",
+        "user": {
+            "description": "Get Roblox user info by username.",
+            "embeds": {
+                "default": {
+                    "title": "User %{username}'s Information"
+                }
+            }
+        }
+    },
+    "tts": {
+        "description": "Center of TTS stuff",
+        "embeds": {
+            "default": {
+                "description": "Generated! >:D",
+                "footer": "Type: %{tts_type}; Input: %{input}",
+                "title": "TTS Conversion"
+            }
+        },
+        "google_translate": {
+            "description": "Generates TTS from Google Translate.",
+            "name": "google_translate"
+        },
+        "name": "tts"
+    },
+    "user": {
+        "avatar": {
+            "description": "Shows Discord user's avatar.",
+            "embeds": {
+                "default": {
+                    "footer": "Requested by %{author}, the result is cached for a minute.",
+                    "title": "User %{user}'s avatar"
+                }
+            }
+        },
+        "description": "A group for users.",
+        "info": {
+            "description": "Retrieves user's information.",
+            "embeds": {
+                "default": {
+                    "title": "Information for %{user}"
+                }
+            },
+            "name": "info"
+        },
+        "name": "user",
+        "set_nick": {
+            "description": "Sets user's nickname.",
+            "embeds": {
+                "changed": {
+                    "description": "%{author} Changed %{user}'s nickname to **%{new_nickname}**."
+                },
+                "reset": {
+                    "description": "%{author} Reseted %{user}'s nickname."
+                }
+            },
+            "reasons": {
+                "changed": "Nickname changed by %{user} via /user nick",
+                "reset": "Nickname reseted by %{user} via /user nick"
+            }
+        },
+        "status": {
+            "description": "Retrieves user's status.",
+            "embeds": {
+                "default": {
+                    "title": "%{user}'s Discord status"
+                }
+            }
+        }
+    },
+    "welcome": {
+        "description": "A group for WelcomeCog",
+        "embeds": {
+            "join": {
+                "description": "Welcome, %{mention}! Please check out the rules in %{rules_mention}.",
+                "description_no_rules": "Welcome to the server, %{mention}!",
+                "footer": "We now have %{count} members.",
+                "title": "Welcome to %{guild}!"
+            },
+            "left": {
+                "description": "Goodbye, %{display}!",
+                "title": "Member %{display} has left %{guild}!"
+            }
+        },
+        "set_channel": {
+            "description": "Set channel to send join / leave message.",
+            "embeds": {
+                "disabled": {
+                    "description": "Welcome notification feature has been disabled."
+                },
+                "enabled": {
+                    "description": "Welcome notification feature has been enabled.\n The welcome message will appear at %{target_mention}."
+                }
+            }
+        },
+        "set_rules_channel": {
+            "description": "Sets rule channel for adding link in it.",
+            "embeds": {
+                "disabled": {
+                    "description": "Rules channel for welcome message has been removed."
+                },
+                "success": {
+                    "description": "Rules channel for welcome message has been set to %{target_mention}."
+                }
+            }
+        },
+        "test": {
+            "description": "Run a test for welcome channel",
+            "embeds": {
+                "sent": {
+                    "description": "Test successfully sent to welcome channel!"
+                },
+                "unconfigured": {
+                    "description": "Welcome channel hasn't configured in this guild."
+                }
+            }
+        }
+    }
+}

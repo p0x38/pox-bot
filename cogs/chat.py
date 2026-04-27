@@ -12,7 +12,7 @@ def get_int(i):
     except ValueError:
         return 0
 
-class Chat(Cog):
+class ChatCog(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
 
@@ -81,4 +81,4 @@ class Chat(Cog):
         logger.debug(f"{message.author.name}: {message.clean_content.strip()}")
 
 async def setup(bot):
-    await bot.add_cog(Chat(bot))
+    await bot.add_cog(ChatCog(bot))

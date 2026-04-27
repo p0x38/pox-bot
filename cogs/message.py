@@ -7,7 +7,7 @@ from aiocache import cached
 from attr import has
 import discord
 from discord.ext import commands
-from discord import Embed, Forbidden, Interaction, Member, Message, TextChannel, TextStyle, app_commands
+from discord import Embed, Forbidden, Interaction, Member, Message, MessageReference, TextChannel, TextStyle, app_commands
 from bot import PoxBot
 from logger import logger
 import stuff
@@ -39,7 +39,7 @@ class DMSendModal(discord.ui.Modal):
             await interaction.response.send_message(f"Failed to send DM. {e}", ephemeral=True)
             logger.error(f"Error. {e}")
 
-class MessageGroup(commands.Cog):
+class MessageCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
 
@@ -106,7 +106,7 @@ class MessageGroup(commands.Cog):
             is_bot = m.author == self.bot.user
             is_replied = False
             if m.reference and m.reference.resolved:
-                if hasattr(m.reference.resolved, 'author'):
+                if isinstance(m.reference.resolved, Message):
                     is_replied = m.reference.resolved.author == self.bot.user
             
             if ctx.message:
@@ -285,4 +285,4 @@ class MessageGroup(commands.Cog):
             return await interaction.followup.send(embed=embed)
 
 async def setup(bot):
-    await bot.add_cog(MessageGroup(bot))
+    await bot.add_cog(MessageCog(bot))

@@ -11,29 +11,26 @@ from logger import logger
 class TranslationManager:
     def __init__(self, locales_path: str = "locales"):
         self.locales_path = locales_path
-        self.lang_info = {
-            "en": {"name": "English", "emoji": "🇺🇸"},
-            "ja": {"name": "日本語", "emoji": "🇯🇵"},
-            "es": {"name": "Español", "emoji": "🇪🇸"},
-            "ru": {"name": "Русский", "emoji": "🇷🇺"},
-            "vi": {"name": "Tiếng Việt", "emoji": "🇻🇳"},
-        }
+        try:
+            with open("resources/available_languages.json", "r", encoding="utf-8") as f:
+                data = orjson.loads(f.read())
+                # Convert the list to a dict for easy lookup: {"en": {"display": "English", ...}}
+                self.lang_info = {item["code"]: item for item in data}
+        except Exception as e:
+            logger.error(f"Failed to load available_languages.json: {e}")
+            self.lang_info = {}
     
     def get_available_language_codes(self) -> List[str]:
-        return [
-            f.split('.')[0]
-            for f in os.listdir(self.locales_path)
-            if f.endswith('.json')
-        ]
+        return list(self.lang_info.keys())
     
     def get_select_options(self, current_locale: str) -> List[SelectOption]:
         options = []
-        for code in self.get_available_language_codes():
+        for code, info in self.lang_info.items():
             info = self.lang_info.get(code, {"name": code.upper(), "emoji": "🌐"})
             options.append(SelectOption(
-                label=info['name'],
+                label=info.get('display', code.upper()),
                 value=code,
-                emoji=info['emoji'],
+                emoji=info('emoji', '🌐'),
                 default=(code == current_locale)
             ))
         return options
@@ -41,7 +38,7 @@ class TranslationManager:
 translation_manager = TranslationManager()
 
 class I18nTranslator:
-    def __init__(self, locales_path: str = "locales"):
+    def __init__(self, locales_path: str = "resources/locales"):
         self.locales_path = os.path.abspath(locales_path)
         self.available_files: Set[str] = set()
         self._sync_cache_locales()
@@ -52,11 +49,17 @@ class I18nTranslator:
         
         i18n.load_path.append(self.locales_path)
         i18n.set('file_format', 'json')
-        i18n.set('filename_format', '{locale}.{format}')
+        i18n.set('filename_format', '{namespace}.{format}')
         i18n.set('fallback', 'en')
         i18n.set('skip_locale_root_data', True)
+        i18n.set('use_locale_dirs', True)
         
-        i18n.set('on_missing_translation', 'return_key_on_missing_translation')
+        self.MISSING = object()
+        
+        def missing_handler(key, locale, **kwargs):
+            return self.MISSING
+        
+        i18n.set('on_missing_translation', missing_handler)
     
     async def _flush_missing_keys(self):
         await asyncio.sleep(self.batch_delay)
@@ -75,8 +78,8 @@ class I18nTranslator:
     def _sync_cache_locales(self):
         if os.path.exists(self.locales_path):
             self.available_files = {
-                f.split('.')[0] for f in os.listdir(self.locales_path)
-                if f.endswith('.json')
+                name for name in os.listdir(self.locales_path)
+                if os.path.isdir(os.path.join(self.locales_path, name))
             }
     
     def _orjson_loader(self, file_path: str) -> dict:
@@ -135,18 +138,18 @@ class I18nTranslator:
         
         translated = i18n.t(text, locale=lang, **kwargs)
         
-        if translated == text or f"{lang}.{text}" in translated:
-            if "." in text:
-                if text not in self.missing_keys_buffer:
-                    self.missing_keys_buffer[text] = set()
-                self.missing_keys_buffer[text].add(lang)
-                
-                if self.batch_task is None:
-                    try:
-                        loop = asyncio.get_running_loop()
-                        self.batch_task = loop.create_task(self._flush_missing_keys())
-                    except RuntimeError:
-                        pass
+        if translated is self.MISSING:
+            if text not in self.missing_keys_buffer:
+                self.missing_keys_buffer[text] = set()
+            self.missing_keys_buffer[text].add(lang)
+            
+            if self.batch_task is None:
+                try:
+                    loop = asyncio.get_running_loop()
+                    self.batch_task = loop.create_task(self._flush_missing_keys())
+                    self.batch_task.add_done_callback(lambda t: setattr(self, "batch_task", None))
+                except RuntimeError:
+                    pass
             return text
         
         return translated

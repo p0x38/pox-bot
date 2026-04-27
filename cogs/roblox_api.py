@@ -17,6 +17,18 @@ class RobloxAPICog(commands.Cog):
     
     group = app_commands.Group(name="roblox", description=app_commands.locale_str("A group for roblox APIs.", message="command.roblox.name"))
     
+    # auto complete for roblox usernames
+    async def roblox_username_autocomplete(self, interaction: Interaction, current: str) -> list[app_commands.Choice[str]]:
+        choices = []
+        try:
+            async for user in self.bot.roblox_client.user_search(current, max_items=10):
+                choices.append(app_commands.Choice(name=f"{user.display_name} (@{user.name})", value=user.name))
+                if len(choices) >= 24:
+                    break
+        except Exception:
+            pass
+        return choices
+    
     @cached(300)
     @group.command(name="user_avatar", description=app_commands.locale_str("Gets Roblox user avatar by username.", message="command.roblox.avatar.description"))
     async def get_user_avatar(self, interaction: Interaction, username: str):

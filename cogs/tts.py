@@ -17,7 +17,7 @@ from src.translator import translator_instance
 
 voice = PiperVoice.load("./resources/voices/en_US-ryan-high.onnx")
 
-class TTS(commands.Cog):
+class TextToSpeechCog(commands.Cog):
     def __init__(self,bot):
         self.bot: PoxBot = bot
     
@@ -174,7 +174,7 @@ class TTS(commands.Cog):
             
             async for chunk in communicate.stream():
                 self.bot.received_chunks += 1
-                if chunk["type"] == "audio":
+                if chunk["type"] == "audio" and "data" in chunk:
                     abuffer.write(chunk["data"])
             
             abuffer.seek(0)
@@ -200,4 +200,4 @@ class TTS(commands.Cog):
             await interaction.followup.send(embed=embed)
 
 async def setup(bot):
-    await bot.add_cog(TTS(bot))
+    await bot.add_cog(TextToSpeechCog(bot))

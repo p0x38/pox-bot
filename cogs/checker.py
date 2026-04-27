@@ -6,7 +6,7 @@ from typing import Optional
 from bot import PoxBot
 from logger import logger
 
-class Checker(commands.Cog):
+class CheckerCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
@@ -154,4 +154,4 @@ class Checker(commands.Cog):
         else:
             return await interaction.followup.send(f"{member.display_name}'s is odd.")
 async def setup(bot):
-    await bot.add_cog(Checker(bot))
+    await bot.add_cog(CheckerCog(bot))

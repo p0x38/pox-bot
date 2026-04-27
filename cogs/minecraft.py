@@ -12,7 +12,7 @@ from roblox.utilities.exceptions import Forbidden, BadRequest, TooManyRequests, 
 
 from bot import PoxBot
 
-class GetAPI(commands.Cog):
+class MinecraftCog(commands.Cog):
     def __init__(self, bot: PoxBot):
         self.bot: PoxBot = bot
     
@@ -88,17 +88,6 @@ class GetAPI(commands.Cog):
                 await interaction.response.send_message(cached)
             else:
                 await interaction.response.send_message("Couldn't resolve the UUID.")
-    
-    # auto complete for roblox usernames
-    async def roblox_username_autocomplete(self, interaction: Interaction, current: str) -> list[app_commands.Choice[str]]:
-        choices = []
-        try:
-            async for user in self.bot.roblox_client.user_search(current, max_items=10):
-                choices.append(app_commands.Choice(name=f"{user.display_name} (@{user.name})", value=user.name))
-                if len(choices) >= 24:
-                    break
-        except Exception:
-            pass
-        return choices
+
 async def setup(bot):
-    await bot.add_cog(GetAPI(bot))
+    await bot.add_cog(MinecraftCog(bot))

@@ -257,7 +257,7 @@ class DynamicInfoView(discord.ui.View):
         
         await interaction.response.edit_message(embed=e, view=self)
     
-class Info(commands.Cog):
+class InformationCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
@@ -520,4 +520,4 @@ class Info(commands.Cog):
     async def send_feedback(self, interaction: Interaction):
         await interaction.response.send_modal(FeedbackModal(self.bot))
 async def setup(bot):
-    await bot.add_cog(Info(bot))
+    await bot.add_cog(InformationCog(bot))

@@ -55,7 +55,7 @@ async def get_reliable_member(guild: Guild, user_id: int) -> tuple[MemberFetchSt
         logger.exception(f"An unexpected error occurred during fetch: {e}")
         return MemberFetchStatus.ERROR, None
 
-class Leaderboard(Cog):
+class LeaderboardCog(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
@@ -251,4 +251,4 @@ class Leaderboard(Cog):
         return await interaction.followup.send(embed=embed)        
             
 async def setup(bot):
-    await bot.add_cog(Leaderboard(bot))
+    await bot.add_cog(LeaderboardCog(bot))

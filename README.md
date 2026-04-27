@@ -12,7 +12,7 @@ source for my bot called stupid bot
 - `Python 3.12`
 - `uv`.
 - [`dependencies.`](pyproject.toml)
-- `MySQL` (You can change it by manually modifying)
+- `PostgreSQL` (You can change it by manually modifying)
 
 ## Usage
 
@@ -20,7 +20,7 @@ Make sure to activate virtualenv first.
 
 Make sure to add `TOKEN` on environment file (.env).
 
-Also set `MYSQL_USER` (Username to be used on MySQL Server) and `MYSQL_PASS` (Password to authenticate user that would be used on MySQL Server) to environment file.
+More `.env` related info: [here](.env-sample)
 
 Run this command: `uv run main.py`
 

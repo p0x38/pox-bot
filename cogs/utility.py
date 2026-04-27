@@ -10,7 +10,7 @@ import data
 from logger import logger
 from src.translator import translator_instance as i18n
 
-class Utility(commands.Cog):
+class UtilityCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
 
@@ -56,4 +56,4 @@ class Utility(commands.Cog):
         await interaction.response.send_message(embed=e)
 
 async def setup(bot):
-    await bot.add_cog(Utility(bot))
+    await bot.add_cog(UtilityCog(bot))

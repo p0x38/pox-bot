@@ -89,7 +89,7 @@ class TicketPanel(discord.ui.View):
     async def create_button_callback(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.send_modal(TicketReasonModal(self.cog))
 
-class TicketGroup(commands.Cog):
+class TicketSystemCog(commands.Cog):
     group = app_commands.Group(name="ticket", description="An group for TicketGroup.")
     def __init__(self, bot):
         self.bot: PoxBot = bot
@@ -241,4 +241,4 @@ class TicketGroup(commands.Cog):
         )
 
 async def setup(bot):
-    await bot.add_cog(TicketGroup(bot))
+    await bot.add_cog(TicketSystemCog(bot))

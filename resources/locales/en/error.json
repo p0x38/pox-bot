@@ -1,0 +1,105 @@
+{
+    "custom": {
+        "cannot_timeout_higher": "My role is not high enough to timeout this user.",
+        "channel_has_no_slowmode_property": "This channel has no property to set slowmode delay.",
+        "forbidden_timeout": "I don't have permission to timeout members.",
+        "guild_only": "The command is usable only in Guild.",
+        "insufficient_permission_ban": "You do not have permission to ban member %{user}.",
+        "insufficient_permission_kick": "You do not have permission to kick member %{user}.",
+        "invalidated_cache": "The command only works on guild because of the issue with caches.",
+        "missing_category": "Missing Category",
+        "no_git_commithash": "No commit hash found",
+        "no_git_lastcommit": "No commit message found",
+        "roblox_failed_retrieve_avatar": "Failed trying to retrieve Roblox user %{username}'s avatar.",
+        "roblox_forbidden": "Couldn't retrieve data from Roblox API because the client doesn't have, or using invalid CSRF Token.",
+        "roblox_user_not_found": "A Roblox user named '%{username}' doesn't exist.",
+        "timeout_duration_lessflow": "Duration must be greater than 0",
+        "tried_to_timeout_higher": "Your role is not high enough to timeout the user.",
+        "tried_to_timeout_himself": "You cannot timeout yourself",
+        "tried_to_timeout_owner": "You cannot timeout the server owner",
+        "unknown_signature": "Unknown Signature",
+        "unsupported_channel": "The channel isn't supported by bot.",
+        "user_not_found": "User not found."
+    },
+    "embed": {
+        "contributor_not_found": {
+            "description": "The contributor %{contributor} has been not found.",
+            "title": "Contributor not found"
+        },
+        "database_not_available": {
+            "description": "Database pool hasn't available this time.",
+            "title": "Database not available"
+        },
+        "edge_tts_not_installed": {
+            "description": "Server has no package to generate speech from edge-tts.",
+            "title": "Edge TTS not installed"
+        },
+        "guild_only": {
+            "description": "This command is only for guild.",
+            "title": "Invalid run context"
+        },
+        "only_positive_value": {
+            "description": "Negative value is not allowed for this command.",
+            "title": "Negative value is not allowed"
+        },
+        "send_error": {
+            "description": "An error thrown while trying to send: %{e}",
+            "title": "Send error"
+        },
+        "slowmode_out_of_range": {
+            "description": "Slowmode delay must be between 0 and 21600 seconds.",
+            "title": "Out of range"
+        },
+        "too_high_value": {
+            "description": "The value mustn't over {max}.",
+            "title": "Value cannot be higher than {max}"
+        },
+        "tts_generation_error": {
+            "description": "An error thrown while trying to generate speech: %{e}",
+            "title": "TTS Generation Error"
+        },
+        "tts_no_text": {
+            "description": "You've set input empty. Retry again later with input.",
+            "title": "Input must be not empty"
+        },
+        "unsupported_channel_slowmode": {
+            "description": "Channel %{channel} doesn't support slowmode.",
+            "title": "Unsupported channel"
+        },
+        "unsupported_channel_type": {
+            "description": "You have chose a channel that is unsupported.",
+            "title": "Unsupported channel type"
+        },
+        "welcome_channel_not_enabled": {
+            "description": "Welcome channel has not enabled in this guild. Make sure to set welcome channel to use this command.",
+            "title": "Welcome channel not enabled"
+        }
+    },
+    "exceptions": {
+        "AppCommandError": "Unknown Command error was thrown!",
+        "BotMissingPermissions": "I do not have the required permissions to execute it.",
+        "CheckFailure": "You do not have permission to use this command.",
+        "CommandAlreadyRegistered": "The command were already registered before.",
+        "CommandInvokeError": "An error occured while executing the command.",
+        "CommandLimitReached": "The command usage is currently limited due to command limitation.",
+        "CommandNotFound": "The command was not found.",
+        "CommandOnCooldown": "The command is on cooldown. Please try again after passing %{remaining} more seconds.",
+        "CommandSignatureMismatch": "The command has out of sync from latest one.",
+        "CommandSyncFailure": "Failed to synchronize command(s).",
+        "HTTPException": "The operation has failed due to HTTP Error.",
+        "MissingAnyRole": "You do not have any of required roles to use it.",
+        "MissingPermissions": "You do not have required permissions to use it.",
+        "MissingRole": "You do not have required role to use it.",
+        "NoPrivateMessage": "The command cannot be used on private messages.",
+        "TransformerError": "An error occured while processing command arguments.",
+        "TranslationError": "An error occured while translating the command.",
+        "Unknown": "An Uncaught error was thrown! %{e}"
+    },
+    "http": {
+        "400": "Error 400: Bad Request. Input contains invalid syntax.",
+        "403": "Error 403: Forbidden. You do not have permission to access the resource.",
+        "404": "Error 404: Not Found. There's no file exist.",
+        "429": "Error 429: Too Many Requests. API has ratelimit client. Try again later.",
+        "500": "Error 500: Internal Server Error. Server has encountered unknown error while processing."
+    }
+}

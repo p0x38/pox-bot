@@ -21,7 +21,7 @@ from bot import PoxBot
 from logger import logger
 import stuff
 
-class DMAdmin(Cog):
+class AdminCog(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
 
@@ -55,4 +55,4 @@ class DMAdmin(Cog):
                             await message.reply("Invalid command!")
                             
 async def setup(bot):
-    await bot.add_cog(DMAdmin(bot))
+    await bot.add_cog(AdminCog(bot))

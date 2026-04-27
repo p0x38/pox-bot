@@ -10,7 +10,7 @@ from logger import logger
 from stuff import clamp
 import stuff
 
-class RandomGroup(commands.Cog):
+class RandomizerCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
@@ -138,4 +138,4 @@ class RandomGroup(commands.Cog):
 
         return await interaction.response.send_message(embed=embed)
 async def setup(bot):
-    await bot.add_cog(RandomGroup(bot))
+    await bot.add_cog(RandomizerCog(bot))
