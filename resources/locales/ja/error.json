@@ -1,0 +1,105 @@
+{
+    "custom": {
+        "cannot_timeout_higher": "このユーザーをタイムアウトするには、ロールの権限が足りないよ。",
+        "channel_has_no_slowmode_property": "このチャンネルはスローモードを設定できないタイプだよ。",
+        "forbidden_timeout": "メンバーをタイムアウトする権限がないよ。",
+        "guild_only": "このコマンドはサーバー内でしか使えないよ。",
+        "insufficient_permission_ban": "%{user} をBANする権限がないよ。",
+        "insufficient_permission_kick": "%{user} をキックする権限がないよ。",
+        "invalidated_cache": "キャッシュの問題があるから、このコマンドはサーバー内でしか使えないよ。",
+        "missing_category": "カテゴリが見つからないよ",
+        "no_git_commithash": "コミットハッシュが見つからないよ",
+        "no_git_lastcommit": "コミットメッセージが見つからないよ",
+        "roblox_failed_retrieve_avatar": "Robloxユーザー %{username} のアバター取得に失敗したよ。",
+        "roblox_forbidden": "CSRFトークンが無効、または未設定のためRoblox APIからデータを取得できなかったよ。",
+        "roblox_user_not_found": "『%{username}』っていうRobloxユーザーは存在しないよ。",
+        "timeout_duration_lessflow": "時間は0より大きくしてね",
+        "tried_to_timeout_higher": "そのユーザーをタイムアウトするにはロールが足りないよ。",
+        "tried_to_timeout_himself": "自分自身はタイムアウトできないよ",
+        "tried_to_timeout_owner": "サーバーオーナーはタイムアウトできないよ",
+        "unknown_signature": "不明なシグネチャだよ",
+        "unsupported_channel": "このチャンネルはボットに対応してないよ。",
+        "user_not_found": "ユーザーが見つからないよ。"
+    },
+    "embed": {
+        "contributor_not_found": {
+            "description": "コントリビューター %{contributor} は見つからなかったよ。",
+            "title": "コントリビューターが見つからない"
+        },
+        "database_not_available": {
+            "description": "今はデータベースに接続できないみたい。",
+            "title": "データベース利用不可"
+        },
+        "edge_tts_not_installed": {
+            "description": "このサーバーには edge-tts がインストールされてないよ。",
+            "title": "Edge TTS 未インストール"
+        },
+        "guild_only": {
+            "description": "このコマンドはサーバー内専用だよ。",
+            "title": "実行できない場所"
+        },
+        "only_positive_value": {
+            "description": "このコマンドではマイナス値は使えないよ。",
+            "title": "負の値は使えない"
+        },
+        "send_error": {
+            "description": "送信中にエラーが発生したよ: %{e}",
+            "title": "送信エラー"
+        },
+        "slowmode_out_of_range": {
+            "description": "スローモードは0〜21600秒の範囲で指定してね。",
+            "title": "範囲外だよ"
+        },
+        "too_high_value": {
+            "description": "値は {max} を超えられないよ。",
+            "title": "{max} より大きい値はダメだよ"
+        },
+        "tts_generation_error": {
+            "description": "音声生成中にエラーが発生したよ: %{e}",
+            "title": "TTS生成エラー"
+        },
+        "tts_no_text": {
+            "description": "入力が空だよ。テキストを入れてもう一度試してね。",
+            "title": "入力が必要だよ"
+        },
+        "unsupported_channel_slowmode": {
+            "description": "チャンネル %{channel} はスローモードに対応してないよ。",
+            "title": "対応してないチャンネル"
+        },
+        "unsupported_channel_type": {
+            "description": "選択したチャンネルタイプは対応してないよ。",
+            "title": "非対応チャンネル"
+        },
+        "welcome_channel_not_enabled": {
+            "description": "このサーバーではウェルカムチャンネルが設定されてないよ。先に設定してね。",
+            "title": "ウェルカム未設定"
+        }
+    },
+    "exceptions": {
+        "AppCommandError": "不明なコマンドエラーが発生したよ！",
+        "BotMissingPermissions": "実行に必要な権限が足りないよ。",
+        "CheckFailure": "このコマンドを使う権限がないよ。",
+        "CommandAlreadyRegistered": "そのコマンドはすでに登録されてるよ。",
+        "CommandInvokeError": "コマンド実行中にエラーが発生したよ。",
+        "CommandLimitReached": "コマンド制限により、今は使えないよ。",
+        "CommandNotFound": "そのコマンドは見つからないよ。",
+        "CommandOnCooldown": "クールダウン中だよ。あと %{remaining} 秒待ってね。",
+        "CommandSignatureMismatch": "コマンドが最新状態と同期してないよ。",
+        "CommandSyncFailure": "コマンドの同期に失敗したよ。",
+        "HTTPException": "HTTPエラーで処理に失敗したよ。",
+        "MissingAnyRole": "必要なロールを持ってないよ。",
+        "MissingPermissions": "必要な権限が足りないよ。",
+        "MissingRole": "必要なロールがないよ。",
+        "NoPrivateMessage": "このコマンドはDMでは使えないよ。",
+        "TransformerError": "引数の処理中にエラーが発生したよ。",
+        "TranslationError": "翻訳中にエラーが発生したよ。",
+        "Unknown": "予期しないエラーが発生したよ！ %{e}"
+    },
+    "http": {
+        "400": "エラー 400: 不正なリクエスト。入力に問題があるよ。",
+        "403": "エラー 403: アクセス拒否。権限がないよ。",
+        "404": "エラー 404: 見つからないよ。",
+        "429": "エラー 429: リクエスト多すぎ！ちょっと待ってね。",
+        "500": "エラー 500: サーバー内部エラーが発生したよ。"
+    }
+}

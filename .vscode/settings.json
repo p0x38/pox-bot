@@ -3,8 +3,8 @@
     "python-envs.pythonProjects": [],
     "todo-tree.tree.scanMode": "workspace",
     "python.REPL.enableREPLSmartSend": false,
-    "i18n-ally.localesPaths": ["locales"],
-    "i18n-ally.pathMatcher": "{locale}.json",
+    "i18n-ally.localesPaths": ["resources/locales"],
+    "i18n-ally.pathMatcher": "{locale}/*.json",
     "i18n-ally.keystyle": "nested",
     "i18n-ally.enabledFrameworks": ["custom"],
     "i18n-ally.regex.usageMatch": [
