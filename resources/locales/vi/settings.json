@@ -1,0 +1,8 @@
+{
+    "fields": {
+        "embed_color": "**Màu nhúng**: %{hex}",
+        "locale": "**Ngôn ngữ hiển thị**: %{lang_code}"
+    },
+    "header_description": "Cài đặt người dùng",
+    "title": "Cài đặt người dùng"
+}

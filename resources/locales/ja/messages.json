@@ -1,6 +1,6 @@
 {
-    "ban_user": "%{user} をBANしたよ。",
-    "kick_user": "%{user} をキックしたよ。",
-    "timed_out_user": "%{user} を %{length} タイムアウトしたよ。",
-    "warn_user": "%{user} に警告したよ。"
+    "ban_user": "%{user}をBANしました。",
+    "kick_user": "%{user}を追放しました。",
+    "timed_out_user": "%{user}を%{length}秒間タイムアウトしました。",
+    "warn_user": "%{user}に警告を送信しました。"
 }

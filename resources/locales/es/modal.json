@@ -1,0 +1,107 @@
+{
+    "DynamicInfoView": {
+        "buttons": {
+            "suggest_button": {
+                "label": "Enviar sugerencias"
+            },
+            "url_button": {
+                "label": "Visita el repositorio de GitHub"
+            }
+        },
+        "data": {
+            "context": {
+                "memory": {
+                    "display": "Uso del contexto"
+                },
+                "mode": {
+                    "display": "Estado de ánimo actual"
+                },
+                "muted": {
+                    "display": "¿Jim está silenciado?"
+                },
+                "title": "Datos cerebrales locales"
+            },
+            "hardware": {
+                "cpu": {
+                    "display": "Uso de CPU (total)"
+                },
+                "cpu_own": {
+                    "display": "Uso de CPU (programa)"
+                },
+                "disk": {
+                    "display": "Uso del disco"
+                },
+                "platform": {
+                    "display": "Plataforma"
+                },
+                "ram": {
+                    "display": "Uso de memoria (total)"
+                },
+                "ram_details": {
+                    "display": "Detalles de la memoria"
+                },
+                "ram_own": {
+                    "display": "Uso de memoria (programa)"
+                },
+                "title": "Detalles técnicos"
+            },
+            "identity": {
+                "latency": {
+                    "display": "Latencia de red"
+                },
+                "owner": {
+                    "display": "Desarrollador de robots"
+                },
+                "signature": {
+                    "display": "Firma"
+                },
+                "title": "Identidad",
+                "uptime": {
+                    "display": "Tiempo de actividad del robot"
+                },
+                "uuid": {
+                    "display": "UUID de sesión"
+                },
+                "version": {
+                    "display": "Versión de robot"
+                }
+            },
+            "stats": {
+                "cached_values": {
+                    "display": "cachés"
+                },
+                "channels": {
+                    "display": "Canales"
+                },
+                "guilds": {
+                    "display": "Servidores"
+                },
+                "interactions": {
+                    "display": "Interacciones"
+                },
+                "msgs": {
+                    "display": "Mensajes vistos"
+                },
+                "title": "Estadísticas de robots",
+                "users": {
+                    "display": "Usuarios"
+                }
+            }
+        },
+        "options": {
+            "context": {
+                "label": "Datos cerebrales locales"
+            },
+            "hardware": {
+                "label": "Información de hardware"
+            },
+            "identity": {
+                "label": "Información general"
+            },
+            "placeholder": "Elige categoría...",
+            "stats": {
+                "label": "Estadística"
+            }
+        }
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "ban_user": "%{user} забанен.",
+    "kick_user": "%{user} исключен.",
+    "timed_out_user": "У %{user} истекло время ожидания %{length}.",
+    "warn_user": "%{user} получил предупреждение."
+}

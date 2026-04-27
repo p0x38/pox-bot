@@ -1,0 +1,8 @@
+{
+    "fields": {
+        "embed_color": "**Color para incrustar**: %{hex}",
+        "locale": "**Idioma para mostrar**: %{lang_code}"
+    },
+    "header_description": "Configuraciones de usuario",
+    "title": "Configuración de usuario"
+}
