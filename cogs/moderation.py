@@ -15,7 +15,7 @@ class ModerationCog(commands.Cog):
         self.bot = bot
         self.user_message_timestamps = {}
     
-    group = app_commands.Group(name="moderation", description=app_commands.locale_str("Moderation management.", extras={"key": "command.moderation.description"}))
+    group = app_commands.Group(name="moderation", description=app_commands.locale_str("command.moderation.description"))
     
     @commands.Cog.listener()
     async def on_message(self, message: Message):
@@ -57,10 +57,10 @@ class ModerationCog(commands.Cog):
                     await message.delete()
                     logger.warning(f"Spam detected from {message.author}")
     
-    @group.command(name="togglefeature", description=app_commands.locale_str("Toggle server features.", extras={"key": "command.moderation.togglefeature.description"}))
+    @group.command(name="togglefeature", description=app_commands.locale_str("command.moderation.togglefeature.description"))
     @app_commands.describe(
-        feature=app_commands.locale_str("The feature to toggle.", extras={"key": "command.moderation.togglefeature.parameters.feature.description"}),
-        state=app_commands.locale_str("On or Off", extras={"key": "command.moderation.togglefeature.parameters.state.description"})
+        feature=app_commands.locale_str("command.moderation.togglefeature.paramaters.feature.description"),
+        state=app_commands.locale_str("command.moderation.togglefeature.paramaters.state.description")
     )
     async def toggle_feature(self, interaction: Interaction, feature: ServerFeatureType, state: bool):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale.value

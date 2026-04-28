@@ -38,9 +38,9 @@ class StatsCog(commands.Cog):
                 
                 await message.channel.send(embed=embed)
             
-    group = app_commands.Group(name="stats", description=app_commands.locale_str("Leveling system.", extras={"key": "command.stats.description"}))
+    group = app_commands.Group(name="stats", description=app_commands.locale_str("command.stats.description"))
     
-    @group.command(name="top", description=app_commands.locale_str("Show the top users.", extras={"key": "command.stats.top.description"}))
+    @group.command(name="top", description=app_commands.locale_str("command.stats.top.description"))
     async def leaderboard(self, interaction: Interaction):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale.value
         embed = Embed()

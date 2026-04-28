@@ -1,3 +1,5 @@
+import re
+
 import i18n
 import os
 import orjson
@@ -39,6 +41,10 @@ class TranslationManager:
 
 translation_manager = TranslationManager()
 
+def natural_key(s: str):
+    return [int(text) if text.isdigit() else text.lower()
+            for text in re.split(r'(\d+)', s)]
+
 class I18nTranslator:
     def __init__(self, locales_path: str = "resources/locales"):
         self.locales_path = os.path.abspath(locales_path)
@@ -68,8 +74,10 @@ class I18nTranslator:
         
         if self.missing_keys_buffer:
             report = ["\n----  Translation Missing Report ----"]
-            for key, langs in self.missing_keys_buffer.items():
-                report.append(f"\t* Key: '{key}' | Missing in: {', '.join(langs)}")
+            for key in sorted(self.missing_keys_buffer, key=natural_key):
+                langs = self.missing_keys_buffer[key]
+                report.append(f"* Key: '{key}' in {', '.join(sorted(langs))}")
+                
             report.append("-------------------------------------")
             
             logger.warning("\n".join(report))
@@ -207,7 +215,7 @@ class DiscordI18nTranslator(app_commands.Translator):
         await self.internal.preload_all()
     
     async def translate(self, string: app_commands.locale_str, locale: Locale, context: app_commands.TranslationContext) -> Optional[str]:
-        key = string.extras.get('key') or str(string)
+        key = str(string)
         
         is_name = context.location in [
             app_commands.TranslationContextLocation.command_name,
@@ -217,10 +225,10 @@ class DiscordI18nTranslator(app_commands.Translator):
         
         if is_name and "." not in key:
             return None
-        
+                
         translated = self.internal.translate_string(key, str(locale))
         
-        if translated == key:
+        if translated is self.internal.MISSING:
             return None
         
         return translated

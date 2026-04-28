@@ -15,7 +15,7 @@ class LevelingCog(commands.Cog):
         self.bot = bot
         self.cooldowns = {}
     
-    group = app_commands.Group(name="leveling", description=app_commands.locale_str("Leveling System.", extras={"key": "command.leveling.description"}))
+    group = app_commands.Group(name="leveling", description=app_commands.locale_str("command.leveling.description"))
     
     def calculate_xp(self, message: Message) -> int:
         content = message.content
@@ -40,9 +40,10 @@ class LevelingCog(commands.Cog):
         
         user_id = message.author.id
         current_time = datetime.now(UTC)
-        cooldown_duration = current_time - self.cooldowns[user_id]
-        if user_id in self.cooldowns and cooldown_duration < timedelta(seconds=60):
-            return
+        if user_id in self.cooldowns:
+            cooldown_duration = current_time - self.cooldowns[user_id]
+            if cooldown_duration < timedelta(seconds=60):
+                return
         
         xp_to_add = self.calculate_xp(message)
         
@@ -60,7 +61,7 @@ class LevelingCog(commands.Cog):
                 
                 await message.channel.send(msg)
     
-    @group.command(name="rank", description=app_commands.locale_str("Check rank", extras={"key": "command.leveling.rank.description"}))
+    @group.command(name="rank", description=app_commands.locale_str("command.leveling.rank.description"))
     async def show_rank(self, interaction: Interaction, member: Optional[Member] = None):
         await interaction.response.defer()
         

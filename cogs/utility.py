@@ -14,7 +14,7 @@ class UtilityCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
 
-    @app_commands.command(name=app_commands.locale_str("8ball", extras={"key": "command.8ball.name"}), description=app_commands.locale_str("Gives a random, classic magic 8-ball response to a user's question.", extras={"key": "command.8ball.description"}))
+    @app_commands.command(name="8ball", description=app_commands.locale_str("command.8ball.description"))
     @app_commands.describe(question="Question to answer by 8ball.")
     async def eight_ball(self, interaction: Interaction, question: str):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale

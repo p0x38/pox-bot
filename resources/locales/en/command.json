@@ -5,8 +5,7 @@
             "default": {
                 "title": "Answer to '%{question}'"
             }
-        },
-        "name": "8ball"
+        }
     },
     "channel": {
         "description": "A group for managing ",
@@ -16,10 +15,8 @@
                 "default": {
                     "title": "Information of %{name}"
                 }
-            },
-            "name": "info"
+            }
         },
-        "name": "channel",
         "slowmode": {
             "description": "Sets slowmode delay",
             "embeds": {
@@ -27,8 +24,7 @@
                     "description": "Successfully set slowmode to **%{seconds}** for %{mention}.",
                     "title": "Slowmode Updated"
                 }
-            },
-            "name": "slowmode"
+            }
         }
     },
     "contributors": {
@@ -40,18 +36,15 @@
                     "description": "Here's a list of contributors who helped my bot! :3",
                     "title": "Contributors"
                 }
-            },
-            "name": "list"
+            }
         },
-        "name": "contributors",
         "view": {
             "description": "Shows contributor information.",
             "embeds": {
                 "default": {
                     "title": "Contributor Information of %{contributor}"
                 }
-            },
-            "name": "view"
+            }
         }
     },
     "economy": {
@@ -164,8 +157,7 @@
     },
     "info": {
         "commit_data": {
-            "description": "Shows bot's latest git commit.",
-            "name": "commit_data"
+            "description": "Shows bot's latest git commit."
         },
         "description": "A group for information",
         "invite": {
@@ -181,23 +173,19 @@
             },
             "error": {
                 "hardlimited": "You can't invite TongueBot right now, since the limit has been reached."
-            },
-            "name": "invite"
+            }
         },
-        "name": "info",
         "os_info": {
             "description": "Shows operating system information.",
             "embed": {
                 "title": "Operating System Information"
-            },
-            "name": "os_info"
+            }
         },
         "ping": {
             "description": "Pong!",
             "embed": {
                 "title": "Pong! (%{latency} ms)"
-            },
-            "name": "ping"
+            }
         },
         "retrieve": {
             "description": "Retrieves bot information.",
@@ -208,38 +196,36 @@
             },
             "error": {
                 "forbidden": "I do not have the **Manage Channels** permission to do that."
-            },
-            "name": "retrieve"
+            }
         },
         "sync": {
-            "description": "Synchronizes commands",
-            "name": "sync"
+            "description": "Synchronizes commands"
         },
         "timedate": {
             "description": "Shows time in specified timezone",
             "embed": {
                 "description": "In %{timezone_name}, it's **%{timedate}**."
-            },
-            "name": "timedate"
+            }
         }
     },
     "leveling": {
+        "description": "Leveling system.",
         "rank": {
             "description": "Check rank.",
             "embeds": {
                 "default": {
-                    "title": "%{user}'s rank",
                     "fields": {
                         "level": {
                             "name": "Level"
                         },
-                        "total": {
-                            "name": "Total XP"
-                        },
                         "progress": {
                             "name": "Progress"
+                        },
+                        "total": {
+                            "name": "Total XP"
                         }
-                    }
+                    },
+                    "title": "%{user}'s rank"
                 }
             }
         }
@@ -248,17 +234,17 @@
         "description": "Moderation management.",
         "togglefeature": {
             "description": "Toggle server features.",
+            "embeds": {
+                "default": {
+                    "description": "Set %{feature_name} to %{state}."
+                }
+            },
             "paramaters": {
                 "feature": {
                     "description": "The feature to toggle"
                 },
                 "state": {
                     "description": "On or Off"
-                }
-            },
-            "embeds": {
-                "default": {
-                    "description": "Set %{feature_name} to %{state}."
                 }
             }
         }
@@ -303,10 +289,8 @@
             }
         },
         "google_translate": {
-            "description": "Generates TTS from Google Translate.",
-            "name": "google_translate"
-        },
-        "name": "tts"
+            "description": "Generates TTS from Google Translate."
+        }
     },
     "user": {
         "avatar": {
@@ -327,12 +311,10 @@
                 }
             },
             "fields": {
-                "wallet": "%{coins} Coins",
-                "stats": "Level %{level} (%{xp} XP) / %{messages} Messages"
-            },
-            "name": "info"
+                "stats": "Level %{level} (%{xp} XP) / %{messages} Messages",
+                "wallet": "%{coins} Coins"
+            }
         },
-        "name": "user",
         "set_nick": {
             "description": "Sets user's nickname.",
             "embeds": {

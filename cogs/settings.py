@@ -84,7 +84,7 @@ class SettingsCog(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot: PoxBot = bot
     
-    @app_commands.command(name="settings", description=app_commands.locale_str("Shows user settings.", extras={"key": "command.settings.description"}))
+    @app_commands.command(name="settings", description=app_commands.locale_str("command.settings.description"))
     async def show_settings(self, interaction: Interaction):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         embed = Embed(color=Color.red())

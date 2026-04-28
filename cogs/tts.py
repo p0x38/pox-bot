@@ -21,7 +21,7 @@ class TextToSpeechCog(commands.Cog):
     def __init__(self,bot):
         self.bot: PoxBot = bot
     
-    ttsgroup = app_commands.Group(name=app_commands.locale_str("tts", extras={"key": "command.tts.name"}),description=app_commands.locale_str("Center of TTS.", extras={"key": "command.tts.description"}))
+    ttsgroup = app_commands.Group(name="tts",description=app_commands.locale_str("command.tts.description"))
     
     async def googletts_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
         suggestions = []
@@ -36,7 +36,7 @@ class TextToSpeechCog(commands.Cog):
         return suggestions
     
     @cached(60*2)
-    @ttsgroup.command(name=app_commands.locale_str("googletts", extras={"key": "command.tts.google_translate.name"}))
+    @ttsgroup.command(name="google_tts")
     @app_commands.autocomplete(lang=googletts_autocomplete)
     async def google_text_to_speech(self, interaction: discord.Interaction, text: str, slow: Optional[bool] = False, lang: Optional[str] = "en"):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale

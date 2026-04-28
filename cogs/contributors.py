@@ -17,9 +17,9 @@ class ContributorsCog(Cog):
         self.bot: PoxBot = bot
         self.contributor_list: list[dict[str, Any]] = data.get_contributors_v2()
 
-    group = app_commands.Group(name=app_commands.locale_str("contributors", extras={"key": "command.contributors.name"}), description=app_commands.locale_str("A group for contributors.", extras={"key": "command.contributors.description"}))
+    group = app_commands.Group(name="contributors", description=app_commands.locale_str("A group for contributors.", extras={"key": "command.contributors.description"}))
     
-    @group.command(name=app_commands.locale_str("list", extras={"key": "command.contributors.list.name"}), description=app_commands.locale_str("Lists all contributors.", extras={"key": "command.contributors.list.description"}))
+    @group.command(name="list", description=app_commands.locale_str("Lists all contributors.", extras={"key": "command.contributors.list.description"}))
     async def list_contributors(self, interaction: Interaction):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         embed = Embed(title=translator_instance.T("command.contributors.list.embeds.default.title", loc), description=translator_instance.T("command.contributors.list.embds.default.description", loc))
@@ -53,7 +53,7 @@ class ContributorsCog(Cog):
             if not contributor.get("command")
         ]
     
-    @group.command(name=app_commands.locale_str("view", extras={"key": "command.contributors.view.name"}), description=app_commands.locale_str("Shows contributor.", extras={"key": "command.contributors.view.description"}))
+    @group.command(name="view", description=app_commands.locale_str("Shows contributor.", extras={"key": "command.contributors.view.description"}))
     @app_commands.autocomplete(contributor_id=contributor_autocomplete)
     async def view_contributor(self, interaction: Interaction, contributor_id: str):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale

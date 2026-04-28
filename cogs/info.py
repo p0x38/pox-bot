@@ -261,14 +261,14 @@ class InformationCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
-    group = app_commands.Group(name=app_commands.locale_str("info", extras={"key": "command.info.name"}), description=app_commands.locale_str("A group for informations.", extras={"key": "command.info.description"}))
+    group = app_commands.Group(name="info", description=app_commands.locale_str("command.info.description"))
     
     def make_bar(self, percent, length=10):
         filled_length = int(length*percent/100)
         bar = '#' * filled_length + '_' * (length - filled_length)
         return f"[`{bar}`] {percent}%"
     
-    @group.command(name=app_commands.locale_str("sync", extras={"key": "command.info.sync.name"}), description=app_commands.locale_str("Synchronizes commands.", extras={"key": "command.info.sync.description"}))
+    @group.command(name="sync", description=app_commands.locale_str("command.info.sync.description"))
     @app_commands.check(stuff.is_bot_owner)
     @commands.guild_only()
     async def sync_commands(self,ctx: Interaction):
@@ -288,7 +288,7 @@ class InformationCog(commands.Cog):
         global start_time
         await ctx.response.send_message("I have been online for {}.".format(stuff.get_formatted_from_seconds(round(time.time() - self.bot.launch_time2))))
     
-    @group.command(name=app_commands.locale_str("retrieve", extras={"key": "command.info.retrieve.name"}), description=app_commands.locale_str("I always with you :)", extras={"key": "command.info.retrieve.description"}))
+    @group.command(name="retrieve", description=app_commands.locale_str("command.info.retrieve.description"))
     async def show_stats(self, interaction: Interaction):
         await interaction.response.defer(thinking=True)
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
@@ -355,7 +355,7 @@ class InformationCog(commands.Cog):
 
         await interaction.followup.send(embed=e)
     
-    @group.command(name=app_commands.locale_str("commit_data", extras={"key": "command.info.commit_data.name"}), description=app_commands.locale_str("Shows bot's latest git commit.", extras={"key": "command.info.commit_data.description"}))
+    @group.command(name="commit_data", description=app_commands.locale_str("command.info.commit_data.description"))
     async def get_commit_data(self, interaction: Interaction):
         await interaction.response.defer(thinking=True)
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
@@ -376,7 +376,7 @@ class InformationCog(commands.Cog):
         
         await interaction.followup.send(embed=e)
     
-    @group.command(name=app_commands.locale_str("ping", extras={"key": "command.info.ping.name"}), description=app_commands.locale_str("Pong!", extras={"key": "command.info.ping.description"}))
+    @group.command(name="ping", description=app_commands.locale_str("command.info.ping.description"))
     async def ping(self, interaction: Interaction):
         await interaction.response.defer()
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
@@ -412,7 +412,7 @@ class InformationCog(commands.Cog):
             for tz in timezones if current.lower() in tz.lower()
         ][:25]
     
-    @group.command(name=app_commands.locale_str("timedate", extras={"key": "command.info.timedate.name"}), description=app_commands.locale_str("Shows time in specified timezone", extras={"key": "command.info.timedate.description"}))
+    @group.command(name="timedate", description=app_commands.locale_str("command.info.timedate.description"))
     @app_commands.autocomplete(timezone=get_timezone_timestamp_autocomplete)
     async def get_timezone_timestamp(self, interaction: discord.Interaction, timezone: str):
         await interaction.response.defer(ephemeral=True)
@@ -426,7 +426,7 @@ class InformationCog(commands.Cog):
         except Exception as e:
             await interaction.followup.send(f"An error occurred: {str(e)}", ephemeral=True)
     
-    @group.command(name=app_commands.locale_str("invite", extras={"key": "command.info.invite.name"}), description=app_commands.locale_str("Invites the bot to server by application url. (LIMITED TO 90)", extras={"key": "command.info.invite.description"}))
+    @group.command(name="invite", description=app_commands.locale_str("command.info.invite.description"))
     async def invite(self, interaction: Interaction):
         try:
             await interaction.response.defer()
@@ -488,7 +488,7 @@ class InformationCog(commands.Cog):
         
         await ctx.response.send_message(f"{status}\nMay the result varies by the time, cuz it is very advanced to do... also this is not accurate.")
     
-    @group.command(name=app_commands.locale_str("os_info", extras={"key": "command.info.os_info.name"}), description=app_commands.locale_str("Shows operating system information.", extras={"key": "command.info.os_info.description"}))
+    @group.command(name="os_info", description=app_commands.locale_str("command.info.os_info.description"))
     async def os_info(self, interaction: discord.Interaction):
         await interaction.response.defer()
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale

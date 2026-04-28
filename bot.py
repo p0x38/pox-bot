@@ -91,6 +91,11 @@ class PoxBot(commands.AutoShardedBot):
     def _(self, s): return s
     
     async def setup_hook(self):
+        try:
+            await self.tree.set_translator(discord_translator)
+        except Exception:
+            logger.exception("Failed to set command translator")
+        
         stuff.setup_database("./leaderboard.db")
         
         dsn = stuff.get_postgresql_dsn()
@@ -113,11 +118,6 @@ class PoxBot(commands.AutoShardedBot):
         await self.stats_db.setup()
         await self.economy_db.setup()
         await self.guild_db.setup()
-        
-        try:
-            await self.tree.set_translator(discord_translator)
-        except Exception:
-            logger.exception("Failed to set command translator")
         
         self.db_connection = await aiosqlite.connect("./leaderboard.db")
 
@@ -222,6 +222,19 @@ class PoxBot(commands.AutoShardedBot):
                     logger.exception(f"Extension {fname[:-3]} has failed to load due to {e}.")
                 except Exception as e:
                     logger.exception(f"Uncaught exception thrown while reloading, due to {e}.")
+        try:
+            synced = await self.tree.sync()
+            logger.info(f"Synchronized {len(synced)} commands.")
+        except app_commands.CommandSyncFailure:
+            logger.exception("CommandSyncFailure: Invalid command data")
+        except Forbidden:
+            logger.error("Forbidden: The bot doesn't have permission to use `application.commands`")
+        except MissingApplicationID:
+            logger.error("MissingApplicationID: The application ID is empty or missing")
+        except app_commands.TranslationError as e:
+            logger.exception(f"TranslationError: Error thrown while translating key {str(e.string)} in {e.locale} ({e.context.location.name})")
+        except HTTPException:
+            logger.error("HTTPException: Failed to sync commands")
 
     async def on_ready(self):
         logger.info("Auth-code is {}".format(self.auth_code))
@@ -239,20 +252,6 @@ class PoxBot(commands.AutoShardedBot):
             )))
         else:
             logger.info("It seems client is connected with bot, but no user object found.")
-
-        try:
-            synced = await self.tree.sync()
-            logger.info(f"Synchronized {len(synced)} commands.")
-        except app_commands.CommandSyncFailure:
-            logger.exception("CommandSyncFailure: Invalid command data")
-        except Forbidden:
-            logger.error("Forbidden: The bot doesn't have permission to use `application.commands`")
-        except MissingApplicationID:
-            logger.error("MissingApplicationID: The application ID is empty or missing")
-        except app_commands.TranslationError as e:
-            logger.exception(f"TranslationError: Error thrown while translating key {str(e.string)} in {e.locale} ({e.context.location.name})")
-        except HTTPException:
-            logger.error("HTTPException: Failed to sync commands")
 
     async def on_message(self,message: discord.Message):
         if message.author == self.user or message.mention_everyone: return

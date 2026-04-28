@@ -225,7 +225,7 @@ class UserCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         
-        @app_commands.context_menu(name=app_commands.locale_str("Kick", extras={"key": "context_menu.kick_member.name"}))
+        @app_commands.context_menu(name=app_commands.locale_str("context_menu.kick_member.name"))
         @app_commands.checks.has_permissions(kick_members=True)
         @app_commands.guild_only()
         async def contextmenu_kick(interaction: Interaction, member: Member):
@@ -246,7 +246,7 @@ class UserCog(commands.Cog):
             finally:
                 return await interaction.followup.send(embed=embed)
         
-        @app_commands.context_menu(name=app_commands.locale_str("Ban", extras={"key": "context_menu.ban_membee.name"}))
+        @app_commands.context_menu(name=app_commands.locale_str("context_menu.ban_member.name"))
         @app_commands.checks.has_permissions(ban_members=True)
         @app_commands.guild_only()
         async def contextmenu_ban(interaction: Interaction, member: Member):
@@ -267,7 +267,7 @@ class UserCog(commands.Cog):
             finally:
                 return await interaction.followup.send(embed=embed)
         
-        @app_commands.context_menu(name=app_commands.locale_str("Timeout", extras={"key": "context_menu.timeout_member.name"}))
+        @app_commands.context_menu(name=app_commands.locale_str("context_menu.timeout_member.name"))
         @app_commands.checks.has_permissions(moderate_members=True)
         @app_commands.guild_only()
         async def contextmenu_timeout(interaction: Interaction, member: Member):
@@ -277,7 +277,7 @@ class UserCog(commands.Cog):
         bot.tree.add_command(contextmenu_ban)
         bot.tree.add_command(contextmenu_timeout)
     
-    group = app_commands.Group(name=app_commands.locale_str("user", extras={"key": "command.user.name"}), description=app_commands.locale_str("A group for user.", extras={"key": "command.user.description"}))
+    group = app_commands.Group(name="user", description=app_commands.locale_str("command.user.description"))
     
     @group.command(name="guild_duration", description="Checks how long user has been in the server.")
     @app_commands.guild_only()
@@ -303,7 +303,7 @@ class UserCog(commands.Cog):
             logger.exception(e)
             await interaction.followup.send("sry errored")
     
-    @group.command(name=app_commands.locale_str("info", extras={"key": "command.user.info.name"}), description=app_commands.locale_str("Retrieves user's information.", extras={"key": "command.user.info.description"}))
+    @group.command(name="info", description=app_commands.locale_str("command.user.info.description"))
     @app_commands.guild_only()
     async def check_user_info(self, interaction: Interaction, member: Member):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale.value
@@ -395,7 +395,7 @@ class UserCog(commands.Cog):
             return await interaction.followup.send(f"Error. {e}")
     
     @cached(60)
-    @group.command(name="avatar", description=app_commands.locale_str("Shows Discord user's avatar.", extras={"key": "command.user.avatar.description"}))
+    @group.command(name="avatar", description=app_commands.locale_str("command.user.avatar.description"))
     @app_commands.guild_only()
     async def get_user_avatar(self, interaction: Interaction, member: Member):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
@@ -500,7 +500,7 @@ class UserCog(commands.Cog):
 
         return await interaction.followup.send(embed=embed)
 
-    @group.command(name="set_nick", description=app_commands.locale_str("Sets user's nickname.", extras={"key": "command.user.set_nick.description"}))
+    @group.command(name="set_nick", description=app_commands.locale_str("command.user.set_nick.description"))
     @app_commands.guild_only()
     async def change_nickname(self, interaction: Interaction, member: Member, new_nick: Optional[str] = None):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
@@ -517,7 +517,7 @@ class UserCog(commands.Cog):
             embed.description = i18n.T("command.user.set_nick.embeds.changed.description", loc, {"user": member.mention, "new_nickname": new_nick})
             return await interaction.followup.send(embed=embed)
     
-    @group.command(name="status", description=app_commands.locale_str("Retrieves user's status.", extras={"key": "command.user.status.description"}))
+    @group.command(name="status", description=app_commands.locale_str("command.user.status.description"))
     @app_commands.guild_only()
     async def get_user_status(self, interaction: Interaction, member: Member):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale

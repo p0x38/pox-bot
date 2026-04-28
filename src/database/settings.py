@@ -71,9 +71,10 @@ class SettingsDatabase(PostgreSQLDatabase):
         self.settings_cache.set(user_id, settings)
         
         if self.pool:
+            data_json = orjson.dumps(settings.to_dict()).decode('utf-8')
             async with self.pool.acquire() as conn:
                 await conn.execute("""
                     INSERT INTO user_preferences (user_id, data)
                     VALUES ($1, $2::jsonb)
                     ON CONFLICT (user_id) DO UPDATE SET data = EXCLUDED.data
-                """, user_id, orjson.dumps(settings.to_dict()))
+                """, user_id, data_json)
