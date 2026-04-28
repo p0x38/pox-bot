@@ -1,15 +1,22 @@
+import sys
+import subprocess
+from typing import Optional
+
+from aiohttp.web_fileresponse import extension
 import stuff
 stuff.create_dir_if_not_exists("./logs")
-
 import os
 import discord
-
-from datetime import UTC
+from datetime import UTC, datetime
 from discord.ext import commands
-from discord import Forbidden, HTTPException, Interaction, MissingApplicationID, app_commands
-
+from discord import Color, Embed, Forbidden, HTTPException, Interaction, MissingApplicationID, app_commands
 from bot import PoxBot
 from logger import logger
+from src.translator import translator_instance
+
+import psutil
+process_ps = psutil.Process(os.getpid())
+process_ps.nice(psutil.ABOVE_NORMAL_PRIORITY_CLASS)
 
 bot_token = stuff.get_bot_token()
 
@@ -32,11 +39,12 @@ tree = bot.tree
 async def reload_cogs(interaction: Interaction):
     loaded_extension = 0
     failed_extension = 0
+    
     await interaction.response.defer()
+    
     for fname in os.listdir('./cogs'):
         if fname.endswith('.py'):
             logger.debug(f"Loading extension {fname[:-3]}.")
-
             if fname[:-3] in bot.EXCLUDE_EXTENSIONS:
                 logger.warning("This extension has excluded from loading.")
                 continue
@@ -82,87 +90,124 @@ async def reload_cogs(interaction: Interaction):
         logger.error("HTTPException: Failed to sync commands")
         return await interaction.followup.send("Failed to sync commands.")
 
+async def try_returnerror(interaction: Interaction, embed: Embed):
+    try:
+        if not interaction.response.is_done():
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+        else:
+            await interaction.followup.send(embed=embed, ephemeral=True)
+    except HTTPException as e:
+        logger.error(f"Could not send error embed due to network/Discord error: {e}")
+    except Exception as e:
+        logger.exception(f"Unexpected failure in try_returnerror: {e}")
+
 @tree.error
+async def on_app_command_error(interaction: Interaction, error: app_commands.AppCommandError):
+    loc = await bot.settings_db.get_locale(interaction) if bot.settings_db else interaction.locale
+    
+    error_name = error.__class__.__name__
+    key = f"error.exceptions.{error_name}"
+    
+    kwargs = {"e": str(error)}
+    
+    if isinstance(error, app_commands.CommandOnCooldown):
+        kwargs["remaining"] = str(round(error.retry_after, 2))
+    
+    if isinstance(error, (app_commands.CommandInvokeError, app_commands.TransformerError)):
+        logger.exception(f"Critical Error in /{interaction.command.qualified_name if interaction.command else "unknown_command"}: {error}")
+    else:
+        logger.warning(f"User Error in /{interaction.command.qualified_name if interaction.command else "unknown_command"}: {error}")
+    
+    description = translator_instance.T(key, loc, kwargs)
+    
+    if description == key:
+        description = translator_instance.T("error.exceptions.AppCommandError", str(loc))
+    
+    embed = Embed(
+        title=f"Error thrown: {error_name}",
+        description=description,
+        color=Color.red(),
+        timestamp=datetime.now()
+    )
+    
+    return await try_returnerror(interaction, embed)
+
+""" @tree.error
 async def on_app_command_error(interaction: Interaction, error: app_commands.AppCommandError) -> None:
     if isinstance(error, app_commands.AppCommandError):
+        embed = Embed(title="Error thrown!", color=Color.red(), timestamp=datetime.now())
         if isinstance(error, app_commands.CommandInvokeError):
             logger.exception(f"An error occurred while invoking command: {error}")
-            await interaction.response.send_message("An error occurred while executing the command.", ephemeral=True)
-            return
+            embed.description = "An error occurred while executing the command."
         elif isinstance(error, app_commands.TransformerError):
             logger.exception(f"An error occurred during argument transformation: {error}")
-            await interaction.response.send_message("An error occurred while processing command arguments.", ephemeral=True)
-            return
+            embed.description = "An error occurred while processing command arguments."
         elif isinstance(error, app_commands.TranslationError):
             logger.exception(f"An error occurred during command translation: {error}")
-            await interaction.response.send_message("An error occurred while translating the command.", ephemeral=True)
-            return
+            embed.description = "An error occurred while translating the command."
         elif isinstance(error, app_commands.CheckFailure):
             if isinstance(error, app_commands.NoPrivateMessage):
                 logger.warning(f"Check failure: {error}")
-                await interaction.response.send_message("This command cannot be used in private messages.", ephemeral=True)
-                return
+                embed.description = "This command cannot be used in private messages."
             elif isinstance(error, app_commands.MissingRole):
                 logger.warning(f"Check failure: {error}")
-                await interaction.response.send_message("You do not have the required role to use this command.", ephemeral=True)
-                return
+                embed.description = "You do not have the required role to use this command."
             elif isinstance(error, app_commands.MissingAnyRole):
                 logger.warning(f"Check failure: {error}")
-                await interaction.response.send_message("You do not have any of the required roles to use this command.", ephemeral=True)
-                return
+                embed.description = "You do not have any of the required roles to use this command."
             elif isinstance(error, app_commands.MissingPermissions):
                 logger.warning(f"Check failure: {error}")
-                await interaction.response.send_message("You do not have the required permissions to use this command.", ephemeral=True)
-                return
+                embed.description = "You do not have the required permissions to use this command."
             elif isinstance(error, app_commands.BotMissingPermissions):
                 logger.warning(f"Check failure: {error}")
-                await interaction.response.send_message("I do not have the required permissions to execute this command.", ephemeral=True)
-                return
+                embed.description = "I do not have the required permissions to execute this command."
             elif isinstance(error, app_commands.CommandOnCooldown):
                 logger.warning(f"Check failure: {error}")
-                await interaction.response.send_message(f"This command is on cooldown. Please try again after {round(error.retry_after, 2)} seconds.", ephemeral=True)
-                return
+                embed.description = f"This command is on cooldown. Please try again after {round(error.retry_after, 2)} seconds."
             else:
                 logger.warning(f"Check failure: {error}")
-                await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
-                return
+                embed.description = "You do not have permission to use this command."
         elif isinstance(error, app_commands.CommandLimitReached):
             logger.warning(f"Command limit reached: {error}")
-            await interaction.response.send_message("The command limit has been reached. Please try again later.", ephemeral=True)
-            return
+            embed.description = "The command limit has been reached. Please try again later."
         elif isinstance(error, app_commands.CommandAlreadyRegistered):
             logger.warning(f"Command already registered: {error}")
-            await interaction.response.send_message("This command is already registered.", ephemeral=True)
-            return
+            embed.description = "This command is already registered."
         elif isinstance(error, app_commands.CommandSignatureMismatch):
             logger.warning(f"Command signature mismatch: {error}")
-            await interaction.response.send_message("There is a signature mismatch for this command.", ephemeral=True)
-            return
+            embed.description = "There is a signature mismatch for this command."
         elif isinstance(error, app_commands.CommandNotFound):
             logger.warning(f"Command not found: {error}")
-            await interaction.response.send_message("This command was not found.", ephemeral=True)
-            return
+            embed.description = "This command was not found."
         elif isinstance(error, app_commands.CommandSyncFailure):
             logger.warning(f"Command sync failure: {error}")
-            await interaction.response.send_message("Failed to synchronize commands.", ephemeral=True)
-            return
+            embed.description = "Failed to synchronize commands."
         else:
             logger.exception(f"An unknown AppCommandError occurred: {error}")
-            await interaction.response.send_message("An unknown error occurred while executing the command.", ephemeral=True)
-            return
+            embed.description = "An unknown error occurred while executing the command."
+        
+        return await try_returnerror(interaction, embed)
     else:
         logger.exception(f"An unexpected error occurred: {error}")
-        return
+        return """
+
+def start_monitor():
+    return subprocess.Popen([sys.executable, "src/performance_gui.py"])
 
 if __name__ == "__main__":
     if not bot_token:
-        print("You should to put the bot token to 'TOKEN' in .env!")
+        logger.critical("You should to put the bot token to 'TOKEN' in .env!")
         exit()
     else:
+        #monitor_proc = start_monitor()
+        
         try:
             bot.run(bot_token, log_handler=None)
         except KeyboardInterrupt:
-            print("Shutting down...")
+            logger.info("Shutting down...")
             pass
+        except Exception as e:
+            logger.exception(f"Uncaught exception: {e}")
         finally:
-            print("Bot has been stopped")
+            #monitor_proc.terminate()
+            logger.info("Bot has been stopped")

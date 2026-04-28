@@ -1,0 +1,390 @@
+{
+    "8ball": {
+        "description": "質問に対して、ランダムでおなじみのマジック8ボールの答えを返すよ。",
+        "embeds": {
+            "default": {
+                "title": "『%{question}』への答え"
+            }
+        }
+    },
+    "channel": {
+        "description": "チャンネル関連のコマンドグループ。",
+        "info": {
+            "description": "チャンネルの情報を表示します。",
+            "embeds": {
+                "default": {
+                    "title": "%{name} の情報"
+                }
+            }
+        },
+        "slowmode": {
+            "description": "スローモードの待機時間を設定します。",
+            "embeds": {
+                "successful": {
+                    "description": "%{mention} のスローモードを **%{seconds}秒** に設定したよ。",
+                    "title": "スローモード更新"
+                }
+            }
+        }
+    },
+    "contributors": {
+        "description": "コントリビューター関連のグループ。",
+        "list": {
+            "description": "コントリビューター一覧を表示します。",
+            "embeds": {
+                "default": {
+                    "description": "このボットに協力してくれた人たちだよ！ありがと〜 :3",
+                    "title": "コントリビューター"
+                }
+            }
+        },
+        "view": {
+            "description": "コントリビューターの情報を表示します。",
+            "embeds": {
+                "default": {
+                    "title": "%{contributor} の情報"
+                }
+            }
+        }
+    },
+    "economy": {
+        "balance": {
+            "description": "現在の所持コインを確認します。",
+            "embeds": {
+                "default": {
+                    "footer": "合計資産: %{coins} コイン",
+                    "title": "%{user} の残高 :3"
+                }
+            },
+            "fields": {
+                "bank": "銀行",
+                "wallet": "ウォレット"
+            }
+        },
+        "buy": {
+            "description": "ショップでアイテムを購入します。",
+            "embeds": {
+                "item_unavailable": {
+                    "description": "そのアイテムは今は売ってないみたい… 3:<",
+                    "title": "購入できないよ"
+                },
+                "not_afford": {
+                    "description": "コインが足りないよ！ 3:<",
+                    "title": "コイン不足"
+                },
+                "purchased": {
+                    "description": "**%{item_name}** を購入したよ！インベントリをチェックしてね〜 ;3",
+                    "title": "購入完了"
+                }
+            }
+        },
+        "daily": {
+            "description": "デイリー報酬を受け取ります。",
+            "embeds": {
+                "default": {
+                    "description": "%{amount} コインもらったよ！ :3",
+                    "title": "デイリー報酬ゲット！"
+                }
+            }
+        },
+        "deposit": {
+            "description": "ウォレットから銀行へコインを預けます。",
+            "embeds": {
+                "default": {
+                    "description": "%{amount} コインを預けたよ。",
+                    "title": "預け入れ完了"
+                }
+            }
+        },
+        "description": "経済システムのコマンドグループ。",
+        "history": {
+            "description": "最近の取引履歴を表示します。"
+        },
+        "inventory": {
+            "description": "持っているアイテムを確認します。",
+            "embeds": {
+                "default": {
+                    "title": "%{user} のインベントリ"
+                },
+                "empty": {
+                    "description": "まだ何も入ってないよ。何か買ってみよ〜 :3",
+                    "title": "空っぽ"
+                }
+            }
+        },
+        "list": {
+            "description": "ショップの商品一覧を表示します。",
+            "fields": {
+                "buy_price": "価格: %{price} コイン",
+                "not_sale": "販売していません"
+            }
+        },
+        "sell": {
+            "description": "アイテムをショップに売ります。",
+            "embeds": {
+                "sold": {
+                    "description": "**%{item_name}** を売ったよ！",
+                    "title": "売却完了"
+                },
+                "unable_to_sell": {
+                    "description": "これは買い取ってくれないみたい… 3:<",
+                    "title": "売れないよ"
+                }
+            }
+        },
+        "withdraw": {
+            "description": "銀行からウォレットへコインを引き出します。",
+            "embeds": {
+                "default": {
+                    "description": "%{amount} コインを引き出したよ。",
+                    "title": "引き出し完了"
+                }
+            }
+        },
+        "work": {
+            "description": "働いてコインを稼ぎます。",
+            "embeds": {
+                "default": {
+                    "description": "働いて %{amount} コインゲット！ :3",
+                    "title": "お仕事完了！"
+                },
+                "tired": {
+                    "description": "あと %{rem} 分くらい休んでね。",
+                    "title": "まだ働けないよ"
+                }
+            }
+        }
+    },
+    "info": {
+        "commit_data": {
+            "description": "最新のgitコミット情報を表示します。"
+        },
+        "description": "情報系コマンド。",
+        "invite": {
+            "description": "アプリURLからボットをサーバーに招待します。（最大90サーバー）",
+            "embed": {
+                "description": "%{prefix}\n\n[このリンク](%{invite_url})から追加できるよ！",
+                "footer": "※ フル機能には高度な権限が必要です。Discordの制限により最大90サーバーまでです。",
+                "status": {
+                    "one": "現在: **%{formatted}** サーバー",
+                    "other": "現在: **%{formatted}** サーバー"
+                },
+                "title": "TongueBotを招待"
+            },
+            "error": {
+                "hardlimited": "今は上限に達してるから招待できないよ。"
+            }
+        },
+        "os_info": {
+            "description": "OS情報を表示します。",
+            "embed": {
+                "title": "OS情報"
+            }
+        },
+        "ping": {
+            "description": "ポン！",
+            "embed": {
+                "title": "ポン！ (%{latency} ms)"
+            }
+        },
+        "retrieve": {
+            "description": "ボットの情報を取得します。",
+            "embed": {
+                "description": "下からカテゴリを選んでね。",
+                "footer": "システム: %{platform}",
+                "title": "ボット情報"
+            },
+            "error": {
+                "forbidden": "**チャンネル管理** 権限が必要です。"
+            }
+        },
+        "sync": {
+            "description": "コマンドを同期します。"
+        },
+        "timedate": {
+            "description": "指定したタイムゾーンの時間を表示します。",
+            "embed": {
+                "description": "%{timezone_name} の現在時刻は **%{timedate}** だよ。"
+            }
+        }
+    },
+    "leveling": {
+        "description": "Leveling system.",
+        "rank": {
+            "description": "Check rank.",
+            "embeds": {
+                "default": {
+                    "fields": {
+                        "level": {
+                            "name": "Level"
+                        },
+                        "progress": {
+                            "name": "Progress"
+                        },
+                        "total": {
+                            "name": "Total XP"
+                        }
+                    },
+                    "title": "%{user}'s rank"
+                }
+            }
+        }
+    },
+    "moderation": {
+        "description": "もでレーションの管理用だよ。",
+        "togglefeature": {
+            "description": "サーバー機能を切り替えるよ。",
+            "embeds": {
+                "default": {
+                    "description": "%{feature_name}を%{state}に設定したよ。"
+                }
+            },
+            "paramaters": {
+                "feature": {
+                    "description": "切り替える機能"
+                },
+                "state": {
+                    "description": "オンかオフ"
+                }
+            }
+        }
+    },
+    "roblox": {
+        "avatar": {
+            "description": "Roblox ユーザーのアバターをユーザー名で取得するよ。",
+            "embeds": {
+                "default": {
+                    "title": "Roblox ユーザー %{username} のアバター"
+                }
+            }
+        },
+        "description": "Roblox API のグループだよ。",
+        "user": {
+            "description": "ユーザー名からRoblox ユーザー情報を取得するよ。",
+            "embeds": {
+                "default": {
+                    "title": "Roblox ユーザー %{username} の情報"
+                }
+            }
+        }
+    },
+    "stats": {
+        "description": "レベリングシステム。",
+        "top": {
+            "description": "トップユーザーを表示するよ。",
+            "embeds": {
+                "default": {
+                    "title": "グローバルリーダーボード！！>:D"
+                }
+            }
+        }
+    },
+    "tts": {
+        "description": "TTS関連の中心だよ",
+        "embeds": {
+            "default": {
+                "description": "生成されたよ！ >:D",
+                "footer": "TTSエンジン: %{tts_type};\n入力: %{input}",
+                "title": "TTS変換"
+            }
+        },
+        "google_translate": {
+            "description": "Google翻訳からTTSを生成するよ。"
+        }
+    },
+    "user": {
+        "avatar": {
+            "description": "Discordユーザーのアバターを表示するよ。",
+            "embeds": {
+                "default": {
+                    "footer": "%{author}からリクエストされた結果は1分間キャッシュされるよ。",
+                    "title": "ユーザー %{user}のアバター"
+                }
+            }
+        },
+        "description": "ユーザー用のグループだよ。",
+        "info": {
+            "description": "ユーザーの情報を取得するよ。",
+            "embeds": {
+                "default": {
+                    "title": "%{user}の情報"
+                }
+            },
+            "fields": {
+                "stats": "Level %{level} (%{xp} XP) / %{messages} Messages",
+                "wallet": "%{coins} Coins"
+            }
+        },
+        "set_nick": {
+            "description": "ユーザーのニックネームを設定するよ。",
+            "embeds": {
+                "changed": {
+                    "description": "%{author}が%{user}のニックネームを**%{new_nickname}**に変更したよ。"
+                },
+                "reset": {
+                    "description": "%{author} は %{user}のニックネームをリセットしたよ。"
+                }
+            },
+            "reasons": {
+                "changed": "/user nick で %{user} によってニックネームが変更されたよ",
+                "reset": "/user nick で %{user} によってニックネームがリセットされたよ"
+            }
+        },
+        "status": {
+            "description": "ユーザーのステータスを取得するよ。",
+            "embeds": {
+                "default": {
+                    "title": "%{user}のDiscordステータス"
+                }
+            }
+        }
+    },
+    "welcome": {
+        "description": "WelcomeCog のためのグループだよ",
+        "embeds": {
+            "join": {
+                "description": "ようこそ、%{mention}さん! %{rules_mention}にてルールを確認してね。",
+                "description_no_rules": "サーバーへようこそ、 %{mention}さん！",
+                "footer": "現在、メンバーは%{count}人いるよ。",
+                "title": "%{guild} へようこそ！"
+            },
+            "left": {
+                "description": "さようなら、 %{display}！",
+                "title": "メンバー %{display} が %{guild} を離れたよ！"
+            }
+        },
+        "set_channel": {
+            "description": "参加/退出メッセージを送信するチャンネルを設定するよ。",
+            "embeds": {
+                "disabled": {
+                    "description": "Welcome通知機能が無効になったよ。"
+                },
+                "enabled": {
+                    "description": "ウェルカム通知機能が有効になったよ。\n ウェルカムメッセージは %{target_mention} に表示されるよ。"
+                }
+            }
+        },
+        "set_rules_channel": {
+            "description": "通知メッセージにルールチャンネルを設定するよ。",
+            "embeds": {
+                "disabled": {
+                    "description": "ウェルカムメッセージのルールチャンネルが削除されたよ。"
+                },
+                "success": {
+                    "description": "ウェルカムメッセージのルールチャンネルが %{target_mention}に設定されたよ。"
+                }
+            }
+        },
+        "test": {
+            "description": "ウェルカムチャンネルのテストを実行するよ",
+            "embeds": {
+                "sent": {
+                    "description": "テストが正常にウェルカムチャンネルに送信されたよ！"
+                },
+                "unconfigured": {
+                    "description": "このギルドでは、Welcome通知チャンネルが設定されてないよ。"
+                }
+            }
+        }
+    }
+}

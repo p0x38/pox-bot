@@ -49,7 +49,7 @@ pf = profanityfilter.ProfanityFilter(extra_censor_list=[
     "blyat"
 ])
 
-class Others(commands.Cog):
+class NullCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
@@ -125,4 +125,4 @@ class Others(commands.Cog):
         await interaction.followup.send(embed=e)
 
 async def setup(bot):
-    await bot.add_cog(Others(bot))
+    await bot.add_cog(NullCog(bot))

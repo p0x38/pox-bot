@@ -2,14 +2,15 @@ import json
 import os
 from typing import Optional
 import aiofiles
-from discord import Embed, Interaction, Member, TextChannel, app_commands
+from discord import Color, Embed, Interaction, Member, TextChannel, app_commands
 from discord.ext import commands
 from logger import logger
+from src.translator import translator_instance as i18n
 
 from bot import PoxBot
 
 class WelcomeCog(commands.Cog):
-    group = app_commands.Group(name="welcome", description="Group for WelcomeCog.")
+    group = app_commands.Group(name="welcome", description=app_commands.locale_str("command.welcome.description"))
 
     def __init__(self, bot):
         self.bot: PoxBot = bot
@@ -60,7 +61,7 @@ class WelcomeCog(commands.Cog):
             rule_channel_id = is_enabled2.get('rules', 0)
 
             if is_enabled != 0:
-                await self.send_message(0,is_enabled, member, rule_channel_id)
+                await self.send_message("join", is_enabled, member, rule_channel_id)
     
     @commands.Cog.listener()
     async def on_member_leave(self, member: Member):
@@ -70,88 +71,133 @@ class WelcomeCog(commands.Cog):
             is_enabled = is_enabled2.get('welcome', 0)
 
             if is_enabled != 0:
-                await self.send_message(1,is_enabled, member)
+                await self.send_message("left", is_enabled, member)
     
-    async def send_message(self, state, channel_id: int, member: Member, rule_channel_id: Optional[int] = None):
+    async def send_message(self, state: str, channel_id: int, member: Member, rules_id: Optional[int] = None):
         channel = self.bot.get_channel(channel_id)
         if channel is None: return
         if not isinstance(channel, TextChannel): return
-        
-        state_text = "Joined" if state == 0 else "Left"
+
+        embed = Embed()
+
+        guild = channel.guild
+        loc = i18n._normalize_locale(guild.preferred_locale)
 
         try:
-            lines = [
-                f"ID: {member.id}",
-                f"Name: {member.display_name}",
-                f"Created on: {member.created_at.strftime("%Y-%m-%d %H:%M")} (<t:{int(member.created_at.timestamp())}:R>)",
-            ]
-            if state == 1 and member.joined_at is not None: lines.append(f"Joined on: {member.joined_at.strftime("%Y-%m-$d %H:%M")} (<t:{int(member.joined_at.timestamp())}:R>)")
-            rules_for = ""
-            if isinstance(rule_channel_id, int) and rule_channel_id != 0:
-                channel2 = self.bot.get_channel(rule_channel_id)
-                if isinstance(channel2, TextChannel):
-                    rules_for = f"Before chatting with others, please read {channel2.mention}!"
-            lines.append(f"\nWelcome to {member.guild.name}, <@{member.id}> :)" if state == 0 else f"\nGoodbye, {member.display_name} :(")
-            if state == 0: lines.append(rules_for)
-            title = f"{member.name} has {state_text}!" if not member.bot else f"{member.name} (BOT) has {state_text}!"
-            embed = Embed(title=title, description="\n".join(lines))
+            if state == "join":
+                title = i18n.T("command.welcome.embeds.join.title", loc, {"guild": guild.name})
+                desc = i18n.T("command.welcome.embeds.join.description", loc, {
+                    "mention": member.mention,
+                    "rules_mention": f"<#{rules_id}" if rules_id != 0 else ""
+                })
 
-            embed.set_thumbnail(url=(member.display_avatar.url if member.display_avatar else member.default_avatar.url))
+                if rules_id == 0:
+                    desc = i18n.T("command.welcome.embeds.join.description_no_rules", loc, {"mention": member.mention})
+                
+                embed.title = title
+                embed.description = desc
+                embed.color = Color.brand_green()
 
-            return await channel.send(embed=embed)
+                footer_text = i18n.T("command.welcome.embeds.join.footer", loc, {"count": guild.member_count})
+                embed.set_footer(text=footer_text)
+            elif state == "left":
+                title = i18n.T("command.welcome.embeds.left.title", loc, {"guild": guild.name, "display": member.display_name})
+                desc = i18n.T("command.welcome.embeds.left.description", loc, {
+                    "display": member.display_name
+                })
+
+                embed.title = title
+                embed.description = desc
+                embed.color = Color.brand_red()
+
+            await channel.send(content=member.mention, embed=embed)
         except Exception as e:
-            logger.exception(f"Uncaught exception: {e}")
+            logger.exception(i18n.T("error.exceptions.Unknown", loc, {"e": e}))
             return
     
-    @group.command(name="set_channel", description="Set channel to send join / leave message.")
+    @group.command(name="set_channel", description=app_commands.locale_str("command.welcome.set_channel.description"))
     @app_commands.guild_only()
     async def set_channel(self, interaction: Interaction, channel: Optional[TextChannel]):
-        if interaction.guild is None: return await interaction.response.send_message("You cannot set welcome channel unless the bot is for guild.")
-        
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
+        embed = Embed(color=Color.blurple())
+
+        if interaction.guild is None:
+            embed.description = i18n.T("error.custom.guild_only", loc)
+            embed.color = Color.red()
+            return await interaction.response.send_message(embed=embed)
+
+        await interaction.response.defer()
+
         self.data.setdefault(interaction.guild.id, {})
 
         if channel is None:
             self.data[interaction.guild.id]['welcome'] = 0
             await self.save()
-            return await interaction.response.send_message(f"Welcome channel has been disabled.")
+            embed.description = i18n.T("command.welcome.set_channel.embeds.disabled.description", loc)
+            return await interaction.followup.send(f"Welcome channel has been disabled.")
         else:
             self.data[interaction.guild.id]['welcome'] = channel.id
             await self.save()
-            return await interaction.response.send_message(f"Welcome channel has been set to {channel.mention}.")
+            embed.description = i18n.T("command.welcome.set_channel.embeds.changed.description", loc, {"target_mention": channel.mention})
+            return await interaction.followup.send(embed=embed)
     
-    @group.command(name="test", description="Run a test for welcome channel")
+    @group.command(name="test", description=app_commands.locale_str("command.welcome.test.description"))
     @app_commands.guild_only()
     async def test_channel(self, interaction: Interaction):
-        if interaction.guild is None: return await interaction.response.send_message("You cannot set welcome channel unless the bot is for guild.")
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
+        embed = Embed(color=Color.blurple())
         
+        if interaction.guild is None:
+            embed.description = i18n.T("error.custom.guild_only", loc)
+            embed.color = Color.red()
+            return await interaction.response.send_message(embed=embed)
+
+        await interaction.response.defer()
+
         is_enabled2 = self.data.get(interaction.guild.id)
 
-        if not is_enabled2: return await interaction.response.send_message("You've not setup welcome feature.")
+        if not is_enabled2:
+            embed.description = i18n.T("error.embeds.welcome_channel_not_enabled.description", loc)
+            embed.title = i18n.T("error.embeds.welcome_channel_not_enabled.title", loc)
+            embed.color = Color.red()
+            return await interaction.response.send_message(embed=embed)
 
         is_enabled = is_enabled2.get('welcome', 0)
         rule_channel_id = is_enabled2.get('rules', 0)
 
         if is_enabled != 0:
-            await self.send_message(0,is_enabled, interaction.guild.me, rule_channel_id)
-            return await interaction.response.send_message(f"Test join message sent!")
+            await self.send_message("join", is_enabled, interaction.guild.me, rule_channel_id)
+            embed.description = i18n.T("command.welcome.test.embeds.sent.description", loc)
+            return await interaction.followup.send(embed=embed)
         else:
-            return await interaction.response.send_message("Welcome channel not configured.")
+            embed.description = i18n.T("command.welcome.test.embeds.unconfigured.description", loc)
+            return await interaction.followup.send(embed=embed)
     
-    @group.command(name="set_rules_channel", description="Sets rule channel for adding link in it.")
+    @group.command(name="set_rules_channel", description=app_commands.locale_str("command.welcome.set_rules_channel.description"))
     @app_commands.guild_only()
     async def set_rule_channel(self, interaction: Interaction, channel: TextChannel):
-        if interaction.guild is None: return await interaction.response.send_message("You cannot set welcome channel unless the bot is for guild.")
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
+        embed = Embed(color=Color.blurple())
         
+        if interaction.guild is None:
+            embed.description = i18n.T("error.custom.guild_only", loc)
+            embed.color = Color.red()
+            return await interaction.response.send_message(embed=embed)
+
+        await interaction.response.defer()
+
         self.data.setdefault(interaction.guild.id, {})
 
         if channel is None:
             self.data[interaction.guild.id]['rules'] = 0
             await self.save()
-            return await interaction.response.send_message(f"Rules channel for welcome message has been disabled.")
+            embed.description = i18n.T("command.welcome.set_rules_channel.embeds.disabled.description", loc)
+            return await interaction.followup.send(embed=embed)
         else:
             self.data[interaction.guild.id]['rules'] = channel.id
             await self.save()
-            return await interaction.response.send_message(f"Rules channel for welcome message has been set to {channel.mention}.")
+            embed.description = i18n.T("command.welcome.set_rules_channel.embeds.success.description", loc)
+            return await interaction.followup.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(WelcomeCog(bot))

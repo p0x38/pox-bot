@@ -10,6 +10,12 @@ def get_contributors():
     
     return contributors_data
 
+def get_contributors_v2():
+    with open('resources/contributors.v2.json', 'r', encoding="utf-8") as f:
+        contributors_data = json.load(f)
+    
+    return contributors_data
+
 class MemberFetchStatus(IntEnum):
     CACHED = auto()
     FETCHED = auto()
@@ -30,6 +36,22 @@ possible_map = {
     10: "yuh",
     11: "yuh uh",
 }
+
+yesno_words = [
+    "Yes",
+    "Yea",
+    "Yup",
+    "Yeah",
+    "Yuh",
+    "Nah",
+    "No",
+    "Nope",
+    "Nuh uh",
+    "Nuh"
+]
+
+possible_map_keys = [f"text.possible_map.{i}" for i in range(1, 11)]
+possibility_words_keys = [f"text.8ball_words.{i}" for i in range(1, 114)]
 
 possibility_words = [
     "Nope.",

@@ -1,0 +1,107 @@
+{
+    "DynamicInfoView": {
+        "buttons": {
+            "suggest_button": {
+                "label": "Submit suggestions"
+            },
+            "url_button": {
+                "label": "Visit the GitHub repository"
+            }
+        },
+        "data": {
+            "context": {
+                "memory": {
+                    "display": "Context Usage"
+                },
+                "mode": {
+                    "display": "Current Mood"
+                },
+                "muted": {
+                    "display": "Is Jim muted?"
+                },
+                "title": "Local Brain Data"
+            },
+            "hardware": {
+                "cpu": {
+                    "display": "CPU Usage (total)"
+                },
+                "cpu_own": {
+                    "display": "CPU Usage (program)"
+                },
+                "disk": {
+                    "display": "Disk Usage"
+                },
+                "platform": {
+                    "display": "Platform"
+                },
+                "ram": {
+                    "display": "Memory Usage (total)"
+                },
+                "ram_details": {
+                    "display": "Memory Details"
+                },
+                "ram_own": {
+                    "display": "Memory Usage (program)"
+                },
+                "title": "Technical Details"
+            },
+            "identity": {
+                "latency": {
+                    "display": "Network Latency"
+                },
+                "owner": {
+                    "display": "Bot Developer"
+                },
+                "signature": {
+                    "display": "Signature"
+                },
+                "title": "Identity & Version",
+                "uptime": {
+                    "display": "Bot Uptime"
+                },
+                "uuid": {
+                    "display": "Session UUID"
+                },
+                "version": {
+                    "display": "Bot Version"
+                }
+            },
+            "stats": {
+                "cached_values": {
+                    "display": "Caches"
+                },
+                "channels": {
+                    "display": "Channels"
+                },
+                "guilds": {
+                    "display": "Servers"
+                },
+                "interactions": {
+                    "display": "Interactions"
+                },
+                "msgs": {
+                    "display": "Messages Seen"
+                },
+                "title": "Bot Statistics",
+                "users": {
+                    "display": "Users"
+                }
+            }
+        },
+        "options": {
+            "context": {
+                "label": "Local Brain Data"
+            },
+            "hardware": {
+                "label": "Hardware Information"
+            },
+            "identity": {
+                "label": "General Information"
+            },
+            "placeholder": "Choose category...",
+            "stats": {
+                "label": "Statistics"
+            }
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "common": {
+        "comfirm": "確認する",
+        "cancel": "キャンセル",
+        "loading": "しばらくお待ちください...",
+        "status": {
+            "online": "オンライン中",
+            "idle": "待機中",
+            "dnd": "取り込み中"
+        }
+    },
+    "errors": {
+        "title": "おっと！",
+        "generic": "問題が発生しました。後でもう一度お試しください。",
+        "cooldown": "再度使用する前に %{remaining}秒お待ちください。",
+        "user_not_found": "そのユーザーが見つかりませんでした。",
+        "user_missing_permissions": "それを行う権限がありません。",
+        "bot_missing_permissions": "私はそれを行う権限がありません。",
+        "not_owner": "Bot開発者のみがこのコマンドを使用できます。"
+    },
+    "units": {
+        "seconds": {
+            "one": "秒",
+            "other": "秒"
+        }
+    },
+    "bot": {
+        "sync_success": "コマンドは正常に同期されました。"
+    }
+}

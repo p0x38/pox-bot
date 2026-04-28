@@ -1,0 +1,7 @@
+{
+    "ban_user": "تم حظر %{user}.",
+    "kick_user": "تم طرد %{user}.",
+    "timed_out_user": "لقد انتهت مهلة %{user} لـ %{length}.",
+    "warn_user": "تم تحذير %{user}.",
+    "level_up": "تم رفع مستوى %{mention} إلى %{new_level}."
+}

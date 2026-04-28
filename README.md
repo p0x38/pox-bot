@@ -1,25 +1,37 @@
 # pox-bot
 
-just an my bot's source code lolol
+[![Crowdin Sync](https://github.com/p0x38/pox-bot/actions/workflows/crowdin.yml/badge.svg)](https://github.com/p0x38/pox-bot/actions/workflows/crowdin.yml)
 
-## Requirements
+> [!CAUTION]
+> There is large files that may consume your disk space.
 
-`uv sync`
+source for my bot called stupid bot
+
+## Requirements to run
+
+- `Python 3.12`
+- `uv`.
+- [`dependencies.`](pyproject.toml)
+- `PostgreSQL` (You can change it by manually modifying)
 
 ## Usage
 
 Make sure to activate virtualenv first.
 
-Run this command:
+Make sure to add `TOKEN` on environment file (.env).
 
-`uv run main.py`
+More `.env` related info: [here](.env-sample)
+
+Run this command: `uv run main.py`
+
+If you want to update the packages (dependencies, not my bot): `uv sync --upgrade`
 
 > [!warning]
 > I'm not responsive for messing the project up.
 
 ## Disclaimer
 
-I do not own the images & contents which is in `data` directory.
+I do not own the images & contents which is in `resources` directory.
 
 ## Contribute
 

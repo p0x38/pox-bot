@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1390224194687733851,
+        "command": "anna",
+        "description": "Idea for converter stuffs",
+        "quote": "What You Do To Me",
+        "content": [
+            "He's a cat"
+        ],
+        "thumbnail_url": "file:../resources/cat_anna.jpg"
+    },
+    {
+        "id": 1463235459974168668,
+        "command": "spy",
+        "description": "Idea for some stuffs",
+        "quote": "67",
+        "content": [
+            "She has silly face maybe"
+        ],
+        "thumbnail_url": "file:../resources/cat_spy.png"
+    }
+]

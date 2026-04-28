@@ -1,0 +1,107 @@
+{
+    "DynamicInfoView": {
+        "buttons": {
+            "suggest_button": {
+                "label": "提案を送る"
+            },
+            "url_button": {
+                "label": "GitHubリポジトリを見る"
+            }
+        },
+        "data": {
+            "context": {
+                "memory": {
+                    "display": "コンテキスト使用量"
+                },
+                "mode": {
+                    "display": "現在のモード"
+                },
+                "muted": {
+                    "display": "Jimはミュート中？"
+                },
+                "title": "ローカルデータ"
+            },
+            "hardware": {
+                "cpu": {
+                    "display": "CPU使用率（全体）"
+                },
+                "cpu_own": {
+                    "display": "CPU使用率（プログラム）"
+                },
+                "disk": {
+                    "display": "ディスク使用量"
+                },
+                "platform": {
+                    "display": "プラットフォーム"
+                },
+                "ram": {
+                    "display": "メモリ使用量（全体）"
+                },
+                "ram_details": {
+                    "display": "メモリ詳細"
+                },
+                "ram_own": {
+                    "display": "メモリ使用量（プログラム）"
+                },
+                "title": "技術情報"
+            },
+            "identity": {
+                "latency": {
+                    "display": "ネットワーク遅延"
+                },
+                "owner": {
+                    "display": "開発者"
+                },
+                "signature": {
+                    "display": "シグネチャ"
+                },
+                "title": "情報・バージョン",
+                "uptime": {
+                    "display": "稼働時間"
+                },
+                "uuid": {
+                    "display": "セッションUUID"
+                },
+                "version": {
+                    "display": "バージョン"
+                }
+            },
+            "stats": {
+                "cached_values": {
+                    "display": "キャッシュ数"
+                },
+                "channels": {
+                    "display": "チャンネル数"
+                },
+                "guilds": {
+                    "display": "サーバー数"
+                },
+                "interactions": {
+                    "display": "インタラクション数"
+                },
+                "msgs": {
+                    "display": "確認したメッセージ数"
+                },
+                "title": "ボット統計",
+                "users": {
+                    "display": "ユーザー数"
+                }
+            }
+        },
+        "options": {
+            "context": {
+                "label": "ローカルデータ"
+            },
+            "hardware": {
+                "label": "ハードウェア情報"
+            },
+            "identity": {
+                "label": "基本情報"
+            },
+            "placeholder": "カテゴリを選んでね...",
+            "stats": {
+                "label": "統計"
+            }
+        }
+    }
+}

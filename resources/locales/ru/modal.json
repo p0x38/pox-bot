@@ -1,0 +1,107 @@
+{
+    "DynamicInfoView": {
+        "buttons": {
+            "suggest_button": {
+                "label": "Отправить предложения"
+            },
+            "url_button": {
+                "label": "Посетите GitHub репозиторий"
+            }
+        },
+        "data": {
+            "context": {
+                "memory": {
+                    "display": "Использование контекста"
+                },
+                "mode": {
+                    "display": "Текущее настроение"
+                },
+                "muted": {
+                    "display": "Джим заглушен?"
+                },
+                "title": "Локальные данные мозга"
+            },
+            "hardware": {
+                "cpu": {
+                    "display": "Загрузка ЦП (сумма)"
+                },
+                "cpu_own": {
+                    "display": "Использование ЦП (программа)"
+                },
+                "disk": {
+                    "display": "Использование диска"
+                },
+                "platform": {
+                    "display": "Платформа"
+                },
+                "ram": {
+                    "display": "Использование памяти (сумма)"
+                },
+                "ram_details": {
+                    "display": "Детали памяти"
+                },
+                "ram_own": {
+                    "display": "Использование памяти (программа)"
+                },
+                "title": "Технические детали"
+            },
+            "identity": {
+                "latency": {
+                    "display": "Задержка сети"
+                },
+                "owner": {
+                    "display": "Бот разработчик"
+                },
+                "signature": {
+                    "display": "Подпись"
+                },
+                "title": "Идентификация и версия",
+                "uptime": {
+                    "display": "Bot Uptime"
+                },
+                "uuid": {
+                    "display": "UUID сеанса"
+                },
+                "version": {
+                    "display": "Версия бота"
+                }
+            },
+            "stats": {
+                "cached_values": {
+                    "display": "Тайники"
+                },
+                "channels": {
+                    "display": "Каналы"
+                },
+                "guilds": {
+                    "display": "Серверы"
+                },
+                "interactions": {
+                    "display": "Взаимодействия"
+                },
+                "msgs": {
+                    "display": "Сообщения просмотрены"
+                },
+                "title": "Bot Statistics",
+                "users": {
+                    "display": "Пользователи"
+                }
+            }
+        },
+        "options": {
+            "context": {
+                "label": "Локальные данные мозга"
+            },
+            "hardware": {
+                "label": "Информация об оборудовании"
+            },
+            "identity": {
+                "label": "Общая информация"
+            },
+            "placeholder": "Выберите категорию...",
+            "stats": {
+                "label": "Статистика"
+            }
+        }
+    }
+}

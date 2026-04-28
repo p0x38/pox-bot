@@ -1,0 +1,27 @@
+[
+    {
+        "code": "en",
+        "display": "English",
+        "emoji": "🇺🇸"
+    },
+    {
+        "code": "ja",
+        "display": "日本語",
+        "emoji": "🇯🇵"
+    },
+    {
+        "code": "ar",
+        "display": "عربي",
+        "emoji": "🇸🇦"
+    },
+    {
+        "code": "ru",
+        "display": "Русский",
+        "emoji": "🇷🇺"
+    },
+    {
+        "code": "tl",
+        "display": "Tagalog",
+        "emoji": "🇵🇭"
+    }
+]

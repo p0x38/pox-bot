@@ -12,7 +12,7 @@ def get_int(i):
     except ValueError:
         return 0
 
-class Chat(Cog):
+class ChatCog(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
 
@@ -50,8 +50,8 @@ class Chat(Cog):
                                 logger.info(f"[{guild.id}]: {guild.name}")
                         case '/info':
                             rows_to_add = {
-                                'User ID': self.bot.user.id,
-                                'User name': self.bot.user.name,
+                                'User ID': self.bot.user.id if self.bot.user else "Unknown",
+                                'User name': self.bot.user.name if self.bot.user else "Unknown",
                                 'Guild count': len(self.bot.guilds),
                                 'Users I can see': len(self.bot.users),
                                 'Current channel': f"[{self.current_channel.guild.id}/{self.current_channel.id}]: {self.current_channel.guild.name} - #{self.current_channel.name}" if self.current_channel else 'None',
@@ -81,4 +81,4 @@ class Chat(Cog):
         logger.debug(f"{message.author.name}: {message.clean_content.strip()}")
 
 async def setup(bot):
-    await bot.add_cog(Chat(bot))
+    await bot.add_cog(ChatCog(bot))

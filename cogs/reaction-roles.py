@@ -9,11 +9,11 @@ import lmstudio as lms
 from bot import PoxBot
 from logger import logger
 
-class ReactionRolesCog(commands.Cog):
+class ReactionRoleCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
 
-    group = app_commands.Group(name="reactionroles", description="Manage reaction roles")
+    group = app_commands.Group(name="reaction_roles", description="Manage reaction roles")
 
     async def get_target_message(self, interaction):
         if not self.bot.user: return None
@@ -117,4 +117,4 @@ class ReactionRolesCog(commands.Cog):
                     if role := guild.get_role(res[0]): await member.remove_roles(role)
     
 async def setup(bot):
-    await bot.add_cog(ReactionRolesCog(bot))
+    await bot.add_cog(ReactionRoleCog(bot))

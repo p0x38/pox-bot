@@ -1,0 +1,8 @@
+{
+    "fields": {
+        "embed_color": "**埋め込みカラー**: %{hex}",
+        "locale": "**表示言語**: %{lang_code}"
+    },
+    "header_description": "ユーザー設定",
+    "title": "ユーザー設定"
+}

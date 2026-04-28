@@ -4,9 +4,7 @@ from discord import Embed, Interaction, Status, app_commands
 
 from bot import PoxBot
 
-from logger import logger
-
-class CountsGroup(commands.Cog):
+class CountsCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
@@ -93,4 +91,4 @@ class CountsGroup(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(CountsGroup(bot))
+    await bot.add_cog(CountsCog(bot))

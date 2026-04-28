@@ -1,0 +1,11 @@
+{
+    "ban_member": {
+        "name": "حظر"
+    },
+    "kick_member": {
+        "name": "طرد"
+    },
+    "timeout_member": {
+        "name": "مهلة"
+    }
+}

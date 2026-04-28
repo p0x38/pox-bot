@@ -7,7 +7,7 @@ from discord.ext import commands
 from bot import PoxBot
 from stuff import check_map
 
-class Detector(commands.Cog):
+class DetectionCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
@@ -115,4 +115,4 @@ class Detector(commands.Cog):
         await interaction.followup.send(embed=e)
     
 async def setup(bot):
-    await bot.add_cog(Detector(bot))
+    await bot.add_cog(DetectionCog(bot))

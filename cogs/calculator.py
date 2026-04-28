@@ -6,7 +6,7 @@ from discord import app_commands
 from bot import PoxBot
 from stuff import clamp
 
-class Calculator(commands.Cog):
+class CalculationCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
@@ -22,4 +22,4 @@ class Calculator(commands.Cog):
         await interaction.response.send_message(f"Percentage: {round((value/max)*1000)/10}%.")
 
 async def setup(bot):
-    await bot.add_cog(Calculator(bot))
+    await bot.add_cog(CalculationCog(bot))

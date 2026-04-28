@@ -1,0 +1,11 @@
+{
+    "ban_member": {
+        "name": "メンバーをBAN"
+    },
+    "kick_member": {
+        "name": "メンバーを追放"
+    },
+    "timeout_member": {
+        "name": "メンバーをタイムアウト"
+    }
+}

@@ -107,7 +107,7 @@ TSUNAMI_FIRST_HEIGHT_CONDITIONS = {
     "第１波の到達を確認": "The arrival of the first wave has been confirmed",
 }
 
-class EEWGroup(commands.Cog):
+class EEWCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
 
@@ -162,4 +162,4 @@ class EEWGroup(commands.Cog):
                 domestic_tsunami = obj['earthquake']['domesticTsunami']
                 foreign_tsunami = obj['earthquake']['foreignTsunami']
 async def setup(bot):
-    await bot.add_cog(EEWGroup(bot))
+    await bot.add_cog(EEWCog(bot))

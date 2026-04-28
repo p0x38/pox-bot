@@ -7,13 +7,13 @@ from thefuzz import process
 
 from stuff import truncate
 
-class SearchIndexMaker(commands.Cog):
+class SearchCog(commands.Cog):
     def __init__(self, bot: PoxBot):
         self.bot: PoxBot = bot
     
-    group = app_commands.Group(name="queryindex", description="Just for no reason")
+    group = app_commands.Group(name="builtin_search", description="Just for no reason")
 
-    @group.command(name="add", description="Add query to database.")
+    @group.command(name="add_query", description="Add query to database.")
     async def add_query(self, interaction: Interaction, value: str):
         await interaction.response.defer()
 
@@ -28,7 +28,7 @@ class SearchIndexMaker(commands.Cog):
             await interaction.followup.send("The bot has not connected with Database.")
             return
          
-    @group.command(name="remove", description="Remove query from database.")
+    @group.command(name="remove_query", description="Remove query from database.")
     async def remove_query(self, interaction: Interaction, value: str):
         await interaction.response.defer()
 
@@ -43,7 +43,7 @@ class SearchIndexMaker(commands.Cog):
             await interaction.followup.send("The bot has not connected with Database.")
             return
     
-    @group.command(name="query_count", description="Get query count.")
+    @group.command(name="count", description="Get query count.")
     async def query_count(self, interaction: Interaction):
         await interaction.response.defer(thinking=True)
 
@@ -69,7 +69,7 @@ class SearchIndexMaker(commands.Cog):
             await interaction.followup.send("The bot has not connected with Database.")
             return
 
-    @group.command(name="query_list", description="Get list of query.")
+    @group.command(name="list", description="Get list of query.")
     async def query_list(self, interaction: Interaction):
         await interaction.response.defer(thinking=True)
 
@@ -94,7 +94,7 @@ class SearchIndexMaker(commands.Cog):
             await interaction.followup.send("The bot has not connected with Database.")
             return
 
-    @group.command(name="search", description="Search query as fuzzy search")
+    @group.command(name="search_query", description="Search query as fuzzy search")
     async def search_query(self, interaction: Interaction, needle: str):
         await interaction.response.defer(thinking=True)
 
@@ -123,4 +123,4 @@ class SearchIndexMaker(commands.Cog):
             await interaction.followup.send("The bot has not connected with Database.")
             return
 async def setup(bot):
-    await bot.add_cog(SearchIndexMaker(bot))
+    await bot.add_cog(SearchCog(bot))
