@@ -222,5 +222,162 @@
             },
             "name": "timedate"
         }
+    },
+    "moderation": {
+        "description": "Moderation management.",
+        "togglefeature": {
+            "description": "Toggle server features.",
+            "paramaters": {
+                "feature": {
+                    "description": "The feature to toggle"
+                },
+                "state": {
+                    "description": "On or Off"
+                }
+            },
+            "embeds": {
+                "default": {
+                    "description": "Set {feature_name} to {state}."
+                }
+            }
+        }
+    },
+    "roblox": {
+        "avatar": {
+            "description": "Gets Roblox user's avatar by username.",
+            "embeds": {
+                "default": {
+                    "title": "Roblox user %{username}'s Avatar"
+                }
+            }
+        },
+        "description": "A group for roblox APIs.",
+        "user": {
+            "description": "Get Roblox user info by username.",
+            "embeds": {
+                "default": {
+                    "title": "User %{username}'s Information"
+                }
+            }
+        }
+    },
+    "stats": {
+        "description": "Leveling system.",
+        "top": {
+            "description": "Show the top users.",
+            "embeds": {
+                "default": {
+                    "title": "Global leaderboard!! >:D"
+                }
+            }
+        }
+    },
+    "tts": {
+        "description": "Center of TTS stuff",
+        "embeds": {
+            "default": {
+                "description": "Generated! >:D",
+                "footer": "Type: %{tts_type}; Input: %{input}",
+                "title": "TTS Conversion"
+            }
+        },
+        "google_translate": {
+            "description": "Generates TTS from Google Translate.",
+            "name": "google_translate"
+        },
+        "name": "tts"
+    },
+    "user": {
+        "avatar": {
+            "description": "Shows Discord user's avatar.",
+            "embeds": {
+                "default": {
+                    "footer": "Requested by %{author}, the result is cached for a minute.",
+                    "title": "User %{user}'s avatar"
+                }
+            }
+        },
+        "description": "A group for users.",
+        "info": {
+            "description": "Retrieves user's information.",
+            "embeds": {
+                "default": {
+                    "title": "Information for %{user}"
+                }
+            },
+            "name": "info"
+        },
+        "name": "user",
+        "set_nick": {
+            "description": "Sets user's nickname.",
+            "embeds": {
+                "changed": {
+                    "description": "%{author} Changed %{user}'s nickname to **%{new_nickname}**."
+                },
+                "reset": {
+                    "description": "%{author} Reseted %{user}'s nickname."
+                }
+            },
+            "reasons": {
+                "changed": "Nickname changed by %{user} via /user nick",
+                "reset": "Nickname reseted by %{user} via /user nick"
+            }
+        },
+        "status": {
+            "description": "Retrieves user's status.",
+            "embeds": {
+                "default": {
+                    "title": "%{user}'s Discord status"
+                }
+            }
+        }
+    },
+    "welcome": {
+        "description": "A group for WelcomeCog",
+        "embeds": {
+            "join": {
+                "description": "Welcome, %{mention}! Please check out the rules in %{rules_mention}.",
+                "description_no_rules": "Welcome to the server, %{mention}!",
+                "footer": "We now have %{count} members.",
+                "title": "Welcome to %{guild}!"
+            },
+            "left": {
+                "description": "Goodbye, %{display}!",
+                "title": "Member %{display} has left %{guild}!"
+            }
+        },
+        "set_channel": {
+            "description": "Set channel to send join / leave message.",
+            "embeds": {
+                "disabled": {
+                    "description": "Welcome notification feature has been disabled."
+                },
+                "enabled": {
+                    "description": "Welcome notification feature has been enabled.\n The welcome message will appear at %{target_mention}."
+                }
+            }
+        },
+        "set_rules_channel": {
+            "description": "Sets rule channel for adding link in it.",
+            "embeds": {
+                "disabled": {
+                    "description": "Rules channel for welcome message has been removed."
+                },
+                "success": {
+                    "description": "Rules channel for welcome message has been set to %{target_mention}."
+                }
+            }
+        },
+        "test": {
+            "description": "Run a test for welcome channel",
+            "embeds": {
+                "sent": {
+                    "description": "Test successfully sent to welcome channel!"
+                },
+                "unconfigured": {
+                    "description": "Welcome channel hasn't configured in this guild."
+                }
+            }
+        }
     }
 }
