@@ -2,5 +2,6 @@
     "ban_user": "%{user} has been banned.",
     "kick_user": "%{user} has been kicked.",
     "timed_out_user": "%{user} has been timed out for %{length}.",
-    "warn_user": "%{user} has been warned."
+    "warn_user": "%{user} has been warned.",
+    "level_up": "%{mention} has been leveled up to %{new_level}."
 }

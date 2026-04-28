@@ -2,26 +2,31 @@
     {
         "code": "en",
         "display": "English",
-        "path": "/locales/en.json"
+        "path": "/locales/en.json",
+        "emoji": "🇺🇸"
     },
     {
         "code": "es",
         "display": "Español",
-        "path": "/locales/es.json"
+        "path": "/locales/es.json",
+        "emoji": "🇪🇸"
     },
     {
         "code": "ja",
         "display": "日本語",
-        "path": "/locales/ja.json"
+        "path": "/locales/ja.json",
+        "emoji": "🇯🇵"
     },
     {
         "code": "vi",
         "display": "Tiếng Việt",
-        "path": "/locales/vi.json"
+        "path": "/locales/vi.json",
+        "emoji": "🇻🇳"
     },
     {
         "code": "ru",
         "display": "Русский",
-        "path": "/locales/ru.json"
+        "path": "/locales/ru.json",
+        "emoji": "🇷🇺"
     }
 ]

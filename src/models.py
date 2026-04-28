@@ -1,7 +1,12 @@
 from dataclasses import dataclass, field, asdict
-from typing import Any, Dict, List, Union, cast
+from datetime import datetime
+from enum import StrEnum
+from turtle import st
+from typing import Any, Dict, List, Optional, Union, cast
 
+from PIL.Image import item
 import orjson
+from pytz import UTC
 
 @dataclass
 class SettingsData:
@@ -85,23 +90,58 @@ class EconomyData:
         if not row: return cls()
         return cls.from_dict(dict(row))
 
+class ServerFeatureType(StrEnum):
+    delete_swears = "delete_message_with_swears"
+    level_notify = "enable_level_notify"
+    anti_spam = "anti_spam_message"
+    predefined_auto_reply = "enable_bot_predefined_autoreply"
+
+@dataclass
+class BlacklistEntry:
+    entry_type: str
+    data: str
+    reason: Optional[str] = None
+    executed_by: int = 0
+    timestamp: float = field(default_factory=lambda: datetime.now(UTC).timestamp())
+
+@dataclass
+class ServerFeatureEntry:
+    name: str
+    enabled: bool = False
+    updated_by: int = 0
+    updated_at: float = field(default_factory=lambda: datetime.now(UTC).timestamp())
+
 @dataclass
 class GuildConfig:
-    # Filtering settings
-    filter_enabled: bool = False
-    banned_words: List[str] = field(default_factory=list)
-    
-    # Leveling settings
+    # Blacklists
+    blacklist_enabled: bool = False
+    blacklists: List[BlacklistEntry] = field(default_factory=list)
+
+    # Leveling
     leveling_enabled: bool = True
     xp_rate: float = 1.0
     
-    # Ticket settings
+    # Tickets
     ticket_category_id: int = 0
     ticket_master_channel_id: int = 0
     
+    # Server features
+    features: List[ServerFeatureEntry] = field(default_factory=list)
+    
     @classmethod
     def from_dict(cls, data: dict):
-        # Filters out keys that don't exist in the dataclass
+        if "blacklists" in data and isinstance(data["blacklists"], list):
+            data["blacklists"] = [
+                BlacklistEntry(**item) if isinstance(item, dict) else item
+                for item in data['blacklists']
+            ]
+        
+        if "features" in data and isinstance(data["features"], list):
+            data["features"] = [
+                ServerFeatureEntry(**item) if isinstance(item, dict) else item
+                for item in data['blacklists']
+            ]
+        
         return cls(**{k: v for k, v in data.items() if k in cls.__dataclass_fields__})
 
     def to_dict(self) -> dict:

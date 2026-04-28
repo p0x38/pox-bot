@@ -68,7 +68,9 @@ class LocalizedSettingsView(ui.View):
         )
 
         info = translation_manager.lang_info.get(loc, {"name": loc, "emoji": "🌐"})
-        lang_display = f"{info['emoji']} {info['name']}"
+        emoji = info.get('emoji', '🌐')
+        name = info.get('display', info.get('name', 'Unknown'))
+        lang_display = f"{emoji} {name}"
         
         embed.description = (
             f"{i18n.T('settings.header_description', loc)}\n\n"

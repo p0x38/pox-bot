@@ -1,12 +1,11 @@
 from discord.ext import commands
 from discord import Embed, Interaction, app_commands
-from stuff import cmd_locale
 
 from bot import PoxBot
 
 class BlackListCog(commands.Cog):
-    def __init__(self, bot):
-        self.bot: PoxBot = bot
+    def __init__(self, bot: PoxBot):
+        self.bot = bot
     
     group = app_commands.Group(name="blacklist", description="Blacklister.")
 

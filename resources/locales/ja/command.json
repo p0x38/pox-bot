@@ -1,226 +1,384 @@
 {
-    "8ball": {
-        "description": "質問に対して、ランダムでおなじみのマジック8ボールの答えを返すよ。",
-        "embeds": {
-            "default": {
-                "title": "『%{question}』への答え"
-            }
-        },
-        "name": "8ball"
+  "8ball": {
+    "description": "質問に対して、ランダムでおなじみのマジック8ボールの答えを返すよ。",
+    "embeds": {
+      "default": {
+        "title": "『%{question}』への答え"
+      }
     },
-    "channel": {
-        "description": "チャンネル関連のコマンドグループ。",
-        "info": {
-            "description": "チャンネルの情報を表示します。",
-            "embeds": {
-                "default": {
-                    "title": "%{name} の情報"
-                }
-            },
-            "name": "info"
-        },
-        "name": "channel",
-        "slowmode": {
-            "description": "スローモードの待機時間を設定します。",
-            "embeds": {
-                "successful": {
-                    "description": "%{mention} のスローモードを **%{seconds}秒** に設定したよ。",
-                    "title": "スローモード更新"
-                }
-            },
-            "name": "slowmode"
-        }
-    },
-    "contributors": {
-        "description": "コントリビューター関連のグループ。",
-        "list": {
-            "description": "コントリビューター一覧を表示します。",
-            "embeds": {
-                "default": {
-                    "description": "このボットに協力してくれた人たちだよ！ありがと〜 :3",
-                    "title": "コントリビューター"
-                }
-            },
-            "name": "list"
-        },
-        "name": "contributors",
-        "view": {
-            "description": "コントリビューターの情報を表示します。",
-            "embeds": {
-                "default": {
-                    "title": "%{contributor} の情報"
-                }
-            },
-            "name": "view"
-        }
-    },
-    "economy": {
-        "balance": {
-            "description": "現在の所持コインを確認します。",
-            "embeds": {
-                "default": {
-                    "footer": "合計資産: %{coins} コイン",
-                    "title": "%{user} の残高 :3"
-                }
-            },
-            "fields": {
-                "bank": "銀行",
-                "wallet": "ウォレット"
-            }
-        },
-        "buy": {
-            "description": "ショップでアイテムを購入します。",
-            "embeds": {
-                "item_unavailable": {
-                    "description": "そのアイテムは今は売ってないみたい… 3:<",
-                    "title": "購入できないよ"
-                },
-                "not_afford": {
-                    "description": "コインが足りないよ！ 3:<",
-                    "title": "コイン不足"
-                },
-                "purchased": {
-                    "description": "**%{item_name}** を購入したよ！インベントリをチェックしてね〜 ;3",
-                    "title": "購入完了"
-                }
-            }
-        },
-        "daily": {
-            "description": "デイリー報酬を受け取ります。",
-            "embeds": {
-                "default": {
-                    "description": "%{amount} コインもらったよ！ :3",
-                    "title": "デイリー報酬ゲット！"
-                }
-            }
-        },
-        "deposit": {
-            "description": "ウォレットから銀行へコインを預けます。",
-            "embeds": {
-                "default": {
-                    "description": "%{amount} コインを預けたよ。",
-                    "title": "預け入れ完了"
-                }
-            }
-        },
-        "description": "経済システムのコマンドグループ。",
-        "history": {
-            "description": "最近の取引履歴を表示します。"
-        },
-        "inventory": {
-            "description": "持っているアイテムを確認します。",
-            "embeds": {
-                "default": {
-                    "title": "%{user} のインベントリ"
-                },
-                "empty": {
-                    "description": "まだ何も入ってないよ。何か買ってみよ〜 :3",
-                    "title": "空っぽ"
-                }
-            }
-        },
-        "list": {
-            "description": "ショップの商品一覧を表示します。",
-            "fields": {
-                "buy_price": "価格: %{price} コイン",
-                "not_sale": "販売していません"
-            }
-        },
-        "sell": {
-            "description": "アイテムをショップに売ります。",
-            "embeds": {
-                "sold": {
-                    "description": "**%{item_name}** を売ったよ！",
-                    "title": "売却完了"
-                },
-                "unable_to_sell": {
-                    "description": "これは買い取ってくれないみたい… 3:<",
-                    "title": "売れないよ"
-                }
-            }
-        },
-        "withdraw": {
-            "description": "銀行からウォレットへコインを引き出します。",
-            "embeds": {
-                "default": {
-                    "description": "%{amount} コインを引き出したよ。",
-                    "title": "引き出し完了"
-                }
-            }
-        },
-        "work": {
-            "description": "働いてコインを稼ぎます。",
-            "embeds": {
-                "default": {
-                    "description": "働いて %{amount} コインゲット！ :3",
-                    "title": "お仕事完了！"
-                },
-                "tired": {
-                    "description": "あと %{rem} 分くらい休んでね。",
-                    "title": "まだ働けないよ"
-                }
-            }
-        }
-    },
+    "name": "8ball"
+  },
+  "channel": {
+    "description": "チャンネル関連のコマンドグループ。",
     "info": {
-        "commit_data": {
-            "description": "最新のgitコミット情報を表示します。",
-            "name": "commit_data"
-        },
-        "description": "情報系コマンド。",
-        "invite": {
-            "description": "アプリURLからボットをサーバーに招待します。（最大90サーバー）",
-            "embed": {
-                "description": "%{prefix}\n\n[このリンク](%{invite_url})から追加できるよ！",
-                "footer": "※ フル機能には高度な権限が必要です。Discordの制限により最大90サーバーまでです。",
-                "status": {
-                    "one": "現在: **%{formatted}** サーバー",
-                    "other": "現在: **%{formatted}** サーバー"
-                },
-                "title": "TongueBotを招待"
-            },
-            "error": {
-                "hardlimited": "今は上限に達してるから招待できないよ。"
-            },
-            "name": "invite"
-        },
-        "name": "info",
-        "os_info": {
-            "description": "OS情報を表示します。",
-            "embed": {
-                "title": "OS情報"
-            },
-            "name": "os_info"
-        },
-        "ping": {
-            "description": "ポン！",
-            "embed": {
-                "title": "ポン！ (%{latency} ms)"
-            },
-            "name": "ping"
-        },
-        "retrieve": {
-            "description": "ボットの情報を取得します。",
-            "embed": {
-                "description": "下からカテゴリを選んでね。",
-                "footer": "System: %{platform}",
-                "title": "ボット情報"
-            },
-            "error": {
-                "forbidden": "**チャンネル管理** 権限が必要です。"
-            },
-            "name": "retrieve"
-        },
-        "sync": {
-            "description": "コマンドを同期します。",
-            "name": "sync"
-        },
-        "timedate": {
-            "description": "指定したタイムゾーンの時間を表示します。",
-            "embed": {
-                "description": "%{timezone_name} の現在時刻は **%{timedate}** だよ。"
-            },
-            "name": "timedate"
+      "description": "チャンネルの情報を表示します。",
+      "embeds": {
+        "default": {
+          "title": "%{name} の情報"
         }
+      },
+      "name": "info"
+    },
+    "name": "channel",
+    "slowmode": {
+      "description": "スローモードの待機時間を設定します。",
+      "embeds": {
+        "successful": {
+          "description": "%{mention} のスローモードを **%{seconds}秒** に設定したよ。",
+          "title": "スローモード更新"
+        }
+      },
+      "name": "slowmode"
     }
+  },
+  "contributors": {
+    "description": "コントリビューター関連のグループ。",
+    "list": {
+      "description": "コントリビューター一覧を表示します。",
+      "embeds": {
+        "default": {
+          "description": "このボットに協力してくれた人たちだよ！ありがと〜 :3",
+          "title": "コントリビューター"
+        }
+      },
+      "name": "list"
+    },
+    "name": "contributors",
+    "view": {
+      "description": "コントリビューターの情報を表示します。",
+      "embeds": {
+        "default": {
+          "title": "%{contributor} の情報"
+        }
+      },
+      "name": "view"
+    }
+  },
+  "economy": {
+    "balance": {
+      "description": "現在の所持コインを確認します。",
+      "embeds": {
+        "default": {
+          "footer": "合計資産: %{coins} コイン",
+          "title": "%{user} の残高 :3"
+        }
+      },
+      "fields": {
+        "bank": "銀行",
+        "wallet": "ウォレット"
+      }
+    },
+    "buy": {
+      "description": "ショップでアイテムを購入します。",
+      "embeds": {
+        "item_unavailable": {
+          "description": "そのアイテムは今は売ってないみたい… 3:<",
+          "title": "購入できないよ"
+        },
+        "not_afford": {
+          "description": "コインが足りないよ！ 3:<",
+          "title": "コイン不足"
+        },
+        "purchased": {
+          "description": "**%{item_name}** を購入したよ！インベントリをチェックしてね〜 ;3",
+          "title": "購入完了"
+        }
+      }
+    },
+    "daily": {
+      "description": "デイリー報酬を受け取ります。",
+      "embeds": {
+        "default": {
+          "description": "%{amount} コインもらったよ！ :3",
+          "title": "デイリー報酬ゲット！"
+        }
+      }
+    },
+    "deposit": {
+      "description": "ウォレットから銀行へコインを預けます。",
+      "embeds": {
+        "default": {
+          "description": "%{amount} コインを預けたよ。",
+          "title": "預け入れ完了"
+        }
+      }
+    },
+    "description": "経済システムのコマンドグループ。",
+    "history": {
+      "description": "最近の取引履歴を表示します。"
+    },
+    "inventory": {
+      "description": "持っているアイテムを確認します。",
+      "embeds": {
+        "default": {
+          "title": "%{user} のインベントリ"
+        },
+        "empty": {
+          "description": "まだ何も入ってないよ。何か買ってみよ〜 :3",
+          "title": "空っぽ"
+        }
+      }
+    },
+    "list": {
+      "description": "ショップの商品一覧を表示します。",
+      "fields": {
+        "buy_price": "価格: %{price} コイン",
+        "not_sale": "販売していません"
+      }
+    },
+    "sell": {
+      "description": "アイテムをショップに売ります。",
+      "embeds": {
+        "sold": {
+          "description": "**%{item_name}** を売ったよ！",
+          "title": "売却完了"
+        },
+        "unable_to_sell": {
+          "description": "これは買い取ってくれないみたい… 3:<",
+          "title": "売れないよ"
+        }
+      }
+    },
+    "withdraw": {
+      "description": "銀行からウォレットへコインを引き出します。",
+      "embeds": {
+        "default": {
+          "description": "%{amount} コインを引き出したよ。",
+          "title": "引き出し完了"
+        }
+      }
+    },
+    "work": {
+      "description": "働いてコインを稼ぎます。",
+      "embeds": {
+        "default": {
+          "description": "働いて %{amount} コインゲット！ :3",
+          "title": "お仕事完了！"
+        },
+        "tired": {
+          "description": "あと %{rem} 分くらい休んでね。",
+          "title": "まだ働けないよ"
+        }
+      }
+    }
+  },
+  "info": {
+    "commit_data": {
+      "description": "最新のgitコミット情報を表示します。",
+      "name": "commit_data"
+    },
+    "description": "情報系コマンド。",
+    "invite": {
+      "description": "アプリURLからボットをサーバーに招待します。（最大90サーバー）",
+      "embed": {
+        "description": "%{prefix}\n\n[このリンク](%{invite_url})から追加できるよ！",
+        "footer": "※ フル機能には高度な権限が必要です。Discordの制限により最大90サーバーまでです。",
+        "status": {
+          "one": "現在: **%{formatted}** サーバー",
+          "other": "現在: **%{formatted}** サーバー"
+        },
+        "title": "TongueBotを招待"
+      },
+      "error": {
+        "hardlimited": "今は上限に達してるから招待できないよ。"
+      },
+      "name": "invite"
+    },
+    "name": "info",
+    "os_info": {
+      "description": "OS情報を表示します。",
+      "embed": {
+        "title": "OS情報"
+      },
+      "name": "os_info"
+    },
+    "ping": {
+      "description": "ポン！",
+      "embed": {
+        "title": "ポン！ (%{latency} ms)"
+      },
+      "name": "ping"
+    },
+    "retrieve": {
+      "description": "ボットの情報を取得します。",
+      "embed": {
+        "description": "下からカテゴリを選んでね。",
+        "footer": "System: %{platform}",
+        "title": "ボット情報"
+      },
+      "error": {
+        "forbidden": "**チャンネル管理** 権限が必要です。"
+      },
+      "name": "retrieve"
+    },
+    "sync": {
+      "description": "コマンドを同期します。",
+      "name": "sync"
+    },
+    "timedate": {
+      "description": "指定したタイムゾーンの時間を表示します。",
+      "embed": {
+        "description": "%{timezone_name} の現在時刻は **%{timedate}** だよ。"
+      },
+      "name": "timedate"
+    }
+  },
+  "level_up": "",
+  "moderation": {
+    "description": "",
+    "togglefeature": {
+      "description": "",
+      "embeds": {
+        "default": {
+          "description": ""
+        }
+      },
+      "paramaters": {
+        "feature": {
+          "description": ""
+        },
+        "state": {
+          "description": ""
+        }
+      }
+    }
+  },
+  "roblox": {
+    "avatar": {
+      "description": "",
+      "embeds": {
+        "default": {
+          "title": ""
+        }
+      }
+    },
+    "description": "",
+    "user": {
+      "description": "",
+      "embeds": {
+        "default": {
+          "title": ""
+        }
+      }
+    }
+  },
+  "stats": {
+    "description": "",
+    "top": {
+      "description": "",
+      "embeds": {
+        "default": {
+          "title": ""
+        }
+      }
+    }
+  },
+  "tts": {
+    "description": "",
+    "embeds": {
+      "default": {
+        "description": "",
+        "footer": "",
+        "title": ""
+      }
+    },
+    "google_translate": {
+      "description": "",
+      "name": ""
+    },
+    "name": ""
+  },
+  "user": {
+    "avatar": {
+      "description": "",
+      "embeds": {
+        "default": {
+          "footer": "",
+          "title": ""
+        }
+      }
+    },
+    "description": "",
+    "info": {
+      "description": "",
+      "embeds": {
+        "default": {
+          "title": ""
+        }
+      },
+      "name": ""
+    },
+    "name": "",
+    "set_nick": {
+      "description": "",
+      "embeds": {
+        "changed": {
+          "description": ""
+        },
+        "reset": {
+          "description": ""
+        }
+      },
+      "reasons": {
+        "changed": "",
+        "reset": ""
+      }
+    },
+    "status": {
+      "description": "",
+      "embeds": {
+        "default": {
+          "title": ""
+        }
+      }
+    }
+  },
+  "welcome": {
+    "description": "",
+    "embeds": {
+      "join": {
+        "description": "",
+        "description_no_rules": "",
+        "footer": "",
+        "title": ""
+      },
+      "left": {
+        "description": "",
+        "title": ""
+      }
+    },
+    "set_channel": {
+      "description": "",
+      "embeds": {
+        "disabled": {
+          "description": ""
+        },
+        "enabled": {
+          "description": ""
+        }
+      }
+    },
+    "set_rules_channel": {
+      "description": "",
+      "embeds": {
+        "disabled": {
+          "description": ""
+        },
+        "success": {
+          "description": ""
+        }
+      }
+    },
+    "test": {
+      "description": "",
+      "embeds": {
+        "sent": {
+          "description": ""
+        },
+        "unconfigured": {
+          "description": ""
+        }
+      }
+    }
+  }
 }

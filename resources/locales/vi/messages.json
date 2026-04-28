@@ -1,6 +1,0 @@
-{
-    "ban_user": "%{user} đã bị cấm.",
-    "kick_user": "%{user} đã bị đá.",
-    "timed_out_user": "%{user} đã hết thời gian chờ cho %{length}.",
-    "warn_user": "%{user} đã được cảnh báo."
-}

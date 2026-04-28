@@ -6,7 +6,7 @@ from aiocache import cached
 import discord
 import wave
 from discord.ext import commands
-from discord import Color, Embed, app_commands
+from discord import Color, Embed, Interaction, app_commands
 from edge_tts import Communicate
 from gtts import gTTS
 from piper import PiperVoice, SynthesisConfig
@@ -139,10 +139,6 @@ class TextToSpeechCog(commands.Cog):
             embed.title = translator_instance.T("error.embed.send_error.title", loc)
             embed.description = translator_instance.T("error.embed.send_error.description", loc, {"e": e})
             await interaction.followup.send(embed=embed)
-    
-    @cached(60)
-    @ttsgroup.command(name="pocket")
-    async def
     
     @cached(60)
     @ttsgroup.command(name="edge")

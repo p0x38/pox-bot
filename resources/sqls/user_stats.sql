@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS user_stats (
+    user_id BIGINT PRIMARY KEY,
+    xp BIGINT DEFAULT 0,
+    level INTEGER DEFAULT 1,
+    total_messages BIGINT DEFAULT 0,
+    last_xp_gain TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)

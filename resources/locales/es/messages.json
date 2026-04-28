@@ -1,6 +1,0 @@
-{
-    "ban_user": "%{user} ha sido baneado.",
-    "kick_user": "%{user} ha sido expulsado.",
-    "timed_out_user": "Se ha agotado el tiempo de espera de %{user} para %{length}.",
-    "warn_user": "%{user} ha sido advertido."
-}

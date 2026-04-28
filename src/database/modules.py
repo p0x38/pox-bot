@@ -1,12 +1,14 @@
+from datetime import datetime
 import json
 import time
 from typing import Dict, List, Optional
 
 from discord import Interaction
+from pytz import UTC
 
 from src.utils.cache import Cache
 from .base import PostgreSQLDatabase
-from src.models import EconomyData, GuildConfig, SettingsData
+from src.models import EconomyData, GuildConfig, ServerFeatureEntry, ServerFeatureType, SettingsData
 import orjson
 from src.translator import translator_instance
 from logger import logger
@@ -83,16 +85,33 @@ class SettingsDatabase(PostgreSQLDatabase):
 
 class StatsDatabase(PostgreSQLDatabase):
     async def on_load(self):
-        await self.execute_sql_file("resources/sqls/stats.sql")
+        await self.execute_sql_file("resources/sqls/user_stats.sql")
+        logger.info("[UserStatsDatabase] Tables verified.")
     
-    async def increment_message(self, user_id: int):
+    async def add_xp(self, user_id: int, count: int):
         if self.pool:
-            async with self.pool.acquire() as conn:
-                await conn.execute("""
-                    INSERT INTO user_stats (user_id, message_count)
-                    VALUES ($1, 1)
-                    ON CONFLICT (user_id) DO UPDATE SET message_count = user_stats.message_count + 1
-                """, user_id)
+            query = """
+            INSERT INTO user_stats (user_id, xp, total_messages, level)
+            VALUES ($1, $2, 1, 1)
+            ON CONFLICT (user_id) DO UPDATE SET
+                xp = user_stats.xp + $2,
+                total_messages = user_stats.total_messages + 1,
+                level = CASE
+                    WHEN floor(pow(user_stats.xp + $2, 0.25)) > user_stats.level
+                    THEN floor(pow(user_stats.xp + $2, 0.25))
+                    ELSE user_stats.level
+                END
+            RETURNING
+                (floor(pow(user_stats.xp + $2, 0.25)) > user_stats.level) AS leveled_up,
+                level AS new_level;
+            """
+            return await self.pool.fetchrow(query, user_id, count)
+        return False
+    
+    async def get_leaderboard(self, sort_by: str = "xp", limit: int = 10):
+        if self.pool:
+            query = f"SELECT user_id, xp, level FROM user_stats ORDER BY {sort_by} DESC LIMIT $1"
+            return await self.pool.fetch(query, limit)
 
 class EconomyDatabase(PostgreSQLDatabase):
     def __init__(self, dsn: str):
@@ -129,8 +148,8 @@ class EconomyDatabase(PostgreSQLDatabase):
         if self.pool:
             async with self.pool.acquire() as conn:
                 await conn.execute("""
-                    INSERT INTO economy_users (user_id, wallet, bank, last_daily)
-                    VALUES ($1, $2, $3, $4)
+                    INSERT INTO economy_users (user_id, wallet, bank, last_daily, last_work)
+                    VALUES ($1, $2, $3, $4, $5)
                     ON CONFLICT (user_id) DO UPDATE SET
                         wallet = EXCLUDED.wallet,
                         bank = EXCLUDED.bank,
@@ -189,7 +208,7 @@ class EconomyDatabase(PostgreSQLDatabase):
             async with self.pool.acquire() as conn:
                 limit = max(1, min(12, limit))
                 rows = await conn.fetch("""
-                    SELECT type, amount, timestampt, description
+                    SELECT type, amount, timestamp, description
                     FROM economy_transactions
                     WHERE user_id = $1
                     ORDER BY id DESC LIMIT $2
@@ -236,3 +255,32 @@ class GuildSettingsDatabase(PostgreSQLDatabase):
                 """, guild_id, json.dumps(config.to_dict()))
                 
                 logger.debug(f"[SettingsDatabase] Updated config for guild {guild_id}")
+    
+    async def get_feature(self, guild_id: int, feature: ServerFeatureType) -> bool:
+        config = await self.get_config(guild_id)
+        
+        for entry in config.features:
+            if entry.name == feature.value:
+                return entry.enabled
+        return False
+    
+    async def set_feature(self, guild_id: int, feature: ServerFeatureType, state: bool, user_id: int):
+        config = await self.get_config(guild_id)
+        
+        found = False
+        for entry in config.features:
+            if entry.name == feature.value:
+                entry.enabled = state
+                entry.updated_by = user_id
+                entry.updated_at = datetime.now(UTC).timestamp()
+                found = True
+                break
+        
+        if not found:
+            config.features.append(ServerFeatureEntry(
+                name=feature.value,
+                enabled=state,
+                updated_by=user_id
+            ))
+        
+        await self.update_config(guild_id, config)

@@ -26,11 +26,13 @@ class TranslationManager:
     def get_select_options(self, current_locale: str) -> List[SelectOption]:
         options = []
         for code, info in self.lang_info.items():
-            info = self.lang_info.get(code, {"name": code.upper(), "emoji": "🌐"})
+            display_name = info.get('display', code.upper())
+            emoji = info.get('emoji', '🌐')
+            
             options.append(SelectOption(
-                label=info.get('display', code.upper()),
+                label=display_name,
                 value=code,
-                emoji=info('emoji', '🌐'),
+                emoji=emoji,
                 default=(code == current_locale)
             ))
         return options
@@ -95,15 +97,23 @@ class I18nTranslator:
         logger.info(f"Preloaded {len(self.available_files)} languages.")
     
     async def _load_locale_async(self, locale: str):
-        file_path = os.path.join(self.locales_path, f"{locale}.json")
-        try:
-            async with aiofiles.open(file_path, mode='rb') as f:
-                content = await f.read()
-                data = orjson.loads(content)
+        locale_dir = os.path.join(self.locales_path, locale)
+        if not os.path.isdir(locale_dir):
+            return
+        
+        for filename in os.listdir(locale_dir):
+            if filename.endswith(".json"):
+                namespace = filename[:-5]
+                file_path = os.path.join(locale_dir, filename)
                 
-                i18n.translations.add(locale, data)
-        except Exception as e:
-            logger.error(f"Failed to async load {locale}: {e}")
+                try:
+                    async with aiofiles.open(file_path, mode='rb') as f:
+                        content = await f.read()
+                        data = orjson.loads(content)
+                        
+                        i18n.translations.add(locale, {namespace: data})
+                except Exception as e:
+                    logger.error(f"Failed to load {filename} for {locale}: {e}")
 
     def _normalize_locale(self, locale: Union[str, Locale]) -> str:
         if not locale:
@@ -212,5 +222,5 @@ class DiscordI18nTranslator(app_commands.Translator):
         
         return translated
 
-translator_instance = I18nTranslator(locales_path="locales")
+translator_instance = I18nTranslator(locales_path="resources/locales")
 discord_translator = DiscordI18nTranslator(translator_instance)
