@@ -1,0 +1,11 @@
+{
+    "ban_member": {
+        "name": "Бан"
+    },
+    "kick_member": {
+        "name": "Кик"
+    },
+    "timeout_member": {
+        "name": "Таймаут"
+    }
+}

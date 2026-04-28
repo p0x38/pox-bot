@@ -5,8 +5,7 @@
             "default": {
                 "title": "『%{question}』への答え"
             }
-        },
-        "name": "8ball"
+        }
     },
     "channel": {
         "description": "チャンネル関連のコマンドグループ。",
@@ -16,10 +15,8 @@
                 "default": {
                     "title": "%{name} の情報"
                 }
-            },
-            "name": "info"
+            }
         },
-        "name": "channel",
         "slowmode": {
             "description": "スローモードの待機時間を設定します。",
             "embeds": {
@@ -27,8 +24,7 @@
                     "description": "%{mention} のスローモードを **%{seconds}秒** に設定したよ。",
                     "title": "スローモード更新"
                 }
-            },
-            "name": "slowmode"
+            }
         }
     },
     "contributors": {
@@ -40,18 +36,15 @@
                     "description": "このボットに協力してくれた人たちだよ！ありがと〜 :3",
                     "title": "コントリビューター"
                 }
-            },
-            "name": "list"
+            }
         },
-        "name": "contributors",
         "view": {
             "description": "コントリビューターの情報を表示します。",
             "embeds": {
                 "default": {
                     "title": "%{contributor} の情報"
                 }
-            },
-            "name": "view"
+            }
         }
     },
     "economy": {
@@ -164,8 +157,7 @@
     },
     "info": {
         "commit_data": {
-            "description": "最新のgitコミット情報を表示します。",
-            "name": "commit_data"
+            "description": "最新のgitコミット情報を表示します。"
         },
         "description": "情報系コマンド。",
         "invite": {
@@ -181,201 +173,216 @@
             },
             "error": {
                 "hardlimited": "今は上限に達してるから招待できないよ。"
-            },
-            "name": "invite"
+            }
         },
-        "name": "info",
         "os_info": {
             "description": "OS情報を表示します。",
             "embed": {
                 "title": "OS情報"
-            },
-            "name": "os_info"
+            }
         },
         "ping": {
             "description": "ポン！",
             "embed": {
                 "title": "ポン！ (%{latency} ms)"
-            },
-            "name": "ping"
+            }
         },
         "retrieve": {
             "description": "ボットの情報を取得します。",
             "embed": {
                 "description": "下からカテゴリを選んでね。",
-                "footer": "System: %{platform}",
+                "footer": "システム: %{platform}",
                 "title": "ボット情報"
             },
             "error": {
                 "forbidden": "**チャンネル管理** 権限が必要です。"
-            },
-            "name": "retrieve"
+            }
         },
         "sync": {
-            "description": "コマンドを同期します。",
-            "name": "sync"
+            "description": "コマンドを同期します。"
         },
         "timedate": {
             "description": "指定したタイムゾーンの時間を表示します。",
             "embed": {
                 "description": "%{timezone_name} の現在時刻は **%{timedate}** だよ。"
-            },
-            "name": "timedate"
+            }
+        }
+    },
+    "leveling": {
+        "description": "Leveling system.",
+        "rank": {
+            "description": "Check rank.",
+            "embeds": {
+                "default": {
+                    "fields": {
+                        "level": {
+                            "name": "Level"
+                        },
+                        "progress": {
+                            "name": "Progress"
+                        },
+                        "total": {
+                            "name": "Total XP"
+                        }
+                    },
+                    "title": "%{user}'s rank"
+                }
+            }
         }
     },
     "moderation": {
-        "description": "Moderation management.",
+        "description": "もでレーションの管理用だよ。",
         "togglefeature": {
-            "description": "Toggle server features.",
-            "paramaters": {
-                "feature": {
-                    "description": "The feature to toggle"
-                },
-                "state": {
-                    "description": "On or Off"
-                }
-            },
+            "description": "サーバー機能を切り替えるよ。",
             "embeds": {
                 "default": {
-                    "description": "Set {feature_name} to {state}."
+                    "description": "%{feature_name}を%{state}に設定したよ。"
+                }
+            },
+            "paramaters": {
+                "feature": {
+                    "description": "切り替える機能"
+                },
+                "state": {
+                    "description": "オンかオフ"
                 }
             }
         }
     },
     "roblox": {
         "avatar": {
-            "description": "Gets Roblox user's avatar by username.",
+            "description": "Roblox ユーザーのアバターをユーザー名で取得するよ。",
             "embeds": {
                 "default": {
-                    "title": "Roblox user %{username}'s Avatar"
+                    "title": "Roblox ユーザー %{username} のアバター"
                 }
             }
         },
-        "description": "A group for roblox APIs.",
+        "description": "Roblox API のグループだよ。",
         "user": {
-            "description": "Get Roblox user info by username.",
+            "description": "ユーザー名からRoblox ユーザー情報を取得するよ。",
             "embeds": {
                 "default": {
-                    "title": "User %{username}'s Information"
+                    "title": "Roblox ユーザー %{username} の情報"
                 }
             }
         }
     },
     "stats": {
-        "description": "Leveling system.",
+        "description": "レベリングシステム。",
         "top": {
-            "description": "Show the top users.",
+            "description": "トップユーザーを表示するよ。",
             "embeds": {
                 "default": {
-                    "title": "Global leaderboard!! >:D"
+                    "title": "グローバルリーダーボード！！>:D"
                 }
             }
         }
     },
     "tts": {
-        "description": "Center of TTS stuff",
+        "description": "TTS関連の中心だよ",
         "embeds": {
             "default": {
-                "description": "Generated! >:D",
-                "footer": "Type: %{tts_type}; Input: %{input}",
-                "title": "TTS Conversion"
+                "description": "生成されたよ！ >:D",
+                "footer": "TTSエンジン: %{tts_type};\n入力: %{input}",
+                "title": "TTS変換"
             }
         },
         "google_translate": {
-            "description": "Generates TTS from Google Translate.",
-            "name": "google_translate"
-        },
-        "name": "tts"
+            "description": "Google翻訳からTTSを生成するよ。"
+        }
     },
     "user": {
         "avatar": {
-            "description": "Shows Discord user's avatar.",
+            "description": "Discordユーザーのアバターを表示するよ。",
             "embeds": {
                 "default": {
-                    "footer": "Requested by %{author}, the result is cached for a minute.",
-                    "title": "User %{user}'s avatar"
+                    "footer": "%{author}からリクエストされた結果は1分間キャッシュされるよ。",
+                    "title": "ユーザー %{user}のアバター"
                 }
             }
         },
-        "description": "A group for users.",
+        "description": "ユーザー用のグループだよ。",
         "info": {
-            "description": "Retrieves user's information.",
+            "description": "ユーザーの情報を取得するよ。",
             "embeds": {
                 "default": {
-                    "title": "Information for %{user}"
+                    "title": "%{user}の情報"
                 }
             },
-            "name": "info"
+            "fields": {
+                "stats": "Level %{level} (%{xp} XP) / %{messages} Messages",
+                "wallet": "%{coins} Coins"
+            }
         },
-        "name": "user",
         "set_nick": {
-            "description": "Sets user's nickname.",
+            "description": "ユーザーのニックネームを設定するよ。",
             "embeds": {
                 "changed": {
-                    "description": "%{author} Changed %{user}'s nickname to **%{new_nickname}**."
+                    "description": "%{author}が%{user}のニックネームを**%{new_nickname}**に変更したよ。"
                 },
                 "reset": {
-                    "description": "%{author} Reseted %{user}'s nickname."
+                    "description": "%{author} は %{user}のニックネームをリセットしたよ。"
                 }
             },
             "reasons": {
-                "changed": "Nickname changed by %{user} via /user nick",
-                "reset": "Nickname reseted by %{user} via /user nick"
+                "changed": "/user nick で %{user} によってニックネームが変更されたよ",
+                "reset": "/user nick で %{user} によってニックネームがリセットされたよ"
             }
         },
         "status": {
-            "description": "Retrieves user's status.",
+            "description": "ユーザーのステータスを取得するよ。",
             "embeds": {
                 "default": {
-                    "title": "%{user}'s Discord status"
+                    "title": "%{user}のDiscordステータス"
                 }
             }
         }
     },
     "welcome": {
-        "description": "A group for WelcomeCog",
+        "description": "WelcomeCog のためのグループだよ",
         "embeds": {
             "join": {
-                "description": "Welcome, %{mention}! Please check out the rules in %{rules_mention}.",
-                "description_no_rules": "Welcome to the server, %{mention}!",
-                "footer": "We now have %{count} members.",
-                "title": "Welcome to %{guild}!"
+                "description": "ようこそ、%{mention}さん! %{rules_mention}にてルールを確認してね。",
+                "description_no_rules": "サーバーへようこそ、 %{mention}さん！",
+                "footer": "現在、メンバーは%{count}人いるよ。",
+                "title": "%{guild} へようこそ！"
             },
             "left": {
-                "description": "Goodbye, %{display}!",
-                "title": "Member %{display} has left %{guild}!"
+                "description": "さようなら、 %{display}！",
+                "title": "メンバー %{display} が %{guild} を離れたよ！"
             }
         },
         "set_channel": {
-            "description": "Set channel to send join / leave message.",
+            "description": "参加/退出メッセージを送信するチャンネルを設定するよ。",
             "embeds": {
                 "disabled": {
-                    "description": "Welcome notification feature has been disabled."
+                    "description": "Welcome通知機能が無効になったよ。"
                 },
                 "enabled": {
-                    "description": "Welcome notification feature has been enabled.\n The welcome message will appear at %{target_mention}."
+                    "description": "ウェルカム通知機能が有効になったよ。\n ウェルカムメッセージは %{target_mention} に表示されるよ。"
                 }
             }
         },
         "set_rules_channel": {
-            "description": "Sets rule channel for adding link in it.",
+            "description": "通知メッセージにルールチャンネルを設定するよ。",
             "embeds": {
                 "disabled": {
-                    "description": "Rules channel for welcome message has been removed."
+                    "description": "ウェルカムメッセージのルールチャンネルが削除されたよ。"
                 },
                 "success": {
-                    "description": "Rules channel for welcome message has been set to %{target_mention}."
+                    "description": "ウェルカムメッセージのルールチャンネルが %{target_mention}に設定されたよ。"
                 }
             }
         },
         "test": {
-            "description": "Run a test for welcome channel",
+            "description": "ウェルカムチャンネルのテストを実行するよ",
             "embeds": {
                 "sent": {
-                    "description": "Test successfully sent to welcome channel!"
+                    "description": "テストが正常にウェルカムチャンネルに送信されたよ！"
                 },
                 "unconfigured": {
-                    "description": "Welcome channel hasn't configured in this guild."
+                    "description": "このギルドでは、Welcome通知チャンネルが設定されてないよ。"
                 }
             }
         }

@@ -1,0 +1,109 @@
+{
+    "custom": {
+        "cannot_timeout_higher": "دوري ليس عاليا بما فيه الكفاية لإنهاء مهلة هذا المستخدم.",
+        "channel_has_no_slowmode_property": "هذه القناة ليس لديها خاصية لتعيين تأخير وضع البطء.",
+        "forbidden_timeout": "ليس لدي الصلاحية لإنتهاء مهلة الأعضاء.",
+        "guild_only": "الأمر قابل للاستخدام فقط في الغيلد.",
+        "insufficient_permission_ban": "ليس لديك الإذن بحظر العضو %{user}.",
+        "insufficient_permission_kick": "ليس لديك الصلاحية لطرد العضو %{user}.",
+        "invalidated_cache": "الأمر يعمل فقط على الرابطة بسبب المشكلة مع المخبآت.",
+        "missing_category": "فئة مفقودة",
+        "no_git_commithash": "لم يتم العثور على تجزئة التزام",
+        "no_git_lastcommit": "لم يتم العثور على رسالة التزام",
+        "roblox_failed_retrieve_avatar": "فشل محاولة استرداد الصورة الرمزية لمستخدم Roblox %{username}.",
+        "roblox_forbidden": "تعذر استرداد البيانات من API Roblox لأن العميل ليس لديه أو باستخدام رمز CSRF غير صالح.",
+        "roblox_user_not_found": "لا يوجد مستخدم Roblox اسمه '%{username}'.",
+        "timeout_duration_lessflow": "يجب أن تكون المدة أكبر من 0",
+        "tried_to_timeout_higher": "الدور الخاص بك ليس عاليا بما فيه الكفاية لإنهاء مهلة المستخدم.",
+        "tried_to_timeout_himself": "لا يمكنك مهلة لنفسك",
+        "tried_to_timeout_owner": "لا يمكنك إنهاء مهلة مالك الخادم",
+        "unknown_signature": "توقيع غير معروف",
+        "unsupported_channel": "القناة غير مدعومة من البوت.",
+        "user_not_found": "المستخدم غير موجود."
+    },
+    "embed": {
+        "contributor_not_found": {
+            "description": "لم يتم العثور على المساهم %{contributor}.",
+            "title": "المساهم غير موجود"
+        },
+        "database_not_available": {
+            "description": "مجمع قاعدة البيانات غير متوفر هذه المرة.",
+            "title": "قاعدة البيانات غير متوفرة"
+        },
+        "edge_tts_not_installed": {
+            "description": "الخادم ليس لديه حزمة لتوليد الكلام من edge-tts.",
+            "title": "لم يتم تثبيت الحافة TTS"
+        },
+        "guild_only": {
+            "description": "هذا الأمر فقط للرابطة.",
+            "title": "سياق التشغيل غير صالح"
+        },
+        "only_positive_value": {
+            "description": "القيمة السلبية غير مسموح بها لهذا الأمر.",
+            "title": "القيمة السلبية غير مسموح بها"
+        },
+        "send_error": {
+            "description": "خطأ أثناء محاولة الإرسال: %{e}",
+            "title": "إرسال خطأ"
+        },
+        "slowmode_out_of_range": {
+            "description": "يجب أن يكون تأخير الوضع البطيء بين 0 و 21600 ثانية.",
+            "title": "خارج النطاق"
+        },
+        "too_high_value": {
+            "description": "يجب ألا تتجاوز القيمة %{max}.",
+            "title": "لا يمكن أن تكون القيمة أعلى من %{max}"
+        },
+        "tts_generation_error": {
+            "description": "حدث خطأ أثناء محاولة إنشاء الكلام: %{e}",
+            "title": "خطأ في توليد TTS"
+        },
+        "tts_no_text": {
+            "description": "لقد قمت بتعيين الإدخال فارغ. أعد المحاولة لاحقًا مع المدخلات.",
+            "title": "الإدخال يجب أن لا يكون فارغاً"
+        },
+        "unsupported_channel_slowmode": {
+            "description": "القناة %{channel} لا تدعم وضع البطء.",
+            "title": "قناة غير مدعومة"
+        },
+        "unsupported_channel_type": {
+            "description": "لقد اخترت قناة غير مدعومة.",
+            "title": "نوع القناة غير مدعوم"
+        },
+        "welcome_channel_not_enabled": {
+            "description": "لم يتم تمكين قناة الترحيب في هذه الرابطة. تأكد من تعيين قناة الترحيب لاستخدام هذا الأمر.",
+            "title": "لم يتم تمكين قناة الترحيب"
+        },
+        "user_data_not_found": {
+            "description": "Data for user %{user} was not found.",
+            "title": "Data not found"
+        }
+    },
+    "exceptions": {
+        "AppCommandError": "تم إلقاء خطأ في الأمر غير معروف!",
+        "BotMissingPermissions": "ليس لدي الصلاحيات المطلوبة لتنفيذه.",
+        "CheckFailure": "ليس لديك الصلاحية لاستخدام هذا الأمر.",
+        "CommandAlreadyRegistered": "تم تسجيل الأمر من قبل.",
+        "CommandInvokeError": "حدث خطأ أثناء تنفيذ الأمر.",
+        "CommandLimitReached": "استخدام الأوامر حاليا محدود بسبب محدودية الأوامر.",
+        "CommandNotFound": "لم يتم العثور على الأمر.",
+        "CommandOnCooldown": "الأمر قيد الانتظار. يرجى المحاولة مرة أخرى بعد مرور %{remaining} ثانية إضافية.",
+        "CommandSignatureMismatch": "الأمر خارج المزامنة من آخر أمر.",
+        "CommandSyncFailure": "فشل مزامنة الأوامر (الأوامر).",
+        "HTTPException": "فشلت العملية بسبب خطأ HTTP.",
+        "MissingAnyRole": "ليس لديك أي أدوار مطلوبة لاستخدامها.",
+        "MissingPermissions": "ليس لديك الأذونات المطلوبة لاستخدامها.",
+        "MissingRole": "ليس لديك دور مطلوب لاستخدامه.",
+        "NoPrivateMessage": "لا يمكن استخدام الأمر على الرسائل الخاصة.",
+        "TransformerError": "حدث خطأ أثناء معالجة حجج الأوامر.",
+        "TranslationError": "حدث خطأ أثناء ترجمة الأمر.",
+        "Unknown": "تم إلقاء خطأ لم يتم القبض عليه! %{e}"
+    },
+    "http": {
+        "400": "خطأ 400: طلب خاطئ. الإدخال يحتوي على بناء غير صالح.",
+        "403": "خطأ 403: محظور. ليس لديك الصلاحية للوصول إلى المصدر.",
+        "404": "خطأ 404: غير موجود. لا يوجد ملف.",
+        "429": "خطأ 429: طلبات كثيرة جداً. API لديه عميل الحد من المعدل. حاول مرة أخرى لاحقاً.",
+        "500": "خطأ 500: خطأ في الخادم الداخلي. واجه الخادم خطأ غير معروف أثناء المعالجة."
+    }
+}

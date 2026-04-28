@@ -1,0 +1,30 @@
+{
+    "common": {
+        "comfirm": "Confirm",
+        "cancel": "Cancel",
+        "loading": "Please wait...",
+        "status": {
+            "online": "Online",
+            "idle": "Idling",
+            "dnd": "Do Not Disturb"
+        }
+    },
+    "errors": {
+        "title": "Whoopsie!",
+        "generic": "Something went wrong. Please try again later.",
+        "cooldown": "Please wait %{remaining}s before using this again.",
+        "user_not_found": "I couldn't find that user.",
+        "user_missing_permissions": "You do not have permission to do that.",
+        "bot_missing_permissions": "I don't have permission to do it.",
+        "not_owner": "Only the bot developer can use this command."
+    },
+    "units": {
+        "seconds": {
+            "one": "second",
+            "other": "seconds"
+        }
+    },
+    "bot": {
+        "sync_success": "Commands have been synchronized successfully."
+    }
+}

@@ -3,5 +3,5 @@
     "kick_user": "%{user} をキックしたよ。",
     "timed_out_user": "%{user} を %{length} タイムアウトしたよ。",
     "warn_user": "%{user} に警告したよ。",
-    "level_up": "%{mention} has been leveled up to %{new_level}."
+    "level_up": "%{mention} は %{new_level} までレベルアップしたよ。"
 }
