@@ -223,6 +223,27 @@
             "name": "timedate"
         }
     },
+    "leveling": {
+        "rank": {
+            "description": "Check rank.",
+            "embeds": {
+                "default": {
+                    "title": "%{user}'s rank",
+                    "fields": {
+                        "level": {
+                            "name": "Level"
+                        },
+                        "total": {
+                            "name": "Total XP"
+                        },
+                        "progress": {
+                            "name": "Progress"
+                        }
+                    }
+                }
+            }
+        }
+    },
     "moderation": {
         "description": "Moderation management.",
         "togglefeature": {
@@ -304,6 +325,10 @@
                 "default": {
                     "title": "Information for %{user}"
                 }
+            },
+            "fields": {
+                "wallet": "%{coins} Coins",
+                "stats": "Level %{level} (%{xp} XP) / %{messages} Messages"
             },
             "name": "info"
         },

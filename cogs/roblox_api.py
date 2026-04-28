@@ -15,7 +15,7 @@ class RobloxAPICog(commands.Cog):
     def __init__(self, bot: PoxBot):
         self.bot: PoxBot = bot
     
-    group = app_commands.Group(name="roblox", description=app_commands.locale_str("A group for roblox APIs.", message="command.roblox.name"))
+    group = app_commands.Group(name="roblox", description=app_commands.locale_str("A group for roblox APIs.", extras={"key": "command.roblox.name"}))
     
     # auto complete for roblox usernames
     async def roblox_username_autocomplete(self, interaction: Interaction, current: str) -> list[app_commands.Choice[str]]:
@@ -30,7 +30,7 @@ class RobloxAPICog(commands.Cog):
         return choices
     
     @cached(300)
-    @group.command(name="user_avatar", description=app_commands.locale_str("Gets Roblox user avatar by username.", message="command.roblox.avatar.description"))
+    @group.command(name="user_avatar", description=app_commands.locale_str("Gets Roblox user avatar by username.", extras={"key": "command.roblox.avatar.description"}))
     async def get_user_avatar(self, interaction: Interaction, username: str):
         await interaction.response.defer()
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
@@ -92,7 +92,7 @@ class RobloxAPICog(commands.Cog):
 
 
     @cached(300)
-    @group.command(name="user", description=app_commands.locale_str("Get Roblox user info by username.", message="command.roblox.user.description"))
+    @group.command(name="user", description=app_commands.locale_str("Get Roblox user info by username.", extras={"key": "command.roblox.user.description"}))
     async def roblox_get_user(self, interaction: Interaction, username: str):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         await interaction.response.defer(thinking=True)

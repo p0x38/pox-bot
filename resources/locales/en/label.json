@@ -31,5 +31,7 @@
     "user_name": "Name",
     "user_nitro": "Nitro since",
     "user_roles": "Roles",
-    "user_status": "Status"
+    "user_status": "Status",
+    "user_wallet": "Wallet",
+    "user_stats": "User stats"
 }

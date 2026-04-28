@@ -13,7 +13,7 @@ from gtts.lang import tts_langs
 import psutil
 from src.utils.cache import Cache
 from classes import EmoticonGenerator, MyTranslator
-from src.database.modules import EconomyDatabase, GuildSettingsDatabase, SettingsDatabase, StatsDatabase
+from src.database import EconomyDatabase, GuildSettingsDatabase, SettingsDatabase, StatsDatabase
 import stuff
 import data
 import aiosqlite

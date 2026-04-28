@@ -1,11 +1,13 @@
 import asyncio
 from datetime import datetime, timedelta
+import inspect
 import math
+from multiprocessing import Value
 import random
 import re
-from typing import Optional, Union
+from typing import Any, Optional, Union
 from discord.ext import commands
-from discord import Activity, ActivityType, ClientStatus, Color, CustomActivity, Embed, Forbidden, Game, HTTPException, Interaction, Locale, Member, Role, Spotify, Status, Streaming, TextChannel, TextStyle, User, app_commands, ui
+from discord import Activity, ActivityType, ClientStatus, Color, CustomActivity, Embed, Forbidden, Game, HTTPException, Interaction, Locale, Member, Role, SelectOption, Spotify, Status, Streaming, TextChannel, TextStyle, User, app_commands, ui
 from aiocache import cached
 
 from bot import PoxBot
@@ -158,13 +160,72 @@ class TimeoutModal(ui.Modal, title="User timeout"):
             self.embed.description = f"Exception thrown!\n{e}"
             logger.exception(e)
             await interaction.response.send_message(embed=self.embed)
+
+class DynamicUserInfoView(ui.View):
+    def __init__(self, member: Member, categories: dict, locale: str):
+        super().__init__(timeout=180)
+        self.member = member
+        self.categories = categories
+        self.locale = locale
+        
+        self.add_item(self.create_select())
+    
+    def create_select(self):
+        options = []
+        for key, data in self.categories.items():
+            label = i18n.T(f"modal.DynamicUserInfoView.fields.{key}", self.locale)
+            description = i18n.T(data.get("desc"), self.locale)
             
+            options.append(SelectOption(
+                label=label,
+                value=key,
+                description=description,
+                emoji=data.get("emoji")
+            ))
+        
+        select = ui.Select(
+            placeholder=i18n.T("modal.DynamicUserInfoView.placeholder", self.locale),
+            options=options
+        )
+        
+        select.callback = self.select_callback
+        return select
+    
+    async def select_callback(self, interaction: Interaction):
+        await interaction.response.defer()
+        
+        selected_label = interaction.data['values']
+        category_data = self.categories.get(selected_label)
+        
+        if not category_data:
+            return await interaction.followup.send("Category not found.", ephemeral=True)
+        
+        embed = Embed(
+            title=i18n.T('modal.DynamicUserInfoView.embeds.default.title', interaction.locale, {"category": selected_label}),
+            color=Color.brand_green()
+        )
+        
+        embed.set_author(name=self.member.display_name, icon_url=self.member.display_avatar.url)
+        
+        for field_name, field_value in category_data.get('fields', {}).items():
+            if inspect.iscoroutinefunction(field_value):
+                display_value = await field_value(self.member)
+            elif callable(field_value):
+                display_value = field_value(self.member)
+            else:
+                display_value = field_value
+            
+            field_name = i18n.T(f"modal.DynamicUserInfoView.fields.{field_name}", self.locale)
+            embed.add_field(name=field_name, value=display_value, inline=True)
+        
+        await interaction.edit_original_response(embed=embed, view=self)
+
 
 class UserCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         
-        @app_commands.context_menu(name=app_commands.locale_str("Kick", message="context_menu.kick_member.name"))
+        @app_commands.context_menu(name=app_commands.locale_str("Kick", extras={"key": "context_menu.kick_member.name"}))
         @app_commands.checks.has_permissions(kick_members=True)
         @app_commands.guild_only()
         async def contextmenu_kick(interaction: Interaction, member: Member):
@@ -185,7 +246,7 @@ class UserCog(commands.Cog):
             finally:
                 return await interaction.followup.send(embed=embed)
         
-        @app_commands.context_menu(name=app_commands.locale_str("Ban", message="context_menu.ban_membee.name"))
+        @app_commands.context_menu(name=app_commands.locale_str("Ban", extras={"key": "context_menu.ban_membee.name"}))
         @app_commands.checks.has_permissions(ban_members=True)
         @app_commands.guild_only()
         async def contextmenu_ban(interaction: Interaction, member: Member):
@@ -206,7 +267,7 @@ class UserCog(commands.Cog):
             finally:
                 return await interaction.followup.send(embed=embed)
         
-        @app_commands.context_menu(name=app_commands.locale_str("Timeout", message="context_menu.timeout_member.name"))
+        @app_commands.context_menu(name=app_commands.locale_str("Timeout", extras={"key": "context_menu.timeout_member.name"}))
         @app_commands.checks.has_permissions(moderate_members=True)
         @app_commands.guild_only()
         async def contextmenu_timeout(interaction: Interaction, member: Member):
@@ -216,7 +277,7 @@ class UserCog(commands.Cog):
         bot.tree.add_command(contextmenu_ban)
         bot.tree.add_command(contextmenu_timeout)
     
-    group = app_commands.Group(name=app_commands.locale_str("user", message="command.user.name"), description=app_commands.locale_str("A group for user.", message="command.user.description"))
+    group = app_commands.Group(name=app_commands.locale_str("user", extras={"key": "command.user.name"}), description=app_commands.locale_str("A group for user.", extras={"key": "command.user.description"}))
     
     @group.command(name="guild_duration", description="Checks how long user has been in the server.")
     @app_commands.guild_only()
@@ -242,7 +303,7 @@ class UserCog(commands.Cog):
             logger.exception(e)
             await interaction.followup.send("sry errored")
     
-    @group.command(name=app_commands.locale_str("info", message="command.user.info.name"), description=app_commands.locale_str("Retrieves user's information.", message="command.user.info.description"))
+    @group.command(name=app_commands.locale_str("info", extras={"key": "command.user.info.name"}), description=app_commands.locale_str("Retrieves user's information.", extras={"key": "command.user.info.description"}))
     @app_commands.guild_only()
     async def check_user_info(self, interaction: Interaction, member: Member):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale.value
@@ -261,8 +322,22 @@ class UserCog(commands.Cog):
                         'user_status': format_status(user.client_status, loc),
                         'user_nitro': user.premium_since.strftime("%Y-%m-%d %H:%M:%S") if user.premium_since else i18n.T("label.non_nitro", loc),
                         'user_join': user.joined_at.strftime("%Y-%m-%d %H:%M:%S") + f" (<t:{int(user.joined_at.timestamp())}:R>)" if user.joined_at else i18n.T("text.unknown_join", loc),
-                        'user_roles': ", ".join([f"<@&{role.id}>" for role in roles]),
+                        'user_roles': ", ".join([f"<@&{role.id}>" for role in roles])
                     }
+                    
+                    if self.bot.economy_db:
+                        coins = await self.bot.economy_db.get_user(member.id)
+                        temp1['user_wallet'] = i18n.T('command.user.info.fields.wallet', loc, {"coins": coins.wallet})
+                    
+                    if self.bot.stats_db:
+                        userstats = await self.bot.stats_db.get_user_stats(member.id)
+                        if userstats:
+                            temp1['user_stats'] = i18n.T('command.user.info.fields.stats', loc, {
+                                "level": f"{userstats.level:,}",
+                                "xp": f"{userstats.xp:,}",
+                                "messages": f"{userstats.total_messages:,}"
+                            })
+                        
                     
                     temp1 = i18n.translate_map(temp1, loc)
 
@@ -320,7 +395,7 @@ class UserCog(commands.Cog):
             return await interaction.followup.send(f"Error. {e}")
     
     @cached(60)
-    @group.command(name="avatar", description=app_commands.locale_str("Shows Discord user's avatar.", message="command.user.avatar.description"))
+    @group.command(name="avatar", description=app_commands.locale_str("Shows Discord user's avatar.", extras={"key": "command.user.avatar.description"}))
     @app_commands.guild_only()
     async def get_user_avatar(self, interaction: Interaction, member: Member):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
@@ -425,7 +500,7 @@ class UserCog(commands.Cog):
 
         return await interaction.followup.send(embed=embed)
 
-    @group.command(name="set_nick", description=app_commands.locale_str("Sets user's nickname.", message="command.user.set_nick.description"))
+    @group.command(name="set_nick", description=app_commands.locale_str("Sets user's nickname.", extras={"key": "command.user.set_nick.description"}))
     @app_commands.guild_only()
     async def change_nickname(self, interaction: Interaction, member: Member, new_nick: Optional[str] = None):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
@@ -442,7 +517,7 @@ class UserCog(commands.Cog):
             embed.description = i18n.T("command.user.set_nick.embeds.changed.description", loc, {"user": member.mention, "new_nickname": new_nick})
             return await interaction.followup.send(embed=embed)
     
-    @group.command(name="status", description=app_commands.locale_str("Retrieves user's status.", message="command.user.status.description"))
+    @group.command(name="status", description=app_commands.locale_str("Retrieves user's status.", extras={"key": "command.user.status.description"}))
     @app_commands.guild_only()
     async def get_user_status(self, interaction: Interaction, member: Member):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale

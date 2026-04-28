@@ -10,7 +10,7 @@ from os.path import join
 from pytz import UTC
 
 from bot import PoxBot
-from src.database.modules import EconomyDatabase
+from src.database import EconomyDatabase
 
 from src.translator import translator_instance as i18n
 
@@ -19,14 +19,14 @@ class EconomyCog(commands.Cog):
         self.bot: PoxBot = bot
         self.db: EconomyDatabase = bot.economy_db
     
-    group = app_commands.Group(name="economy", description=app_commands.locale_str("Economy system", message="command.economy.description"))
+    group = app_commands.Group(name="economy", description=app_commands.locale_str("Economy system", extras={"key": "command.economy.description"}))
 
     async def get_loc(self, interaction: Interaction) -> str:
         if self.bot.settings_db:
             return await self.bot.settings_db.get_locale(interaction)
         return "en"
     
-    @group.command(name="balance", description=app_commands.locale_str("Check your current balance", message="command.economy.balance.description"))
+    @group.command(name="balance", description=app_commands.locale_str("Check your current balance", extras={"key": "command.economy.balance.description"}))
     async def balance(self, interaction: Interaction):
         await interaction.response.defer()
 
@@ -61,7 +61,7 @@ class EconomyCog(commands.Cog):
 
             return interaction.followup.send(embed=embed)
     
-    @group.command(name="deposit", description=app_commands.locale_str("Move money from wallet to bank.", message="command.economy.deposit.description"))
+    @group.command(name="deposit", description=app_commands.locale_str("Move money from wallet to bank.", extras={"key": "command.economy.deposit.description"}))
     async def deposit(self, interaction: Interaction, amount: int):
         await interaction.response.defer()
 
@@ -97,7 +97,7 @@ class EconomyCog(commands.Cog):
             embed.color = Color.green()
             return await interaction.followup.send(embed=embed)
         
-    @group.command(name="withdraw", description=app_commands.locale_str("Move money from bank to wallet.", message="command.economy.withdraw.description"))
+    @group.command(name="withdraw", description=app_commands.locale_str("Move money from bank to wallet.", extras={"key": "command.economy.withdraw.description"}))
     async def withdraw(self, interaction: Interaction, amount: int):
         await interaction.response.defer()
 
@@ -133,7 +133,7 @@ class EconomyCog(commands.Cog):
             embed.color = Color.green()
             return await interaction.followup.send(embed=embed)
     
-    @group.command(name="work", description=app_commands.locale_str("Earn some coins by working", message="command.economy.work.description"))
+    @group.command(name="work", description=app_commands.locale_str("Earn some coins by working", extras={"key": "command.economy.work.description"}))
     async def work(self, interaction: Interaction):
         await interaction.response.defer()
 
@@ -165,7 +165,7 @@ class EconomyCog(commands.Cog):
 
             await interaction.followup.send(embed=embed)
     
-    @group.command(name='list', description=app_commands.locale_str("View the item shop", message="command.economy.list.description"))
+    @group.command(name='list', description=app_commands.locale_str("View the item shop", extras={"key": "command.economy.list.description"}))
     async def list_items(self, interaction: Interaction):
         await interaction.response.defer()
 
@@ -188,7 +188,7 @@ class EconomyCog(commands.Cog):
                 embed.add_field(name=f"{i['name']} (ID: {i['id']})", value=f"{buy_price}\n{i['description']}", inline=False)
             await interaction.response.send_message(embed=embed)
     
-    @group.command(name="buy", description=app_commands.locale_str("Buy on item from the shop", message="command.economy.buy.description"))
+    @group.command(name="buy", description=app_commands.locale_str("Buy on item from the shop", extras={"key": "command.economy.buy.description"}))
     async def buy_items(self, interaction: Interaction, item_id: str):
         await interaction.response.defer()
 
@@ -224,7 +224,7 @@ class EconomyCog(commands.Cog):
 
             await interaction.followup.send(embed=embed)
     
-    @group.command(name="sell", description=app_commands.locale_str("Sell on item back to the shop", message="command.economy.sell.description"))
+    @group.command(name="sell", description=app_commands.locale_str("Sell on item back to the shop", extras={"key": "command.economy.sell.description"}))
     async def sell_items(self, interaction: Interaction, item_id: str):
         await interaction.response.defer()
 
@@ -254,7 +254,7 @@ class EconomyCog(commands.Cog):
 
             await interaction.followup.send(embed=embed)
     
-    @group.command(name="inventory", description=app_commands.locale_str("View your items", message="command.economy.inventory.description"))
+    @group.command(name="inventory", description=app_commands.locale_str("View your items", extras={"key": "command.economy.inventory.description"}))
     async def inventory(self, interaction: Interaction):
         await interaction.response.defer()
 
@@ -282,7 +282,7 @@ class EconomyCog(commands.Cog):
             
             await interaction.response.send_message(embed=embed)
 
-    @group.command(name="daily", description=app_commands.locale_str("Claim your daily reward", message="command.economy.claim.description"))
+    @group.command(name="daily", description=app_commands.locale_str("Claim your daily reward", extras={"key": "command.economy.claim.description"}))
     async def daily(self, interaction: Interaction):
         await interaction.response.defer()
 
@@ -325,7 +325,7 @@ class EconomyCog(commands.Cog):
 
             return interaction.followup.send(embed=embed)
     
-    @group.command(name='history', description=app_commands.locale_str("View your recent transactions", message="command.economy.history.description"))
+    @group.command(name='history', description=app_commands.locale_str("View your recent transactions", extras={"key": "command.economy.history.description"}))
     async def history(self, interaction: Interaction, limit: app_commands.Range[int, 1, 12]):
         await interaction.response.defer()
 

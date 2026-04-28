@@ -15,9 +15,9 @@ class ChannelCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
-    group = app_commands.Group(name=app_commands.locale_str("channel", message="command.channel.name"), description=app_commands.locale_str("A group for channels.", message="command.channel.description"))
+    group = app_commands.Group(name="channel", description=app_commands.locale_str("A group for channels.", extras={"key": "command.channel.description"}))
     
-    @group.command(name=app_commands.locale_str("slowmode", message="command.channel.slowmode.name"), description=app_commands.locale_str("Sets slowmode delay", message="command.channel.slowmode.description"))
+    @group.command(name=app_commands.locale_str("slowmode", extras={"key": "command.channel.slowmode.name"}), description=app_commands.locale_str("Sets slowmode delay", extras={"key": "command.channel.slowmode.description"}))
     @app_commands.guild_only()
     async def set_slowmode_delay(self, interaction: Interaction, channel: Optional[TextChannel], seconds: app_commands.Range[int, 0, 21600]):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale

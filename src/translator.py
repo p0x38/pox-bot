@@ -148,6 +148,9 @@ class I18nTranslator:
         
         translated = i18n.t(text, locale=lang, **kwargs)
         
+        if translated is self.MISSING and lang != "en":
+            translated = i18n.t(text, locale="en", **kwargs)
+        
         if translated is self.MISSING:
             if text not in self.missing_keys_buffer:
                 self.missing_keys_buffer[text] = set()
@@ -204,7 +207,7 @@ class DiscordI18nTranslator(app_commands.Translator):
         await self.internal.preload_all()
     
     async def translate(self, string: app_commands.locale_str, locale: Locale, context: app_commands.TranslationContext) -> Optional[str]:
-        key = string.message if string.message is not None else str(string)
+        key = string.extras.get('key') or str(string)
         
         is_name = context.location in [
             app_commands.TranslationContextLocation.command_name,

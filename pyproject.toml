@@ -12,8 +12,6 @@ dependencies = [
     "aiosqlite>=0.21.0",
     "asyncpg>=0.31.0",
     "attr>=0.3.2",
-    "deep-translator>=1.11.4",
-    "deptry>=0.25.1",
     "discord-py>=2.6.4",
     "distro>=1.9.0",
     "edge-tts>=7.2.3",
@@ -44,4 +42,13 @@ dependencies = [
     "roblox>=2.0.0",
     "thefuzz>=0.22.1",
     "websockets>=15.0.1",
+]
+
+[dependency-groups]
+dev = [
+    "dependency-checker>=0.0.5",
+    "deptry>=0.25.1",
+    "fawltydeps>=0.20.0",
+    "pip-audit>=2.10.0",
+    "pipdeptree>=2.35.1",
 ]

@@ -7,7 +7,7 @@ from discord import Color, Embed, Interaction, Message, app_commands
 from pytz import UTC
 
 from bot import PoxBot
-from src.database.modules import StatsDatabase
+from src.database import StatsDatabase
 
 from src.translator import translator_instance as i18n
 
@@ -38,9 +38,9 @@ class StatsCog(commands.Cog):
                 
                 await message.channel.send(embed=embed)
             
-    group = app_commands.Group(name="stats", description=app_commands.locale_str("Leveling system.", message="command.stats.description"))
+    group = app_commands.Group(name="stats", description=app_commands.locale_str("Leveling system.", extras={"key": "command.stats.description"}))
     
-    @group.command(name="top", description=app_commands.locale_str("Show the top users.", message="command.stats.top.description"))
+    @group.command(name="top", description=app_commands.locale_str("Show the top users.", extras={"key": "command.stats.top.description"}))
     async def leaderboard(self, interaction: Interaction):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale.value
         embed = Embed()
@@ -54,9 +54,9 @@ class StatsCog(commands.Cog):
             description = ""
             
             if rows:
-                for i, row in enumerate(rows, 1):
-                    user = self.bot.get_user(row['user_id']) or f"User({row['user_id']})"
-                    description += f"**{i}.** {user} • Lvl {row['level']} ({row['xp']} XP)\n"
+                for i, row in enumerate(rows.items, 1):
+                    user = self.bot.get_user(row.user_id) or f"User({row.user_id})"
+                    description += f"**{i}.** {user} • Lvl {row.level} ({row.xp} XP)\n"
             else:
                 description = "Wow, there's no one inside here."
             

@@ -10,7 +10,7 @@ from src.translator import translator_instance as i18n
 from bot import PoxBot
 
 class WelcomeCog(commands.Cog):
-    group = app_commands.Group(name="welcome", description=app_commands.locale_str("A group for WelcomeCog", message="command.welcome.description"))
+    group = app_commands.Group(name="welcome", description=app_commands.locale_str("A group for WelcomeCog", extras={"key": "command.welcome.description"}))
 
     def __init__(self, bot):
         self.bot: PoxBot = bot
@@ -115,7 +115,7 @@ class WelcomeCog(commands.Cog):
             logger.exception(i18n.T("error.exceptions.Unknown", loc, {"e": e}))
             return
     
-    @group.command(name="set_channel", description=app_commands.locale_str("Set channel to send join / leave message.", message="command.welcome.set_channel.description"))
+    @group.command(name="set_channel", description=app_commands.locale_str("Set channel to send join / leave message.", extras={"key": "command.welcome.set_channel.description"}))
     @app_commands.guild_only()
     async def set_channel(self, interaction: Interaction, channel: Optional[TextChannel]):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
@@ -141,7 +141,7 @@ class WelcomeCog(commands.Cog):
             embed.description = i18n.T("command.welcome.set_channel.embeds.changed.description", loc, {"target_mention": channel.mention})
             return await interaction.followup.send(embed=embed)
     
-    @group.command(name="test", description=app_commands.locale_str("Run a test for welcome channel", message="command.welcome.test.description"))
+    @group.command(name="test", description=app_commands.locale_str("Run a test for welcome channel", extras={"key": "command.welcome.test.description"}))
     @app_commands.guild_only()
     async def test_channel(self, interaction: Interaction):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
@@ -173,7 +173,7 @@ class WelcomeCog(commands.Cog):
             embed.description = i18n.T("command.welcome.test.embeds.unconfigured.description", loc)
             return await interaction.followup.send(embed=embed)
     
-    @group.command(name="set_rules_channel", description=app_commands.locale_str("Sets rule channel for adding link in it.", message="command.welcome.set_rules_channel.description"))
+    @group.command(name="set_rules_channel", description=app_commands.locale_str("Sets rule channel for adding link in it.", extras={"key": "command.welcome.set_rules_channel.description"}))
     @app_commands.guild_only()
     async def set_rule_channel(self, interaction: Interaction, channel: TextChannel):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale

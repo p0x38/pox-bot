@@ -51,6 +51,7 @@ class MessageCog(commands.Cog):
         await ctx.response.send_message(f"{msg}")
 
     @group.command(name="send", description="Sends a message.")
+    @app_commands.checks.cooldown(1, 3.0, key=lambda i: i.user.id)
     @app_commands.guild_only()
     async def send_message(self, interaction: Interaction, channel: TextChannel, message: str):
         try:
