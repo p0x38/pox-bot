@@ -1,0 +1,107 @@
+{
+    "DynamicInfoView": {
+        "buttons": {
+            "suggest_button": {
+                "label": "تقديم الاقتراحات"
+            },
+            "url_button": {
+                "label": "زيارة مستودع GitHub"
+            }
+        },
+        "data": {
+            "context": {
+                "memory": {
+                    "display": "استخدام السياق"
+                },
+                "mode": {
+                    "display": "المزاج الحالي"
+                },
+                "muted": {
+                    "display": "هل تم كتم جيم ؟"
+                },
+                "title": "بيانات الدماغ المحلي"
+            },
+            "hardware": {
+                "cpu": {
+                    "display": "استخدام المعالج (المجموع)"
+                },
+                "cpu_own": {
+                    "display": "استخدام المعالج (البرنامج)"
+                },
+                "disk": {
+                    "display": "استخدام القرص"
+                },
+                "platform": {
+                    "display": "المنصة"
+                },
+                "ram": {
+                    "display": "استخدام الذاكرة (المجموع)"
+                },
+                "ram_details": {
+                    "display": "تفاصيل الذاكرة"
+                },
+                "ram_own": {
+                    "display": "استخدام الذاكرة (برنامج)"
+                },
+                "title": "التفاصيل التقنية"
+            },
+            "identity": {
+                "latency": {
+                    "display": "لاتفيا الشبكة"
+                },
+                "owner": {
+                    "display": "مطور البوت"
+                },
+                "signature": {
+                    "display": "التوقيع"
+                },
+                "title": "الهوية و الإصدار",
+                "uptime": {
+                    "display": "Bot Uptime"
+                },
+                "uuid": {
+                    "display": "UID الجلسة"
+                },
+                "version": {
+                    "display": "إصدار البوت"
+                }
+            },
+            "stats": {
+                "cached_values": {
+                    "display": "المخبآت"
+                },
+                "channels": {
+                    "display": "القنوات"
+                },
+                "guilds": {
+                    "display": "خوادم"
+                },
+                "interactions": {
+                    "display": "التفاعلات"
+                },
+                "msgs": {
+                    "display": "الرسائل المشاهدة"
+                },
+                "title": "Bot Statistics",
+                "users": {
+                    "display": "المستخدمون"
+                }
+            }
+        },
+        "options": {
+            "context": {
+                "label": "بيانات الدماغ المحلي"
+            },
+            "hardware": {
+                "label": "معلومات الجهاز"
+            },
+            "identity": {
+                "label": "معلومات عامة"
+            },
+            "placeholder": "اختر الفئة...",
+            "stats": {
+                "label": "الإحصائيات"
+            }
+        }
+    }
+}

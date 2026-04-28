@@ -73,6 +73,10 @@
         "welcome_channel_not_enabled": {
             "description": "このサーバーではウェルカムチャンネルが設定されてないよ。先に設定してね。",
             "title": "ウェルカム未設定"
+        },
+        "user_data_not_found": {
+            "description": "Data for user %{user} was not found.",
+            "title": "Data not found"
         }
     },
     "exceptions": {

@@ -1,0 +1,7 @@
+{
+    "ban_user": "%{user} был забанен.",
+    "kick_user": "%{user} был кикнут.",
+    "timed_out_user": "%{user} истекло время ожидания для %{length}.",
+    "warn_user": "%{user} был предупрежден.",
+    "level_up": "%{mention} повышен до %{new_level}."
+}

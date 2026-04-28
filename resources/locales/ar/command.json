@@ -1,0 +1,390 @@
+{
+    "8ball": {
+        "description": "يعطي استجابة عشوائية للسحر الكلاسيكي 8 كرات لسؤال المستخدم.",
+        "embeds": {
+            "default": {
+                "title": "الإجابة على '%{question}'"
+            }
+        }
+    },
+    "channel": {
+        "description": "مجموعة للادارة ",
+        "info": {
+            "description": "يعرض معلومات القناة.",
+            "embeds": {
+                "default": {
+                    "title": "معلومات من %{name}"
+                }
+            }
+        },
+        "slowmode": {
+            "description": "تعيين تأخير الوضع البطيء",
+            "embeds": {
+                "successful": {
+                    "description": "تم تعيين وضع البطء بنجاح إلى **%{seconds}** لـ %{mention}.",
+                    "title": "تم تحديث الوضع البطيء"
+                }
+            }
+        }
+    },
+    "contributors": {
+        "description": "مجموعة للمساهمين.",
+        "list": {
+            "description": "يسرد جميع المساهمين.",
+            "embeds": {
+                "default": {
+                    "description": "إليك قائمة من المساهمين الذين ساعدوا بوتي! :3",
+                    "title": "المساهمون"
+                }
+            }
+        },
+        "view": {
+            "description": "إظهار معلومات المساهمين.",
+            "embeds": {
+                "default": {
+                    "title": "معلومات المساهم من %{contributor}"
+                }
+            }
+        }
+    },
+    "economy": {
+        "balance": {
+            "description": "تحقق من رصيدك الحالي.",
+            "embeds": {
+                "default": {
+                    "footer": "مجموع الأصول: %{coins} عملات معدنية",
+                    "title": "رصيد %{user}:3"
+                }
+            },
+            "fields": {
+                "bank": "البنك",
+                "wallet": "المحافظ"
+            }
+        },
+        "buy": {
+            "description": "اشتري من المنتج من المتجر.",
+            "embeds": {
+                "item_unavailable": {
+                    "description": "هذا العنصر غير متوفر للبيع! 3:<",
+                    "title": "العنصر غير متوفر"
+                },
+                "not_afford": {
+                    "description": "ليس لديك ما يكفي من العملات في محفظتك لشراء هذا! 3:<",
+                    "title": "عملات معدنية غير كافية"
+                },
+                "purchased": {
+                    "description": "اشتريت بنجاح **%{item_name}**! تحقق من مخزونك ~ 3",
+                    "title": "اكتمل الشراء"
+                }
+            }
+        },
+        "daily": {
+            "description": "احصل على مكافأتك اليومية.",
+            "embeds": {
+                "default": {
+                    "description": "لقد حصلت على %{amount} من العملات المعدنية كمكافآت يومية! :3",
+                    "title": "لقد حصلت على مكافأة يومية!"
+                }
+            }
+        },
+        "deposit": {
+            "description": "نقل المال من المحفظة إلى البنك.",
+            "embeds": {
+                "default": {
+                    "description": "تم إيداع عملات %{amount} بنجاح. :3",
+                    "title": "تم الإيداع بنجاح"
+                }
+            }
+        },
+        "description": "مجموعة لنظام الاقتصاد.",
+        "history": {
+            "description": "عرض المعاملات الأخيرة الخاصة بك."
+        },
+        "inventory": {
+            "description": "عرض العناصر الخاصة بك.",
+            "embeds": {
+                "default": {
+                    "title": "مخزون %{user}"
+                },
+                "empty": {
+                    "description": "حزمة الظهر الخاصة بك فارغة الآن. قم بشراء شيء لتغيير هذا النص تخميني. :3",
+                    "title": "باقة خلفية فارغة"
+                }
+            }
+        },
+        "list": {
+            "description": "عرض متجر العناصر.",
+            "fields": {
+                "buy_price": "السعر: %{price} عملة",
+                "not_sale": "ليس للبيع"
+            }
+        },
+        "sell": {
+            "description": "قم ببيع العنصر مرة أخرى إلى المتجر.",
+            "embeds": {
+                "sold": {
+                    "description": "بيع**%{item_name}",
+                    "title": "تم البيع"
+                },
+                "unable_to_sell": {
+                    "description": "المتجر لن يشتري هذا مرة أخرى! 3:<",
+                    "title": "تعذر البيع"
+                }
+            }
+        },
+        "withdraw": {
+            "description": "نقل المال من بنك إلى محفظة.",
+            "embeds": {
+                "default": {
+                    "description": "تم سحب عملات %{amount} بنجاح. :3",
+                    "title": "تم السحب بنجاح"
+                }
+            }
+        },
+        "work": {
+            "description": "اكسب بعض العملات عن طريق العمل.",
+            "embeds": {
+                "default": {
+                    "description": "لقد حصلت على %{amount} عملة معدنية بالعمل! :3",
+                    "title": "لقد عملت من أجل المال!"
+                },
+                "tired": {
+                    "description": "تحتاج إلى الاستراحة %{rem} دقائق أخرى:",
+                    "title": "لا يمكنك العمل الآن!"
+                }
+            }
+        }
+    },
+    "info": {
+        "commit_data": {
+            "description": "يظهر أحدث التزام git للبوت"
+        },
+        "description": "مجموعة معلومات",
+        "invite": {
+            "description": "دعوة البوت إلى الخادم عن طريق رابط التطبيق. (محدود إلى 90)",
+            "embed": {
+                "description": "%{prefix}\n\nيمكنك إضافتي إلى الخادم الخاص بك باستخدام [هذا الرابط.](%{invite_url})",
+                "footer": "ملاحظة: يتطلب أذونات متقدمة للتشغيل الكامل، ودعوة تقتصر على 90 خادماً بسبب الحد من الخروج.",
+                "status": {
+                    "one": "القدرة: **%{formatted}** خادم",
+                    "other": "القدرة: **%{formatted}** خوادم"
+                },
+                "title": "Invite TongueBot"
+            },
+            "error": {
+                "hardlimited": "لا يمكنك دعوة تونغي بوت الآن، منذ أن تم الوصول إلى الحد الأقصى."
+            }
+        },
+        "os_info": {
+            "description": "يعرض معلومات نظام التشغيل.",
+            "embed": {
+                "title": "معلومات نظام التشغيل"
+            }
+        },
+        "ping": {
+            "description": "Pong!",
+            "embed": {
+                "title": "Pong! (%{latency} ms)"
+            }
+        },
+        "retrieve": {
+            "description": "يسترجع معلومات البوت.",
+            "embed": {
+                "description": "حدد فئة أدناه لعرض تفاصيل محددة.",
+                "footer": "النظام: %{platform}",
+                "title": "معلومات بوت"
+            },
+            "error": {
+                "forbidden": "ليس لدي إذن **إدارة القنوات** للقيام بذلك."
+            }
+        },
+        "sync": {
+            "description": "مزامنة الأوامر"
+        },
+        "timedate": {
+            "description": "إظهار الوقت في المنطقة الزمنية المحددة",
+            "embed": {
+                "description": "في %{timezone_name}، هو **%{timedate}**."
+            }
+        }
+    },
+    "leveling": {
+        "description": "Leveling system.",
+        "rank": {
+            "description": "Check rank.",
+            "embeds": {
+                "default": {
+                    "fields": {
+                        "level": {
+                            "name": "Level"
+                        },
+                        "progress": {
+                            "name": "Progress"
+                        },
+                        "total": {
+                            "name": "Total XP"
+                        }
+                    },
+                    "title": "%{user}'s rank"
+                }
+            }
+        }
+    },
+    "moderation": {
+        "description": "إدارة الاعتدال",
+        "togglefeature": {
+            "description": "تبديل ميزات الخادم.",
+            "embeds": {
+                "default": {
+                    "description": "تعيين %{feature_name} إلى %{state}."
+                }
+            },
+            "paramaters": {
+                "feature": {
+                    "description": "الميزة المراد تبديلها"
+                },
+                "state": {
+                    "description": "تشغيل أو إيقاف"
+                }
+            }
+        }
+    },
+    "roblox": {
+        "avatar": {
+            "description": "يحصل على الصورة الرمزية لمستخدم Roblox عن طريق اسم المستخدم.",
+            "embeds": {
+                "default": {
+                    "title": "روبلوكس المستخدم %{username}الصورة الرمزية"
+                }
+            }
+        },
+        "description": "مجموعة لـ Rblox APIs.",
+        "user": {
+            "description": "احصل على معلومات مستخدم Roblox عن طريق اسم المستخدم.",
+            "embeds": {
+                "default": {
+                    "title": "معلومات المستخدم %{username}"
+                }
+            }
+        }
+    },
+    "stats": {
+        "description": "نظام المستوى.",
+        "top": {
+            "description": "إظهار أعلى المستخدمين.",
+            "embeds": {
+                "default": {
+                    "title": "المتصدرين العالمي!! >:D"
+                }
+            }
+        }
+    },
+    "tts": {
+        "description": "مركز اشياء TTS",
+        "embeds": {
+            "default": {
+                "description": "تم إنشاؤه! >:D",
+                "footer": "النوع: %{tts_type}؛ المدخلات: %{input}",
+                "title": "تحويل TTS"
+            }
+        },
+        "google_translate": {
+            "description": "توليد TTS من ترجمة جوجل."
+        }
+    },
+    "user": {
+        "avatar": {
+            "description": "إظهار صورة مستخدم ديسكورد.",
+            "embeds": {
+                "default": {
+                    "footer": "طلب من %{author}، يتم تخزين النتيجة مؤقتاً لمدة دقيقة.",
+                    "title": "صورة المستخدم %{user}"
+                }
+            }
+        },
+        "description": "مجموعة للمستخدمين.",
+        "info": {
+            "description": "استرداد معلومات المستخدم.",
+            "embeds": {
+                "default": {
+                    "title": "معلومات ل %{user}"
+                }
+            },
+            "fields": {
+                "stats": "Level %{level} (%{xp} XP) / %{messages} Messages",
+                "wallet": "%{coins} Coins"
+            }
+        },
+        "set_nick": {
+            "description": "تعيين الاسم المستعار للمستخدم.",
+            "embeds": {
+                "changed": {
+                    "description": "%{author} غير الاسم المستعار %{user}إلى **%{new_nickname}**."
+                },
+                "reset": {
+                    "description": "%{author} أعاد الاسم المستعار ل %{user}."
+                }
+            },
+            "reasons": {
+                "changed": "تم تغيير الاسم المستعار بواسطة %{user} عبر /user nick",
+                "reset": "تمت إعادة تعيين الاسم المستعار بواسطة %{user} عبر /user nick"
+            }
+        },
+        "status": {
+            "description": "استرداد حالة المستخدم.",
+            "embeds": {
+                "default": {
+                    "title": "%{user}'s Discord status"
+                }
+            }
+        }
+    },
+    "welcome": {
+        "description": "مجموعة من WelcomeCog",
+        "embeds": {
+            "join": {
+                "description": "مرحبا، %{mention}! الرجاء التحقق من القواعد في %{rules_mention}.",
+                "description_no_rules": "مرحبا بكم في الخادم، %{mention}!",
+                "footer": "لدينا الآن أعضاء %{count}.",
+                "title": "مرحبا بكم في %{guild}!"
+            },
+            "left": {
+                "description": "وداعاً، %{display}!",
+                "title": "العضو %{display} غادر %{guild}!"
+            }
+        },
+        "set_channel": {
+            "description": "تعيين قناة لإرسال رسالة الانضمام / تركه.",
+            "embeds": {
+                "disabled": {
+                    "description": "تم تعطيل ميزة إشعار الترحيب."
+                },
+                "enabled": {
+                    "description": "تم تفعيل خاصية إشعارات الترحيب.\n ستظهر رسالة الترحيب على %{target_mention}."
+                }
+            }
+        },
+        "set_rules_channel": {
+            "description": "تعيين قناة قاعدة لإضافة رابط فيها.",
+            "embeds": {
+                "disabled": {
+                    "description": "تم إزالة قناة القواعد لرسالة الترحيب."
+                },
+                "success": {
+                    "description": "تم تعيين قناة القواعد لرسالة الترحيب إلى %{target_mention}."
+                }
+            }
+        },
+        "test": {
+            "description": "تشغيل اختبار لقناة الترحيب",
+            "embeds": {
+                "sent": {
+                    "description": "تم إرسال الاختبار بنجاح لقناة الترحيب!"
+                },
+                "unconfigured": {
+                    "description": "لم يتم تكوين قناة الترحيب في هذه الرابطة."
+                }
+            }
+        }
+    }
+}
