@@ -237,7 +237,7 @@
             },
             "embeds": {
                 "default": {
-                    "description": "Set {feature_name} to {state}."
+                    "description": "Set %{feature_name} to %{state}."
                 }
             }
         }

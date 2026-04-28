@@ -51,8 +51,8 @@
             "title": "Out of range"
         },
         "too_high_value": {
-            "description": "The value mustn't over {max}.",
-            "title": "Value cannot be higher than {max}"
+            "description": "The value mustn't over %{max}.",
+            "title": "Value cannot be higher than %{max}"
         },
         "tts_generation_error": {
             "description": "An error thrown while trying to generate speech: %{e}",
