@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List, Optional
 from src.database import PostgreSQLDatabase
 from src.models import EconomyData
 from src.utils import Cache
@@ -11,7 +10,8 @@ class EconomyDatabase(PostgreSQLDatabase):
         self._cache = Cache(ttl=300)
     
     async def on_load(self):
-        await self.execute_sql_file("resources/sqls/economy.sql")
+        await self.run_migrations("resources/migrations")
+        logger.info("[EconomyDatabase] Migration suite completed.")
     
     async def post_close(self):
         logger.info("[EconomyDatabase] Cleanup complete.")
@@ -49,14 +49,14 @@ class EconomyDatabase(PostgreSQLDatabase):
                         last_work = EXCLUDED.last_work
                 """, user.user_id, user.wallet, user.bank, user.last_daily, user.last_work)
     
-    async def get_shop_items(self) -> List[dict]:
+    async def get_shop_items(self) -> list[dict]:
         if self.pool:
             async with self.pool.acquire() as conn:
                 rows = await conn.fetch("SELECT * FROM economy_items WHERE buy_price IS NOT NULL")
                 return [dict(r) for r in rows]
         return []
     
-    async def get_item(self, item_id: str) -> Optional[dict]:
+    async def get_item(self, item_id: str) -> dict | None:
         if self.pool:
             async with self.pool.acquire() as conn:
                 row = await conn.fetchrow("SELECT * FROM economy_items WHERE id = $1", item_id)
@@ -75,7 +75,7 @@ class EconomyDatabase(PostgreSQLDatabase):
 
                 await conn.execute("DELETE FROM economy_inventory WHERE quantity <= 0")
     
-    async def get_inventory(self, user_id: int) -> List[dict]:
+    async def get_inventory(self, user_id: int) -> list[dict]:
         if self.pool:
             async with self.pool.acquire() as conn:
                 rows = await conn.fetch("""
@@ -95,7 +95,7 @@ class EconomyDatabase(PostgreSQLDatabase):
                     VALUES ($1, $2, $3, $4)
                 """, user_id, tx_type, amount, desc, int(datetime.now().timestamp()))
     
-    async def get_history(self, user_id: int, limit: int = 5) -> List[dict]:
+    async def get_history(self, user_id: int, limit: int = 5) -> list:
         if self.pool:
             async with self.pool.acquire() as conn:
                 limit = max(1, min(12, limit))

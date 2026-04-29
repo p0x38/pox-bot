@@ -1,10 +1,9 @@
 import sys
 import subprocess
-from typing import Optional
 
-from aiohttp.web_fileresponse import extension
 import stuff
 stuff.create_dir_if_not_exists("./logs")
+
 import os
 import discord
 from datetime import UTC, datetime

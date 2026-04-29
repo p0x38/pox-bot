@@ -206,8 +206,9 @@ class FunCog(Cog):
         
         await interaction.response.send_message(embed=embed)
     
-    @group.command(name="ship", description="Calculates the love rate between two users")
-    async def ship_users(self, interaction: Interaction, user1: Member, user2: Optional[Member] = None):
+    @app_commands.command(name="ship", description="Calculates the love rate between two users")
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+    async def ship_users(self, interaction: Interaction, user1: User | Member, user2: User | Member | None = None):
         if not user2:
             if interaction.guild:
                 try:

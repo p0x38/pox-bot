@@ -14,10 +14,8 @@ class SettingsDatabase(PostgreSQLDatabase):
         self.settings_cache = Cache(ttl=600)
     
     async def on_load(self):
-        if self.pool:
-            async with self.pool.acquire() as conn:
-                await self.execute_sql_file("resources/sqls/settings.sql")
-            logger.info("[SettingsDatabase] Tables verified.")
+        await self.run_migrations("resources/migrations")
+        logger.info("[SettingsDatabase] Migration suite completed.")
     
     async def pre_close(self):
         logger.debug("[SettingsDatabase] Clearing cache before shutdown...")
@@ -50,7 +48,6 @@ class SettingsDatabase(PostgreSQLDatabase):
                     raw_data = row['data']
                     parsed_data = orjson.loads(raw_data) if isinstance(raw_data, (str, bytes)) else raw_data
 
-                    loc = parsed_data.get('locale')
                     settings = SettingsData.from_dict(parsed_data)
                 else:
                     settings = SettingsData()

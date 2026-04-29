@@ -1,13 +1,15 @@
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
-from typing import Dict, List, Optional
+from enum import IntEnum
+import uuid
 
 from pytz import UTC
-
 
 @dataclass
 class BaseConfigData:
     enabled: bool = False
+    last_execution: float = field(default_factory=lambda: datetime.now(UTC).timestamp())
+    last_executor: int | None = None
 
 @dataclass
 class BaseFilterData:
@@ -15,25 +17,40 @@ class BaseFilterData:
 
 @dataclass
 class WelcomeChannels:
-    join: Optional[int] = 0
-    leave: Optional[int] = 0
-    rules: Optional[int] = 0
+    join: int | None = 0
+    leave: int | None = 0
+    rules: int | None = 0
+
+class BlacklistEntryMatchType(IntEnum):
+    default = 0
+    regex = 1
+    exact = 2
+    whole_word = 3
 
 @dataclass
 class BlacklistEntry:
     trigger: str
-    reason: Optional[str] = None
-    executed_by: int = 0
+    id: str = field(default_factory=lambda: str(uuid.uuid4())[:8])
+    reason: str | None = None
+    type: BlacklistEntryMatchType = BlacklistEntryMatchType.default
+    case_insensitive: bool = True
+    executed_by: int | None = 0
     timestamp: float = field(default_factory=lambda: datetime.now(UTC).timestamp())
 
 @dataclass
+class ReactionRoleEntry:
+    message_id: int
+    emoji: str
+    role_id: int
+
+@dataclass
 class WelcomeData:
-    welcome_message: Optional[str] = None
-    leave_message: Optional[str] = None
+    welcome_message: str | None = None
+    leave_message: str | None = None
 
 @dataclass
 class WordFilter(BaseFilterData):
-    blacklists: List[BlacklistEntry] = field(default_factory=list)
+    blacklists: list[BlacklistEntry] = field(default_factory=list)
 
 @dataclass
 class AntiSpamFilter(BaseFilterData):
@@ -42,7 +59,6 @@ class AntiSpamFilter(BaseFilterData):
 
 @dataclass
 class WelcomeConfig(BaseConfigData):
-    enabled = False
     channels: WelcomeChannels = field(default_factory=WelcomeChannels)
     data: WelcomeData = field(default_factory=WelcomeData)
 
@@ -50,20 +66,51 @@ class WelcomeConfig(BaseConfigData):
 class LevelingConfig(BaseConfigData):
     xp_rate: float = 1.0
     notify: bool = True
-    notify_channel: Optional[int] = None
+    notify_channel: int | None = None
 
 @dataclass
 class FilterConfig(BaseConfigData):
-    filters: Dict[str, BaseFilterData] = field(default_factory=dict)
+    filters: dict[str, BaseFilterData | AntiSpamFilter | WordFilter] = field(default_factory=dict)
 
 @dataclass
 class TicketConfig(BaseConfigData):
-    category: Optional[int] = None
-    master_channel: Optional[int] = None
+    category: int | None = None
+    master_channel: int | None = None
+    staff_role: int | None = None
 
 @dataclass
 class GuildConfigV2:
-    features: Dict[str, BaseConfigData] = field(default_factory=dict)
+    version: int = 2
+    reaction_roles: list[ReactionRoleEntry] = field(default_factory=list)
+    features: dict[str, BaseConfigData] = field(default_factory=dict)
+    
+    @property
+    def filtering(self) -> FilterConfig:
+        feat = self.features.get("filtering")
+        if not isinstance(feat, FilterConfig):
+            return FilterConfig()
+        return feat
+    
+    @property
+    def leveling(self) -> LevelingConfig:
+        feat = self.features.get("leveling")
+        if not isinstance(feat, LevelingConfig):
+            return LevelingConfig()
+        return feat
+    
+    @property
+    def welcome(self) -> WelcomeConfig:
+        feat = self.features.get("welcome_channel")
+        if not isinstance(feat, WelcomeConfig):
+            return WelcomeConfig()
+        return feat
+    
+    @property
+    def tickets(self) -> TicketConfig:
+        feat = self.features.get("ticket_system")
+        if not isinstance(feat, TicketConfig):
+            return TicketConfig()
+        return feat
     
     @classmethod
     def from_dict(cls, data: dict):
@@ -74,34 +121,69 @@ class GuildConfigV2:
             w = f["welcome_channel"]
             parsed["welcome_channel"] = WelcomeConfig(
                 enabled=w.get("enabled", False),
+                last_execution=w.get("last_execution", datetime.now(UTC).timestamp()),
+                last_executor=w.get("last_executor"),
                 channels=WelcomeChannels(**w.get("channels", {})),
                 data=WelcomeData(**w.get("data", {}))
             )
         
         if "filtering" in f:
             filt_raw = f["filtering"]
-            sub_feats = filt_raw.get("features", {})
+            sub_feats = filt_raw.get("filters", {})
             
             filter_map = {}
             if "word" in sub_feats:
                 wf = sub_feats["word"]
-                bl = [BlacklistEntry(**b) for b in wf.get("blacklists", [])]
+                bl = []
+                for b in wf.get("blacklists", []):
+                    match_type_val = b.get("type", 0)
+                    try:
+                        match_type = BlacklistEntryMatchType(match_type_val)
+                    except ValueError:
+                        match_type = BlacklistEntryMatchType.default
+                    
+                    bl.append(BlacklistEntry(
+                        trigger=b.get("trigger", ""),
+                        id=b.get("id", str(uuid.uuid4())[:8]),
+                        reason=b.get("reason"),
+                        type=match_type,
+                        case_insensitive=b.get("case_insensitive", True),
+                        executed_by=b.get("executed_by"),
+                        timestamp=b.get("timestamp", datetime.now(UTC).timestamp())
+                    ))
                 filter_map["word"] = WordFilter(enabled=wf.get("enabled", False), blacklists=bl)
             
-            if "antispam" in sub_feats:
-                filter_map["anti_spam"] = AntiSpamFilter(**sub_feats["antispam"])
+            if "anti_spam" in sub_feats:
+                filter_map["anti_spam"] = AntiSpamFilter(**sub_feats["anti_spam"])
             
             parsed["filtering"] = FilterConfig(
                 enabled=filt_raw.get("enabled", False),
+                last_execution=filt_raw.get("last_execution", datetime.now(UTC).timestamp()),
+                last_executor=filt_raw.get("last_executor"),
                 filters=filter_map
             )
         
         if "leveling" in f:
-            parsed["leveling"] = LevelingConfig(**f["leveling"])
+            lv = f["leveling"]
+            parsed["leveling"] = LevelingConfig(
+                enabled=lv.get("enabled", False),
+                last_execution=lv.get("last_execution", datetime.now(UTC).timestamp()),
+                last_executor=lv.get("last_executor"),
+                xp_rate=lv.get("xp_rate", 1.0),
+                notify=lv.get("notify", True),
+                notify_channel=lv.get("notify_channel")
+            )
         if "ticket_system" in f:
-            parsed["ticket_system"] = TicketConfig(**f["ticket_system"])
+            tk = f["ticket_system"]
+            parsed["ticket_system"] = TicketConfig(
+                enabled=tk.get("enabled", False),
+                last_execution=tk.get("last_execution", datetime.now(UTC).timestamp()),
+                last_executor=tk.get("last_executor"),
+                category=tk.get("category"),
+                master_channel=tk.get("master_channel"),
+                staff_role=tk.get("staff_role")
+            )
         
-        return cls(features=parsed)
-    
+        return cls(version=2, features=parsed)
     def to_dict(self) -> dict:
         return asdict(self)

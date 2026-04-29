@@ -1,9 +1,7 @@
 from datetime import datetime
-import random
-from typing import Optional
 
 from discord.ext import commands
-from discord import Color, Embed, Interaction, Message, app_commands
+from discord import Color, Embed, Interaction, app_commands
 from pytz import UTC
 
 from bot import PoxBot
@@ -14,29 +12,7 @@ from src.translator import translator_instance as i18n
 class StatsCog(commands.Cog):
     def __init__(self, bot: PoxBot) -> None:
         self.bot = bot
-        self.db: Optional[StatsDatabase] = bot.stats_db
-    
-    @commands.Cog.listener()
-    async def on_message(self, message: Message):
-        if message.author.bot or not message.guild:
-            return
-        
-        if self.bot.guild_db and self.db:
-            config = await self.bot.guild_db.get_config(message.guild.id)
-            if not config.leveling_enabled:
-                return
-            
-            xp_gain = int(random.randint(5, 15) * config.xp_rate)
-            
-            result = await self.db.add_xp(message.author.id, xp_gain)
-            
-            if result and result['leveled_up']:
-                loc = message.guild.preferred_locale.value if message.guild else "en"
-                embed = Embed(color=Color.gold())
-                
-                embed.description = i18n.T("messages.level_up", loc, {"mention": message.author.mention, "level": result['new_level']})
-                
-                await message.channel.send(embed=embed)
+        self.db: StatsDatabase | None = bot.stats_db
             
     group = app_commands.Group(name="stats", description=app_commands.locale_str("command.stats.description"))
     

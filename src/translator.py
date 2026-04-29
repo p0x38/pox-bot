@@ -5,7 +5,7 @@ import os
 import orjson
 import aiofiles
 import asyncio
-from typing import Any, Dict, List, Optional, Union, overload, Set
+from typing import Any, overload
 from discord import Interaction, Locale, SelectOption, app_commands
 
 from logger import logger
@@ -22,10 +22,10 @@ class TranslationManager:
             logger.error(f"Failed to load available_languages.json: {e}")
             self.lang_info = {}
     
-    def get_available_language_codes(self) -> List[str]:
+    def get_available_language_codes(self) -> list[str]:
         return list(self.lang_info.keys())
     
-    def get_select_options(self, current_locale: str) -> List[SelectOption]:
+    def get_select_options(self, current_locale: str) -> list[SelectOption]:
         options = []
         for code, info in self.lang_info.items():
             display_name = info.get('display', code.upper())
@@ -48,12 +48,12 @@ def natural_key(s: str):
 class I18nTranslator:
     def __init__(self, locales_path: str = "resources/locales"):
         self.locales_path = os.path.abspath(locales_path)
-        self.available_files: Set[str] = set()
+        self.available_files: set[str] = set()
         self._sync_cache_locales()
         
-        self.missing_keys_buffer: Dict[str, Set[str]] = {}
+        self.missing_keys_buffer: dict[str, set[str]] = {}
         self.batch_delay = 5.0
-        self.batch_task: Optional[asyncio.Task] = None
+        self.batch_task: asyncio.Task | None = None
         
         i18n.load_path.append(self.locales_path)
         i18n.set('file_format', 'json')
@@ -123,7 +123,7 @@ class I18nTranslator:
                 except Exception as e:
                     logger.error(f"Failed to load {filename} for {locale}: {e}")
 
-    def _normalize_locale(self, locale: Union[str, Locale]) -> str:
+    def _normalize_locale(self, locale: str | Locale) -> str:
         if not locale:
             return "en"
         
@@ -139,19 +139,19 @@ class I18nTranslator:
         
         return base
     
-    def get_best_locale(self, user_locale: Optional[str], interaction_locale: Locale) -> str:
+    def get_best_locale(self, user_locale: str | None, interaction_locale: Locale) -> str:
         if user_locale:
             if user_locale in self.available_files:
                 return user_locale
         
         return self._normalize_locale(interaction_locale)
     
-    def get_user_locale(self, interaction: Interaction, user_settings: Optional[Any] = None) -> str:
+    def get_user_locale(self, interaction: Interaction, user_settings: Any = None) -> str:
         if user_settings and hasattr(user_settings, 'locale') and user_settings.locale:
             return self._normalize_locale(user_settings.locale)
         return self._normalize_locale(interaction.locale)
     
-    def translate_string(self, text: str, locale: Union[str, Locale], **kwargs) -> str:
+    def translate_string(self, text: str, locale: str | Locale, **kwargs) -> str:
         lang = self._normalize_locale(locale)
         
         translated = i18n.t(text, locale=lang, **kwargs)
@@ -179,12 +179,12 @@ class I18nTranslator:
         return self.T(key, locale, count=count, **kwargs)
     
     @overload
-    def T(self, text: str, locale: None = None, placeholders: Optional[dict[str, Any]] = None, **kwargs) -> app_commands.locale_str: ...
+    def T(self, text: str, locale: None = None, placeholders: dict[str, Any] | None = None, **kwargs) -> app_commands.locale_str: ...
     
     @overload
-    def T(self, text: str, locale: Union[str, Locale], placeholders: Optional[dict[str, Any]] = None, **kwargs) -> str: ...
+    def T(self, text: str, locale: str | Locale, placeholders: dict[str, Any] | None = None, **kwargs) -> str: ...
     
-    def T(self, text: str, locale: Optional[Union[str, Locale]] = None, placeholders: Optional[dict[str, Any]] = None, **kwargs) -> Union[str, app_commands.locale_str]:
+    def T(self, text: str, locale: str | Locale | None = None, placeholders: dict[str, Any] | None = None, **kwargs) -> str | app_commands.locale_str:
         if locale is None:
             return text
         
@@ -214,7 +214,7 @@ class DiscordI18nTranslator(app_commands.Translator):
     async def load(self):
         await self.internal.preload_all()
     
-    async def translate(self, string: app_commands.locale_str, locale: Locale, context: app_commands.TranslationContext) -> Optional[str]:
+    async def translate(self, string: app_commands.locale_str, locale: Locale, context: app_commands.TranslationContext) -> str | None:
         key = str(string)
         
         is_name = context.location in [

@@ -6,8 +6,8 @@ from src.models import UserStats, LeaderboardData
 
 class StatsDatabase(PostgreSQLDatabase):
     async def on_load(self):
-        await self.execute_sql_file("resources/sqls/user_stats.sql")
-        logger.info("[UserStatsDatabase] Tables verified.")
+        await self.run_migrations("resources/migrations")
+        logger.info("[StatsDatabase] Migration suite completed.")
     
     async def add_xp(self, user_id: int, count: int):
         if self.pool:
@@ -24,7 +24,7 @@ class StatsDatabase(PostgreSQLDatabase):
                 END
             RETURNING
                 (floor(pow(user_stats.xp + $2, 0.25)) > (SELECT level FROM user_stats WHERE user_id = $1)) AS leveled_up,
-                level AS new_level;
+                CAST(level AS INTEGER) AS new_level;
             """
             return await self.pool.fetchrow(query, user_id, count)
         return False
@@ -32,7 +32,7 @@ class StatsDatabase(PostgreSQLDatabase):
     async def get_user_stats(self, user_id: int) -> Optional[UserStats]:
         if not self.pool:
             return None
-        row = self.pool.fetchrow("SELECT * FROM user_stats WHERE user_id = $1", user_id)
+        row = await self.pool.fetchrow("SELECT * FROM user_stats WHERE user_id = $1", user_id)
         return UserStats.from_row(row)
     
     async def get_leaderboard(self, sort_by: str = "xp", limit: int = 10):

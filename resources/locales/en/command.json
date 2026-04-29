@@ -3,17 +3,17 @@
         "description": "Gives a random, classic magic 8-ball response to a user's question.",
         "embeds": {
             "default": {
-                "title": "Answer to '%{question}'"
+                "title": "Answer to a question '%{question}'"
             }
         }
     },
     "channel": {
-        "description": "A group for managing ",
+        "description": "A group for managing channels.",
         "info": {
-            "description": "Shows channel information.",
+            "description": "Shows information for the target channel.",
             "embeds": {
                 "default": {
-                    "title": "Information of %{name}"
+                    "title": "Information for %{name}"
                 }
             }
         },
@@ -42,7 +42,7 @@
             "description": "Shows contributor information.",
             "embeds": {
                 "default": {
-                    "title": "Contributor Information of %{contributor}"
+                    "title": "Contributor Information for %{contributor}"
                 }
             }
         }
@@ -62,7 +62,7 @@
             }
         },
         "buy": {
-            "description": "Buy on item from the shop.",
+            "description": "Buy an item from the shop.",
             "embeds": {
                 "item_unavailable": {
                     "description": "That item is not available for sale! 3:<",
@@ -107,7 +107,7 @@
                     "title": "%{user}'s inventory"
                 },
                 "empty": {
-                    "description": "Your backpack is empty right now. buy something to change this text i guess. :3",
+                    "description": "Your backpack is empty right now. Buy something to change this text i guess. :3",
                     "title": "Empty backpack"
                 }
             }
@@ -120,10 +120,10 @@
             }
         },
         "sell": {
-            "description": "Sell on item back to the shop.",
+            "description": "Sell an item back to the shop.",
             "embeds": {
                 "sold": {
-                    "description": "Sold **%{item_name}",
+                    "description": "Sold **%{item_name}.",
                     "title": "Sale completed"
                 },
                 "unable_to_sell": {
@@ -136,7 +136,7 @@
             "description": "Move money from bank to wallet.",
             "embeds": {
                 "default": {
-                    "description": "Withdrawed %{amount} coins successfully. :3",
+                    "description": "Withdrew %{amount} coins successfully. :3",
                     "title": "Withdraw success"
                 }
             }
@@ -162,7 +162,8 @@
         "description": "A group for information",
         "invite": {
             "description": "Invites the bot to server by application url. (LIMITED TO 90)",
-            "embed": {
+            "embeds": {
+                "default": {
                 "description": "%{prefix}\n\nYou can add me to your server using [this link.](%{invite_url})",
                 "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation.",
                 "status": {
@@ -170,6 +171,7 @@
                     "other": "Capacity: **%{formatted}** servers"
                 },
                 "title": "Invite TongueBot"
+            }
             },
             "error": {
                 "hardlimited": "You can't invite TongueBot right now, since the limit has been reached."
@@ -177,22 +179,28 @@
         },
         "os_info": {
             "description": "Shows operating system information.",
-            "embed": {
+            "embeds": {
+                "default": {
                 "title": "Operating System Information"
+                }
             }
         },
         "ping": {
             "description": "Pong!",
-            "embed": {
+            "embeds": {
+                "default": {
                 "title": "Pong! (%{latency} ms)"
+                }
             }
         },
         "retrieve": {
             "description": "Retrieves bot information.",
-            "embed": {
+            "embeds": {
+                "default": {
                 "description": "Select a category below to view specific details.",
                 "footer": "System: %{platform}",
                 "title": "Bot Information"
+                }
             },
             "error": {
                 "forbidden": "I do not have the **Manage Channels** permission to do that."
@@ -203,8 +211,10 @@
         },
         "timedate": {
             "description": "Shows time in specified timezone",
-            "embed": {
+            "embeds": {
+                "default": {
                 "description": "In %{timezone_name}, it's **%{timedate}**."
+                }
             }
         }
     },
@@ -228,6 +238,15 @@
                     "title": "%{user}'s rank"
                 }
             }
+        },
+        "configure": {
+            "description": "Configures leveling system.",
+            "embeds": {
+                "default": {
+                    "title": "Leveling system updated",
+                    "description": "The system has been updated."
+                }
+            }
         }
     },
     "moderation": {
@@ -239,12 +258,49 @@
                     "description": "Set %{feature_name} to %{state}."
                 }
             },
-            "paramaters": {
+            "parameters": {
                 "feature": {
                     "description": "The feature to toggle"
                 },
                 "state": {
                     "description": "On or Off"
+                }
+            }
+        },
+        "blacklist": {
+            "description": "Blacklist system.",
+            "add": {
+                "description": "Adds a word to the blacklists.",
+                "embeds": {
+                    "default": {
+                        "title": "Added word into blacklist",
+                        "description": "Added %{entry} into blacklist with type '%{type}', as %{id}."
+                    }
+                }
+            },
+            "remove": {
+                "description": "Removes matched query from blacklists.",
+                "embeds": {
+                    "default": {
+                        "title": "Removed matched queries from blacklist",
+                        "description": "Removed every query matching with '%{query}'."
+                    },
+                    "not_found": {
+                        "title": "Triggers not found",
+                        "description": "Triggers were not found from blacklist with matching query '%{query}'."
+                    }
+                }
+            },
+            "list": {
+                "description": "Lists every blacklist triggers registered in this server.",
+                "embeds": {
+                    "default": {
+                        "title": "Blacklist triggers registered in this server",
+                        "footer": "And more %{remaining} triggers are registered."
+                    },
+                    "no_blacklist": {
+                        "description": "Blacklist trigger was not found from this server."
+                    }
                 }
             }
         }
@@ -269,7 +325,7 @@
         }
     },
     "stats": {
-        "description": "Leveling system.",
+        "description": "Leaderboard and statistics.",
         "top": {
             "description": "Show the top users.",
             "embeds": {
@@ -277,6 +333,12 @@
                     "title": "Global leaderboard!! >:D"
                 }
             }
+        }
+    },
+    "ticket": {
+        "description": "Ticket system V2.",
+        "setup": {
+            "description": "Configure the ticket system for this server."
         }
     },
     "tts": {
@@ -322,12 +384,12 @@
                     "description": "%{author} Changed %{user}'s nickname to **%{new_nickname}**."
                 },
                 "reset": {
-                    "description": "%{author} Reseted %{user}'s nickname."
+                    "description": "%{author} Reset %{user}'s nickname."
                 }
             },
             "reasons": {
                 "changed": "Nickname changed by %{user} via /user nick",
-                "reset": "Nickname reseted by %{user} via /user nick"
+                "reset": "Nickname reset by %{user} via /user nick"
             }
         },
         "status": {
@@ -382,7 +444,7 @@
                     "description": "Test successfully sent to welcome channel!"
                 },
                 "unconfigured": {
-                    "description": "Welcome channel hasn't configured in this guild."
+                    "description": "Welcome channel hasn't been configured."
                 }
             }
         }

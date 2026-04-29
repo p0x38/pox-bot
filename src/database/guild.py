@@ -4,9 +4,9 @@ import orjson
 from pytz import UTC
 
 from src.database import PostgreSQLDatabase
-from src.models import ServerFeatureEntry
-from src.models import GuildConfig
-from src.models import ServerFeatureType
+from src.models.guild_settings import ServerFeatureEntry
+from src.models.guild_settings import GuildConfig
+from src.models.guild_settings import ServerFeatureType
 from src.utils import Cache
 from logger import logger
 
@@ -38,7 +38,8 @@ class GuildSettingsDatabase(PostgreSQLDatabase):
         return GuildConfig()
     
     async def update_config(self, guild_id: int, config: GuildConfig):
-        self._cache.set(guild_id, config)
+        
+        config_json = orjson.dumps(config.to_dict()).decode('utf-8')
         
         if self.pool:
             async with self.pool.acquire() as conn:
@@ -46,7 +47,8 @@ class GuildSettingsDatabase(PostgreSQLDatabase):
                     INSERT INTO guild_settings (guild_id, config)
                     VALUES ($1, $2::jsonb)
                     ON CONFLICT (guild_id) DO UPDATE SET config = EXCLUDED.config
-                """, guild_id, orjson.dumps(config.to_dict()))
+                """, guild_id, config_json)
+                self._cache.set(guild_id, config)
                 
                 logger.debug(f"[SettingsDatabase] Updated config for guild {guild_id}")
     

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, Union, cast
+from typing import Any, cast
 
 import orjson
 
@@ -24,18 +24,21 @@ class SettingsData:
         
         self._locale = value
     
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "locale": str(self.locale),
             "embed_color": self.embed_color
         }
     
     @classmethod
-    def from_dict(cls, data: Union[Dict[str, Any], str, bytes]):
+    def from_dict(cls, data: dict[str, Any] | str | bytes):
         if isinstance(data, (str, bytes)):
-            parsed_data: Dict[str, Any] = orjson.loads(data)
+            parsed_data: dict[str, Any] = orjson.loads(data)
         else:
-            parsed_data = cast(Dict[str, Any], data)
+            parsed_data = cast(dict[str, Any], data)
+        
+        if "locale" in parsed_data:
+            parsed_data["_locale"] = parsed_data.pop("locale")
         
         filtered = {
             k: parsed_data[k]

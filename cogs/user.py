@@ -5,7 +5,7 @@ import math
 from multiprocessing import Value
 import random
 import re
-from typing import Any, Optional, Union
+from typing import Any, cast
 from discord.ext import commands
 from discord import Activity, ActivityType, ClientStatus, Color, CustomActivity, Embed, Forbidden, Game, HTTPException, Interaction, Locale, Member, Role, SelectOption, Spotify, Status, Streaming, TextChannel, TextStyle, User, app_commands, ui
 from aiocache import cached
@@ -19,7 +19,7 @@ from src.translator import translator_instance as i18n
 
 from stuff import crop_word
 
-def format_status(client_status: ClientStatus, locale: Union[Locale, str]):
+def format_status(client_status: ClientStatus, locale: Locale | str):
     result = ""
     if isinstance(client_status.status, Status):
         status = client_status.status
@@ -193,10 +193,15 @@ class DynamicUserInfoView(ui.View):
     
     async def select_callback(self, interaction: Interaction):
         await interaction.response.defer()
-        
-        selected_label = interaction.data['values']
+
+        data = cast(dict[str, Any], interaction.data or {})
+        selected_values = data.get("values")
+        if not isinstance(selected_values, list) or not selected_values:
+            return await interaction.followup.send("Category not found.", ephemeral=True)
+
+        selected_label = selected_values[0]
         category_data = self.categories.get(selected_label)
-        
+
         if not category_data:
             return await interaction.followup.send("Category not found.", ephemeral=True)
         
@@ -325,18 +330,23 @@ class UserCog(commands.Cog):
                         'user_roles': ", ".join([f"<@&{role.id}>" for role in roles])
                     }
                     
-                    if self.bot.economy_db:
-                        coins = await self.bot.economy_db.get_user(member.id)
-                        temp1['user_wallet'] = i18n.T('command.user.info.fields.wallet', loc, {"coins": coins.wallet})
-                    
-                    if self.bot.stats_db:
-                        userstats = await self.bot.stats_db.get_user_stats(member.id)
-                        if userstats:
-                            temp1['user_stats'] = i18n.T('command.user.info.fields.stats', loc, {
-                                "level": f"{userstats.level:,}",
-                                "xp": f"{userstats.xp:,}",
-                                "messages": f"{userstats.total_messages:,}"
-                            })
+                    if self.bot.user_db:
+                        data = await self.bot.user_db.get_full_profile(member.id)
+                        if data:
+                            temp1['user_wallet'] = i18n.T(
+                                'command.user.info.fields.wallet',
+                                loc,
+                                {"coins": data.get('wallet', 0)}
+                            )
+                            temp1['user_stats'] = i18n.T(
+                                'command.user.info.fields.stats',
+                                loc,
+                                {
+                                    "level": f"{data.get('level', 0):,}",
+                                    "xp": f"{data.get('xp', 0):,}",
+                                    "messages": f"{data.get('total_messages', 0):,}"
+                                }
+                            )
                         
                     
                     temp1 = i18n.translate_map(temp1, loc)
@@ -365,16 +375,6 @@ class UserCog(commands.Cog):
                             else:
                                 temp1[f'Activity #{index_activity}'] = i18n.T("text.unknown", loc)
                     
-                    if self.bot.stats_db and self.bot.stats_db.pool:
-                        async with self.bot.stats_db.pool.acquire() as conn:
-                            row = await conn.fetchrow(
-                                "SELECT message_count FROM user_stats WHERE user_id = $1",
-                                interaction.user.id
-                            )
-                        
-                        count = row['message_count'] if row else 0
-                        temp1['user_message_count'] = i18n.T("label.user_message_count_value", loc, {"messages": count})
-                    
                     e = Embed(title=i18n.T("command.user.info.embeds.default.title", loc, {"user": user.display_name}))
 
                     for key,value in temp1.items():
@@ -391,7 +391,7 @@ class UserCog(commands.Cog):
             else:
                 return await interaction.followup.send(i18n.T("error.custom.invalidated_cache", loc))
         except Exception as e:
-            logger.error(f"Error: {e}")
+            logger.exception(f"Error: {e}")
             return await interaction.followup.send(f"Error. {e}")
     
     @cached(60)
@@ -412,7 +412,7 @@ class UserCog(commands.Cog):
     @app_commands.describe(member="Member to kick.")
     @app_commands.describe(reason="Reason for member to give in DM.")
     @app_commands.guild_only()
-    async def kick(self, interaction: Interaction, member: Member, reason: Optional[str] = None):
+    async def kick(self, interaction: Interaction, member: Member, reason: str | None = None):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         await interaction.response.defer()
         embed = Embed()
@@ -502,7 +502,7 @@ class UserCog(commands.Cog):
 
     @group.command(name="set_nick", description=app_commands.locale_str("command.user.set_nick.description"))
     @app_commands.guild_only()
-    async def change_nickname(self, interaction: Interaction, member: Member, new_nick: Optional[str] = None):
+    async def change_nickname(self, interaction: Interaction, member: Member, new_nick: str | None = None):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         await interaction.response.defer()
         
@@ -536,7 +536,7 @@ class UserCog(commands.Cog):
     
     @group.command(name="to_reachgoal", description="Returns remaining members to reach a goal value.")
     @app_commands.guild_only()
-    async def get_remaining_members(self, interaction: Interaction, goal: Optional[int] = None):
+    async def get_remaining_members(self, interaction: Interaction, goal: int | None = None):
         if interaction.guild is None: return await interaction.response.send_message("Object is not guild", ephemeral=True)
 
         member_count = len(interaction.guild.members)

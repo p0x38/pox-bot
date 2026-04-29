@@ -1,7 +1,6 @@
 import datetime
 import os
 import random
-import re
 import subprocess
 from time import time
 from typing import Optional
@@ -11,11 +10,11 @@ import discord
 from discord.ext import commands
 from gtts.lang import tts_langs
 import psutil
+from src.database import GuildSettingsDatabaseV2, UserDatabase
 from src.utils.cache import Cache
-from classes import EmoticonGenerator, MyTranslator
-from src.database import EconomyDatabase, GuildSettingsDatabase, SettingsDatabase, StatsDatabase
+from classes import EmoticonGenerator
+from src.database import EconomyDatabase, SettingsDatabase, StatsDatabase
 import stuff
-import data
 import aiosqlite
 import profanityfilter
 import roblox
@@ -41,10 +40,11 @@ class PoxBot(commands.AutoShardedBot):
         self.launch_time2 = time()
         self.handled_messages = 0
         self.db_connection = None
-        self.settings_db: Optional[SettingsDatabase] = None
-        self.stats_db: Optional[StatsDatabase] = None
-        self.economy_db: Optional[EconomyDatabase] = None
-        self.guild_db: Optional[GuildSettingsDatabase] = None
+        self.settings_db: SettingsDatabase | None = None
+        self.stats_db: StatsDatabase | None = None
+        self.economy_db: EconomyDatabase | None = None
+        self.guild_db: GuildSettingsDatabaseV2 | None = None
+        self.user_db: UserDatabase | None = None
         self.mysql = None
         self.commit_hash = ""
         self.session_uuid = uuid.uuid4()
@@ -106,18 +106,21 @@ class PoxBot(commands.AutoShardedBot):
         self.settings_db = SettingsDatabase(dsn)
         self.stats_db = StatsDatabase(dsn)
         self.economy_db = EconomyDatabase(dsn)
-        self.guild_db = GuildSettingsDatabase(dsn)
+        self.guild_db = GuildSettingsDatabaseV2(dsn)
+        self.user_db = UserDatabase(dsn)
         
         await self.settings_db.connect()
         
         self.stats_db.pool = self.settings_db.pool
         self.economy_db.pool = self.settings_db.pool
         self.guild_db.pool = self.settings_db.pool
+        self.user_db.pool = self.settings_db.pool
         
         await self.settings_db.setup()
         await self.stats_db.setup()
         await self.economy_db.setup()
         await self.guild_db.setup()
+        await self.user_db.setup()
         
         self.db_connection = await aiosqlite.connect("./leaderboard.db")
 

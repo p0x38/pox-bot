@@ -15,7 +15,7 @@ class EconomyData:
     def total(self) -> int:
         return self.wallet + self.bank
     
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "user_id": self.user_id,
             "wallet": self.wallet,
@@ -25,11 +25,11 @@ class EconomyData:
         }
     
     @classmethod
-    def from_dict(cls, data: Union[Dict[str, Any], str, bytes]):
+    def from_dict(cls, data: dict[str, Any] | str | bytes):
         if isinstance(data, (str, bytes)):
-            parsed_data: Dict[str, Any] = orjson.loads(data)
+            parsed_data: dict[str, Any] = orjson.loads(data)
         else:
-            parsed_data = cast(Dict[str, Any], data)
+            parsed_data = cast(dict[str, Any], data)
         
         filtered = {
             k: parsed_data[k]

@@ -1,6 +1,5 @@
 from collections import Counter, defaultdict
 import random
-import time
 from discord import Locale, app_commands
 from discord.app_commands import locale_str
 

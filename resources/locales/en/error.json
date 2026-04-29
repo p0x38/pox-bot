@@ -27,7 +27,7 @@
             "title": "Contributor not found"
         },
         "database_not_available": {
-            "description": "Database pool hasn't available this time.",
+            "description": "Database pool is not available at this time.",
             "title": "Database not available"
         },
         "edge_tts_not_installed": {
@@ -59,7 +59,7 @@
             "title": "TTS Generation Error"
         },
         "tts_no_text": {
-            "description": "You've set input empty. Retry again later with input.",
+            "description": "Input cannot be empty. Retry again later with input.",
             "title": "Input must be not empty"
         },
         "unsupported_channel_slowmode": {
@@ -77,26 +77,30 @@
         "user_data_not_found": {
             "description": "Data for user %{user} was not found.",
             "title": "Data not found"
+        },
+        "blacklist_not_configured": {
+            "title": "Blacklist is not configured",
+            "description": "The blacklist is not configured for this server."
         }
     },
     "exceptions": {
         "AppCommandError": "Unknown Command error was thrown!",
         "BotMissingPermissions": "I do not have the required permissions to execute it.",
         "CheckFailure": "You do not have permission to use this command.",
-        "CommandAlreadyRegistered": "The command were already registered before.",
-        "CommandInvokeError": "An error occured while executing the command.",
+        "CommandAlreadyRegistered": "The command is already registered.",
+        "CommandInvokeError": "An error thrown while executing the command.",
         "CommandLimitReached": "The command usage is currently limited due to command limitation.",
         "CommandNotFound": "The command was not found.",
         "CommandOnCooldown": "The command is on cooldown. Please try again after passing %{remaining} more seconds.",
-        "CommandSignatureMismatch": "The command has out of sync from latest one.",
+        "CommandSignatureMismatch": "The command is out of sync with the latest version.",
         "CommandSyncFailure": "Failed to synchronize command(s).",
         "HTTPException": "The operation has failed due to HTTP Error.",
         "MissingAnyRole": "You do not have any of required roles to use it.",
         "MissingPermissions": "You do not have required permissions to use it.",
         "MissingRole": "You do not have required role to use it.",
         "NoPrivateMessage": "The command cannot be used on private messages.",
-        "TransformerError": "An error occured while processing command arguments.",
-        "TranslationError": "An error occured while translating the command.",
+        "TransformerError": "An error thrown while processing command arguments.",
+        "TranslationError": "An error thrown while translating the command.",
         "Unknown": "An Uncaught error was thrown! %{e}"
     },
     "http": {

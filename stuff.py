@@ -12,9 +12,6 @@ import base64
 import aiofiles
 import dotenv
 import urllib.parse
-from typing import Optional
-
-from src.translator import translator_instance
 
 dotenv.load_dotenv()
 
@@ -641,11 +638,11 @@ def get_int(i):
     except Exception:
         return -1
 
-def format_boolean(i: Optional[bool], true_text: str = "Yes", false_text: str = "No"):
-    if not i: return "None"
+def format_boolean(i: bool | None, true_text: str = "Yes", false_text: str = "No", missing_text: str = "None"):
+    if not i: return missing_text
     return true_text if i == True else false_text
 
-def format_seconds(i: Optional[int]):
+def format_seconds(i: int | None):
     if not i: return "???"
     suffix = "seconds" if i > 1 else "second"
     return f"{i} {suffix}"

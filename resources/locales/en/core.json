@@ -1,6 +1,6 @@
 {
     "common": {
-        "comfirm": "Confirm",
+        "comfirm": "confirm",
         "cancel": "Cancel",
         "loading": "Please wait...",
         "status": {
@@ -15,7 +15,7 @@
         "cooldown": "Please wait %{remaining}s before using this again.",
         "user_not_found": "I couldn't find that user.",
         "user_missing_permissions": "You do not have permission to do that.",
-        "bot_missing_permissions": "I don't have permission to do it.",
+        "bot_missing_permissions": "I don't have permission to do that.",
         "not_owner": "Only the bot developer can use this command."
     },
     "units": {

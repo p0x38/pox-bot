@@ -1,8 +1,6 @@
 from operator import isub
 import string
 import textwrap
-from typing import Optional
-
 import data
 
 def letter_reverser(input: str, decode: bool) -> str:

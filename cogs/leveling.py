@@ -2,9 +2,9 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 import random
 import time
-from typing import Optional
+from discord.abc import Messageable
 from discord.ext import commands
-from discord import Color, Embed, Interaction, Member, Message, app_commands
+from discord import Color, Embed, Forbidden, Interaction, Member, Message, TextChannel, User, app_commands
 from pytz import UTC
 from bot import PoxBot
 from src.translator import translator_instance as i18n
@@ -13,63 +13,97 @@ from logger import logger
 class LevelingCog(commands.Cog):
     def __init__(self, bot: PoxBot):
         self.bot = bot
-        self.cooldowns = {}
+        self.cooldowns: dict[int, datetime] = {}
     
     group = app_commands.Group(name="leveling", description=app_commands.locale_str("command.leveling.description"))
     
-    def calculate_xp(self, message: Message) -> int:
+    async def get_working_locale(self, target: Member | User | Interaction) -> str:
+        if isinstance(target, Interaction):
+            return await self.bot.settings_db.get_locale(target) if self.bot.settings_db else target.locale.value
+        
+        if self.bot.settings_db:
+            data = await self.bot.settings_db.get_settings(target.id)
+            if data and data.locale:
+                return data.locale
+        
+        return target.guild.preferred_locale.value if isinstance(target, Member) and target.guild else "en"
+    
+    def calculate_xp(self, message: Message, multiplier: float = 1.0) -> int:
         content = message.content
-        if not content: return random.randint(5, 10)
+        if not content:
+            return int(random.randint(5, 10) * multiplier)
         
         words = content.split()
-        word_count = len(words)
-        char_count = len(content)
+        word_bonus = min(len(words) // 2, 24)
+        char_bonus = min(len(content) // 10, 24)
         
-        base_xp = random.randint(5, 10)
+        base_xp = random.randint(10, 20)
+        total_xp = (base_xp + word_bonus + char_bonus) * multiplier
         
-        word_bonus = min(word_count // 2, 24)
-        char_bonus = min(char_count // 10, 24)
-        
-        total_xp = base_xp + word_bonus + char_bonus
-        
-        return min(total_xp, 50)
+        return int(min(total_xp, 128))
     
     @commands.Cog.listener()
     async def on_message(self, message: Message):
-        if message.author.bot or not message.guild: return
+        if message.author.bot or not message.guild or not self.bot.guild_db: return
         
-        user_id = message.author.id
-        current_time = datetime.now(UTC)
-        if user_id in self.cooldowns:
-            cooldown_duration = current_time - self.cooldowns[user_id]
-            if cooldown_duration < timedelta(seconds=60):
-                return
+        config = await self.bot.guild_db.get_config(message.guild.id)
+        lev_cfg = config.leveling
         
-        xp_to_add = self.calculate_xp(message)
-        
-        if not self.bot.stats_db:
+        if not lev_cfg.enabled:
             return
         
-        result = await self.bot.stats_db.add_xp(user_id, xp_to_add)
+        last_gain = self.cooldowns.get(message.author.id)
+        if last_gain and datetime.now(UTC) - last_gain < timedelta(minutes=1):
+            return
         
-        if result:
-            self.cooldowns[user_id] = current_time
+        xp_gain = self.calculate_xp(message, multiplier=lev_cfg.xp_rate)
+        
+        if self.bot.stats_db:
+            result = await self.bot.stats_db.add_xp(message.author.id, xp_gain)
+            self.cooldowns[message.author.id] = datetime.now(UTC)
             
-            if result["leveled_up"]:
-                loc = message.guild.preferred_locale.value
-                msg = i18n.T("messages.level_up", loc, {"mention": message.author.mention, "new_level": result["new_level"]})
+            if result and result.get('leveled_up') and lev_cfg.notify:
+                loc = await self.get_working_locale(message.author)
                 
-                await message.channel.send(msg)
+                embed = Embed(
+                    description=i18n.T("messages.level_up", loc, {
+                        "mention": message.author.mention,
+                        "new_level": result['new_level']
+                    }),
+                    color=Color.gold()
+                )
+                
+                target_channel = message.channel
+                if lev_cfg.notify_channel:
+                    custom_chan = message.guild.get_channel(lev_cfg.notify_channel)
+                    if isinstance(custom_chan, Messageable):
+                        target_channel = custom_chan
+                
+                try:
+                    await target_channel.send(embed=embed)
+                except Forbidden:
+                    pass
     
-    @group.command(name="rank", description=app_commands.locale_str("command.leveling.rank.description"))
-    async def show_rank(self, interaction: Interaction, member: Optional[Member] = None):
+    @group.command(name="configure", description=app_commands.locale_str("command.leveling.configure.description"))
+    @app_commands.default_permissions(administrator=True)
+    async def configure_leveling(
+        self,
+        interaction: Interaction,
+        multiplier: float | None = None,
+        notify: bool | None = None,
+        channel: TextChannel | None = None
+    ):
+        loc = interaction.guild.preferred_locale if interaction.guild else "en"
         await interaction.response.defer()
-        
-        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         
         embed = Embed()
         
-        if not self.bot.stats_db:
+        if not interaction.guild:
+            embed.title = i18n.T("error.embed.guild_only.title", loc)
+            embed.description = i18n.T("error.embed.guild_only.description", loc)
+            return await interaction.followup.send(embed=embed)
+        
+        if not self.bot.guild_db:
             embed.title = i18n.T("error.embeds.database_not_available.title", loc)
             embed.description = i18n.T("error.embeds.database_not_available.description", loc)
             embed.timestamp = datetime.now(UTC)
@@ -77,36 +111,22 @@ class LevelingCog(commands.Cog):
 
             return interaction.followup.send(embed=embed)
         
-        target = member or interaction.user
-        stats = await self.bot.stats_db.get_user_stats(target.id)
+        config = await self.bot.guild_db.get_config(interaction.guild.id)
         
-        if not stats:
-            embed.title = i18n.T("error.embeds.user_data_not_found.title", loc)
-            embed.description = i18n.T("error.embeds.user_data_not_found.description", loc)
-            embed.timestamp = datetime.now(UTC)
-            embed.color = Color.red()
-
-            return interaction.followup.send(embed=embed)
+        if multiplier is not None:
+            config.leveling.xp_rate = max(0.1, min(multiplier, 5.0))
         
-        level = stats.level
-        xp = stats.xp
+        if notify is not None:
+            config.leveling.notify = notify
         
-        current_lvl_base = int(pow(level, 4))
-        next_lvl_base = int(pow(level + 1, 4))
-        progress = xp - current_lvl_base
-        needed = next_lvl_base - current_lvl_base
+        if channel is not None:
+            config.leveling.notify_channel = channel.id
         
-        filled = int((progress / max(needed, 1)) * 20)
-        bar = f"[{'#' * filled}{' ' * (20 - filled)}]"
+        await self.bot.guild_db.update_config(interaction.guild.id, config)
         
-        embed.color = Color.blue()
-        embed.title = i18n.T("command.leveling.rank.embeds.default.title", loc, {"user": target.display_name})
-        embed.set_thumbnail(url=target.display_avatar.url)
-        embed.add_field(name=i18n.T("command.leveling.rank.embeds.default.fields.level.name", loc), value=str(level), inline=True)
-        embed.add_field(name=i18n.T("command.leveling.rank.embeds.default.fields.total.name", loc), value=f"{xp:,}", inline=True)
-        embed.add_field(name=i18n.T("command.leveling.rank.embeds.default.fields.progress.name", loc), value=f"{bar} ({progress}/{needed} XP)", inline=False)
+        embed.title = i18n.T("command.leveling.configure.embeds.default.title", loc)
+        embed.description = i18n.T("command.leveling.configure.embeds.default.description", loc)
         
         await interaction.followup.send(embed=embed)
-
 async def setup(bot):
     await bot.add_cog(LevelingCog(bot))

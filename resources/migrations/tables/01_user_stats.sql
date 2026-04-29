@@ -3,5 +3,5 @@ CREATE TABLE IF NOT EXISTS user_stats (
     xp BIGINT DEFAULT 0,
     level INTEGER DEFAULT 1,
     total_messages BIGINT DEFAULT 0,
-    last_xp_gain TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+    level_xp_gain TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

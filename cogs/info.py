@@ -294,8 +294,8 @@ class InformationCog(commands.Cog):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         
         view = DynamicInfoView(self, self.bot, loc)
-        e = Embed(title=i18n.T("command.info.retrieve.embed.title", loc), description=i18n.T("command.info.retrieve.embed.description", loc))
-        e.set_footer(text=i18n.T("command.info.retrieve.embed.footer", loc, {"platform": platform.system()}))
+        e = Embed(title=i18n.T("command.info.retrieve.embeds.default.title", loc), description=i18n.T("command.info.retrieve.embeds.default.description", loc))
+        e.set_footer(text=i18n.T("command.info.retrieve.embeds.default.footer", loc, {"platform": platform.system()}))
         
         await interaction.followup.send(embed=e, view=view)
     
@@ -381,7 +381,7 @@ class InformationCog(commands.Cog):
         await interaction.response.defer()
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         
-        e = Embed(title=i18n.T("command.info.ping.embed.title", loc, {"latency": str(round(self.bot.latency * 10000) / 100)}))
+        e = Embed(title=i18n.T("command.info.ping.embeds.default.title", loc, {"latency": str(round(self.bot.latency * 10000) / 100)}))
         
         rows_to_add = {
             'Shard ID': self.bot.shard_id or i18n.T("text.standalone", loc),
@@ -421,7 +421,7 @@ class InformationCog(commands.Cog):
         try:
             tz = pytz.timezone(timezone)
             timec = datetime.strftime(datetime.now(tz), '%Y.%m.%d, %H:%M:%S with the UTC offset %z')
-            embed.description = i18n.T("command.info.timedate.embed.description", loc, {"timezone_name": timezone, "timedate": timec})
+            embed.description = i18n.T("command.info.timedate.embeds.default.description", loc, {"timezone_name": timezone, "timedate": timec})
             await interaction.followup.send(embed=embed)
         except Exception as e:
             await interaction.followup.send(f"An error occurred: {str(e)}", ephemeral=True)
@@ -435,7 +435,7 @@ class InformationCog(commands.Cog):
             guild_count = len(self.bot.guilds)
             limit = self.bot.bot_servers_limit
             
-            status_msg = i18n.T("command.info.invite.embed.status", loc, {"formatted": f"{guild_count}/{limit}"}, count=limit)
+            status_msg = i18n.T("command.info.invite.embeds.default.status", loc, {"formatted": f"{guild_count}/{limit}"}, count=limit)
             
             scopes = "bot%20applications.commands"
             perms = 1395868252224
@@ -445,15 +445,15 @@ class InformationCog(commands.Cog):
             invite_url = f"https://discord.com/oauth2/authorize?client_id={client_id}&permissions={perms}&scope={scopes}"
             
             embed = Embed(
-                title=i18n.T("command.info.invite.embed.title", loc),
-                description=i18n.T("command.info.invite.embed.description", loc, {"invite_url": invite_url}),
+                title=i18n.T("command.info.invite.embeds.default.title", loc),
+                description=i18n.T("command.info.invite.embeds.default.description", loc, {"invite_url": invite_url}),
                 color=Color.red() if guild_count >= limit else Color.blurple()
             )
             
             if guild_count >= limit:
                 embed.description = i18n.T("command.info.invite.error.hardlimited", loc)
             
-            embed.set_footer(text=i18n.T("command.info.invite.embed.footer", loc))
+            embed.set_footer(text=i18n.T("command.info.invite.embeds.default.footer", loc))
             
             await interaction.followup.send(embed=embed)
         except Exception as e:
@@ -493,7 +493,7 @@ class InformationCog(commands.Cog):
         await interaction.response.defer()
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         
-        e = discord.Embed(title=i18n.T("command.info.os_info.embed.title", loc))
+        e = discord.Embed(title=i18n.T("command.info.os_info.embeds.default.title", loc))
 
         system = platform.system()
 

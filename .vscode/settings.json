@@ -36,5 +36,21 @@
         "resources/fonts/**": true,
         "logs/**": true,
         "data/**": true
-    }
+    },
+    "python.analysis.completeFunctionParens": true,
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.displayEnglishDiagnostics": false,
+    "python.analysis.enableParallelIndexing": true,
+    "python.analysis.enableTroubleshootMissingImports": true,
+    "python.analysis.generateWithTypeAnnotation": false,
+    "python.analysis.inlayHints.callArgumentNames": "off",
+    "python.analysis.languageServerMode": "full",
+    "python.analysis.typeCheckingMode": "standard",
+    "python.analysis.typeEvaluation.deprecateTypingAliases": true,
+    "python.analysis.typeEvaluation.enableReachabilityAnalysis": true,
+    "python.analysis.enablePerfTelemetry": true,
+    "python.analysis.referencesCodeLens": true,
+    "json.trace.server": "messages",
+    "git.autofetch": "all",
+    "python.analysis.typeEvaluation.analyzeUnannotatedFunctions": true
 }

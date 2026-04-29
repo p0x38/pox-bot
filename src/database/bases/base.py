@@ -1,13 +1,12 @@
 import os
 import aiofiles
 import asyncpg
-from typing import Optional
 from logger import logger
 
 class PostgreSQLDatabase:
     def __init__(self, dsn: str):
         self.dsn = dsn
-        self.pool: Optional[asyncpg.Pool] = None
+        self.pool: asyncpg.Pool | None = None
     
     async def connect(self):
         """Standard pool initialization."""
@@ -41,23 +40,36 @@ class PostgreSQLDatabase:
     
     async def execute_sql_file(self, file_path: str):
         """Helper to run raw SQL files."""
+        if not self.pool:
+            raise ConnectionError("Pool not initialized")
+        
         if not os.path.exists(file_path):
-            logger.error(f"SQL file not found: {file_path}")
-            return
+            raise FileNotFoundError(f"The SQL file '{file_path}' was not found.")
         
         try:
+            logger.debug(f"[{self.__class__.__name__}] Attempting to execute SQL file '{file_path}'...")
             async with aiofiles.open(file_path, 'r', encoding='utf-8') as f:
                 sql = await f.read()
-            
-            if self.pool:
                 async with self.pool.acquire() as conn:
-                    await conn.execute(sql)
-                    logger.info(f"Successfully executed SQL file: {file_path}")
-            else:
-                raise ConnectionError("Connection pool not available")
+                    async with conn.transaction():
+                        await conn.execute(sql)
+                    logger.info(f"[{self.__class__.__name__}] Successfully executed SQL file: {file_path}")
         except Exception as e:
-            logger.error(f"Error thrown while trying to execute \"{file_path}\": {e}")
+            raise RuntimeError(f"Failed to execute this SQL file: {file_path}") from e
     
+    async def run_migrations(self, base_path: str = "resources/migrations"):
+        categories = ["tables", "indexes", "views"]
+        
+        for category in categories:
+            folder_path = os.path.join(base_path, category)
+            if not os.path.exists(folder_path):
+                continue
+            
+            logger.info(f"[{self.__class__.__name__}] Loading {category}...")
+            
+            for filename in sorted(os.listdir(folder_path)):
+                if filename.endswith(".sql"):
+                    await self.execute_sql_file(os.path.join(folder_path, filename))
     async def setup_tables_from_folder(self, folder_name: str):
         sql_dir = f"resource/{folder_name}"
         if os.path.exists(sql_dir):

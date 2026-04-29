@@ -1,7 +1,6 @@
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from enum import StrEnum
-from typing import List, Optional
 
 from pytz import UTC
 
@@ -15,7 +14,7 @@ class ServerFeatureType(StrEnum):
 class BlacklistEntry:
     entry_type: str
     data: str
-    reason: Optional[str] = None
+    reason: str | None = None
     executed_by: int = 0
     timestamp: float = field(default_factory=lambda: datetime.now(UTC).timestamp())
 
@@ -30,7 +29,7 @@ class ServerFeatureEntry:
 class GuildConfig:
     # Blacklists
     blacklist_enabled: bool = False
-    blacklists: List[BlacklistEntry] = field(default_factory=list)
+    blacklists: list[BlacklistEntry] = field(default_factory=list)
 
     # Leveling
     leveling_enabled: bool = True
@@ -41,7 +40,7 @@ class GuildConfig:
     ticket_master_channel_id: int = 0
     
     # Server features
-    features: List[ServerFeatureEntry] = field(default_factory=list)
+    features: list[ServerFeatureEntry] = field(default_factory=list)
     
     @classmethod
     def from_dict(cls, data: dict):

@@ -120,7 +120,7 @@
         "game": "Playing %{activity} on %{platform}",
         "listening": "Listening to %{activity}",
         "playing": "Playing %{activity}",
-        "spotify": "Listening %{title} by %{artist} in %{album}",
+        "spotify": "Listening to %{title} by %{artist} in %{album}",
         "stream": "Streaming %{activity} at %{platform}",
         "streaming": "Streaming %{activity}",
         "watching": "Watching %{activity}"
@@ -133,7 +133,7 @@
         "false": "Tails",
         "true": "Heads"
     },
-    "command_synchronized": "Commands has been synchronized now.",
+    "command_synchronized": "Commands have been synchronized now.",
     "device": {
         "desktop": "Desktop",
         "mobile": "Mobile",

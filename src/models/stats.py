@@ -1,8 +1,5 @@
 from dataclasses import field
-from typing import List, Optional
-
 from attr import dataclass
-
 
 @dataclass
 class UserStats:
@@ -27,11 +24,11 @@ class LeaderboardItem:
     user_id: int
     xp: int
     level: int
-    rank: Optional[int] = None
+    rank: int | None = None
 
 @dataclass
 class LeaderboardData:
-    items: List[LeaderboardItem] = field(default_factory=list)
+    items: list[LeaderboardItem] = field(default_factory=list)
     sort_by: str = "xp"
 
     @classmethod
