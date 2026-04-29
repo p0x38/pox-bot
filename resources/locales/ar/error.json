@@ -77,6 +77,10 @@
         "user_data_not_found": {
             "description": "لم يتم العثور على بيانات المستخدم %{user}.",
             "title": "البيانات غير موجودة"
+        },
+        "blacklist_not_configured": {
+            "title": "Blacklist is not configured",
+            "description": "The blacklist is not configured for this server."
         }
     },
     "exceptions": {

@@ -162,14 +162,16 @@
         "description": "مجموعة معلومات",
         "invite": {
             "description": "دعوة البوت إلى الخادم عن طريق رابط التطبيق. (محدود إلى 90)",
-            "embed": {
-                "description": "%{prefix}\n\nيمكنك إضافتي إلى الخادم الخاص بك باستخدام [هذا الرابط.](%{invite_url})",
-                "footer": "ملاحظة: يتطلب أذونات متقدمة للتشغيل الكامل، ودعوة تقتصر على 90 خادماً بسبب الحد من الخروج.",
-                "status": {
-                    "one": "القدرة: **%{formatted}** خادم",
-                    "other": "القدرة: **%{formatted}** خوادم"
-                },
-                "title": "Invite TongueBot"
+            "embeds": {
+                "default": {
+                    "description": "%{prefix}\n\nYou can add me to your server using [this link.](%{invite_url})",
+                    "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation.",
+                    "status": {
+                    "one": "Capacity: **%{formatted}** server",
+                    "other": "Capacity: **%{formatted}** servers"
+                    },
+                    "title": "Invite TongueBot"
+                }
             },
             "error": {
                 "hardlimited": "لا يمكنك دعوة تونغي بوت الآن، منذ أن تم الوصول إلى الحد الأقصى."
@@ -177,22 +179,28 @@
         },
         "os_info": {
             "description": "يعرض معلومات نظام التشغيل.",
-            "embed": {
-                "title": "معلومات نظام التشغيل"
+            "embeds": {
+                "default": {
+                    "title": "Operating System Information"
+                }
             }
         },
         "ping": {
             "description": "Pong!",
-            "embed": {
-                "title": "Pong! (%{latency} ms)"
+            "embeds": {
+                "default": {
+                    "title": "Pong! (%{latency} ms)"
+                }
             }
         },
         "retrieve": {
             "description": "يسترجع معلومات البوت.",
-            "embed": {
-                "description": "حدد فئة أدناه لعرض تفاصيل محددة.",
-                "footer": "النظام: %{platform}",
-                "title": "معلومات بوت"
+            "embeds": {
+                "default": {
+                    "description": "Select a category below to view specific details.",
+                    "footer": "System: %{platform}",
+                    "title": "Bot Information"
+                }
             },
             "error": {
                 "forbidden": "ليس لدي إذن **إدارة القنوات** للقيام بذلك."
@@ -203,8 +211,10 @@
         },
         "timedate": {
             "description": "إظهار الوقت في المنطقة الزمنية المحددة",
-            "embed": {
-                "description": "في %{timezone_name}، هو **%{timedate}**."
+            "embeds": {
+                "default": {
+                    "description": "In %{timezone_name}, it's **%{timedate}**."
+                }
             }
         }
     },
@@ -215,17 +225,26 @@
             "embeds": {
                 "default": {
                     "fields": {
-                        "level": {
+                    "level": {
                             "name": "المستوى"
-                        },
-                        "progress": {
+                    },
+                    "progress": {
                             "name": "التقدم"
-                        },
-                        "total": {
+                    },
+                    "total": {
                             "name": "مجموع XP"
-                        }
+                    }
                     },
                     "title": "رتبة %{user}"
+                }
+            }
+        },
+        "configure": {
+            "description": "Configures leveling system.",
+            "embeds": {
+                "default": {
+                    "title": "Leveling system updated",
+                    "description": "The system has been updated."
                 }
             }
         }
@@ -239,12 +258,49 @@
                     "description": "تعيين %{feature_name} إلى %{state}."
                 }
             },
-            "paramaters": {
+            "parameters": {
                 "feature": {
-                    "description": "الميزة المراد تبديلها"
+                    "description": "The feature to toggle"
                 },
                 "state": {
-                    "description": "تشغيل أو إيقاف"
+                    "description": "On or Off"
+                }
+            }
+        },
+        "blacklist": {
+            "description": "Blacklist system.",
+            "add": {
+                "description": "Adds a word to the blacklists.",
+                "embeds": {
+                    "default": {
+                    "title": "Added word into blacklist",
+                    "description": "Added %{entry} into blacklist with type '%{type}', as %{id}."
+                    }
+                }
+            },
+            "remove": {
+                "description": "Removes matched query from blacklists.",
+                "embeds": {
+                    "default": {
+                    "title": "Removed matched queries from blacklist",
+                    "description": "Removed every query matching with '%{query}'."
+                    },
+                    "not_found": {
+                    "title": "Triggers not found",
+                    "description": "Triggers were not found from blacklist with matching query '%{query}'."
+                    }
+                }
+            },
+            "list": {
+                "description": "Lists every blacklist triggers registered in this server.",
+                "embeds": {
+                    "default": {
+                    "title": "Blacklist triggers registered in this server",
+                    "footer": "And more %{remaining} triggers are registered."
+                    },
+                    "no_blacklist": {
+                    "description": "Blacklist trigger was not found from this server."
+                    }
                 }
             }
         }
@@ -277,6 +333,12 @@
                     "title": "المتصدرين العالمي!! >:D"
                 }
             }
+        }
+    },
+    "ticket": {
+        "description": "Ticket system V2.",
+        "setup": {
+            "description": "Configure the ticket system for this server."
         }
     },
     "tts": {

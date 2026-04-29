@@ -77,6 +77,10 @@
         "user_data_not_found": {
             "description": "ユーザー %{user} のデータが見つからなかったよ。",
             "title": "データが見つからなかったよ"
+        },
+        "blacklist_not_configured": {
+            "title": "Blacklist is not configured",
+            "description": "The blacklist is not configured for this server."
         }
     },
     "exceptions": {
