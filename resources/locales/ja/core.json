@@ -15,7 +15,7 @@
         "cooldown": "再度使用する前に %{remaining}秒お待ちください。",
         "user_not_found": "そのユーザーが見つかりませんでした。",
         "user_missing_permissions": "それを行う権限がありません。",
-        "bot_missing_permissions": "私はそれを行う権限がありません。",
+        "bot_missing_permissions": "僕にはそれを行う権限がないよ。",
         "not_owner": "Bot開発者のみがこのコマンドを使用できます。"
     },
     "units": {

@@ -79,8 +79,8 @@
             "title": "データが見つからなかったよ"
         },
         "blacklist_not_configured": {
-            "title": "Blacklist is not configured",
-            "description": "The blacklist is not configured for this server."
+            "title": "ブラックリストが設定されていないよ",
+            "description": "ブラックリストがこのサーバーに設定されていないよ。"
         }
     },
     "exceptions": {
