@@ -1,45 +1,45 @@
 {
     "custom": {
-        "cannot_timeout_higher": "My role is not high enough to timeout this user.",
-        "channel_has_no_slowmode_property": "This channel has no property to set slowmode delay.",
-        "forbidden_timeout": "I don't have permission to timeout members.",
-        "guild_only": "The command is usable only in Guild.",
-        "insufficient_permission_ban": "You do not have permission to ban member %{user}.",
-        "insufficient_permission_kick": "You do not have permission to kick member %{user}.",
-        "invalidated_cache": "The command only works on guild because of the issue with caches.",
+        "cannot_timeout_higher": "My role is not high enough to timeout this user.. 3:",
+        "channel_has_no_slowmode_property": "This channel has no property to set slowmode delay! D:<",
+        "forbidden_timeout": "I don't have permission to timeout members! D:",
+        "guild_only": "The command is usable only in Guild! :3",
+        "insufficient_permission_ban": "You do not have permission to ban member %{user}! 3:<",
+        "insufficient_permission_kick": "You do not have permission to kick member %{user}! D:<",
+        "invalidated_cache": "The command only works on guild because of the issue with caches. :3",
         "missing_category": "Missing Category",
         "no_git_commithash": "No commit hash found",
         "no_git_lastcommit": "No commit message found",
-        "roblox_failed_retrieve_avatar": "Failed trying to retrieve Roblox user %{username}'s avatar.",
-        "roblox_forbidden": "Couldn't retrieve data from Roblox API because the client doesn't have, or using invalid CSRF Token.",
-        "roblox_user_not_found": "A Roblox user named '%{username}' doesn't exist.",
-        "timeout_duration_lessflow": "Duration must be greater than 0",
-        "tried_to_timeout_higher": "Your role is not high enough to timeout the user.",
-        "tried_to_timeout_himself": "You cannot timeout yourself",
-        "tried_to_timeout_owner": "You cannot timeout the server owner",
+        "roblox_failed_retrieve_avatar": "Failed trying to retrieve Roblox user %{username}'s avatar! 3:",
+        "roblox_forbidden": "Couldn't retrieve data from Roblox API because the client doesn't have, or using invalid CSRF Token. :3",
+        "roblox_user_not_found": "A Roblox user named '%{username}' doesn't exist. :3",
+        "timeout_duration_lessflow": "Duration must be greater than 0! 3:",
+        "tried_to_timeout_higher": "Your role is not high enough to timeout the user! :3",
+        "tried_to_timeout_himself": "You cannot timeout yourself! 3:",
+        "tried_to_timeout_owner": "You cannot timeout the server owner! 3:<",
         "unknown_signature": "Unknown Signature",
-        "unsupported_channel": "The channel isn't supported by bot.",
-        "user_not_found": "User not found."
+        "unsupported_channel": "The channel isn't supported by bot! :3",
+        "user_not_found": "User not found..! :3"
     },
     "embed": {
         "contributor_not_found": {
-            "description": "The contributor %{contributor} has been not found.",
+            "description": "The contributor %{contributor} has been not found... 3:",
             "title": "Contributor not found"
         },
         "database_not_available": {
-            "description": "Database pool is not available at this time.",
+            "description": "Database pool is not available at this time! :3",
             "title": "Database not available"
         },
         "edge_tts_not_installed": {
-            "description": "Server has no package to generate speech from edge-tts.",
+            "description": "Server has no package to generate speech from edge-tts :/",
             "title": "Edge TTS not installed"
         },
         "guild_only": {
-            "description": "This command is only for guild.",
+            "description": "This command is only for guild! :3",
             "title": "Invalid run context"
         },
         "only_positive_value": {
-            "description": "Negative value is not allowed for this command.",
+            "description": "Negative value is not allowed for this command!! 3:<",
             "title": "Negative value is not allowed"
         },
         "send_error": {
@@ -47,11 +47,11 @@
             "title": "Send error"
         },
         "slowmode_out_of_range": {
-            "description": "Slowmode delay must be between 0 and 21600 seconds.",
+            "description": "Slowmode delay must be between 0 and 21600 seconds! :3",
             "title": "Out of range"
         },
         "too_high_value": {
-            "description": "The value mustn't over %{max}.",
+            "description": "The value mustn't over %{max}~ :3",
             "title": "Value cannot be higher than %{max}"
         },
         "tts_generation_error": {
@@ -59,7 +59,7 @@
             "title": "TTS Generation Error"
         },
         "tts_no_text": {
-            "description": "Input cannot be empty. Retry again later with input.",
+            "description": "Input cannot be empty. Retry again later with input! :3",
             "title": "Input must be not empty"
         },
         "unsupported_channel_slowmode": {

@@ -21,7 +21,7 @@
             "description": "Sets slowmode delay",
             "embeds": {
                 "successful": {
-                    "description": "Successfully set slowmode to **%{seconds}** for %{mention}.",
+                    "description": "Successfully set slowmode to **%{seconds}** for %{mention}! :D",
                     "title": "Slowmode Updated"
                 }
             }
@@ -116,18 +116,18 @@
             "description": "View the item shop.",
             "fields": {
                 "buy_price": "Price: %{price} coins",
-                "not_sale": "Not for sale"
+                "not_sale": "Not for sale!! 3:<"
             }
         },
         "sell": {
             "description": "Sell an item back to the shop.",
             "embeds": {
                 "sold": {
-                    "description": "Sold **%{item_name}.",
+                    "description": "Sold **%{item_name}! :D",
                     "title": "Sale completed"
                 },
                 "unable_to_sell": {
-                    "description": "The shop won't buy this back! 3:<",
+                    "description": "The shop won't buy this back! 3:",
                     "title": "Unable to sell"
                 }
             }
@@ -164,24 +164,24 @@
             "description": "Invites the bot to server by application url. (LIMITED TO 90)",
             "embeds": {
                 "default": {
-                "description": "%{prefix}\n\nYou can add me to your server using [this link.](%{invite_url})",
-                "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation.",
-                "status": {
-                    "one": "Capacity: **%{formatted}** server",
-                    "other": "Capacity: **%{formatted}** servers"
-                },
-                "title": "Invite TongueBot"
-            }
+                    "description": "%{prefix}\n\nYou can add me to your server using [this link!](%{invite_url}) :D",
+                    "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation!",
+                    "status": {
+                        "one": "Capacity: **%{formatted}** server",
+                        "other": "Capacity: **%{formatted}** servers"
+                    },
+                    "title": "Invite TongueBot"
+                }
             },
             "error": {
-                "hardlimited": "You can't invite TongueBot right now, since the limit has been reached."
+                "hardlimited": "You can't invite TongueBot right now, since the limit has been reached... 3:"
             }
         },
         "os_info": {
             "description": "Shows operating system information.",
             "embeds": {
                 "default": {
-                "title": "Operating System Information"
+                    "title": "Operating System Information"
                 }
             }
         },
@@ -189,7 +189,7 @@
             "description": "Pong!",
             "embeds": {
                 "default": {
-                "title": "Pong! (%{latency} ms)"
+                    "title": "Pong! (%{latency} ms) :D"
                 }
             }
         },
@@ -197,13 +197,13 @@
             "description": "Retrieves bot information.",
             "embeds": {
                 "default": {
-                "description": "Select a category below to view specific details.",
-                "footer": "System: %{platform}",
-                "title": "Bot Information"
+                    "description": "Select a category below to view specific details! >:D",
+                    "footer": "System: %{platform}",
+                    "title": "Bot Information"
                 }
             },
             "error": {
-                "forbidden": "I do not have the **Manage Channels** permission to do that."
+                "forbidden": "I do not have the **Manage Channels** permission to do that! D:"
             }
         },
         "sync": {
@@ -213,7 +213,7 @@
             "description": "Shows time in specified timezone",
             "embeds": {
                 "default": {
-                "description": "In %{timezone_name}, it's **%{timedate}**."
+                    "description": "In %{timezone_name}, it's **%{timedate}**. :3"
                 }
             }
         }
@@ -244,7 +244,7 @@
             "embeds": {
                 "default": {
                     "title": "Leveling system updated",
-                    "description": "The system has been updated."
+                    "description": "The system has been updated! :D"
                 }
             }
         }
@@ -255,7 +255,7 @@
             "description": "Toggle server features.",
             "embeds": {
                 "default": {
-                    "description": "Set %{feature_name} to %{state}."
+                    "description": "Set %{feature_name} to %{state}! :3"
                 }
             },
             "parameters": {
@@ -274,7 +274,7 @@
                 "embeds": {
                     "default": {
                         "title": "Added word into blacklist",
-                        "description": "Added %{entry} into blacklist with type '%{type}', as %{id}."
+                        "description": "Added %{entry} into blacklist with type '%{type}', and searchable with ID '%{id}'! :3"
                     }
                 }
             },
@@ -283,11 +283,11 @@
                 "embeds": {
                     "default": {
                         "title": "Removed matched queries from blacklist",
-                        "description": "Removed every query matching with '%{query}'."
+                        "description": "Removed every query matching with '%{query}'! :3"
                     },
                     "not_found": {
                         "title": "Triggers not found",
-                        "description": "Triggers were not found from blacklist with matching query '%{query}'."
+                        "description": "Triggers were not found from blacklist with matching query '%{query}'... 3:"
                     }
                 }
             },
@@ -296,10 +296,10 @@
                 "embeds": {
                     "default": {
                         "title": "Blacklist triggers registered in this server",
-                        "footer": "And more %{remaining} triggers are registered."
+                        "footer": "And more %{remaining} triggers are registered. :3"
                     },
                     "no_blacklist": {
-                        "description": "Blacklist trigger was not found from this server."
+                        "description": "Blacklist trigger was not found from this server. 3:"
                     }
                 }
             }
@@ -359,7 +359,7 @@
             "description": "Shows Discord user's avatar.",
             "embeds": {
                 "default": {
-                    "footer": "Requested by %{author}, the result is cached for a minute.",
+                    "footer": "Requested by %{author}, the result is cached for a minute. :3",
                     "title": "User %{user}'s avatar"
                 }
             }
@@ -381,10 +381,10 @@
             "description": "Sets user's nickname.",
             "embeds": {
                 "changed": {
-                    "description": "%{author} Changed %{user}'s nickname to **%{new_nickname}**."
+                    "description": "%{author} Changed %{user}'s nickname to **%{new_nickname}**! :3"
                 },
                 "reset": {
-                    "description": "%{author} Reset %{user}'s nickname."
+                    "description": "%{author} Reset %{user}'s nickname! :D"
                 }
             },
             "reasons": {
@@ -405,24 +405,24 @@
         "description": "A group for WelcomeCog",
         "embeds": {
             "join": {
-                "description": "Welcome, %{mention}! Please check out the rules in %{rules_mention}.",
-                "description_no_rules": "Welcome to the server, %{mention}!",
+                "description": "Welcome, %{mention}! Please check out the rules in %{rules_mention}. :3",
+                "description_no_rules": "Welcome to the server, %{mention}! x3",
                 "footer": "We now have %{count} members.",
                 "title": "Welcome to %{guild}!"
             },
             "left": {
-                "description": "Goodbye, %{display}!",
-                "title": "Member %{display} has left %{guild}!"
+                "description": "Goodbye, %{display}! :3",
+                "title": "Member %{display} has left %{guild}... 3:"
             }
         },
         "set_channel": {
             "description": "Set channel to send join / leave message.",
             "embeds": {
                 "disabled": {
-                    "description": "Welcome notification feature has been disabled."
+                    "description": "Welcome notification feature has been disabled! :3"
                 },
                 "enabled": {
-                    "description": "Welcome notification feature has been enabled.\n The welcome message will appear at %{target_mention}."
+                    "description": "Welcome notification feature has been enabled.\n The welcome message will appear at %{target_mention}! :3"
                 }
             }
         },
@@ -430,10 +430,10 @@
             "description": "Sets rule channel for adding link in it.",
             "embeds": {
                 "disabled": {
-                    "description": "Rules channel for welcome message has been removed."
+                    "description": "Rules channel for welcome message has been removed! :3"
                 },
                 "success": {
-                    "description": "Rules channel for welcome message has been set to %{target_mention}."
+                    "description": "Rules channel for welcome message has been set to %{target_mention}! :3"
                 }
             }
         },
@@ -441,10 +441,10 @@
             "description": "Run a test for welcome channel",
             "embeds": {
                 "sent": {
-                    "description": "Test successfully sent to welcome channel!"
+                    "description": "Test successfully sent to welcome channel! :D"
                 },
                 "unconfigured": {
-                    "description": "Welcome channel hasn't been configured."
+                    "description": "Welcome channel hasn't been configured. 3:"
                 }
             }
         }
