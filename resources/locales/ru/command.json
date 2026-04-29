@@ -162,14 +162,16 @@
         "description": "Группа для информации",
         "invite": {
             "description": "Приглашает бота к серверу по адресу приложения. (НЕ РАЗРЕШЕНО ДО 90)",
-            "embed": {
-                "description": "%{prefix}\n\nВы можете добавить меня на сервер, используя [эту ссылку.](%{invite_url})",
-                "footer": "Примечание: Требует расширенные разрешения для полной функциональности, а приглашение ограничено 90 серверами из-за ограничения дискорда.",
-                "status": {
-                    "one": "Вместимость: **%{formatted}** сервер",
-                    "other": "Вместимость: **%{formatted}** серверов"
-                },
-                "title": "Invite TongueBot"
+            "embeds": {
+                "default": {
+                    "description": "%{prefix}\n\nYou can add me to your server using [this link.](%{invite_url})",
+                    "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation.",
+                    "status": {
+                    "one": "Capacity: **%{formatted}** server",
+                    "other": "Capacity: **%{formatted}** servers"
+                    },
+                    "title": "Invite TongueBot"
+                }
             },
             "error": {
                 "hardlimited": "Вы не можете пригласить TongueBot прямо сейчас, так как лимит достигнут."
@@ -177,22 +179,28 @@
         },
         "os_info": {
             "description": "Показывает информацию об операционной системе.",
-            "embed": {
-                "title": "Информация об операционной системе"
+            "embeds": {
+                "default": {
+                    "title": "Operating System Information"
+                }
             }
         },
         "ping": {
             "description": "Pong!",
-            "embed": {
-                "title": "Pong! (%{latency} ms)"
+            "embeds": {
+                "default": {
+                    "title": "Pong! (%{latency} ms)"
+                }
             }
         },
         "retrieve": {
             "description": "Получает информацию о боте.",
-            "embed": {
-                "description": "Выберите категорию ниже для просмотра конкретных деталей.",
-                "footer": "Система: %{platform}",
-                "title": "Информация о боте"
+            "embeds": {
+                "default": {
+                    "description": "Select a category below to view specific details.",
+                    "footer": "System: %{platform}",
+                    "title": "Bot Information"
+                }
             },
             "error": {
                 "forbidden": "У меня нет прав на **управление каналами**."
@@ -203,8 +211,10 @@
         },
         "timedate": {
             "description": "Показывает время в указанном часовом поясе",
-            "embed": {
-                "description": "В %{timezone_name}, это **%{timedate}**."
+            "embeds": {
+                "default": {
+                    "description": "In %{timezone_name}, it's **%{timedate}**."
+                }
             }
         }
     },
@@ -215,17 +225,26 @@
             "embeds": {
                 "default": {
                     "fields": {
-                        "level": {
+                    "level": {
                             "name": "Уровень"
-                        },
-                        "progress": {
+                    },
+                    "progress": {
                             "name": "Прогресс"
-                        },
-                        "total": {
+                    },
+                    "total": {
                             "name": "Всего XP"
-                        }
+                    }
                     },
                     "title": "Ранг %{user}"
+                }
+            }
+        },
+        "configure": {
+            "description": "Configures leveling system.",
+            "embeds": {
+                "default": {
+                    "title": "Leveling system updated",
+                    "description": "The system has been updated."
                 }
             }
         }
@@ -239,12 +258,49 @@
                     "description": "Установить %{feature_name} на %{state}."
                 }
             },
-            "paramaters": {
+            "parameters": {
                 "feature": {
-                    "description": "Функция для переключения"
+                    "description": "The feature to toggle"
                 },
                 "state": {
-                    "description": "Вкл или выкл"
+                    "description": "On or Off"
+                }
+            }
+        },
+        "blacklist": {
+            "description": "Blacklist system.",
+            "add": {
+                "description": "Adds a word to the blacklists.",
+                "embeds": {
+                    "default": {
+                    "title": "Added word into blacklist",
+                    "description": "Added %{entry} into blacklist with type '%{type}', as %{id}."
+                    }
+                }
+            },
+            "remove": {
+                "description": "Removes matched query from blacklists.",
+                "embeds": {
+                    "default": {
+                    "title": "Removed matched queries from blacklist",
+                    "description": "Removed every query matching with '%{query}'."
+                    },
+                    "not_found": {
+                    "title": "Triggers not found",
+                    "description": "Triggers were not found from blacklist with matching query '%{query}'."
+                    }
+                }
+            },
+            "list": {
+                "description": "Lists every blacklist triggers registered in this server.",
+                "embeds": {
+                    "default": {
+                    "title": "Blacklist triggers registered in this server",
+                    "footer": "And more %{remaining} triggers are registered."
+                    },
+                    "no_blacklist": {
+                    "description": "Blacklist trigger was not found from this server."
+                    }
                 }
             }
         }
@@ -277,6 +333,12 @@
                     "title": "Глобальная таблица лидеров!! >:D"
                 }
             }
+        }
+    },
+    "ticket": {
+        "description": "Ticket system V2.",
+        "setup": {
+            "description": "Configure the ticket system for this server."
         }
     },
     "tts": {

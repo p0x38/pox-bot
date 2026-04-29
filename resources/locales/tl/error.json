@@ -77,6 +77,10 @@
         "user_data_not_found": {
             "description": "Data for user %{user} was not found.",
             "title": "Data not found"
+        },
+        "blacklist_not_configured": {
+            "title": "Blacklist is not configured",
+            "description": "The blacklist is not configured for this server."
         }
     },
     "exceptions": {
