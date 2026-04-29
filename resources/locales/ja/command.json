@@ -10,7 +10,7 @@
     "channel": {
         "description": "チャンネル関連のコマンドグループ。",
         "info": {
-            "description": "チャンネルの情報を表示します。",
+            "description": "チャンネルの情報を表示するよ。",
             "embeds": {
                 "default": {
                     "title": "%{name} の情報"
@@ -62,7 +62,7 @@
             }
         },
         "buy": {
-            "description": "ショップでアイテムを購入します。",
+            "description": "ショップでアイテムを購入するよ。",
             "embeds": {
                 "item_unavailable": {
                     "description": "そのアイテムは今は売ってないみたい… 3:<",
@@ -120,7 +120,7 @@
             }
         },
         "sell": {
-            "description": "アイテムをショップに売ります。",
+            "description": "アイテムをショップに売るよ。",
             "embeds": {
                 "sold": {
                     "description": "**%{item_name}** を売ったよ！",
@@ -164,13 +164,13 @@
             "description": "アプリURLからボットをサーバーに招待します。（最大90サーバー）",
             "embeds": {
                 "default": {
-                    "description": "%{prefix}\n\nYou can add me to your server using [this link.](%{invite_url})",
-                    "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation.",
+                    "description": "%{prefix}\n\n[このリンク](%{invite_url})から追加できるよ！",
+                    "footer": "注:完全な機能には高度な権限が必要だよ、Discordの仕様上、招待数は90サーバーまでに制限されるよ。",
                     "status": {
-                    "one": "Capacity: **%{formatted}** server",
-                    "other": "Capacity: **%{formatted}** servers"
+                    "one": "現在: **%{formatted}** サーバー",
+                    "other": "現在: **%{formatted}** サーバー"
                     },
-                    "title": "Invite TongueBot"
+                    "title": "TongueBotを招待"
                 }
             },
             "error": {
@@ -181,7 +181,7 @@
             "description": "OS情報を表示します。",
             "embeds": {
                 "default": {
-                    "title": "Operating System Information"
+                    "title": "OS情報"
                 }
             }
         },
@@ -197,9 +197,9 @@
             "description": "ボットの情報を取得します。",
             "embeds": {
                 "default": {
-                    "description": "Select a category below to view specific details.",
-                    "footer": "System: %{platform}",
-                    "title": "Bot Information"
+                    "description": "下からカテゴリを選んでね。",
+                    "footer": "システム: %{platform}",
+                    "title": "ボット情報"
                 }
             },
             "error": {
@@ -213,7 +213,7 @@
             "description": "指定したタイムゾーンの時間を表示します。",
             "embeds": {
                 "default": {
-                    "description": "In %{timezone_name}, it's **%{timedate}**."
+                    "description": "%{timezone_name} の現在時刻は **%{timedate}** だよ。"
                 }
             }
         }
@@ -240,11 +240,11 @@
             }
         },
         "configure": {
-            "description": "Configures leveling system.",
+            "description": "レベリングシステムを設定するよ。",
             "embeds": {
                 "default": {
-                    "title": "Leveling system updated",
-                    "description": "The system has been updated."
+                    "title": "レベルシステムが更新されたよ",
+                    "description": "システムが更新されたよ。"
                 }
             }
         }
@@ -260,46 +260,46 @@
             },
             "parameters": {
                 "feature": {
-                    "description": "The feature to toggle"
+                    "description": "切り替える機能"
                 },
                 "state": {
-                    "description": "On or Off"
+                    "description": "オンかオフ"
                 }
             }
         },
         "blacklist": {
-            "description": "Blacklist system.",
+            "description": "ブラックリストシステム。",
             "add": {
-                "description": "Adds a word to the blacklists.",
+                "description": "ブラックリストに単語を追加するよ。",
                 "embeds": {
                     "default": {
-                    "title": "Added word into blacklist",
-                    "description": "Added %{entry} into blacklist with type '%{type}', as %{id}."
+                    "title": "単語をブラックリストに追加したよ",
+                    "description": "%{entry} をブラックリストに '%{type}' として追加したよ。 ユニークな識別子は%{id}だよ。"
                     }
                 }
             },
             "remove": {
-                "description": "Removes matched query from blacklists.",
+                "description": "ブラックリストから一致したクエリを削除するよ。",
                 "embeds": {
                     "default": {
-                    "title": "Removed matched queries from blacklist",
-                    "description": "Removed every query matching with '%{query}'."
+                    "title": "ブラックリストから一致したクエリを削除したよ。",
+                    "description": "'%{query}' に一致するすべてのクエリを削除したよ。"
                     },
                     "not_found": {
-                    "title": "Triggers not found",
-                    "description": "Triggers were not found from blacklist with matching query '%{query}'."
+                    "title": "トリガーが見つからなかったよ。",
+                    "description": "クエリ「%{query} 」に一致するトリガーはブラックリストから見つからなかったよ。"
                     }
                 }
             },
             "list": {
-                "description": "Lists every blacklist triggers registered in this server.",
+                "description": "このサーバーに登録されているすべてのブラックリストのトリガーを一覧表示するよ。",
                 "embeds": {
                     "default": {
-                    "title": "Blacklist triggers registered in this server",
-                    "footer": "And more %{remaining} triggers are registered."
+                    "title": "このサーバーに登録されたブラックリストのトリガー",
+                    "footer": "さらに、 %{remaining} 個多いトリガーが登録されているよ。"
                     },
                     "no_blacklist": {
-                    "description": "Blacklist trigger was not found from this server."
+                    "description": "このサーバーからブラックリストトリガーが見つからなかったよ。"
                     }
                 }
             }
@@ -336,9 +336,9 @@
         }
     },
     "ticket": {
-        "description": "Ticket system V2.",
+        "description": "チケットシステム V2.",
         "setup": {
-            "description": "Configure the ticket system for this server."
+            "description": "このサーバーのチケットシステムを構成するよ。"
         }
     },
     "tts": {
