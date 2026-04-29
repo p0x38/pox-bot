@@ -209,23 +209,23 @@
         }
     },
     "leveling": {
-        "description": "Leveling system.",
+        "description": "レベリングシステム。",
         "rank": {
-            "description": "Check rank.",
+            "description": "ランクをチェックするよ。",
             "embeds": {
                 "default": {
                     "fields": {
                         "level": {
-                            "name": "Level"
+                            "name": "レベル"
                         },
                         "progress": {
-                            "name": "Progress"
+                            "name": "進行状況"
                         },
                         "total": {
-                            "name": "Total XP"
+                            "name": "合計XP"
                         }
                     },
-                    "title": "%{user}'s rank"
+                    "title": "%{user}のランク"
                 }
             }
         }
@@ -311,8 +311,8 @@
                 }
             },
             "fields": {
-                "stats": "Level %{level} (%{xp} XP) / %{messages} Messages",
-                "wallet": "%{coins} Coins"
+                "stats": "レベル %{level} (%{xp} XP) / %{messages} メッセージ",
+                "wallet": "%{coins} コイン"
             }
         },
         "set_nick": {

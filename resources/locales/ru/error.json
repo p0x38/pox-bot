@@ -75,8 +75,8 @@
             "title": "Канал приветствия не включен"
         },
         "user_data_not_found": {
-            "description": "Data for user %{user} was not found.",
-            "title": "Data not found"
+            "description": "Данные для пользователя %{user} не найдены.",
+            "title": "Данные не найдены"
         }
     },
     "exceptions": {

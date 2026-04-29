@@ -209,23 +209,23 @@
         }
     },
     "leveling": {
-        "description": "Leveling system.",
+        "description": "نظام المستوى.",
         "rank": {
-            "description": "Check rank.",
+            "description": "تحقق من الرتبة.",
             "embeds": {
                 "default": {
                     "fields": {
                         "level": {
-                            "name": "Level"
+                            "name": "المستوى"
                         },
                         "progress": {
-                            "name": "Progress"
+                            "name": "التقدم"
                         },
                         "total": {
-                            "name": "Total XP"
+                            "name": "مجموع XP"
                         }
                     },
-                    "title": "%{user}'s rank"
+                    "title": "رتبة %{user}"
                 }
             }
         }
@@ -311,8 +311,8 @@
                 }
             },
             "fields": {
-                "stats": "Level %{level} (%{xp} XP) / %{messages} Messages",
-                "wallet": "%{coins} Coins"
+                "stats": "المستوى %{level} (%{xp} XP) / %{messages} رسائل",
+                "wallet": "%{coins} عملات"
             }
         },
         "set_nick": {

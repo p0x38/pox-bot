@@ -75,8 +75,8 @@
             "title": "ウェルカム未設定"
         },
         "user_data_not_found": {
-            "description": "Data for user %{user} was not found.",
-            "title": "Data not found"
+            "description": "ユーザー %{user} のデータが見つからなかったよ。",
+            "title": "データが見つからなかったよ"
         }
     },
     "exceptions": {
