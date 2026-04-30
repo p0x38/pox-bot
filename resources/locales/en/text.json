@@ -139,6 +139,12 @@
         "mobile": "Mobile",
         "website": "Website"
     },
+    "NSFWLevel": {
+        "default": "Non-NSFW",
+        "explicit": "Explicit",
+        "safe": "Safe",
+        "age_restricted": "Age Restricted"
+    },
     "idk": "IDK",
     "joined": "Joined",
     "left": "Left",

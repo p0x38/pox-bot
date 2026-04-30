@@ -7,6 +7,40 @@
             }
         }
     },
+    "admin": {
+        "reload_cogs": {
+            "description": "Reloads all bot extensions and synchronizes slash commands.",
+            "embeds": {
+                "loading": {
+                    "title": "Processing reload...",
+                    "description": "Please be patient while reloading...",
+                    "progress": "Please be patient while reloading...\nCurrently loading: `%{current_cog}`\nProgress: **%{current}/%{total}**\nSuccess: **%{loaded}** | Failed: **%{failed}**"
+                },
+                "success": {
+                    "title": "Reload process successfully done!",
+                    "description": "Total **%{loaded}** extensions updated successfully.\nSynchronized **%{synched}** slash commands globally."
+                },
+                "error": {
+                    "title": "Synchronization Failed!",
+                    "description": "The extensions reloaded, but the global command sync failed."
+                }
+            },
+            "errors": {
+                "sync_failure": "Failed to sync: One or more commands contain invalid data structure.",
+                "forbidden": "The bot lacks the `application.commands` scope in this guild.",
+                "missing_id": "Critical Error: Application ID is missing from the bot instance.",
+                "translation_error": "Sync aborted: An error occurred within the command translator.",
+                "http_error": "Discord API error: Failed to communicate with the command gateway.",
+                "generic": "An unknown error occurred during command synchronization."
+            }
+        }
+    },
+    "calculate": {
+        "description": "A group for calculator.",
+        "percentage": {
+            "description": "Calculates percentage."
+        }
+    },
     "channel": {
         "description": "A group for managing channels.",
         "info": {
@@ -27,6 +61,39 @@
             }
         }
     },
+    "chatbot": {
+        "description": "A group for AI Chat bot using Ollama.",
+        "add_event": {
+            "description": "Adds global event to history."
+        },
+        "mem": {
+            "description": "Check Jim's brain space.",
+            "embeds": {
+                "default": {
+                    "title": "Context Memory Status"
+                }
+            }
+        },
+        "unlock": {
+            "description": "Forcefully unlocks the channel if Jim is stuck.",
+            "messages": {
+                "unlock": "uh ok i'm back",
+                "already": "I'm not even thinking right now, but okay!"
+            }
+        },
+        "perf": {
+            "description": "Shows performance stats."
+        },
+        "stats": {
+            "description": "Shows statistics of bot (global)."
+        },
+        "user_stats": {
+            "description": "Shows statistics of bot (user)."
+        },
+        "clear_memories": {
+            "description": "Clears chat history for AI chat session."
+        }
+    },
     "contributors": {
         "description": "A group for contributors.",
         "list": {
@@ -45,6 +112,102 @@
                     "title": "Contributor Information for %{contributor}"
                 }
             }
+        }
+    },
+    "convert": {
+        "description": "A group for converters.",
+        "meow": {
+            "description": "Makes text to MEOW MEOW :3"
+        },
+        "uwu": {
+            "description": "Same with say_uwuify, but with mention."
+        },
+        "base64": {
+            "description": "Encodes text into Base64."
+        },
+        "unbase64": {
+            "description": "Decodes text from Base64."
+        },
+        "muffle": {
+            "description": "Changes text to sounds like muffled."
+        },
+        "base7777": {
+            "description": "Encrypts text into Base7777. (requested by galaxy_fl3x)"
+        },
+        "unbase7777": {
+            "description": "Decrypts text from Base7777. (requested by galaxy_fl3x)"
+        },
+        "glitch": {
+            "description": "Makes the text looks like corrupted."
+        },
+        "nsrc1": {
+            "description": "Encrypts text into NSRC-1. (fah)"
+        },
+        "unnsrc1": {
+            "description": "Decrypts text from NSRC-1. (fah)"
+        },
+        "invert_letters": {
+            "description": "Reverses text letters."
+        },
+        "caesar": {
+            "description": "Encrypt text using the Caesar cipher."
+        },
+        "uncaesar": {
+            "description": "Decrypt text using the Caesar cipher."
+        },
+        "railfence": {
+            "description": "Encrypt text using the rail fence cipher."
+        },
+        "unrailfence": {
+            "description": "Decrypt text using the rail fence cipher."
+        },
+        "morse": {
+            "description": "Encode into morse code. (requested by AnnaYarik999Alt)"
+        },
+        "demorse": {
+            "description": "Decode morse code. (requested by AnnaYarik999Alt)"
+        },
+        "binary": {
+            "description": "Encode into binary. (requested by AnnaYarik999Alt)"
+        },
+        "unbinary": {
+            "description": "Decode binary. (requested by AnnaYarik999Alt)"
+        },
+        "reverse_words": {
+            "description": "Reverse words."
+        },
+        "color_name": {
+            "description": "Retrieves color name from colornames.org."
+        },
+        "psc1": {
+            "description": "Encrypt into PSC-1."
+        },
+        "unpsc1": {
+            "description": "Decrypt PSC-1."
+        }
+    },
+    "detect": {
+        "description": "A group for detection.",
+        "how_gay": {
+            "description": "Check how member is gay."
+        },
+        "how_slop": {
+            "description": "Check how member is slop."
+        },
+        "how_femboy": {
+            "description": "Check how member is femboy."
+        },
+        "how_freaky": {
+            "description": "Check how member is freaky."
+        },
+        "vibecheck": {
+            "description": "Check how member is vibing."
+        },
+        "custom_member": {
+            "description": "Check how much member is close to some."
+        },
+        "custom2": {
+            "description": "Check how high is it."
         }
     },
     "economy": {
@@ -114,6 +277,12 @@
         },
         "list": {
             "description": "View the item shop.",
+            "embeds": {
+                "closed": {
+                    "description": "Try visit shop later... 3:",
+                    "title": "Shop is currently closed!"
+                }
+            },
             "fields": {
                 "buy_price": "Price: %{price} coins",
                 "not_sale": "Not for sale!! 3:<"
@@ -153,6 +322,60 @@
                     "title": "You can't work right now!"
                 }
             }
+        }
+    },
+    "fun": {
+        "description": "A group for fun.",
+        "guess_game": {
+            "description": "Starts a new number guessing game. (1 ~ 100)"
+        },
+        "guess": {
+            "description": "Guess the number."
+        },
+        "stopguess": {
+            "description": "Forcibly stops ongoing guess game."
+        },
+        "job_application": {
+            "description": "A JOB!!!"
+        },
+        "boop_member": {
+            "description": "Boops member."
+        },
+        "dice": {
+            "description": "Rolls a dice."
+        },
+        "ship": {
+            "description": "Calculates the love rate between two users."
+        }
+    },
+    "guild": {
+        "description": "A group for server.",
+        "info": {
+            "description": "Check the server information."
+        },
+        "kickmembers": {
+            "description": "Kicks every real members."
+        },
+        "nsfw_level": {
+            "description": "Show the server NSFW Level."
+        },
+        "icon": {
+            "description": "Show the server icon."
+        },
+        "count": {
+            "description": "Retrieves the count of server members."
+        },
+        "members_list": {
+            "description": "Lists members in the server."
+        },
+        "search_members": {
+            "description": "Searches for members matching with query."
+        },
+        "role_list": {
+            "description": "Lists roles in the server."
+        },
+        "logs": {
+            "description": "Shows a menu to get history of kics, bans and timeouts."
         }
     },
     "info": {
@@ -219,6 +442,15 @@
         }
     },
     "leveling": {
+        "configure": {
+            "description": "Configures leveling system.",
+            "embeds": {
+                "default": {
+                    "description": "The system has been updated! :D",
+                    "title": "Leveling system updated"
+                }
+            }
+        },
         "description": "Leveling system.",
         "rank": {
             "description": "Check rank.",
@@ -238,18 +470,46 @@
                     "title": "%{user}'s rank"
                 }
             }
-        },
-        "configure": {
-            "description": "Configures leveling system.",
-            "embeds": {
-                "default": {
-                    "title": "Leveling system updated",
-                    "description": "The system has been updated! :D"
-                }
-            }
         }
     },
     "moderation": {
+        "blacklist": {
+            "add": {
+                "description": "Adds a word to the blacklists.",
+                "embeds": {
+                    "default": {
+                        "description": "Added %{entry} into blacklist with type '%{type}', and searchable with ID '%{id}'! :3",
+                        "title": "Added word into blacklist"
+                    }
+                }
+            },
+            "description": "Blacklist system.",
+            "list": {
+                "description": "Lists every blacklist triggers registered in this server.",
+                "embeds": {
+                    "default": {
+                        "footer": "And more %{remaining} triggers are registered. :3",
+                        "title": "Blacklist triggers registered in this server"
+                    },
+                    "no_blacklist": {
+                        "description": "Blacklist trigger was not found from this server. 3:"
+                    }
+                }
+            },
+            "remove": {
+                "description": "Removes matched query from blacklists.",
+                "embeds": {
+                    "default": {
+                        "description": "Removed every query matching with '%{query}'! :3",
+                        "title": "Removed matched queries from blacklist"
+                    },
+                    "not_found": {
+                        "description": "Triggers were not found from blacklist with matching query '%{query}'... 3:",
+                        "title": "Triggers not found"
+                    }
+                }
+            }
+        },
         "description": "Moderation management.",
         "togglefeature": {
             "description": "Toggle server features.",
@@ -264,43 +524,6 @@
                 },
                 "state": {
                     "description": "On or Off"
-                }
-            }
-        },
-        "blacklist": {
-            "description": "Blacklist system.",
-            "add": {
-                "description": "Adds a word to the blacklists.",
-                "embeds": {
-                    "default": {
-                        "title": "Added word into blacklist",
-                        "description": "Added %{entry} into blacklist with type '%{type}', and searchable with ID '%{id}'! :3"
-                    }
-                }
-            },
-            "remove": {
-                "description": "Removes matched query from blacklists.",
-                "embeds": {
-                    "default": {
-                        "title": "Removed matched queries from blacklist",
-                        "description": "Removed every query matching with '%{query}'! :3"
-                    },
-                    "not_found": {
-                        "title": "Triggers not found",
-                        "description": "Triggers were not found from blacklist with matching query '%{query}'... 3:"
-                    }
-                }
-            },
-            "list": {
-                "description": "Lists every blacklist triggers registered in this server.",
-                "embeds": {
-                    "default": {
-                        "title": "Blacklist triggers registered in this server",
-                        "footer": "And more %{remaining} triggers are registered. :3"
-                    },
-                    "no_blacklist": {
-                        "description": "Blacklist trigger was not found from this server. 3:"
-                    }
                 }
             }
         }
@@ -392,11 +615,63 @@
                 "reset": "Nickname reset by %{user} via /user nick"
             }
         },
+        "set_profile": {
+            "description": "Sets your community profile.",
+            "embeds": {
+                "default": {
+                    "title": "Successfully updated your community profile! :3",
+                    "description": "Set your description to '%{description}' and nickname to '%{nickname}'. :3"
+                }
+            }
+        },
         "status": {
             "description": "Retrieves user's status.",
             "embeds": {
                 "default": {
                     "title": "%{user}'s Discord status"
+                }
+            }
+        }
+    },
+    "userphone": {
+        "description": "A group for userphone.",
+        "call": {
+            "description": "Calls to random guild.",
+            "embeds": {
+                "paired": {
+                    "title": "Paired!",
+                    "description": "Paired to another guild!"
+                },
+                "searching": {
+                    "title": "Searching guild",
+                    "description": "Searching for a guild that's able to call..."
+                }
+            }
+        },
+        "hangup": {
+            "description": "Hangs up the ingoing call.",
+            "embeds": {
+                "default": {
+                    "title": "Hanged ingoing call up!",
+                    "description": "Hanged the call up."
+                }
+            }
+        },
+        "globalchat": {
+            "description": "Configures global chat.",
+            "embeds": {
+                "default": {
+                    "title": "Successfully configured",
+                    "description": "Settings has been successfully configured!"
+                }
+            }
+        },
+        "userphone": {
+            "description": "Configures userphone.",
+            "embeds": {
+                "default": {
+                    "title": "Successfully configured",
+                    "description": "Settings has been successfully configured!"
                 }
             }
         }

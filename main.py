@@ -1,5 +1,6 @@
 import sys
 import subprocess
+import time
 
 import stuff
 stuff.create_dir_if_not_exists("./logs")
@@ -11,7 +12,7 @@ from discord.ext import commands
 from discord import Color, Embed, Forbidden, HTTPException, Interaction, MissingApplicationID, app_commands
 from bot import PoxBot
 from logger import logger
-from src.translator import translator_instance
+from src.translator import translator_instance as i18n
 
 import psutil
 process_ps = psutil.Process(os.getpid())
@@ -33,61 +34,101 @@ bot = PoxBot(
 
 tree = bot.tree
 
-@tree.command(name="reload_cogs", description="Reloads cogs. (not restarting bot)")
+@tree.command(name="reload_cogs", description=app_commands.locale_str("command.admin.reload_cogs.description"))
 @app_commands.check(stuff.is_bot_owner)
 async def reload_cogs(interaction: Interaction):
-    loaded_extension = 0
-    failed_extension = 0
+    loc = await bot.settings_db.get_locale(interaction) if bot.settings_db else interaction.locale
     
     await interaction.response.defer()
     
-    for fname in os.listdir('./cogs'):
-        if fname.endswith('.py'):
-            logger.debug(f"Loading extension {fname[:-3]}.")
-            if fname[:-3] in bot.EXCLUDE_EXTENSIONS:
-                logger.warning("This extension has excluded from loading.")
-                continue
+    loaded, failed, skipped = 0, 0, 0
+    cog_files = [f for f in os.listdir('./cogs') if f.endswith('.py')]
+    total = len(cog_files)
+    
+    embed = Embed(color=Color.gold())
+    embed.title = i18n.T("command.admin.reload_cogs.embeds.loading.title", loc)
+    embed.description = i18n.T("command.admin.reload_cogs.embeds.loading.description", loc)
+    msg = await interaction.followup.send(embed=embed, wait=True)
+    
+    last_update_time = time.time()
+    update_interval = 1.75
+    
+    for index, fname in enumerate(cog_files):
+        ext_name = fname[:-3]
+        
+        if ext_name in bot.EXCLUDE_EXTENSIONS:
+            skipped += 1
+        else:
+            try:
+                await bot.reload_extension(f"cogs.{ext_name}")
+                loaded += 1
+            except Exception as e:
+                logger.exception(f"[{e.__class__.__name__}] Failed to load {ext_name}: {e}")
+                failed += 1
+        
+        current_time = time.time()
+        if (current_time - last_update_time) >= update_interval or index == total - 1:
+            progress_text = i18n.T(
+                "command.admin.reload_cogs.embeds.loading.progress",
+                loc,
+                {
+                    "current": index + 1,
+                    "total": total,
+                    "loaded": loaded,
+                    "failed": failed
+                }
+            )
+            embed.description = progress_text
             
             try:
-                await bot.reload_extension(f"cogs.{fname[:-3]}")
-                logger.debug(f"Successfully loaded {fname[:-3]}.")
-                loaded_extension += 1
-            except commands.ExtensionNotLoaded as e:
-                logger.exception(f"Extension {fname[:-3]} was not loaded due to {e}.")
-                failed_extension += 1
-            except commands.ExtensionNotFound:
-                logger.exception(f"Extension {fname[:-3]} was not found from cogs folder.")
-                failed_extension += 1
-            except commands.NoEntryPointError:
-                logger.exception(f"Extension {fname[:-3]} has no entrypoint to load.")
-                failed_extension += 1
-            except commands.ExtensionFailed as e:
-                logger.exception(f"Extension {fname[:-3]} has failed to load due to {e}.")
-                failed_extension += 1
-            except Exception as e:
-                logger.exception(f"Uncaught exception thrown while reloading, due to {e}.")
-                failed_extension += 1
+                await msg.edit(embed=embed)
+                last_update_time = current_time
+            except HTTPException:
+                pass
+    
+    sync_success = False
+    num_synched = 0
+    error_key = None
     
     try:
         synched = await bot.tree.sync()
-        logger.info(f"Synchronized {len(synched)} commands, with {loaded_extension} loaded extensions and {failed_extension} failed.")
-        return await interaction.followup.send(f"Synchronized {len(synched)} commands, with {loaded_extension} loaded extensions and {failed_extension} failed.")
+        num_synched = len(synched)
+        sync_success = True
+        logger.info(f"Synchronized {num_synched} commands.")
     except app_commands.CommandSyncFailure:
         logger.exception("CommandSyncFailure: Invalid command data")
-        return await interaction.followup.send("Failed to sync commands. It seems some commands has invalid data.")
+        error_key = "command.admin.reload_cogs.errors.sync_failure"
     except Forbidden:
-        logger.error("Forbidden: The bot doesn't have permission to use `application.commands`")
-        #await interaction.followup.send("Failed to sync commands. The scope `application.commands` is not allowed in this guild.\nMake sure to allow the usage of `application.commands`.")
-        return
+        logger.error("Forbidden: Missing application.commands scope")
+        error_key = "command.admin.reload_cogs.errors.forbidden"
     except MissingApplicationID:
-        logger.error("MissingApplicationID: The application ID is empty or missing")
-        return
+        logger.error("MissingApplicationID: ID is empty")
+        error_key = "command.admin.reload_cogs.errors.missing_id"
     except app_commands.TranslationError:
-        logger.exception("TranslationError: Error occured while translating commands")
-        return await interaction.followup.send("Failed to sync commands. It seems the syncing failed due to translation failure.")
+        logger.exception("TranslationError during sync")
+        error_key = "command.admin.reload_cogs.errors.translation_error"
     except HTTPException:
-        logger.error("HTTPException: Failed to sync commands")
-        return await interaction.followup.send("Failed to sync commands.")
+        logger.error("HTTPException during sync")
+        error_key = "command.admin.reload_cogs.errors.http_error"
+    
+    if sync_success:
+        embed.title = i18n.T("command.admin.reload_cogs.embeds.success.title", loc)
+        embed.color = Color.green()
+        embed.description = i18n.T(
+            "command.admin.reload_cogs.embeds.success.description",
+            loc,
+            {
+                "loaded": loaded,
+                "failed": failed,
+                "synched": num_synched
+            }
+        )
+    else:
+        embed.title = i18n.T("command.admin.reload_cogs.embeds.error.title", loc)
+        embed.color = Color.red()
+        embed.description = i18n.T(error_key or "command.admin.reloads_cogs.errors.generic", loc)
+    
+    await msg.edit(embed=embed)
 
 async def try_returnerror(interaction: Interaction, embed: Embed):
     try:
@@ -117,10 +158,10 @@ async def on_app_command_error(interaction: Interaction, error: app_commands.App
     else:
         logger.warning(f"User Error in /{interaction.command.qualified_name if interaction.command else "unknown_command"}: {error}")
     
-    description = translator_instance.T(key, loc, kwargs)
+    description = i18n.T(key, loc, kwargs)
     
     if description == key:
-        description = translator_instance.T("error.exceptions.AppCommandError", str(loc))
+        description = i18n.T("error.exceptions.AppCommandError", str(loc))
     
     embed = Embed(
         title=f"Error thrown: {error_name}",

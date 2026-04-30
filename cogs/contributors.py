@@ -12,6 +12,8 @@ from src.translator import translator_instance
 from bot import PoxBot
 import data
 
+from logger import logger
+
 class ContributorsCog(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
@@ -19,10 +21,20 @@ class ContributorsCog(Cog):
 
     group = app_commands.Group(name="contributors", description=app_commands.locale_str("A group for contributors.", extras={"key": "command.contributors.description"}))
     
+    async def safe_get_user(self, user_id: int):
+        user = self.bot.get_user(user_id)
+        if user:
+            return user
+        try:
+            user = await self.bot.fetch_user(user_id)
+            return user
+        except Exception as e:
+            return None
+    
     @group.command(name="list", description=app_commands.locale_str("Lists all contributors.", extras={"key": "command.contributors.list.description"}))
     async def list_contributors(self, interaction: Interaction):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
-        embed = Embed(title=translator_instance.T("command.contributors.list.embeds.default.title", loc), description=translator_instance.T("command.contributors.list.embds.default.description", loc))
+        embed = Embed(title=translator_instance.T("command.contributors.list.embeds.default.title", loc), description=translator_instance.T("command.contributors.list.embeds.default.description", loc))
         
         await interaction.response.defer()
         
@@ -32,7 +44,7 @@ class ContributorsCog(Cog):
             user_id = contributor.get("id", None)
             if not user_id: continue
             
-            user = self.bot.get_user(user_id)
+            user = await self.safe_get_user(user_id)
             
             display_name = user.display_name if user else translator_instance.T("text.unknown", loc)
             
@@ -90,8 +102,8 @@ class ContributorsCog(Cog):
             else:
                 return await interaction.followup.send(embed=embed)
         else:
-            embed.title = translator_instance.T("error.embed.contributor_not_found.title", loc)
-            embed.title = translator_instance.T("error.embed.contributor_not_found.description", loc, {"contributor": contributor_id})
+            embed.title = translator_instance.T("error.embeds.contributor_not_found.title", loc)
+            embed.title = translator_instance.T("error.embeds.contributor_not_found.description", loc, {"contributor": contributor_id})
     
     @group.command(name="spy_thesinglerunc", description="Special thanks to codigoerror10014")
     async def spy_thesinglerunc(self, interaction: Interaction):

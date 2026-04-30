@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_user_profiles_id ON user_profiles(user_id);

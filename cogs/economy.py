@@ -96,6 +96,13 @@ class EconomyCog(commands.Cog):
             embed.description = i18n.T('command.economy.deposit.embeds.default.description', loc)
             embed.color = Color.green()
             return await interaction.followup.send(embed=embed)
+        else:
+            embed.title = i18n.T("error.embeds.database_not_available.title", loc)
+            embed.description = i18n.T("error.embeds.database_not_available.description", loc)
+            embed.timestamp = datetime.now(UTC)
+            embed.color = Color.red()
+
+            return interaction.followup.send(embed=embed)
         
     @group.command(name="withdraw", description=app_commands.locale_str("command.economy.withdraw.description"))
     async def withdraw(self, interaction: Interaction, amount: int):
@@ -132,6 +139,13 @@ class EconomyCog(commands.Cog):
             embed.description = i18n.T('command.economy.withdraw.embeds.default.description', loc)
             embed.color = Color.green()
             return await interaction.followup.send(embed=embed)
+        else:
+            embed.title = i18n.T("error.embeds.database_not_available.title", loc)
+            embed.description = i18n.T("error.embeds.database_not_available.description", loc)
+            embed.timestamp = datetime.now(UTC)
+            embed.color = Color.red()
+
+            return interaction.followup.send(embed=embed)
     
     @group.command(name="work", description=app_commands.locale_str("command.economy.work.description"))
     async def work(self, interaction: Interaction):
@@ -160,10 +174,17 @@ class EconomyCog(commands.Cog):
             await self.db.log_tx(user.user_id, "work", earned, "Salary")
 
             embed.title = i18n.T("command.economy.work.embeds.default.title", loc)
-            embed.description = i18n.T("command.economy.work.embeds.default.description", loc)
+            embed.description = i18n.T("command.economy.work.embeds.default.description", loc, {"amount": f"{earned:,}"})
             embed.color = Color.green()
 
             await interaction.followup.send(embed=embed)
+        else:
+            embed.title = i18n.T("error.embeds.database_not_available.title", loc)
+            embed.description = i18n.T("error.embeds.database_not_available.description", loc)
+            embed.timestamp = datetime.now(UTC)
+            embed.color = Color.red()
+
+            return interaction.followup.send(embed=embed)
     
     @group.command(name='list', description=app_commands.locale_str("command.economy.list.description"))
     async def list_items(self, interaction: Interaction):
@@ -186,7 +207,14 @@ class EconomyCog(commands.Cog):
             for i in items:
                 buy_price = i18n.T('command.economy.list.fields.buy_price', loc, {"price": f"{i['buy_price']:,}"}) if i['buy_price'] else i18n.T('command.economy.list.fields.not_sale', loc)
                 embed.add_field(name=f"{i['name']} (ID: {i['id']})", value=f"{buy_price}\n{i['description']}", inline=False)
-            await interaction.response.send_message(embed=embed)
+            await interaction.followup.send(embed=embed)
+        else:
+            embed.title = i18n.T("error.embeds.database_not_available.title", loc)
+            embed.description = i18n.T("error.embeds.database_not_available.description", loc)
+            embed.timestamp = datetime.now(UTC)
+            embed.color = Color.red()
+
+            return interaction.followup.send(embed=embed)
     
     @group.command(name="buy", description=app_commands.locale_str("command.economy.buy.description"))
     async def buy_items(self, interaction: Interaction, item_id: str):
@@ -223,6 +251,13 @@ class EconomyCog(commands.Cog):
             embed.color = Color.green()
 
             await interaction.followup.send(embed=embed)
+        else:
+            embed.title = i18n.T("error.embeds.database_not_available.title", loc)
+            embed.description = i18n.T("error.embeds.database_not_available.description", loc)
+            embed.timestamp = datetime.now(UTC)
+            embed.color = Color.red()
+
+            return interaction.followup.send(embed=embed)
     
     @group.command(name="sell", description=app_commands.locale_str("command.economy.sell.description"))
     async def sell_items(self, interaction: Interaction, item_id: str):
@@ -253,6 +288,13 @@ class EconomyCog(commands.Cog):
             embed.color = Color.green()
 
             await interaction.followup.send(embed=embed)
+        else:
+            embed.title = i18n.T("error.embeds.database_not_available.title", loc)
+            embed.description = i18n.T("error.embeds.database_not_available.description", loc)
+            embed.timestamp = datetime.now(UTC)
+            embed.color = Color.red()
+
+            return interaction.followup.send(embed=embed)
     
     @group.command(name="inventory", description=app_commands.locale_str("command.economy.inventory.description"))
     async def inventory(self, interaction: Interaction):
@@ -280,7 +322,14 @@ class EconomyCog(commands.Cog):
                     value=i['description'], inline=False
                 )
             
-            await interaction.response.send_message(embed=embed)
+            await interaction.followup.send(embed=embed)
+        else:
+            embed.title = i18n.T("error.embeds.database_not_available.title", loc)
+            embed.description = i18n.T("error.embeds.database_not_available.description", loc)
+            embed.timestamp = datetime.now(UTC)
+            embed.color = Color.red()
+
+            return interaction.followup.send(embed=embed)
 
     @group.command(name="daily", description=app_commands.locale_str("command.economy.daily.description"))
     async def daily(self, interaction: Interaction):
@@ -304,7 +353,7 @@ class EconomyCog(commands.Cog):
                 embed.title = i18n.T("error.embeds.daily_cooldown.title", loc)
                 embed.description = i18n.T("error.embeds.daily_cooldown.description", loc, {"h": hours, "m": minutes})
                 embed.timestamp = datetime.now(UTC)
-                return await interaction.response.send_message(embed=embed, ephemeral=True)
+                return await interaction.followup.send(embed=embed, ephemeral=True)
             
             reward = random.randint(100, 900)
             user.wallet += reward

@@ -6,6 +6,7 @@ import time
 from typing import Optional
 from discord.ext import commands, tasks
 from discord import Color, Embed, Interaction, Member, Message, TextChannel, app_commands
+from src.translator import translator_instance as i18n
 
 import ollama
 import openai
@@ -102,7 +103,7 @@ class ChatbotCog(commands.Cog):
             return True
         return False
     
-    group = app_commands.Group(name="chatbot", description="A group for AI Chat bot using Ollama")
+    group = app_commands.Group(name="chatbot", description=app_commands.locale_str("command.chatbot.description"))
     
     async def summarize_history(self, channel_id: int):
         to_summarize = []
@@ -290,23 +291,23 @@ class ChatbotCog(commands.Cog):
                         self.history[message.channel.id].append(f"assistant: {final_text}")
                         self.stats['total_success'] += 1
                     else:
-                        await message.reply("i got nothing")
+                        await message.reply(i18n.T('messages.chatbot_empty', message.guild.preferred_locale if message.guild else "en"))
                         self.stats['total_failures'] += 1
             
             except ollama.RequestError:
                 logger.exception(f"You forgot to specify the model to generate.")
                 if is_mentioned:
-                    await message.reply("oh hold on, ASK POX ABOUT THIS")
+                    await message.reply(i18n.T('messages.chatbot_request_error', message.guild.preferred_locale if message.guild else "en"))
                 self.stats["total_failures"] += 1
             except ollama.ResponseError:
                 logger.exception(f"It seems ollama couldn't generate response!")
                 if is_mentioned:
-                    await message.reply("and then I stopped thinking... because i don't understand it")
+                    await message.reply(i18n.T('messages.chatbot_response_error', message.guild.preferred_locale if message.guild else "en"))
                 self.stats["total_failures"] += 1
             except Exception as e:
                 logger.exception(f"Error raised while processing Ollama Chat bot: {e}")
                 if is_mentioned:
-                    await message.reply("oof x_x")
+                    await message.reply(i18n.T('error.exceptions.Unknown', message.guild.preferred_locale if message.guild else "en", {"e": str(e)}))
                 self.stats["total_failures"] += 1
             finally:
                 self.channel_data[channel_id]['is_locked'] = False
@@ -322,13 +323,13 @@ class ChatbotCog(commands.Cog):
         if filled > bar_length: filled = bar_length
         return "■" * filled + "□" * (bar_length - filled)
     
-    @group.command(name="add_event", description="Adds global event to history.")
+    @group.command(name="add_event", description=app_commands.locale_str("command.chatbot.add_event.description"))
     async def add_globaL_event(self, interaction: Interaction, event_text: str = "...?"):
         formatted_event = f"*{event_text.strip('*')}*"
         self.history[interaction.channel_id].append(formatted_event)
         logger.info(f"Event injected into #{interaction.channel_id}: {formatted_event}")
     
-    @group.command(name="mem", description="Check Jim's brain space")
+    @group.command(name="mem", description=app_commands.locale_str("command.chatbot.mem.description"))
     async def show_memory(self, interaction: Interaction):
         await interaction.response.defer()
         
@@ -369,16 +370,17 @@ class ChatbotCog(commands.Cog):
 
         await interaction.followup.send(embed=embed)
     
-    @group.command(name="unlock", description="Forcefully unlocks the channel if Jim is stuck")
+    @group.command(name="unlock", description=app_commands.locale_str("command.chatbot.unlock.description"))
     async def force_unlock(self, interaction: Interaction):
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         channel_id = interaction.channel_id
         if self.channel_data[channel_id]["is_locked"]:
             self.channel_data[channel_id]["is_locked"] = False
-            await interaction.response.send_message("uh ok i'm back.")
+            await interaction.response.send_message(i18n.T('command.chatbot.unlock.messages.unlock', loc))
         else:
-            await interaction.response.send_message("I'm not even thinking right now, but okay!", ephemeral=True)
+            await interaction.response.send_message(i18n.T('command.chatbot.unlock.messages.already', loc), ephemeral=True)
     
-    @group.command(name="perf", description="Performance stats i guess")
+    @group.command(name="perf", description=app_commands.locale_str("command.chatbot.perf.description"))
     async def show_perfstats(self, interaction: Interaction):
         try:
             await interaction.response.defer()
@@ -422,7 +424,7 @@ class ChatbotCog(commands.Cog):
         except Exception as e:
             logger.exception(e)
     
-    @group.command(name="stats", description="Shows stats (global)")
+    @group.command(name="stats", description=app_commands.locale_str("command.chatbot.stats.description"))
     async def show_stats(self, interaction: Interaction):
         try:
             await interaction.response.defer()
@@ -449,7 +451,7 @@ class ChatbotCog(commands.Cog):
         except Exception as e:
             logger.exception(e)
     
-    @group.command(name="userstats", description="Shows stats")
+    @group.command(name="userstats", description=app_commands.locale_str("command.chatbot.user_stats.description"))
     async def show_userstats(self, interaction: Interaction, member: Optional[Member] = None):
         try:
             await interaction.response.defer()
@@ -477,7 +479,7 @@ class ChatbotCog(commands.Cog):
         except Exception as e:
             logger.exception(e)
     
-    @group.command(name="clear_memories", description="Clears chat history for AI chat")
+    @group.command(name="clear_memories", description=app_commands.locale_str("command.chatbot.clear_memories.description"))
     async def clear_memory(self, interaction: Interaction):
         channel_id = 0
         if interaction.channel: channel_id = interaction.channel_id

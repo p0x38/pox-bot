@@ -4,5 +4,6 @@
         "locale": "**Display Language**: %{lang_code}"
     },
     "header_description": "User settings",
-    "title": "User Settings"
+    "title": "User Settings",
+    "page": "TongueBot :3"
 }

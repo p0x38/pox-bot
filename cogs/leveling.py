@@ -99,8 +99,8 @@ class LevelingCog(commands.Cog):
         embed = Embed()
         
         if not interaction.guild:
-            embed.title = i18n.T("error.embed.guild_only.title", loc)
-            embed.description = i18n.T("error.embed.guild_only.description", loc)
+            embed.title = i18n.T("error.embeds.guild_only.title", loc)
+            embed.description = i18n.T("error.embeds.guild_only.description", loc)
             return await interaction.followup.send(embed=embed)
         
         if not self.bot.guild_db:

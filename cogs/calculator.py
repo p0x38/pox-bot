@@ -10,9 +10,9 @@ class CalculationCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
-    calc_group = app_commands.Group(name="calculate", description="A group for calculator cogs")
+    calc_group = app_commands.Group(name="calculate", description=app_commands.locale_str("command.calculate.description"))
     
-    @calc_group.command(name="percentage")
+    @calc_group.command(name="percentage", description=app_commands.locale_str("command.calculate.percentage.description"))
     async def calculate_percentage(self, interaction: discord.Interaction, value: int, max: Optional[int]):
         if max is None:
             max = 100

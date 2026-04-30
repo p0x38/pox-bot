@@ -74,9 +74,9 @@ class FunCog(Cog):
 
             await interaction.followup.send(embed=e)
     
-    group = app_commands.Group(name="fun", description="Fun stuff.")
+    group = app_commands.Group(name="fun", description=app_commands.locale_str("command.fun.description"))
     
-    @group.command(name="guess_game", description="Starts a new number guessing game (1 ~ 100)")
+    @group.command(name="guess_game", description=app_commands.locale_str("command.fun.guess_game.description"))
     async def guess_game(self, interaction: Interaction):
         user_id = interaction.user.id
 
@@ -98,7 +98,7 @@ class FunCog(Cog):
             f"Use /guess <number> to guess."
         )
     
-    @group.command(name='guess', description="Guess the number.")
+    @group.command(name='guess', description=app_commands.locale_str("command.fun.guess.description"))
     async def make_guess(self, interaction: Interaction, number: int):
         user_id = interaction.user.id
 
@@ -144,7 +144,7 @@ class FunCog(Cog):
             
             return await interaction.response.send_message(f"You failed to guess. {special}\n It was {secret_number}. Your score is {game_data['score']}. Try again.")
     
-    @group.command(name="stopguess", description="Stops the current guessing game.")
+    @group.command(name="stopguess", description=app_commands.locale_str("command.fun.stopguess.description"))
     async def stop_guessing(self, interaction: Interaction):
         user_id = interaction.user.id
 
@@ -156,7 +156,7 @@ class FunCog(Cog):
             return await interaction.response.send_message(f"You've not even started the guess.")
 
     @cached(300)
-    @group.command(name="job_application", description="yeah")
+    @group.command(name="job_application", description=app_commands.locale_str("command.fun.job_application.description"))
     async def a_job_message(self, ctx):
         try:
             await ctx.response.send_message("Today, I'll be talking about one of humanity's biggest fears.")
@@ -165,12 +165,12 @@ class FunCog(Cog):
         except Exception as e:
             logger.error(e)
     
-    @group.command(name="boop_member", description="boops someone")
+    @group.command(name="boop_member", description=app_commands.locale_str("command.fun.boop_member.description"))
     @app_commands.describe(user="Member to boop")
     async def boop_member(self, ctx: Interaction, user: Union[User, Member]):
         return await ctx.response.send_message(f"<@{user.id}> boop.")
     
-    @group.command(name="dice", description="Rolls dice.")
+    @group.command(name="dice", description=app_commands.locale_str("command.fun.dice.description"))
     async def roll_dice(self, interaction: Interaction, dices: int, sides: int):
         await interaction.response.defer()
 
@@ -186,27 +186,7 @@ class FunCog(Cog):
 
         return await interaction.followup.send(embed=embed)
     
-    @group.command(name="8ball", description="Gives a random, magic 8-ball response")
-    async def generate_response_from_eightball(self, interaction: Interaction, question: str):
-        choice = random.choice(data.possibility_words)
-        
-        embed = Embed(title=f"8-ball response to your question", color=Color.random())
-        embed.add_field(name="Question", value=question, inline=True)
-        embed.add_field(name="Response", value=choice, inline=True)
-        
-        await interaction.response.send_message(embed=embed)
-    
-    @group.command(name="yesno", description="Gives yes or no to your question")
-    async def generate_yesno(self, interaction: Interaction, question: str):
-        choice = random.choice(data.yesno_words)
-        
-        embed = Embed(title=f"Yes or no to your question", color=Color.random())
-        embed.add_field(name="Question", value=question, inline=True)
-        embed.add_field(name="Response", value=choice, inline=True)
-        
-        await interaction.response.send_message(embed=embed)
-    
-    @app_commands.command(name="ship", description="Calculates the love rate between two users")
+    @app_commands.command(name="ship", description=app_commands.locale_str("command.fun.ship.description"))
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def ship_users(self, interaction: Interaction, user1: User | Member, user2: User | Member | None = None):
         if not user2:

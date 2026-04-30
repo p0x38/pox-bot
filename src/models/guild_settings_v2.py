@@ -21,6 +21,11 @@ class WelcomeChannels:
     leave: int | None = 0
     rules: int | None = 0
 
+class PhoneStatus(IntEnum):
+    idle = 0
+    searching = 1
+    in_call = 2
+
 class BlacklistEntryMatchType(IntEnum):
     default = 0
     regex = 1
@@ -79,6 +84,17 @@ class TicketConfig(BaseConfigData):
     staff_role: int | None = None
 
 @dataclass
+class GlobalChatConfig(BaseConfigData):
+    channel_id: int | None = None
+    webhook_url: str | None = None
+
+@dataclass
+class UserphoneConfig(BaseConfigData):
+    channel_id: int | None = None
+    status: PhoneStatus = PhoneStatus.idle
+    current_partner_id: int | None = None
+
+@dataclass
 class GuildConfigV2:
     version: int = 2
     reaction_roles: list[ReactionRoleEntry] = field(default_factory=list)
@@ -112,78 +128,108 @@ class GuildConfigV2:
             return TicketConfig()
         return feat
     
+    @property
+    def global_chat(self) -> GlobalChatConfig:
+        feat = self.features.get("global_chat")
+        if not isinstance(feat, GlobalChatConfig):
+            return GlobalChatConfig()
+        return feat
+    
+    @property
+    def userphone(self) -> UserphoneConfig:
+        feat = self.features.get("global_chat")
+        if not isinstance(feat, UserphoneConfig):
+            return UserphoneConfig()
+        return feat
+    
     @classmethod
     def from_dict(cls, data: dict):
         f = data.get("features", {})
         parsed = {}
         
-        if "welcome_channel" in f:
-            w = f["welcome_channel"]
-            parsed["welcome_channel"] = WelcomeConfig(
-                enabled=w.get("enabled", False),
-                last_execution=w.get("last_execution", datetime.now(UTC).timestamp()),
-                last_executor=w.get("last_executor"),
-                channels=WelcomeChannels(**w.get("channels", {})),
-                data=WelcomeData(**w.get("data", {}))
-            )
+        w = f.get("welcome_channel", {})
+        parsed["welcome_channel"] = WelcomeConfig(
+            enabled=w.get("enabled", False),
+            last_execution=w.get("last_execution", datetime.now(UTC).timestamp()),
+            last_executor=w.get("last_executor"),
+            channels=WelcomeChannels(**w.get("channels", {})),
+            data=WelcomeData(**w.get("data", {}))
+        )
         
-        if "filtering" in f:
-            filt_raw = f["filtering"]
-            sub_feats = filt_raw.get("filters", {})
-            
-            filter_map = {}
-            if "word" in sub_feats:
-                wf = sub_feats["word"]
-                bl = []
-                for b in wf.get("blacklists", []):
-                    match_type_val = b.get("type", 0)
-                    try:
-                        match_type = BlacklistEntryMatchType(match_type_val)
-                    except ValueError:
-                        match_type = BlacklistEntryMatchType.default
-                    
-                    bl.append(BlacklistEntry(
-                        trigger=b.get("trigger", ""),
-                        id=b.get("id", str(uuid.uuid4())[:8]),
-                        reason=b.get("reason"),
-                        type=match_type,
-                        case_insensitive=b.get("case_insensitive", True),
-                        executed_by=b.get("executed_by"),
-                        timestamp=b.get("timestamp", datetime.now(UTC).timestamp())
-                    ))
-                filter_map["word"] = WordFilter(enabled=wf.get("enabled", False), blacklists=bl)
-            
-            if "anti_spam" in sub_feats:
-                filter_map["anti_spam"] = AntiSpamFilter(**sub_feats["anti_spam"])
-            
-            parsed["filtering"] = FilterConfig(
-                enabled=filt_raw.get("enabled", False),
-                last_execution=filt_raw.get("last_execution", datetime.now(UTC).timestamp()),
-                last_executor=filt_raw.get("last_executor"),
-                filters=filter_map
-            )
+        filt_raw = f.get("filtering", {})
+        sub_feats = filt_raw.get("filters", {})
         
-        if "leveling" in f:
-            lv = f["leveling"]
-            parsed["leveling"] = LevelingConfig(
-                enabled=lv.get("enabled", False),
-                last_execution=lv.get("last_execution", datetime.now(UTC).timestamp()),
-                last_executor=lv.get("last_executor"),
-                xp_rate=lv.get("xp_rate", 1.0),
-                notify=lv.get("notify", True),
-                notify_channel=lv.get("notify_channel")
-            )
-        if "ticket_system" in f:
-            tk = f["ticket_system"]
-            parsed["ticket_system"] = TicketConfig(
-                enabled=tk.get("enabled", False),
-                last_execution=tk.get("last_execution", datetime.now(UTC).timestamp()),
-                last_executor=tk.get("last_executor"),
-                category=tk.get("category"),
-                master_channel=tk.get("master_channel"),
-                staff_role=tk.get("staff_role")
-            )
+        filter_map = {}
+        if "word" in sub_feats:
+            wf = sub_feats["word"]
+            bl = []
+            for b in wf.get("blacklists", []):
+                match_type_val = b.get("type", 0)
+                try:
+                    match_type = BlacklistEntryMatchType(match_type_val)
+                except ValueError:
+                    match_type = BlacklistEntryMatchType.default
+                
+                bl.append(BlacklistEntry(
+                    trigger=b.get("trigger", ""),
+                    id=b.get("id", str(uuid.uuid4())[:8]),
+                    reason=b.get("reason"),
+                    type=match_type,
+                    case_insensitive=b.get("case_insensitive", True),
+                    executed_by=b.get("executed_by"),
+                    timestamp=b.get("timestamp", datetime.now(UTC).timestamp())
+                ))
+            filter_map["word"] = WordFilter(enabled=wf.get("enabled", False), blacklists=bl)
         
-        return cls(version=2, features=parsed)
+        if "anti_spam" in sub_feats:
+            filter_map["anti_spam"] = AntiSpamFilter(**sub_feats["anti_spam"])
+        
+        parsed["filtering"] = FilterConfig(
+            enabled=filt_raw.get("enabled", False),
+            last_execution=filt_raw.get("last_execution", datetime.now(UTC).timestamp()),
+            last_executor=filt_raw.get("last_executor"),
+            filters=filter_map
+        )
+        
+        lv = f.get("levling", {})
+        parsed["leveling"] = LevelingConfig(
+            enabled=lv.get("enabled", False),
+            last_execution=lv.get("last_execution", datetime.now(UTC).timestamp()),
+            last_executor=lv.get("last_executor"),
+            xp_rate=lv.get("xp_rate", 1.0),
+            notify=lv.get("notify", True),
+            notify_channel=lv.get("notify_channel")
+        )
+        
+        tk = f.get("ticket_system", {})
+        parsed["ticket_system"] = TicketConfig(
+            enabled=tk.get("enabled", False),
+            last_execution=tk.get("last_execution", datetime.now(UTC).timestamp()),
+            last_executor=tk.get("last_executor"),
+            category=tk.get("category"),
+            master_channel=tk.get("master_channel"),
+            staff_role=tk.get("staff_role")
+        )
+        
+        phone_raw = f.get("userphone", {})
+        parsed["userphone"] = UserphoneConfig(
+            enabled=phone_raw.get("enabled", False),
+            last_execution=phone_raw.get("last_execution", datetime.now(UTC).timestamp()),
+            last_executor=phone_raw.get("last_executor"),
+            channel_id=phone_raw.get("channel_id"),
+            status=PhoneStatus(phone_raw.get("status", 0)),
+            current_partner_id=phone_raw.get("current_partner_id")
+        )
+        
+        gc = f.get("global_chat", {})
+        parsed["global_chat"] = GlobalChatConfig(
+            enabled=gc.get("enabled", False),
+            last_execution=gc.get("last_execution", datetime.now(UTC).timestamp()),
+            last_executor=gc.get("last_executor"),
+            channel_id=gc.get("channel_id"),
+            webhook_url=gc.get("webhook_url")
+        )
+        
+        return cls(version=data.get("version", 2), features=parsed)
     def to_dict(self) -> dict:
         return asdict(self)

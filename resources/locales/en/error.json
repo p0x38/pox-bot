@@ -19,9 +19,10 @@
         "tried_to_timeout_owner": "You cannot timeout the server owner! 3:<",
         "unknown_signature": "Unknown Signature",
         "unsupported_channel": "The channel isn't supported by bot! :3",
-        "user_not_found": "User not found..! :3"
+        "user_not_found": "User not found..! :3",
+        "description_not_found": "No description yet... 3:"
     },
-    "embed": {
+    "embeds": {
         "contributor_not_found": {
             "description": "The contributor %{contributor} has been not found... 3:",
             "title": "Contributor not found"
@@ -81,6 +82,22 @@
         "blacklist_not_configured": {
             "title": "Blacklist is not configured",
             "description": "The blacklist is not configured for this server."
+        },
+        "daily_cooldown": {
+            "title": "You can't claim daily rewards right now!",
+            "description": "You need to wait more %{h} hours %{m} minutes to get daily again! 3:<"
+        },
+        "phone_in_call": {
+            "title": "Your guild already in call",
+            "description": "Your guild is already in call."
+        },
+        "not_in_call": {
+            "title": "Your guild isn't in call",
+            "description": "Your guild is not in call."
+        },
+        "need_hangup": {
+            "title": "You can't configure while in call",
+            "description": "Please hang the call up to use this command."
         }
     },
     "exceptions": {

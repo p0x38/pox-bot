@@ -156,13 +156,20 @@ class I18nTranslator:
         
         translated = i18n.t(text, locale=lang, **kwargs)
         
-        if translated is self.MISSING and lang != "en":
-            translated = i18n.t(text, locale="en", **kwargs)
+        is_missing = (translated is self.MISSING) or (isinstance(translated, str) and not translated.strip())
         
-        if translated is self.MISSING:
+        is_same_as_en = False
+        if not is_missing and lang != "en":
+            en_val = i18n.t(text, locale="en", **kwargs)
+            if translated == en_val:
+                is_same_as_en = True
+        
+        if is_missing or is_same_as_en:
             if text not in self.missing_keys_buffer:
                 self.missing_keys_buffer[text] = set()
-            self.missing_keys_buffer[text].add(lang)
+            
+            report_tag = f"{lang} (untranslated)" if is_same_as_en else lang
+            self.missing_keys_buffer[text].add(report_tag)
             
             if self.batch_task is None:
                 try:
@@ -171,6 +178,11 @@ class I18nTranslator:
                     self.batch_task.add_done_callback(lambda t: setattr(self, "batch_task", None))
                 except RuntimeError:
                     pass
+            
+            if is_missing and lang != "en":
+                translated = i18n.t(text, locale="en", **kwargs)
+        
+        if translated is self.MISSING:
             return text
         
         return translated

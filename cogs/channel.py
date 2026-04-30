@@ -1,7 +1,7 @@
 from typing import Optional, Union
 
 from aiocache import cached
-from discord import Color, Embed, Forbidden, Guild, TextChannel, Interaction, app_commands, VoiceChannel, CategoryChannel, StageChannel, ForumChannel
+from discord import Color, Embed, Forbidden, TextChannel, Interaction, app_commands, VoiceChannel, CategoryChannel, StageChannel, ForumChannel
 from discord.abc import GuildChannel
 from discord.ext import commands
 
@@ -26,8 +26,8 @@ class ChannelCog(commands.Cog):
         if not seconds: seconds = 0
         
         if not interaction.guild:
-            embed.title = translator_instance.T("error.embed.guild_only.title", loc)
-            embed.description = translator_instance.T("error.embed.guild_only.description", loc)
+            embed.title = translator_instance.T("error.embeds.guild_only.title", loc)
+            embed.description = translator_instance.T("error.embeds.guild_only.description", loc)
             return await interaction.response.send_message(embed=embed)
         
         await interaction.response.defer()
@@ -47,16 +47,16 @@ class ChannelCog(commands.Cog):
                     embed.description = str(e)
                     return await interaction.followup.send(embed=embed)
             else:
-                embed.description = translator_instance.T("error.embed.guild_only.description", loc)
+                embed.description = translator_instance.T("error.embeds.guild_only.description", loc)
                 return await interaction.followup.send(embed=embed)
         
         try:
             if not hasattr(channel, "edit") or not hasattr(channel, "slowmode_delay"):
-                embed.description = translator_instance.T("error.embed.unsupported_channel_slowmode.description", loc, {"channel": channel.mention})
+                embed.description = translator_instance.T("error.embeds.unsupported_channel_slowmode.description", loc, {"channel": channel.mention})
                 return await interaction.followup.send(embed=embed)
             
             if not (0 <= seconds <= 21600):
-                embed.description = translator_instance.T("error.embed.slowmode_out_of_range.description", loc)
+                embed.description = translator_instance.T("error.embeds.slowmode_out_of_range.description", loc)
                 return await interaction.followup.send(embed=embed)
             
             await channel.edit(slowmode_delay=seconds)
@@ -76,15 +76,15 @@ class ChannelCog(commands.Cog):
             embed.description = translator_instance.T("error.exceptions.Unknown", loc, {"e": e})
             await interaction.followup.send(embed=embed)
     
-    @group.command(name="info", description="Shows channel information.")
+    @group.command(name="info", description=app_commands.locale_str("command.channel.info.description"))
     @app_commands.guild_only()
     async def get_channel_info(self, interaction: Interaction, channel: GuildChannel):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale.value
         embed = Embed(description=translator_instance.T("text.unknown", loc), color=Color.red())
         
         if not interaction.guild:
-            embed.title = translator_instance.T("error.embed.guild_only.title", loc)
-            embed.description = translator_instance.T("error.embed.guild_only.description", loc)
+            embed.title = translator_instance.T("error.embeds.guild_only.title", loc)
+            embed.description = translator_instance.T("error.embeds.guild_only.description", loc)
             return await interaction.response.send_message(embed=embed)
         
         await interaction.response.defer()
@@ -137,8 +137,8 @@ class ChannelCog(commands.Cog):
                 }
             else:
                 exist = False
-                embed.title = translator_instance.T("error.embed.unsupported_channel_type.title", loc)
-                embed.description = translator_instance.T("error.embed.unsupported_channel_type.description", loc)
+                embed.title = translator_instance.T("error.embeds.unsupported_channel_type.title", loc)
+                embed.description = translator_instance.T("error.embeds.unsupported_channel_type.description", loc)
             
             if exist:
                 embed.color = Color.blurple()

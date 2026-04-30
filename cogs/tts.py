@@ -45,8 +45,8 @@ class TextToSpeechCog(commands.Cog):
         embed = Embed(color=Color.red())
         
         if not text.strip():
-            embed.title = translator_instance.T("error.embed.tts_no_text.title", loc)
-            embed.description = translator_instance.T("error.embed.tts_no_text.description", loc)
+            embed.title = translator_instance.T("error.embeds.tts_no_text.title", loc)
+            embed.description = translator_instance.T("error.embeds.tts_no_text.description", loc)
             return interaction.followup.send(embed=embed)
         
         if lang is None: lang = "en"
@@ -60,8 +60,8 @@ class TextToSpeechCog(commands.Cog):
             abuffer.seek(0)
         except Exception as e:
             logger.exception(f"{e}")
-            embed.title = translator_instance.T("error.embed.tts_generation_error.title", loc)
-            embed.description = translator_instance.T("error.embed.tts_generation_error.description", loc, {"e": e})
+            embed.title = translator_instance.T("error.embeds.tts_generation_error.title", loc)
+            embed.description = translator_instance.T("error.embeds.tts_generation_error.description", loc, {"e": e})
             return await interaction.followup.send(translator_instance.T("error.custom.tts_generation_error", loc, {"e": e}))
         
         dfile = discord.File(abuffer, filename=f"GoogleTTS_{lang}_{str(int(time()))}.mp3")
@@ -75,8 +75,8 @@ class TextToSpeechCog(commands.Cog):
         except Exception as e:
             logger.exception(f"{e}")
             embed.color=Color.red()
-            embed.title = translator_instance.T("error.embed.send_error.title", loc)
-            embed.description = translator_instance.T("error.embed.send_error.description", loc, {"e": e})
+            embed.title = translator_instance.T("error.embeds.send_error.title", loc)
+            embed.description = translator_instance.T("error.embeds.send_error.description", loc, {"e": e})
             await interaction.followup.send(embed=embed)
     
     @cached(60)
@@ -97,8 +97,8 @@ class TextToSpeechCog(commands.Cog):
         embed = Embed(color=Color.red())
         
         if not text.strip():
-            embed.title = translator_instance.T("error.embed.tts_no_text.title", loc)
-            embed.description = translator_instance.T("error.embed.tts_no_text.description", loc)
+            embed.title = translator_instance.T("error.embeds.tts_no_text.title", loc)
+            embed.description = translator_instance.T("error.embeds.tts_no_text.description", loc)
             return interaction.followup.send(embed=embed)
         
         abuffer = BytesIO()
@@ -121,8 +121,8 @@ class TextToSpeechCog(commands.Cog):
             abuffer.seek(0)
         except Exception as e:
             logger.exception(f"{e}")
-            embed.title = translator_instance.T("error.embed.tts_generation_error.title", loc)
-            embed.description = translator_instance.T("error.embed.tts_generation_error.description", loc, {"e": e})
+            embed.title = translator_instance.T("error.embeds.tts_generation_error.title", loc)
+            embed.description = translator_instance.T("error.embeds.tts_generation_error.description", loc, {"e": e})
             return await interaction.followup.send(translator_instance.T("error.custom.tts_generation_error", loc, {"e": e}))
         
         dfile = discord.File(abuffer, filename=f"PiperTTS_{str(int(time()))}.wav")
@@ -136,8 +136,8 @@ class TextToSpeechCog(commands.Cog):
         except Exception as e:
             logger.exception(f"{e}")
             embed.color=Color.red()
-            embed.title = translator_instance.T("error.embed.send_error.title", loc)
-            embed.description = translator_instance.T("error.embed.send_error.description", loc, {"e": e})
+            embed.title = translator_instance.T("error.embeds.send_error.title", loc)
+            embed.description = translator_instance.T("error.embeds.send_error.description", loc, {"e": e})
             await interaction.followup.send(embed=embed)
     
     @cached(60)
@@ -150,13 +150,13 @@ class TextToSpeechCog(commands.Cog):
         
         if not "edge_tts" in sys.modules:
             logger.error("edge_tts package is not installed in this project. ignoring...")
-            embed.title = translator_instance.T("error.embed.edge_tts_not_installed.title", loc)
-            embed.description = translator_instance.T("error.embed.tts_not_installed.description", loc)
+            embed.title = translator_instance.T("error.embeds.edge_tts_not_installed.title", loc)
+            embed.description = translator_instance.T("error.embeds.tts_not_installed.description", loc)
             return interaction.followup.send(embed=embed)
         
         if not text.strip():
-            embed.title = translator_instance.T("error.embed.tts_no_text.title", loc)
-            embed.description = translator_instance.T("error.embed.tts_no_text.description", loc)
+            embed.title = translator_instance.T("error.embeds.tts_no_text.title", loc)
+            embed.description = translator_instance.T("error.embeds.tts_no_text.description", loc)
             return interaction.followup.send(embed=embed)
         
         if not lang:
@@ -180,8 +180,8 @@ class TextToSpeechCog(commands.Cog):
             abuffer.seek(0)
         except Exception as e:
             logger.exception(f"{e}")
-            embed.title = translator_instance.T("error.embed.tts_generation_error.title", loc)
-            embed.description = translator_instance.T("error.embed.tts_generation_error.description", loc, {"e": e})
+            embed.title = translator_instance.T("error.embeds.tts_generation_error.title", loc)
+            embed.description = translator_instance.T("error.embeds.tts_generation_error.description", loc, {"e": e})
             return await interaction.followup.send(translator_instance.T("error.custom.tts_generation_error", loc, {"e": e}))
         
         dfile = discord.File(abuffer, filename=f"EdgeTTS_{lang}_{str(int(time()))}.mp3")
@@ -195,8 +195,8 @@ class TextToSpeechCog(commands.Cog):
         except Exception as e:
             logger.exception(f"{e}")
             embed.color=Color.red()
-            embed.title = translator_instance.T("error.embed.send_error.title", loc)
-            embed.description = translator_instance.T("error.embed.send_error.description", loc, {"e": e})
+            embed.title = translator_instance.T("error.embeds.send_error.title", loc)
+            embed.description = translator_instance.T("error.embeds.send_error.description", loc, {"e": e})
             await interaction.followup.send(embed=embed)
 
 async def setup(bot):

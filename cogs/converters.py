@@ -28,10 +28,10 @@ class ConversionCog(commands.Cog):
     def __init__(self,bot):
         self.bot: PoxBot = bot
     
-    converter_group = app_commands.Group(name="convert",description="Commands for Converters")
+    converter_group = app_commands.Group(name="convert",description=app_commands.locale_str("command.convert.description"))
 
     @cached(60)
-    @converter_group.command(name="meow",description="makes text to MEOW MEOW.")
+    @converter_group.command(name="meow",description=app_commands.locale_str("command.convert.meow.description"))
     @app_commands.describe(text="Text to be meowified")
     async def meowify(self, ctx: Interaction, text: str):
         await ctx.response.defer(thinking=True)
@@ -41,7 +41,7 @@ class ConversionCog(commands.Cog):
             await ctx.followup.send(f"Error occured! {e}")
 
     @cached(60)
-    @converter_group.command(name="uwu", description="same with say_uwuify, but with mention lol")
+    @converter_group.command(name="uwu", description=app_commands.locale_str("command.convert.uwu.description"))
     @app_commands.describe(text="Text to be uwuified")
     async def uwuify(self, ctx: Interaction, text: str):
         await ctx.response.defer(thinking=True)
@@ -52,7 +52,7 @@ class ConversionCog(commands.Cog):
             await ctx.followup.send(f"Error. {e}")
 
     @cached(60)
-    @converter_group.command(name="base64", description="Makes your message into base64")
+    @converter_group.command(name="base64", description=app_commands.locale_str("command.convert.base64.description"))
     @app_commands.describe(text="Text to be base64-ified")
     async def base64ify(self, ctx: Interaction, text: str):
         await ctx.response.defer(thinking=True)
@@ -63,7 +63,7 @@ class ConversionCog(commands.Cog):
             await ctx.followup.send(f"Error. {e}")
 
     @cached(60)
-    @converter_group.command(name="unbase64", description="Makes your base64 message decoded")
+    @converter_group.command(name="unbase64", description=app_commands.locale_str("command.convert.unbase64.description"))
     @app_commands.describe(text="Base64 to be textified")
     async def debase64ify(self, ctx: Interaction, text: str):
         await ctx.response.defer(thinking=True)
@@ -74,7 +74,7 @@ class ConversionCog(commands.Cog):
             await ctx.followup.send(f"Error. {e}")
 
     @cached(60)
-    @converter_group.command(name="muffle", description="muffles your response")
+    @converter_group.command(name="muffle", description=app_commands.locale_str("command.convert.muffle.description"))
     @app_commands.describe(text="Message to be MMMPHHHH-ified")
     async def mmphify(self, ctx: Interaction, text: str):
         await ctx.response.defer(thinking=True)
@@ -84,7 +84,7 @@ class ConversionCog(commands.Cog):
             await ctx.followup.send(f"Error: {e} 3:")
 
     @cached(60)
-    @converter_group.command(name="base7777", description="Base 7777 by galaxy_fl3x")
+    @converter_group.command(name="base7777", description=app_commands.locale_str("command.convert.base7777.description"))
     async def base7777ify(self, interaction: Interaction, text: str):
         await interaction.response.defer(thinking=True)
         splitted1 = list(data.alphabet)
@@ -101,7 +101,7 @@ class ConversionCog(commands.Cog):
         await interaction.followup.send(result)
 
     @cached(60)
-    @converter_group.command(name="unbase7777", description="Base 7777 by galaxy_fl3x")
+    @converter_group.command(name="unbase7777", description=app_commands.locale_str("command.convert.unbase7777.description"))
     async def debase7777ify(self, interaction: Interaction, text: str):
         await interaction.response.defer(thinking=True)
         splitted1 = list(data.alphabet)
@@ -118,7 +118,7 @@ class ConversionCog(commands.Cog):
         await interaction.followup.send(result)
 
     @cached(60)
-    @converter_group.command(name="glitch", description="Makes the text corrupted.")
+    @converter_group.command(name="glitch", description=app_commands.locale_str("command.convert.glitch.description"))
     async def zalgo_text(self, interaction: Interaction, text:  str, level: Optional[int] = 2):
         if level is None: level = 2
         level = stuff.clamp(level, 1, 3)
@@ -127,7 +127,7 @@ class ConversionCog(commands.Cog):
         await interaction.response.send_message(result)
 
     @cached(60)
-    @converter_group.command(name="nsrc1", description="Converts text into NSRC-1 Encoded")
+    @converter_group.command(name="nsrc1", description=app_commands.locale_str("command.convert.nsrc1.description"))
     async def nsrc1(self, interaction: Interaction, text: str):
         await interaction.response.defer(thinking=True)
         
@@ -145,7 +145,7 @@ class ConversionCog(commands.Cog):
         await interaction.followup.send(ciphered_2)
 
     @cached(60)
-    @converter_group.command(name="un_nsrc1", description="Decodes NSRC-1 into text")
+    @converter_group.command(name="unnsrc1", description=app_commands.locale_str("command.convert.unnsrc1.description"))
     async def un_nsrc1(self, interaction: Interaction, text: str):
         await interaction.response.defer(thinking=True)
         
@@ -163,58 +163,58 @@ class ConversionCog(commands.Cog):
         await interaction.followup.send(ciphered_2)
 
     @cached(60)
-    @converter_group.command(name="invert_letters", description="Makes the word inverts per letter.")
+    @converter_group.command(name="invert_letters", description=app_commands.locale_str("command.convert.invert_letters.description"))
     async def letterreverse(self, interaction: Interaction, text: str):
         await interaction.response.send_message(ciphers.letter_reverser(text,False))
     
     @cached(60)
-    @converter_group.command(name="caesar_cipher", description="Encrypts text by Caesar Cipher.")
+    @converter_group.command(name="caesar", description=app_commands.locale_str("command.convert.caesar.description"))
     async def caesar(self, interaction: Interaction, text: str, shift: int):
         await interaction.response.send_message(ciphers.caesar_cipher(text,shift,False))
     
     @cached(60)
-    @converter_group.command(name="uncaesar_cipher", description="Decrypts text by Caesar Cipher.")
+    @converter_group.command(name="uncaesar", description=app_commands.locale_str("command.convert.uncaesar.description"))
     async def decaesar(self, interaction: Interaction, text: str, shift: int):
         await interaction.response.send_message(ciphers.caesar_cipher(text,shift,True))
     
     @cached(60)
-    @converter_group.command(name="rail_fence", description="Encrypts text by Rail fence Cipher.")
+    @converter_group.command(name="railfence", description=app_commands.locale_str("command.convert.railfence.description"))
     async def railfence(self, interaction: Interaction, text: str, key: int):
         await interaction.response.send_message(ciphers.rail_fence(text,key))
     
     @cached(60)
-    @converter_group.command(name="unrail_fence", description="Decrypts text by Rail fence Cipher.")
+    @converter_group.command(name="unrailfence", description=app_commands.locale_str("command.convert.unrailfence.description"))
     async def unrailfence(self, interaction: Interaction, text: str, key: int):
         await interaction.response.send_message(ciphers.decrypt_rail_fence(text,key))
     
     @cached(60)
-    @converter_group.command(name="morse_code", description="Converts text to morse code. (by AnnaYarik13Alt)")
+    @converter_group.command(name="morse", description=app_commands.locale_str("command.convert.morse.description"))
     async def morse_codify(self, interaction: Interaction, text: str):
         await interaction.response.send_message(f"`{ciphers.morse_code(text)}`")
     
     @cached(60)
-    @converter_group.command(name="binary", description="Converts text to binary. (by AnnaYarik13Alt)")
+    @converter_group.command(name="binary", description=app_commands.locale_str("command.convert.binary.description"))
     async def binarify(self, interaction: Interaction, text: str):
         await interaction.response.send_message(f"`{ciphers.binary(text)}`")
     
     @cached(60)
-    @converter_group.command(name="demorse_code", description="Converts morse code to text. (by AnnaYarik13Alt)")
+    @converter_group.command(name="demorse", description=app_commands.locale_str("command.convert.demorse.description"))
     async def demorse_codify(self, interaction: Interaction, text: str):
         await interaction.response.send_message({ciphers.morse_code(text,True)})
     
     @cached(60)
-    @converter_group.command(name="unbinary", description="Converts binary to text. (by AnnaYarik13Alt)")
+    @converter_group.command(name="unbinary", description=app_commands.locale_str("command.convert.unmorse.description"))
     async def unbinarify(self, interaction: Interaction, text: str):
         await interaction.response.send_message(ciphers.binary(text,True))
     
     @cached(60)
-    @converter_group.command(name="reverse_words", description="Reverses text per words.")
+    @converter_group.command(name="reverse_words", description=app_commands.locale_str("command.convert.reverse_words.description"))
     async def reverser(self, interaction: Interaction, text: str):
         vce = ' '.join(word[::-1] for word in text.split(" "))
         await interaction.response.send_message(vce)
     
     @cached(60)
-    @converter_group.command(name="color_name", description="Retrieves color name from colornames.org.")
+    @converter_group.command(name="color_name", description=app_commands.locale_str("command.convert.color_name.description"))
     async def color_name(self, interaction: Interaction, hex: str):
         await interaction.response.defer()
 
@@ -250,7 +250,7 @@ class ConversionCog(commands.Cog):
         return await interaction.followup.send(embed=embed)
     
     @cached(60)
-    @converter_group.command(name="psc1", description="Converts text into PSC-1 Encoded")
+    @converter_group.command(name="psc1", description=app_commands.locale_str("command.convert.psc1.description"))
     async def psc1(self, interaction: Interaction, text: str):
         await interaction.response.defer(thinking=True)
         
@@ -264,7 +264,7 @@ class ConversionCog(commands.Cog):
         return await interaction.followup.send(output)
     
     @cached(60)
-    @converter_group.command(name="un_psc1", description="Decodes PSC-1 into text")
+    @converter_group.command(name="unpsc1", description=app_commands.locale_str("command.convert.unpsc1.description"))
     async def un_psc1(self, interaction: Interaction, text: str):
         await interaction.response.defer(thinking=True)
         

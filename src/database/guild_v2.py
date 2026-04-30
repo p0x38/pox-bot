@@ -102,3 +102,17 @@ class GuildSettingsDatabaseV2(PostgreSQLDatabase):
         
         async with self.pool.acquire() as conn:
             return await conn.fetchval
+    
+    async def find_random_partner(self, requester_guild_id: int) -> int | None:
+        if not self.pool:
+            return None
+        
+        async with self.pool.acquire() as conn:
+            row = await conn.fetchrow("""
+                SELECT guild_id FROM guild_settings
+                WHERE (config->'features'->'userphone'->>'status')::int = 1
+                AND guild_id != $1
+                LIMIT 1
+            """, requester_guild_id)
+            
+            return row['guild_id'] if row else None

@@ -86,9 +86,9 @@ class GuildCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
-    checker_group = app_commands.Group(name="guild",description="group for checker cog")
+    checker_group = app_commands.Group(name="guild",description=app_commands.locale_str("command.guild.description"))
     
-    @checker_group.command(name="info", description="checks current server information")
+    @checker_group.command(name="info", description=app_commands.locale_str("command.guild.info.description"))
     @app_commands.guild_only()
     async def check_server_info(self, interaction: Interaction):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
@@ -98,22 +98,24 @@ class GuildCog(commands.Cog):
         
         if guild:
             temp1 = {
-                'Description': guild.description if guild.description else "No description.",
-                'Preferred Locale': guild.preferred_locale.language_code,
-                'Owner': guild.owner.mention if guild.owner else "Unknown",
-                'Members': f"{len(guild.members):,} members",
-                'Created on': guild.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                'Current Shard': guild.shard_id if guild.shard_id else "N/A",
-                'Over 250?': "Yes" if guild.large == True else "No",
-                'Roles': f"{len(guild.roles):,} roles",
-                'Emojis': f"{len(guild.emojis):,} emojis",
-                'Stickers': f"{len(guild.stickers):,} stickers",
-                'Boost Level': f"Level {guild.premium_tier}",
-                'Boosts': f"{guild.premium_subscription_count:,} boosts",
-                'Channels': f"{len(guild.channels):,} channels",
-                'Categories': f"{len(guild.categories):,} categories",
-                'Chunked': f"{'Yes' if guild.chunked else 'No'}",
+                'server_description': guild.description if guild.description else "No description.",
+                'server_locale': guild.preferred_locale.language_code,
+                'server_owner': guild.owner.mention if guild.owner else "Unknown",
+                'server_members': f"{len(guild.members):,} members",
+                'server_creation': guild.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                'server_shard': guild.shard_id if guild.shard_id else "N/A",
+                'server_large': "Yes" if guild.large == True else "No",
+                'server_roles': f"{len(guild.roles):,} roles",
+                'server_emojis': f"{len(guild.emojis):,} emojis",
+                'server_stickers': f"{len(guild.stickers):,} stickers",
+                'server_level': f"Level {guild.premium_tier}",
+                'server_boosts': f"{guild.premium_subscription_count:,} boosts",
+                'server_channels': f"{len(guild.channels):,} channels",
+                'server_categories': f"{len(guild.categories):,} categories",
+                'server_chunked': f"{'Yes' if guild.chunked else 'No'}",
             }
+            
+            temp1 = i18n.translate_map(temp1, str(loc))
             e = Embed(title=f"Information for {guild.name}", color=Color.blue())
             e.set_footer(text=f"Guild ID: {guild.id}")
             e.set_author(name=f"By {guild.owner.name if guild.owner else 'Unknown'}", icon_url=guild.owner.avatar.url if guild.owner and guild.owner.avatar else None)
@@ -127,7 +129,7 @@ class GuildCog(commands.Cog):
         else:
             return await interaction.followup.send("Guild not found.")
     
-    @checker_group.command(name="kickmembers", description="Kicks real user members")
+    @checker_group.command(name="kickmembers", description=app_commands.locale_str("command.guild.kickmembers.description"))
     @app_commands.guild_only()
     @app_commands.checks.has_permissions(administrator=True)
     async def kick_all_realusers(self, interaction: Interaction):
@@ -147,30 +149,21 @@ class GuildCog(commands.Cog):
             return await interaction.followup.send("Guild not found.")
     
     @cached(300)
-    @checker_group.command(name="nsfw_level",description="Checks if server has NSFW Level")
+    @checker_group.command(name="nsfw_level",description=app_commands.locale_str("command.guild.nsfw_level.description"))
     @app_commands.guild_only()
     async def check_nsfw_level(self, interaction: Interaction):
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         await interaction.response.defer(thinking=True)
         embed = Embed(title="Is server NSFW?",description="")
         if interaction.guild:
-            match (interaction.guild.nsfw_level):
-                case NSFWLevel.default:
-                    embed.description = "Not NSFW"
-                case NSFWLevel.explicit:
-                    embed.description = "Explicit"
-                case NSFWLevel.safe:
-                    embed.description = "Safe"
-                case NSFWLevel.age_restricted:
-                    embed.description = "Age restricted"
-                case _:
-                    embed.description = "Unknown"
+            embed.description = i18n.T(f"text.NSFWLevel.{interaction.guild.nsfw_level.name}", loc)
         else:
             return await interaction.followup.send("Guild not found.")
         
         return await interaction.followup.send(embed=embed)
     
     @cached(300)
-    @checker_group.command(name="icon", description="Gets server icon.")
+    @checker_group.command(name="icon", description=app_commands.locale_str("command.guild.icon.description"))
     @app_commands.guild_only()
     async def get_server_icon(self, interaction: Interaction):
         await interaction.response.defer(thinking=True)
@@ -180,7 +173,7 @@ class GuildCog(commands.Cog):
         else:
             return await interaction.followup.send("No icon found.")
     
-    @checker_group.command(name="count", description="Gets count of members by usertype, and calculates")
+    @checker_group.command(name="count", description=app_commands.locale_str("command.guild.count.description"))
     @app_commands.guild_only()
     @app_commands.checks.has_permissions(moderate_members=True)
     async def get_member(self, interaction: Interaction):
@@ -212,7 +205,7 @@ class GuildCog(commands.Cog):
             lines.append(f"Nitro users: {nitros}")
     
     @cached(60)
-    @checker_group.command(name="members_list", description="Retrieves memebers in this guild.")
+    @checker_group.command(name="members_list", description=app_commands.locale_str("command.guild.members_list.description"))
     @app_commands.guild_only()
     async def get_members(self, interaction: Interaction, include_bot: bool = False, include_member: bool = True):
         await interaction.response.defer()
@@ -249,7 +242,7 @@ class GuildCog(commands.Cog):
             return await interaction.followup.send(embed=embed)
     
     @cached(60)
-    @checker_group.command(name="search_members", description="Searches members by keyword.")
+    @checker_group.command(name="search_members", description=app_commands.locale_str("command.guild.search_members.description"))
     @app_commands.guild_install()
     async def search_members(self, interaction: Interaction, keyword: str):
         await interaction.response.defer()
@@ -278,7 +271,7 @@ class GuildCog(commands.Cog):
             return await interaction.followup.send(embed=embed)
     
     @cached(60)
-    @checker_group.command(name="role_list", description="Retrieves list of roles.")
+    @checker_group.command(name="role_list", description=app_commands.locale_str("command.guild.roles_list.description"))
     @app_commands.guild_install()
     async def get_roles(self, interaction: Interaction):
         await interaction.response.defer()
@@ -317,7 +310,7 @@ class GuildCog(commands.Cog):
         
         return history
     
-    @checker_group.command(name="logs", description="Shows a menu to get history of kicks, bans and timeouts.")
+    @checker_group.command(name="logs", description=app_commands.locale_str("command.guild.logs.description"))
     @app_commands.checks.has_permissions(view_audit_log=True)
     async def show_history(self, interaction: Interaction):
         if not interaction.guild: return await interaction.response.send_message("Must be in guild.")

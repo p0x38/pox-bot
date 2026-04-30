@@ -9,6 +9,7 @@ from typing import Any, cast
 from discord.ext import commands
 from discord import Activity, ActivityType, ClientStatus, Color, CustomActivity, Embed, Forbidden, Game, HTTPException, Interaction, Locale, Member, Role, SelectOption, Spotify, Status, Streaming, TextChannel, TextStyle, User, app_commands, ui
 from aiocache import cached
+from pytz import UTC
 
 from bot import PoxBot
 
@@ -283,6 +284,7 @@ class UserCog(commands.Cog):
         bot.tree.add_command(contextmenu_timeout)
     
     group = app_commands.Group(name="user", description=app_commands.locale_str("command.user.description"))
+    global_group = app_commands.Group(name="user_global", description=app_commands.locale_str("command.user.description"), allowed_contexts=app_commands.AppCommandContext(guild=True, dm_channel=True, private_channel=True))
     
     @group.command(name="guild_duration", description="Checks how long user has been in the server.")
     @app_commands.guild_only()
@@ -308,96 +310,121 @@ class UserCog(commands.Cog):
             logger.exception(e)
             await interaction.followup.send("sry errored")
     
-    @group.command(name="info", description=app_commands.locale_str("command.user.info.description"))
-    @app_commands.guild_only()
-    async def check_user_info(self, interaction: Interaction, member: Member):
+    @global_group.command(name="user_profile", description=app_commands.locale_str("command.user.info.description"))
+    async def check_user_info(self, interaction: Interaction, member: Member | User):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale.value
         await interaction.response.defer(thinking=True)
         try:
-            if interaction.guild:
-                user = interaction.guild.get_member(member.id)
-                if user:
+            user = interaction.guild.get_member(member.id) if interaction.guild else member
+            if user:
+                e = Embed(title=i18n.T("command.user.info.embeds.default.title", loc, {"user": user.display_name}))
+                temp1 = {
+                    'user_id': user.id,
+                    'user_name': f"`{user.display_name}`",
+                    'user_bot': i18n.T("text.boolean.true" if user.bot else "text.boolean.false", loc),
+                    'user_creation': user.created_at.strftime("%Y-%m-%d %H:%M:%S") + f" (<t:{int(user.created_at.timestamp())}:R>)"
+                }
+                
+                if isinstance(user, Member):
                     roles = [role for role in user.roles if role.name != "@everyone"]
-                    temp1 = {
-                        'user_id': user.id,
-                        'user_name': f"`{user.display_name}`",
-                        'user_bot': i18n.T("text.boolean.true" if user.bot else "text.boolean.false", loc),
-                        'user_creation': user.created_at.strftime("%Y-%m-%d %H:%M:%S") + f" (<t:{int(user.created_at.timestamp())}:R>)",
-                        'user_highest_role': f"<@&{user.top_role.id}>",
-                        'user_status': format_status(user.client_status, loc),
-                        'user_nitro': user.premium_since.strftime("%Y-%m-%d %H:%M:%S") if user.premium_since else i18n.T("label.non_nitro", loc),
-                        'user_join': user.joined_at.strftime("%Y-%m-%d %H:%M:%S") + f" (<t:{int(user.joined_at.timestamp())}:R>)" if user.joined_at else i18n.T("text.unknown_join", loc),
-                        'user_roles': ", ".join([f"<@&{role.id}>" for role in roles])
-                    }
-                    
-                    if self.bot.user_db:
-                        data = await self.bot.user_db.get_full_profile(member.id)
-                        if data:
-                            temp1['user_wallet'] = i18n.T(
-                                'command.user.info.fields.wallet',
-                                loc,
-                                {"coins": data.get('wallet', 0)}
-                            )
-                            temp1['user_stats'] = i18n.T(
-                                'command.user.info.fields.stats',
-                                loc,
-                                {
-                                    "level": f"{data.get('level', 0):,}",
-                                    "xp": f"{data.get('xp', 0):,}",
-                                    "messages": f"{data.get('total_messages', 0):,}"
-                                }
-                            )
-                        
-                    
-                    temp1 = i18n.translate_map(temp1, loc)
+                    temp1['user_highest_role'] = f"<@&{user.top_role.id}>"
+                    temp1['user_join'] = user.joined_at.strftime("%Y-%m-%d %H:%M:%S") + f" (<t:{int(user.joined_at.timestamp())}:R>)" if user.joined_at else i18n.T("text.unknown_join", loc)
+                    temp1['user_roles'] = ", ".join([f"<@&{role.id}" for role in roles])
+                    temp1['user_status'] = format_status(user.client_status, loc)
+                    temp1['user_nitro'] = user.premium_since.strftime("%Y-%m-%d %H:%M:%S") if user.premium_since else i18n.T("label.non_nitro", loc)
+                
+                if self.bot.user_db:
+                    data = await self.bot.user_db.get_full_profile(member.id)
+                    if data:
+                        wallet = data.get('wallet') or 0
+                        level = data.get('level') or 0
+                        xp = data.get('xp') or 0 
+                        messages = data.get('total_messages') or 0
+                        nickname = data.get('nickname') or i18n.T("text.unknown", loc)
+                        description = data.get('description') or i18n.T('error.custom.description_not_found', loc)
+                        temp1['user_wallet'] = i18n.T(
+                            'command.user.info.fields.wallet',
+                            loc,
+                            {"coins": f"{wallet:,}"}
+                        )
+                        temp1['user_stats'] = i18n.T(
+                            'command.user.info.fields.stats',
+                            loc,
+                            {
+                                "level": f"{level:,}",
+                                "xp": f"{xp:,}",
+                                "messages": f"{messages:,}"
+                            }
+                        )
+                        temp1['user_nickname'] = nickname
+                        e.description = description
+                
+                temp1 = i18n.translate_map(temp1, loc)
+                if isinstance(user, Member):
+                    index_activity = 0
+                    for activity in user.activities:
+                        index_activity += 1
+                        if isinstance(activity, Activity):
+                            info = ""
+                            match (activity.type):
+                                case ActivityType.custom:
+                                    info = activity.name
+                                case _:
+                                    info = i18n.T(f"text.activity_type.{activity.type.name}", loc, {"activity": activity.name})
+                            
+                            temp1[f'Activity #{index_activity}'] = f"{info} ({activity.state})"
+                        elif isinstance(activity, Game):
+                            temp1[f'Activity #{index_activity}'] = i18n.T("text.activity_type.game", loc, {"activity": activity.name, "platform": activity.platform})
+                        elif isinstance(activity, Streaming):
+                            temp1[f'Activity #{index_activity}'] = i18n.T("text.activity_type.stream", loc, {"activity": activity.name, "platform": activity.platform})
+                        elif isinstance(activity, CustomActivity):
+                            temp1[f'Activity #{index_activity}'] = activity.name
+                        elif isinstance(activity, Spotify):
+                            temp1[f'Activity #{index_activity}'] = i18n.T("text.activity_type.spotify", loc, {"title": activity.title, "artist": activity.artist, "album": activity.album})
+                        else:
+                            temp1[f'Activity #{index_activity}'] = i18n.T("text.unknown", loc)
 
-                    if user.activities:
-                        index_activity = 0
-                        for activity in user.activities:
-                            index_activity += 1
-                            if isinstance(activity, Activity):
-                                info = ""
-                                match (activity.type):
-                                    case ActivityType.custom:
-                                        info = activity.name
-                                    case _:
-                                        info = i18n.T(f"text.activity_type.{activity.type.name}", loc, {"activity": activity.name})
-                                
-                                temp1[f'Activity #{index_activity}'] = f"{info} ({activity.state})"
-                            elif isinstance(activity, Game):
-                                temp1[f'Activity #{index_activity}'] = i18n.T("text.activity_type.game", loc, {"activity": activity.name, "platform": activity.platform})
-                            elif isinstance(activity, Streaming):
-                                temp1[f'Activity #{index_activity}'] = i18n.T("text.activity_type.stream", loc, {"activity": activity.name, "platform": activity.platform})
-                            elif isinstance(activity, CustomActivity):
-                                temp1[f'Activity #{index_activity}'] = activity.name
-                            elif isinstance(activity, Spotify):
-                                temp1[f'Activity #{index_activity}'] = i18n.T("text.activity_type.spotify", loc, {"title": activity.title, "artist": activity.artist, "album": activity.album})
-                            else:
-                                temp1[f'Activity #{index_activity}'] = i18n.T("text.unknown", loc)
-                    
-                    e = Embed(title=i18n.T("command.user.info.embeds.default.title", loc, {"user": user.display_name}))
+                for key,value in temp1.items():
+                    e.add_field(name=key, value=value, inline=True)
 
-                    for key,value in temp1.items():
-                        e.add_field(name=key, value=value, inline=True)
-
-                    if user.display_avatar:
-                        e.set_thumbnail(url=user.display_avatar.url)
-                    else:
-                        e.set_thumbnail(url=user.default_avatar.url)
-
-                    return await interaction.followup.send(embed=e)
+                if user.display_avatar:
+                    e.set_thumbnail(url=user.display_avatar.url)
                 else:
-                    return await interaction.followup.send(i18n.T("error.custom.user_not_found", loc))
+                    e.set_thumbnail(url=user.default_avatar.url)
+
+                return await interaction.followup.send(embed=e)
             else:
-                return await interaction.followup.send(i18n.T("error.custom.invalidated_cache", loc))
+                return await interaction.followup.send(i18n.T("error.custom.user_not_found", loc))
         except Exception as e:
             logger.exception(f"Error: {e}")
             return await interaction.followup.send(f"Error. {e}")
     
+    @global_group.command(name="set-profile", description=app_commands.locale_str("command.user.set_profile.description"))
+    async def set_user_community_profile(self, interaction: Interaction, nickname: str | None = None, description: str | None = None):
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
+        
+        await interaction.response.defer()
+        
+        embed = Embed()
+        
+        if not self.bot.user_db:
+            embed.title = i18n.T("error.embeds.database_not_available.title", loc)
+            embed.description = i18n.T("error.embeds.database_not_available.description", loc)
+            embed.timestamp = datetime.now(UTC)
+            embed.color = Color.red()
+
+            return interaction.followup.send(embed=embed)
+        
+        await self.bot.user_db.update_profile(interaction.user.id, description, nickname)
+        
+        embed.title = i18n.T("command.user.set_profile.embeds.default.title", loc)
+        embed.description = i18n.T("command.user.set_profile.embeds.default.description", loc, {"nickname": nickname, "description": description})
+        
+        await interaction.followup.send(embed=embed)
+    
     @cached(60)
-    @group.command(name="avatar", description=app_commands.locale_str("command.user.avatar.description"))
-    @app_commands.guild_only()
-    async def get_user_avatar(self, interaction: Interaction, member: Member):
+    @global_group.command(name="avatar", description=app_commands.locale_str("command.user.avatar.description"))
+    async def get_user_avatar(self, interaction: Interaction, member: User | Member):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         await interaction.response.defer()
 

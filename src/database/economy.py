@@ -22,18 +22,20 @@ class EconomyDatabase(PostgreSQLDatabase):
     
     async def get_user(self, user_id: int) -> EconomyData:
         cached = self._cache.get(user_id)
-        if cached: return cached
+        if cached:
+            return cached
 
-        if self.pool:
-            async with self.pool.acquire() as conn:
-                row = await conn.fetchrow("SELECT * FROM economy_users WHERE user_id = $1", user_id)
-                user_obj = EconomyData.from_row(row)
-                if not row:
-                    user_obj.user_id = user_id
-
-                self._cache.set(user_id, user_obj)
-                return user_obj
-        return EconomyData(user_id=user_id)
+        async def fetch_user(conn):
+            row = await conn.fetchrow(
+                "SELECT * FROM economy_users WHERE user_id = $1",
+                user_id
+            )
+            user_obj = EconomyData.from_row(row) if row else EconomyData(user_id=user_id)
+            self._cache.set(user_id, user_obj)
+            return user_obj
+        
+        result = await self.with_connection(fetch_user)
+        return result or EconomyData(user_id=user_id)
     
     async def save_user(self, user: EconomyData):
         self._cache.set(user.user_id, user)
@@ -45,7 +47,7 @@ class EconomyDatabase(PostgreSQLDatabase):
                     ON CONFLICT (user_id) DO UPDATE SET
                         wallet = EXCLUDED.wallet,
                         bank = EXCLUDED.bank,
-                        last_daily = EXCLUDED.last_daily
+                        last_daily = EXCLUDED.last_daily,
                         last_work = EXCLUDED.last_work
                 """, user.user_id, user.wallet, user.bank, user.last_daily, user.last_work)
     
@@ -92,7 +94,7 @@ class EconomyDatabase(PostgreSQLDatabase):
             async with self.pool.acquire() as conn:
                 await conn.execute("""
                     INSERT INTO economy_transactions (user_id, type, amount, description, timestamp)
-                    VALUES ($1, $2, $3, $4)
+                    VALUES ($1, $2, $3, $4, $5)
                 """, user_id, tx_type, amount, desc, int(datetime.now().timestamp()))
     
     async def get_history(self, user_id: int, limit: int = 5) -> list:

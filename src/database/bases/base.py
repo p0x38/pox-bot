@@ -77,6 +77,17 @@ class PostgreSQLDatabase:
                 if filename.endswith(".sql"):
                     await self.execute_sql_file(os.path.join(sql_dir, filename))
     
+    async def acquire_connection(self):
+        if not self.pool:
+            return None
+        return await self.pool.acquire()
+    
+    async def with_connection(self, callback):
+        if not self.pool:
+            return None
+        async with self.pool.acquire() as conn:
+            return await callback(conn)
+    
     async def close(self):
         """
         Main entry point for shutdown.

@@ -103,8 +103,8 @@ class ModerationCog(commands.Cog):
         embed = Embed()
         
         if not interaction.guild:
-            embed.title = i18n.T("error.embed.guild_only.title", loc)
-            embed.description = i18n.T("error.embed.guild_only.description", loc)
+            embed.title = i18n.T("error.embeds.guild_only.title", loc)
+            embed.description = i18n.T("error.embeds.guild_only.description", loc)
             return await interaction.followup.send(embed=embed)
         
         if not self.bot.guild_db:
@@ -163,8 +163,8 @@ class ModerationCog(commands.Cog):
         embed = Embed()
         
         if not interaction.guild:
-            embed.title = i18n.T("error.embed.guild_only.title", loc)
-            embed.description = i18n.T("error.embed.guild_only.description", loc)
+            embed.title = i18n.T("error.embeds.guild_only.title", loc)
+            embed.description = i18n.T("error.embeds.guild_only.description", loc)
             return await interaction.followup.send(embed=embed)
         
         if not self.bot.guild_db:
@@ -213,8 +213,8 @@ class ModerationCog(commands.Cog):
         embed = Embed()
         
         if not interaction.guild:
-            embed.title = i18n.T("error.embed.guild_only.title", loc)
-            embed.description = i18n.T("error.embed.guild_only.description", loc)
+            embed.title = i18n.T("error.embeds.guild_only.title", loc)
+            embed.description = i18n.T("error.embeds.guild_only.description", loc)
             return await interaction.followup.send(embed=embed)
         
         if not self.bot.guild_db:
@@ -258,8 +258,8 @@ class ModerationCog(commands.Cog):
         embed = Embed()
         
         if not interaction.guild:
-            embed.title = i18n.T("error.embed.guild_only.title", loc)
-            embed.description = i18n.T("error.embed.guild_only.description", loc)
+            embed.title = i18n.T("error.embeds.guild_only.title", loc)
+            embed.description = i18n.T("error.embeds.guild_only.description", loc)
             return await interaction.followup.send(embed=embed)
         
         if not self.bot.guild_db:
@@ -268,7 +268,7 @@ class ModerationCog(commands.Cog):
             embed.timestamp = datetime.now(UTC)
             embed.color = Color.red()
 
-            return interaction.followup.send(embed=embed)
+            return await interaction.followup.send(embed=embed)
         
         config = await self.bot.guild_db.get_config(interaction.guild.id)
         
@@ -279,7 +279,7 @@ class ModerationCog(commands.Cog):
             embed.timestamp = datetime.now(UTC)
             embed.color = Color.red()
 
-            return interaction.followup.send(embed=embed)
+            return await interaction.followup.send(embed=embed)
         
         embed.title = i18n.T('command.moderation.blacklist.list.embeds.default.title', loc)
         
@@ -292,7 +292,7 @@ class ModerationCog(commands.Cog):
         if len(wf.blacklists) > 20:
             embed.set_footer(text=i18n.T("command.moderation.blacklist.list.embeds.default.footer", loc, {"remaining": len(wf.blacklists) - 20}))
         
-        await interaction.response.send_message(embed=embed)
+        await interaction.followup.send(embed=embed)
         
 async def setup(bot):
     await bot.add_cog(ModerationCog(bot))

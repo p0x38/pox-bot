@@ -8,7 +8,7 @@
         }
     },
     "channel": {
-        "description": "チャンネル関連のコマンドグループ。",
+        "description": "チャンネル関連のグループ。",
         "info": {
             "description": "チャンネルの情報を表示するよ。",
             "embeds": {
@@ -18,10 +18,10 @@
             }
         },
         "slowmode": {
-            "description": "スローモードの待機時間を設定します。",
+            "description": "スローモードの待機時間を設定するよ。",
             "embeds": {
                 "successful": {
-                    "description": "%{mention} のスローモードを **%{seconds}秒** に設定したよ。",
+                    "description": "%{mention} のスローモードを **%{seconds}秒** に設定できたよ! :3",
                     "title": "スローモード更新"
                 }
             }
@@ -30,16 +30,16 @@
     "contributors": {
         "description": "コントリビューター関連のグループ。",
         "list": {
-            "description": "コントリビューター一覧を表示します。",
+            "description": "コントリビューター一覧を表示するよ。",
             "embeds": {
                 "default": {
-                    "description": "このボットに協力してくれた人たちだよ！ありがと〜 :3",
+                    "description": "このボットに協力してくれた人たちだよ! ありがと〜 :3",
                     "title": "コントリビューター"
                 }
             }
         },
         "view": {
-            "description": "コントリビューターの情報を表示します。",
+            "description": "コントリビューターの情報を表示するよ。",
             "embeds": {
                 "default": {
                     "title": "%{contributor} の情報"
@@ -49,7 +49,7 @@
     },
     "economy": {
         "balance": {
-            "description": "現在の所持コインを確認します。",
+            "description": "現在の所持コインを確認するよ。",
             "embeds": {
                 "default": {
                     "footer": "合計資産: %{coins} コイン",
@@ -66,109 +66,109 @@
             "embeds": {
                 "item_unavailable": {
                     "description": "そのアイテムは今は売ってないみたい… 3:<",
-                    "title": "購入できないよ"
+                    "title": "購入できないよ!"
                 },
                 "not_afford": {
-                    "description": "コインが足りないよ！ 3:<",
-                    "title": "コイン不足"
+                    "description": "コインが足りないよぉぉ! 3:<",
+                    "title": "コイン不足だよ!"
                 },
                 "purchased": {
-                    "description": "**%{item_name}** を購入したよ！インベントリをチェックしてね〜 ;3",
-                    "title": "購入完了"
+                    "description": "**%{item_name}** を購入したよ! インベントリをチェックしてね〜 ;3",
+                    "title": "購入完了したよ!"
                 }
             }
         },
         "daily": {
-            "description": "デイリー報酬を受け取ります。",
+            "description": "一日ごとの報酬を受け取るよ。",
             "embeds": {
                 "default": {
-                    "description": "%{amount} コインもらったよ！ :3",
-                    "title": "デイリー報酬ゲット！"
+                    "description": "%{amount} コインもらったよ! :3",
+                    "title": "デイリー報酬ゲットしたよ!"
                 }
             }
         },
         "deposit": {
-            "description": "ウォレットから銀行へコインを預けます。",
+            "description": "ウォレットから銀行へコインを預るよ。",
             "embeds": {
                 "default": {
-                    "description": "%{amount} コインを預けたよ。",
-                    "title": "預け入れ完了"
+                    "description": "%{amount} コインを預けたよ!",
+                    "title": "預け入れ完了したよ!"
                 }
             }
         },
         "description": "経済システムのコマンドグループ。",
         "history": {
-            "description": "最近の取引履歴を表示します。"
+            "description": "最近の取引履歴を表示するよ。"
         },
         "inventory": {
-            "description": "持っているアイテムを確認します。",
+            "description": "持っているアイテムを確認するよ。",
             "embeds": {
                 "default": {
                     "title": "%{user} のインベントリ"
                 },
                 "empty": {
-                    "description": "まだ何も入ってないよ。何か買ってみよ〜 :3",
-                    "title": "空っぽ"
+                    "description": "まだ何も入ってないみたい… 何か買ってみよ〜 :3",
+                    "title": "空っぽだ…!"
                 }
             }
         },
         "list": {
-            "description": "ショップの商品一覧を表示します。",
+            "description": "ショップの商品一覧を表示するよ。",
             "fields": {
                 "buy_price": "価格: %{price} コイン",
-                "not_sale": "販売していません"
+                "not_sale": "販売していないみたい…"
             }
         },
         "sell": {
             "description": "アイテムをショップに売るよ。",
             "embeds": {
                 "sold": {
-                    "description": "**%{item_name}** を売ったよ！",
-                    "title": "売却完了"
+                    "description": "**%{item_name}** を売ったよ!",
+                    "title": "売却完了したよ!"
                 },
                 "unable_to_sell": {
-                    "description": "これは買い取ってくれないみたい… 3:<",
-                    "title": "売れないよ"
+                    "description": "これは買い取ってくれないみたい… 3:",
+                    "title": "売れないよ…"
                 }
             }
         },
         "withdraw": {
-            "description": "銀行からウォレットへコインを引き出します。",
+            "description": "銀行からウォレットへコインを引き出すよ。",
             "embeds": {
                 "default": {
                     "description": "%{amount} コインを引き出したよ。",
-                    "title": "引き出し完了"
+                    "title": "引き出し完了したよ!"
                 }
             }
         },
         "work": {
-            "description": "働いてコインを稼ぎます。",
+            "description": "働いてコインを稼ぐよ。",
             "embeds": {
                 "default": {
-                    "description": "働いて %{amount} コインゲット！ :3",
-                    "title": "お仕事完了！"
+                    "description": "働いて %{amount} コインゲット! :3",
+                    "title": "お仕事完了!"
                 },
                 "tired": {
                     "description": "あと %{rem} 分くらい休んでね。",
-                    "title": "まだ働けないよ"
+                    "title": "まだ働けないよ!"
                 }
             }
         }
     },
     "info": {
         "commit_data": {
-            "description": "最新のgitコミット情報を表示します。"
+            "description": "最新のGitコミット情報を表示するよ。"
         },
-        "description": "情報系コマンド。",
+        "description": "情報関連のグループ。",
         "invite": {
-            "description": "アプリURLからボットをサーバーに招待します。（最大90サーバー）",
+            "description": "アプリURLからボットをサーバーに招待するよ。（最大90サーバーまで）",
             "embeds": {
                 "default": {
-                    "description": "%{prefix}\n\n[このリンク](%{invite_url})から追加できるよ！",
-                    "footer": "注:完全な機能には高度な権限が必要だよ、Discordの仕様上、招待数は90サーバーまでに制限されるよ。",
+                    "description": "%{prefix}\n\n[このリンク](%{invite_url})から追加できるよ!",
+                    "footer": "注:完全な機能には高度な権限が必要なんだ。そしてDiscordの未認証のBOTに対しての仕様上、招待数は90サーバーまでに制限されるよ。",
                     "status": {
-                    "one": "現在: **%{formatted}** サーバー",
-                    "other": "現在: **%{formatted}** サーバー"
+                        "one": "現在: **%{formatted}** サーバー",
+                        "other": "現在: **%{formatted}** サーバー"
                     },
                     "title": "TongueBotを招待"
                 }
@@ -178,7 +178,7 @@
             }
         },
         "os_info": {
-            "description": "OS情報を表示します。",
+            "description": "OS情報を表示するよ。",
             "embeds": {
                 "default": {
                     "title": "OS情報"
@@ -186,7 +186,7 @@
             }
         },
         "ping": {
-            "description": "ポン！",
+            "description": "Pong!",
             "embeds": {
                 "default": {
                     "title": "Pong! (%{latency} ms)"
@@ -194,7 +194,7 @@
             }
         },
         "retrieve": {
-            "description": "ボットの情報を取得します。",
+            "description": "ボットの情報を取得するよ。",
             "embeds": {
                 "default": {
                     "description": "下からカテゴリを選んでね。",
@@ -203,14 +203,14 @@
                 }
             },
             "error": {
-                "forbidden": "**チャンネル管理** 権限が必要です。"
+                "forbidden": "**チャンネル管理** 権限が必要だよ。"
             }
         },
         "sync": {
-            "description": "コマンドを同期します。"
+            "description": "コマンドを同期するよ。"
         },
         "timedate": {
-            "description": "指定したタイムゾーンの時間を表示します。",
+            "description": "指定したタイムゾーンの時間を表示するよ。",
             "embeds": {
                 "default": {
                     "description": "%{timezone_name} の現在時刻は **%{timedate}** だよ。"
@@ -219,21 +219,21 @@
         }
     },
     "leveling": {
-        "description": "レベリングシステム。",
+        "description": "レベル関連のグループ。",
         "rank": {
             "description": "ランクをチェックするよ。",
             "embeds": {
                 "default": {
                     "fields": {
-                    "level": {
+                        "level": {
                             "name": "レベル"
-                    },
-                    "progress": {
+                        },
+                        "progress": {
                             "name": "進行状況"
-                    },
-                    "total": {
+                        },
+                        "total": {
                             "name": "合計XP"
-                    }
+                        }
                     },
                     "title": "%{user}のランク"
                 }
@@ -250,7 +250,7 @@
         }
     },
     "moderation": {
-        "description": "もでレーションの管理用だよ。",
+        "description": "モデレーション関連のグループ。",
         "togglefeature": {
             "description": "サーバー機能を切り替えるよ。",
             "embeds": {
@@ -268,13 +268,13 @@
             }
         },
         "blacklist": {
-            "description": "ブラックリストシステム。",
+            "description": "ブラックリスト関連のグループ。",
             "add": {
                 "description": "ブラックリストに単語を追加するよ。",
                 "embeds": {
                     "default": {
-                    "title": "単語をブラックリストに追加したよ",
-                    "description": "%{entry} をブラックリストに '%{type}' として追加したよ。 ユニークな識別子は%{id}だよ。"
+                        "title": "単語をブラックリストに追加したよ!",
+                        "description": "%{entry} をブラックリストに '%{type}' として追加したよ! ユニークな識別子は%{id}だよ!"
                     }
                 }
             },
@@ -282,12 +282,12 @@
                 "description": "ブラックリストから一致したクエリを削除するよ。",
                 "embeds": {
                     "default": {
-                    "title": "ブラックリストから一致したクエリを削除したよ。",
-                    "description": "'%{query}' に一致するすべてのクエリを削除したよ。"
+                        "title": "ブラックリストから一致したクエリを削除したよ!",
+                        "description": "'%{query}' に一致するすべてのクエリを削除したよ!"
                     },
                     "not_found": {
-                    "title": "トリガーが見つからなかったよ。",
-                    "description": "クエリ「%{query} 」に一致するトリガーはブラックリストから見つからなかったよ。"
+                        "title": "トリガーが見つからなかったよ…",
+                        "description": "クエリ「%{query} 」に一致するトリガーはブラックリストから見つからなかったよ… 3:"
                     }
                 }
             },
@@ -295,11 +295,11 @@
                 "description": "このサーバーに登録されているすべてのブラックリストのトリガーを一覧表示するよ。",
                 "embeds": {
                     "default": {
-                    "title": "このサーバーに登録されたブラックリストのトリガー",
-                    "footer": "さらに、 %{remaining} 個多いトリガーが登録されているよ。"
+                        "title": "このサーバーに登録されたブラックリストのトリガー",
+                        "footer": "さらに、 %{remaining} 個多いトリガーが登録されているよ。"
                     },
                     "no_blacklist": {
-                    "description": "このサーバーからブラックリストトリガーが見つからなかったよ。"
+                        "description": "このサーバーからブラックリストトリガーが見つからなかったよ。"
                     }
                 }
             }
@@ -314,7 +314,7 @@
                 }
             }
         },
-        "description": "Roblox API のグループだよ。",
+        "description": "Roblox関連のグループ。",
         "user": {
             "description": "ユーザー名からRoblox ユーザー情報を取得するよ。",
             "embeds": {
@@ -325,12 +325,12 @@
         }
     },
     "stats": {
-        "description": "レベリングシステム。",
+        "description": "リーダーボード関連のグループ。",
         "top": {
             "description": "トップユーザーを表示するよ。",
             "embeds": {
                 "default": {
-                    "title": "グローバルリーダーボード！！>:D"
+                    "title": "グローバルリーダーボード!! >:D"
                 }
             }
         }
@@ -342,10 +342,10 @@
         }
     },
     "tts": {
-        "description": "TTS関連の中心だよ",
+        "description": "TTS関連のグループ。",
         "embeds": {
             "default": {
-                "description": "生成されたよ！ >:D",
+                "description": "生成されたよ! >:D",
                 "footer": "TTSエンジン: %{tts_type};\n入力: %{input}",
                 "title": "TTS変換"
             }
@@ -406,13 +406,13 @@
         "embeds": {
             "join": {
                 "description": "ようこそ、%{mention}さん! %{rules_mention}にてルールを確認してね。",
-                "description_no_rules": "サーバーへようこそ、 %{mention}さん！",
+                "description_no_rules": "サーバーへようこそ、 %{mention}さん!",
                 "footer": "現在、メンバーは%{count}人いるよ。",
-                "title": "%{guild} へようこそ！"
+                "title": "%{guild} へようこそ!"
             },
             "left": {
-                "description": "さようなら、 %{display}！",
-                "title": "メンバー %{display} が %{guild} を離れたよ！"
+                "description": "さようなら、 %{display}!",
+                "title": "メンバー %{display} が %{guild} を離れたよ!"
             }
         },
         "set_channel": {
@@ -422,7 +422,7 @@
                     "description": "Welcome通知機能が無効になったよ。"
                 },
                 "enabled": {
-                    "description": "ウェルカム通知機能が有効になったよ。\n ウェルカムメッセージは %{target_mention} に表示されるよ。"
+                    "description": "ウェルカム通知機能が有効になったよ!\n ウェルカムメッセージは %{target_mention} に表示されるよ。"
                 }
             }
         },
@@ -430,21 +430,21 @@
             "description": "通知メッセージにルールチャンネルを設定するよ。",
             "embeds": {
                 "disabled": {
-                    "description": "ウェルカムメッセージのルールチャンネルが削除されたよ。"
+                    "description": "ウェルカムメッセージのルールチャンネルが削除されたよ。 :3"
                 },
                 "success": {
-                    "description": "ウェルカムメッセージのルールチャンネルが %{target_mention}に設定されたよ。"
+                    "description": "ウェルカムメッセージのルールチャンネルが %{target_mention}に設定されたよ。 :3"
                 }
             }
         },
         "test": {
-            "description": "ウェルカムチャンネルのテストを実行するよ",
+            "description": "ウェルカムチャンネルのテストを実行するよ。",
             "embeds": {
                 "sent": {
-                    "description": "テストが正常にウェルカムチャンネルに送信されたよ！"
+                    "description": "テストが正常にウェルカムチャンネルに送信されたよ! :3"
                 },
                 "unconfigured": {
-                    "description": "このギルドでは、Welcome通知チャンネルが設定されてないよ。"
+                    "description": "このギルドでは、Welcome通知チャンネルが設定されてないよ。 3:"
                 }
             }
         }
