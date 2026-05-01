@@ -331,12 +331,13 @@ class ChatbotCog(commands.Cog):
     
     @group.command(name="mem", description=app_commands.locale_str("command.chatbot.mem.description"))
     async def show_memory(self, interaction: Interaction):
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         await interaction.response.defer()
         
         embed = Embed(title="🧠 Context Memory Status", color=Color.dark_grey())
         
         if not self.history:
-            return await interaction.followup.send("My brain is currently empty. (No history)")
+            return await interaction.followup.send(i18n.T("command.chatbot.mem.messages.empty", loc))
         
         # Calculate how many 'turns' are in each channel
         for channel_id, history in self.history.items():
@@ -382,11 +383,12 @@ class ChatbotCog(commands.Cog):
     
     @group.command(name="perf", description=app_commands.locale_str("command.chatbot.perf.description"))
     async def show_perfstats(self, interaction: Interaction):
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         try:
             await interaction.response.defer()
             
             if not self.perf_logs:
-                return await interaction.followup.send("No data were collected for performance stats currently.")
+                return await interaction.followup.send(i18n.T("command.chatbot.perf.messages.empty_logs", loc))
             
             avg_ttft = sum(l['ttft'] for l in self.perf_logs) / len(self.perf_logs)
             avg_tps = sum(l['tps'] for l in self.perf_logs) / len(self.perf_logs)
@@ -395,8 +397,8 @@ class ChatbotCog(commands.Cog):
             ttft_bar = self.get_latency_bar(avg_ttft, 5.0)
             tps_bar = self.get_latency_bar(10.0 / (avg_tps if avg_tps > 0 else 0.1), 10.0)
             
-            embed = Embed(title="Hardware Efficiency Metrics", color=Color.green())
-            embed.description = f"Stats based on last {len(self.perf_logs)} generations."
+            embed = Embed(title=i18n.T("command.chatbot.perf.embeds.default.title"), color=Color.green())
+            embed.description = i18n.T("command.chatbot.perf.embeds.default.description", loc, {"generations": len(self.perf_logs)})
             
             embed.add_field(
                 name=f"Delay (TTFT): {avg_ttft:.2f}s", 

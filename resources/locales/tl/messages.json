@@ -1,7 +1,10 @@
 {
-    "ban_user": "%{user} has been banned.",
-    "kick_user": "%{user} has been kicked.",
-    "timed_out_user": "%{user} has been timed out for %{length}.",
-    "warn_user": "%{user} has been warned.",
-    "level_up": "%{mention} has been leveled up to %{new_level}."
+    "ban_user": "{user} has been banned.",
+    "chatbot_empty": "Wala akong salita! \n3:",
+    "chatbot_request_error": "Mukhang nakalimutan ng may-ari ng bot na tukuyin ang modelong bubuuin. \n:/",
+    "chatbot_response_error": "Mukhang tumigil sa paggana ang server. \n:/",
+    "kick_user": "{user} has been kicked.",
+    "level_up": "{mention} has been leveled up to {new_level}.",
+    "timed_out_user": "{user} has been timed out for {length}.",
+    "warn_user": "{user} has been warned."
 }

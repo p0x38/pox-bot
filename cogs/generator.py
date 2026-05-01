@@ -27,6 +27,7 @@ from logger import logger
 import stuff
 import data
 from proglog import TqdmProgressBarLogger
+from src.translator import translator_instance as i18n
 
 from matplotlib import pyplot as plt
 
@@ -64,21 +65,21 @@ class GenerationCog(Cog):
                 callback=self.generate_funny_fade_video
             )
         )
-    group = app_commands.Group(name="generate", description="Generators.")
+    group = app_commands.Group(name="generate", description=locale_str("command.generate.description"))
     
-    @group.command(name="emoticon",description="Sends random emoticon")
+    @group.command(name="emoticon", description=locale_str("command.generate.emoticon.description"))
     @app_commands.checks.cooldown(2, 6, key=lambda i: i.user.id)
     async def send_emoticon(self,ctx):
         await ctx.response.send_message(random.choice(data.emoticons))
     
     @cached(300)
-    @group.command(name="idek", description="idek.")
+    @group.command(name="idek", description=locale_str("command.generate.idek.description"))
     @app_commands.checks.cooldown(2, 6, key=lambda i: i.user.id)
     async def idek(self, ctx):
         await ctx.response.send_message(f"idek.")
     
     @cached(300)
-    @group.command(name="nyan_cat",description="Nyan cat :D")
+    @group.command(name="nyan_cat", description=locale_str("command.generate.nyan_cat.description"))
     @app_commands.checks.cooldown(2, 6, key=lambda i: i.user.id)
     async def nyan_cat_image(self, ctx: Interaction):
         try:
@@ -88,12 +89,12 @@ class GenerationCog(Cog):
             with open(url2, 'rb') as f:
                 pic = File(f)
             
-            await ctx.response.send_message("THINK FAST, CHUCKLE NUTS.",file=pic)
+            await ctx.response.send_message(i18n.T("command.generate.nyan_cat.messages.think_fast"),file=pic)
         except Exception as e:
             await ctx.response.send_message(f"err.type=null.error. {e}")
     
     @cached(300)
-    @group.command(name="cat_jard", description="evade")
+    @group.command(name="cat_jard", description=locale_str("command.generate.cat_jard.description"))
     @app_commands.checks.cooldown(2, 6, key=lambda i: i.user.id)
     async def cat_jard(self, interaction: Interaction):
         embed = Embed()
@@ -107,7 +108,7 @@ class GenerationCog(Cog):
         if embed:
             await interaction.response.send_message(embed=embed,file=pic)
 
-    @group.command(name="target_close", description="Target Closing Algorithm")
+    @group.command(name="target_close", description=locale_str("command.generate.target_close.description"))
     async def algorithm_closing_to_target(self, ctx: Interaction, target_value: Optional[float], concurrents: Optional[int]):
         await ctx.response.defer()
         conc = stuff.clamp(concurrents or 10, 1, 20)

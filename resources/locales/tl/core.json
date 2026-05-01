@@ -12,7 +12,7 @@
     "errors": {
         "title": "Whoopsie!",
         "generic": "Something went wrong. Please try again later.",
-        "cooldown": "Please wait %{remaining}s before using this again.",
+        "cooldown": "Please wait {remaining}s before using this again.",
         "user_not_found": "I couldn't find that user.",
         "user_missing_permissions": "You do not have permission to do that.",
         "bot_missing_permissions": "I don't have permission to do it.",

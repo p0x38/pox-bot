@@ -1,0 +1,764 @@
+{
+    "8ball": {
+        "description": "Meeow maw maw meeeeow meeeow meeow 8-meow meeeow! :3",
+        "embeds": {
+            "default": {
+                "title": "Mow meeow 8-meow meow... '{question}'"
+            }
+        }
+    },
+    "admin": {
+        "reload_cogs": {
+            "description": "Meeeeow maw mow mmeeeeooww mow miiaw mew meeow meeeeeow! >:D",
+            "embeds": {
+                "error": {
+                    "description": "Mow meeeeeow mew mmeeeeooww, maw meeeeow maw meeeeeow meeeeow maaaow... 3:",
+                    "title": "Mew mew, mmeeeeeeeeeooww meeeow! 3:"
+                },
+                "loading": {
+                    "description": "Meeow mow mow, mmeeeooww mmeeeeooww~ :3",
+                    "progress": "Meow meeow, Maw'maw mmeeeooww meeow~ \nMmeeeooww meeeeow: `{current_cog}`\nMeeeeeow: **{current}/{total}**\nMeeeeow: **{loaded}** | Meeeow: **{failed}**",
+                    "title": "Mmeeeeooww meeeow... :3"
+                },
+                "success": {
+                    "description": "Mmeeeeeeooww meeeeow **{loaded}** mmeeeeooww! >:D\nMew meeeow **{synched}** meeow meeeeeow mmeeeeooww~",
+                    "title": "Meeeow meeeeeow mmeeeeeeooww! :D"
+                }
+            },
+            "errors": {
+                "forbidden": "Mew mow'mew meow mow `mmeeeeeooww.meeeeeow` mmeeeeeooww mew meow meeeow... 3:",
+                "generic": "Mmeeeooww meeow meow meeow meeow meeeeow meeeeeow! 3:",
+                "http_error": "Miiiiaw MOW mew meeeow mew! Maw meeeow'maw meeow mow meeeeow. 3:",
+                "missing_id": "Meeeeeow meeow! Maw Mmeeeeeooww MAw mow meeeeow meeeeow... 3:",
+                "sync_failure": "Meow meeeow! Meow meeeeeow meow meeow miaw. 3:",
+                "translation_error": "Meow meeeeow! Mmeeeooww meeow mow maw meeeeow mmeeeeooww. 3:"
+            }
+        }
+    },
+    "calculate": {
+        "description": "Meow miaw! :3",
+        "percentage": {
+            "description": "Mmeeeeooww maw mmeeeeooww mew maw~"
+        }
+    },
+    "channel": {
+        "description": "Maw maw meeow mew meeeeeow meeeeeow! :3",
+        "info": {
+            "description": "Meeow meow meow meow meeow mow meeeeow~",
+            "embeds": {
+                "default": {
+                    "title": "Meow mew {name} :3"
+                }
+            }
+        },
+        "slowmode": {
+            "description": "Meow maw meeeeeow maaow!",
+            "embeds": {
+                "successful": {
+                    "description": "Meow! Mew meeeeeow mow **{seconds}** mow {mention}! >:D",
+                    "title": "Meeeeeow Meeeeow! :3"
+                }
+            }
+        }
+    },
+    "chatbot": {
+        "add_event": {
+            "description": "Meow maw meeeow meeow maw maw maaaaow! :3"
+        },
+        "clear_memories": {
+            "description": "Meeow maw meow meeeow meeow! 3:"
+        },
+        "description": "Mew meeow mew mow MAw meeeeow meeow! :3",
+        "mem": {
+            "description": "Mew'maw meow meow Mew'maw meeow miiaw~ :3",
+            "embeds": {
+                "default": {
+                    "title": "Meeeeow Meeeow Meeeow :3"
+                }
+            },
+            "messages": {
+                "empty": "Maw meeow mow mmeeeeooww meeow meeow mow. 3:"
+            }
+        },
+        "perf": {
+            "description": "Meeow maw meow mew meeeeeow maw meeeeow! :3",
+            "embeds": {
+                "default": {
+                    "description": "Meow mow maw meeow meeow maw mow maow {generations} mmeeeeeooww~",
+                    "title": "Meeeeeow Mmeeeeooww Meeeeow >:D"
+                }
+            },
+            "messages": {
+                "empty_logs": "Maw maw'maw meow mow mmeeeeeooww meow meeow mow... 3:"
+            }
+        },
+        "stats": {
+            "description": "Meeow mew meeeow maw meeow! :3"
+        },
+        "unlock": {
+            "description": "Mmeeeeooww meeeeow maw meeeeow mow Maw mow meeow! >:D",
+            "messages": {
+                "already": "Mow'mew maw meow meeeeeow meeow mow, mow meow! :3",
+                "unlock": "mow mow mow'maw meow >:D"
+            }
+        },
+        "user_stats": {
+            "description": "Meeow meow mow meeow! :3"
+        }
+    },
+    "contributors": {
+        "description": "Mow meeow mow mew mow meeeeow mmeeeeeeooww! :3",
+        "list": {
+            "description": "Meeow meeeeeow maw meeeow mow~",
+            "embeds": {
+                "default": {
+                    "description": "Meow'mew mew meow mow mew maw meow meeeow maw meeeow meow maw! :3",
+                    "title": "Meeeeow Mmeeeeeeooww >:D"
+                }
+            }
+        },
+        "view": {
+            "description": "Meeow meow meeow mew meeeeeow mmeeeeeooww! :3",
+            "embeds": {
+                "default": {
+                    "title": "Meow mew mmeeeeeooww {contributor}~"
+                }
+            }
+        }
+    },
+    "convert": {
+        "base64": {
+            "description": "Meeow meow meow meow Meow64! :3"
+        },
+        "base7777": {
+            "description": "Meeeeeow meow meow Meow7777! (mmeeeooww maw maaaow_mow3x) :3"
+        },
+        "binary": {
+            "description": "Meeow mew meow meow-meow meeeow! (mmeeeooww mew MmeeEooww999Mew) :3"
+        },
+        "caesar": {
+            "description": "Mmeeeooww meow meeow maw Meeeow meeeow! >:D"
+        },
+        "color_name": {
+            "description": "Meeow maw meeow meow meow mmeeeeooww.mew! :3"
+        },
+        "demorse": {
+            "description": "Maaaaow miiaw meow mew meeeow! (mmeeeooww mew MmeeEooww999Maw) :3"
+        },
+        "description": "Mow meeow meow mew mmeeeeooww! :3",
+        "glitch": {
+            "description": "Mew-meeow maw-meow mew-meow mew-maow mew-meeeeow... >:D"
+        },
+        "invert_letters": {
+            "description": "Meeow miaw meeeeow mmeeeooww! :3"
+        },
+        "meow": {
+            "description": "Meeow mmeeeeooww meow MEOW MEOW :3"
+        },
+        "morse": {
+            "description": "Meeow mow meow miaw maw meeeow! (mmeeeooww mew MmeeEooww999Mew) :3"
+        },
+        "muffle": {
+            "description": "Meeow mew meeow meow mew'maw meeeeow meow maw meeeow... :3"
+        },
+        "nsrc1": {
+            "description": "Meeeeeow meow meow MEOW-1! (mew) :3"
+        },
+        "psc1": {
+            "description": "Meeeeeow mow meow MOW-1! :3"
+        },
+        "railfence": {
+            "description": "Mmeeeooww meow meeow mew meow meeow meeeow! >:D"
+        },
+        "reverse_words": {
+            "description": "Meeow meow maaow meeeow! :3"
+        },
+        "unbase64": {
+            "description": "Meeeeow meow meow Meow64! :3"
+        },
+        "unbase7777": {
+            "description": "Meeeeeow meow meow Meow7777! (mmiiiaaww mow meeeow_mow3x) :3"
+        },
+        "unbinary": {
+            "description": "Mmeeeeooww meow-meeow meow mew meow! (mmeeeooww mew MmeeEooww999Maw) :3"
+        },
+        "uncaesar": {
+            "description": "Mmeeeeeooww maw Meeeow meeeow! :3"
+        },
+        "unnsrc1": {
+            "description": "Meeeeeow meow meow MEOW-1! (mow) :3"
+        },
+        "unpsc1": {
+            "description": "Meeeeeow MEW-1! :3"
+        },
+        "unrailfence": {
+            "description": "Mmeeeeeooww mew meow meeow meeeow! :3"
+        },
+        "uwu": {
+            "description": "MeEeeeow maw meow, mow mew miiiiaw meeeeow! :3"
+        }
+    },
+    "detect": {
+        "custom2": {
+            "description": "Mow'maw maw mew meow maw mow~ :3"
+        },
+        "custom_member": {
+            "description": "Meeeow maw meeow mow meeeow maw mow mmeeeooww! :3"
+        },
+        "description": "Mow meeow mow mmeeeooww meeow! >:D",
+        "how_femboy": {
+            "description": "Maw'mew mew maw meow maw mew meeeow meow mew! :3"
+        },
+        "how_freaky": {
+            "description": "Maw'mew maw mew meeeow meow mow! >:D"
+        },
+        "how_gay": {
+            "description": "Maw'mew maw maw mew meow maw! :3"
+        },
+        "how_slop": {
+            "description": "Mow'mew maw mow meow meow meow mew! :3"
+        },
+        "vibecheck": {
+            "description": "Meow mow mew meow meeow! >:D"
+        }
+    },
+    "economy": {
+        "balance": {
+            "description": "Meeow mow meow meeow meeow maw meow! :3",
+            "embeds": {
+                "default": {
+                    "footer": "Meeow meeow meeeow: {coins} meeow~",
+                    "title": "{user}'maw Meeeeow :3"
+                }
+            },
+            "fields": {
+                "bank": "Meow",
+                "wallet": "Meeeow"
+            }
+        },
+        "buy": {
+            "description": "Maw meow meow meeow meow mew meow! :3",
+            "embeds": {
+                "item_unavailable": {
+                    "description": "Meow meow mew'maw meow maw meow! 3:<",
+                    "title": "Meow mmeeeeeooww 3:"
+                },
+                "not_afford": {
+                    "description": "Mow'mew maw meeow maw maw meow! 3:<",
+                    "title": "Mow meeeow meeow! 3:"
+                },
+                "purchased": {
+                    "description": "Maw! Mow meeeow **{item_name}**! Miiaw meow mmeeeooww~ :3",
+                    "title": "Meeeeeow mmeeeeooww! >:D"
+                }
+            }
+        },
+        "daily": {
+            "description": "Meow meow meeow meeeeeow! :3",
+            "embeds": {
+                "default": {
+                    "description": "Mew maw {amount} meeow meow meow meeow meeeow! :D",
+                    "title": "Meeow meeeow meeeeow! :3"
+                }
+            }
+        },
+        "deposit": {
+            "description": "Meeow meow meeow meeeow mew maw meow~",
+            "embeds": {
+                "default": {
+                    "description": "Meeeow mmeeeooww {amount} meeow! :3",
+                    "title": "Meeeeow mmeeeeooww~"
+                }
+            }
+        },
+        "description": "Maw meeow maw mew mew meeow meeow! :3",
+        "history": {
+            "description": "Maow maw meow meeeow mmeeeeeeooww~"
+        },
+        "inventory": {
+            "description": "Maw mew mow meow maw meow meeow! :3",
+            "embeds": {
+                "default": {
+                    "title": "{user}'mow mmeeeooww~"
+                },
+                "empty": {
+                    "description": "Meow meeeeeow mew meeeeow meeow... mew mmeeeooww maw meeeow meow! :3",
+                    "title": "Meeow meeeeeow 3:"
+                }
+            }
+        },
+        "list": {
+            "description": "Meow mew meow mew maw meow! :3",
+            "embeds": {
+                "closed": {
+                    "description": "Meow meow meeow, mow'maw meeeow! 3:",
+                    "title": "Meow mew meeeow meeow maw! 3:"
+                }
+            },
+            "fields": {
+                "buy_price": "Meeow: {price} maaow",
+                "not_sale": "Maw mow meow!! 3:<"
+            }
+        },
+        "sell": {
+            "description": "Meow meow meow meow maw mew meow! >:D",
+            "embeds": {
+                "sold": {
+                    "description": "Meow **{item_name}**! :D",
+                    "title": "Meow meeeeeow! :3"
+                },
+                "unable_to_sell": {
+                    "description": "Mow meow meeow'mow meow meow! 3:",
+                    "title": "Mow'mew meow meow! 3:"
+                }
+            }
+        },
+        "withdraw": {
+            "description": "Meow meow meeow mew mew maw meow! :3",
+            "embeds": {
+                "default": {
+                    "description": "Meeeeeow {amount} meeow! >:D",
+                    "title": "Meeeeeow mmeeeeooww~"
+                }
+            }
+        },
+        "work": {
+            "description": "Mow meow meeeow maw meeow! :3",
+            "embeds": {
+                "default": {
+                    "description": "Maw meeeow meow mew meeeow {amount} meeow! :3",
+                    "title": "Maw mew meow! >:D"
+                },
+                "tired": {
+                    "description": "Mow'maw mew miiiaw! Meow maw {rem} meow meeeeow. 3:",
+                    "title": "Mew maw'mew meow meeow mew! 3:"
+                }
+            }
+        }
+    },
+    "fun": {
+        "boop_member": {
+            "description": "Meow meeeeow meeow mow mow miaw! :3"
+        },
+        "description": "Mow meeow mew meeow mew! :3",
+        "dice": {
+            "description": "Meow maw meow! >:D"
+        },
+        "guess": {
+            "description": "Maw maw meeow mew meeeow! :3"
+        },
+        "guess_game": {
+            "description": "Meeeow mew mew meeeow meeeeeow maow! (1 ~ 100) :3"
+        },
+        "job_application": {
+            "description": "Mow mew MAW!!! >:D"
+        },
+        "ship": {
+            "description": "Mmeeeeooww mow meow meow meow meeeeow mew meeeow! :3"
+        },
+        "stopguess": {
+            "description": "Mmeeeeooww meeow maw meeeeeow meow! >:D"
+        }
+    },
+    "generate": {
+        "cat_jard": {
+            "description": "Meeow maw mew! >:D"
+        },
+        "description": "Mew meeow mow mmeeeeooww meeow meeow! :3",
+        "emoticon": {
+            "description": "Meeow mow meeeeow meeeow meow maaaaaow! :3"
+        },
+        "idek": {
+            "description": "mew meeeeeow maw'maw meow meow. :3"
+        },
+        "nyan_cat": {
+            "description": "Meow Mew meow!! :D",
+            "messages": {
+                "think_fast": "MIIAW MEOW, MEEEEOW MEOW! >:D"
+            }
+        },
+        "target_close": {
+            "description": "Meeeow meeeeow mmeeeooww... >:D"
+        }
+    },
+    "guild": {
+        "count": {
+            "description": "Meeeow mow meow meeeow mew mow meow! :3"
+        },
+        "description": "Mew miiaw maw meeeow meeow! :3",
+        "icon": {
+            "description": "Meeow mow mew meeeow maow! :3"
+        },
+        "info": {
+            "description": "Meeow maw mow maw meeeow meow! :3"
+        },
+        "kickmembers": {
+            "description": "Meeow meeow meeeow meow meeeow! >:D"
+        },
+        "logs": {
+            "description": "Meeow maw meeeeow maw meeow, meow, maw meeeeeow! 3:"
+        },
+        "members_list": {
+            "description": "Meeow maw mew meow miiiaw meow! :3"
+        },
+        "nsfw_level": {
+            "description": "Meeeow maw meeeow'mow meeow meeow! :3"
+        },
+        "role_list": {
+            "description": "Maaow mew mew meeow mow maw meeeow! :3"
+        },
+        "search_members": {
+            "description": "Meeow mow meeeeow meeeeeow miaw meeow! >:D"
+        }
+    },
+    "info": {
+        "commit_data": {
+            "description": "Meeow maw meeeow mew maaaow! :3"
+        },
+        "description": "Mew meeow mew meow mew meeow! :3",
+        "invite": {
+            "description": "Meeow mew meeeow meow maw mew maw mew mow! (Meeeeow mew 90 meeeeow meeeow 3:)",
+            "embeds": {
+                "default": {
+                    "description": "{prefix}\n\nMow maw mew maw maw meow meeeow meeow [meow meow!]({invite_url}) :D",
+                    "footer": "Meow: Mew meow meeeeeow mmeeeeeooww mow meow meeow, mew Mow'maw meeeeow mow 90 meeeeow maaaaow maw Meeeeow! 3:",
+                    "status": {
+                        "one": "Meeeeeow: **{formatted}** meeeow",
+                        "other": "Meeeeeow: **{formatted}** meeeeow"
+                    },
+                    "title": "Meeeow MmeeeoOww! :3"
+                }
+            },
+            "error": {
+                "hardlimited": "Mew, maw mew'mow miiiaw maw meeow maw, Mew mew mow meeeow meeow... 3:"
+            }
+        },
+        "os_info": {
+            "description": "Meeow meow MOw Maw'mow meeeeow mow! :3",
+            "embeds": {
+                "default": {
+                    "title": "Mmeeeooww Meeeow Meow :3"
+                }
+            }
+        },
+        "ping": {
+            "description": "Meow! :D",
+            "embeds": {
+                "default": {
+                    "title": "Meow! ({latency} mew) :D"
+                }
+            }
+        },
+        "retrieve": {
+            "description": "Meow mow maw mow meow! :3",
+            "embeds": {
+                "default": {
+                    "description": "Miaw mow meeeeeow meeow mow mow maw meeeeow! >:D",
+                    "footer": "Meeeeow mow: {platform} :3",
+                    "title": "Mow Meow~"
+                }
+            },
+            "error": {
+                "forbidden": "Mow meow mew **Meeeow Meeeeeow** mmeeeeooww maw mow meow! 3:"
+            }
+        },
+        "sync": {
+            "description": "Meeow maw meeeeeow mow! :3"
+        },
+        "timedate": {
+            "description": "Meeow maw meow maw mow meeeeeow meeeeeow! :3",
+            "embeds": {
+                "default": {
+                    "description": "Meow maw {timezone_name}, maw'mew mmeeeooww **{timedate}**! :3"
+                }
+            }
+        }
+    },
+    "leveling": {
+        "configure": {
+            "description": "Meeeow maw meeeeeow meeeow! :3",
+            "embeds": {
+                "default": {
+                    "description": "Meeeow meeeeow! >:D",
+                    "title": "Meeeeeow meeeow mew meow meeeeow! :3"
+                }
+            }
+        },
+        "description": "Meeeeeow meeow! :3",
+        "rank": {
+            "description": "Meeow meow meow! :3",
+            "embeds": {
+                "default": {
+                    "fields": {
+                        "level": {
+                            "name": "Meeow"
+                        },
+                        "progress": {
+                            "name": "Meeeeeow"
+                        },
+                        "total": {
+                            "name": "Meeow XP"
+                        }
+                    },
+                    "title": "{user}'maw Meow! :3"
+                }
+            }
+        }
+    },
+    "moderation": {
+        "blacklist": {
+            "add": {
+                "description": "Meow mew mow meow mow maw mmeeeooww! >:D",
+                "embeds": {
+                    "default": {
+                        "description": "Meeow '{entry}' mew mew mmeeeooww mow meow '{type}', mmeeeeooww meow MEw '{id}'! :3",
+                        "title": "Meow mmeeeeeooww! >:D"
+                    }
+                }
+            },
+            "description": "Mmeeeooww meeow! :3",
+            "list": {
+                "description": "Meeow maw mew meeeeow meeow mew meow meeeow! :3",
+                "embeds": {
+                    "default": {
+                        "footer": "Meow {remaining} meow meeeeeow meeeow meow! :3",
+                        "title": "Mmeeeooww meeeeeow mow meow meeeow~"
+                    },
+                    "no_blacklist": {
+                        "description": "Meeeow'mew meow mow mmeeeooww meeeeeow meow! :3"
+                    }
+                }
+            },
+            "remove": {
+                "description": "Meeeeow maw meow meow mow mmeeeooww! :3",
+                "embeds": {
+                    "default": {
+                        "description": "Meeeeeow mmeeeeooww meeeeeow '{query}' meow mow mmeeeooww! :3",
+                        "title": "Meeeeow meeeeow! :D"
+                    },
+                    "not_found": {
+                        "description": "Meeeow'mow meow meeeeeow meeeeeow '{query}' maw maw mmeeeooww... 3:",
+                        "title": "Meeeeeow maw meeow! 3:"
+                    }
+                }
+            }
+        },
+        "description": "Mmeeeeooww meeow! >:D",
+        "togglefeature": {
+            "description": "Meeow meeeow meeeeeow mew mew maw! :3",
+            "embeds": {
+                "default": {
+                    "description": "Meeeeow {feature_name} maw {state}! :3"
+                }
+            },
+            "parameters": {
+                "feature": {
+                    "description": "Mew meeeeow mew meeow meeeow~"
+                },
+                "state": {
+                    "description": "Maw mew Mow! :3"
+                }
+            }
+        }
+    },
+    "roblox": {
+        "avatar": {
+            "description": "Meeow maw Meeowx meow'maw meeeow mow meeow meeeeeow! :3",
+            "embeds": {
+                "default": {
+                    "title": "{username}'mow Meeowx Meeeow! :3"
+                }
+            }
+        },
+        "description": "Maw miiaw mow maw mow Meeowx MEOw! :3",
+        "user": {
+            "description": "Meow Meeowx miaw meow mew meeow meeeeeow! :3",
+            "embeds": {
+                "default": {
+                    "title": "{username}'maw Meow! :3"
+                }
+            }
+        }
+    },
+    "stats": {
+        "description": "Mmeeeeeeooww mow meeow! :3",
+        "top": {
+            "description": "Meeow mew maw meeow! >:D",
+            "embeds": {
+                "default": {
+                    "title": "Meeeow Mmeeeeeooww!! >:D"
+                }
+            }
+        }
+    },
+    "ticket": {
+        "description": "Meeeow meeeow Mow2! :3",
+        "setup": {
+            "description": "Meow maw maw meeeow meeeow maw meow meeeow! :3"
+        }
+    },
+    "tts": {
+        "description": "Meeeow mow maw mew MOW meeow! :3",
+        "embeds": {
+            "default": {
+                "description": "Mmeeeooww! >:D",
+                "footer": "Meow: {tts_type}; Meeow: {input}",
+                "title": "MAW Mmeeeeooww :3"
+            }
+        },
+        "google_translate": {
+            "description": "Meeow MAW meow Meeeow Mmeeeooww! :3"
+        }
+    },
+    "user": {
+        "avatar": {
+            "description": "Meeow meeeeow'maw Meeeeow meeeow! :3",
+            "embeds": {
+                "default": {
+                    "footer": "Mmeeeooww maw {author}, meeeow maw mow meeeow! :3",
+                    "title": "{user}'mew meeeow! :3"
+                }
+            }
+        },
+        "description": "Mew meeow maw meow meeow! :3",
+        "info": {
+            "description": "Meow mew mow meeow meow meeow mew meow! :3",
+            "embeds": {
+                "default": {
+                    "title": "Meow mew {user}~"
+                }
+            },
+            "fields": {
+                "stats": "Meeow {level} ({xp} XP) / {messages} Meeeeeow :3",
+                "wallet": "{coins} Meeow!"
+            }
+        },
+        "set_nick": {
+            "description": "Meeeeow meeeeow'maw meeeeeow! >:D",
+            "embeds": {
+                "changed": {
+                    "description": "{author} meeeeow {user}'mow miiiiiaw mow **{new_nickname}**! :3"
+                },
+                "reset": {
+                    "description": "{author} meeow {user}'maw meeeeeow! :D"
+                }
+            },
+            "reasons": {
+                "changed": "Meeeeeow meeeeow mow {user} mow /meow meow! :3",
+                "reset": "Meeeeeow meeow mow {user} mow /meow meow! :3"
+            }
+        },
+        "set_profile": {
+            "description": "Meow mow meow maow mmeeeooww meeeeow! :3",
+            "embeds": {
+                "default": {
+                    "description": "Maw meow maw mew '{description}' maw meow meeeeeow mew '{nickname}'! :3",
+                    "title": "Meeeeow meeeeow mmeeeeeeooww! :D"
+                }
+            }
+        },
+        "status": {
+            "description": "Meeeow mow meow'mew Meeeeow meeeow! :3",
+            "embeds": {
+                "default": {
+                    "title": "{user}'mow meeeow! :3"
+                }
+            }
+        }
+    },
+    "userphone": {
+        "call": {
+            "description": "Meeow maw meeeeow meeeow miiiaw! :3",
+            "embeds": {
+                "paired": {
+                    "description": "Maw meeeow maw meow meeeeow meeeow! >:D",
+                    "title": "Meeeow! :D"
+                },
+                "searching": {
+                    "description": "",
+                    "title": ""
+                },
+                "status": {
+                    "description": "Meeeeow mew mow mow meeeow maw meow... :3",
+                    "title": "Meeeow"
+                }
+            }
+        },
+        "description": "Mew meeow mow mow mmeeeooww! :3",
+        "globalchat": {
+            "description": "Meeeow mow meeeow meow maaaaaow! :3",
+            "embeds": {
+                "default": {
+                    "description": "Meeeeeow mew mow mmeeeeooww! :3",
+                    "title": "Mmeeeeooww mmeeeeeeooww! :D"
+                }
+            }
+        },
+        "hangup": {
+            "description": "Meeow mew maw meeeeow meow! 3:",
+            "embeds": {
+                "default": {
+                    "description": "Meow mew mow meow! 3:",
+                    "title": "Meow meeow! 3:"
+                }
+            }
+        },
+        "userphone": {
+            "description": "Meeeow mow mmeeeooww meeeeeow! :3",
+            "embeds": {
+                "default": {
+                    "description": "Meeeeeow mow maw mmeeeeooww! :3",
+                    "title": "Mmeeeeooww mmeeeeeeooww! :D"
+                }
+            }
+        }
+    },
+    "welcome": {
+        "description": "Mew meeow mow meeeeow meeeeeow! :3",
+        "embeds": {
+            "join": {
+                "description": "Meeeeow, {mention}! Meow maow mew meow maw meeow maw {rules_mention}~ :3",
+                "description_no_rules": "Meeeeow mow mow meeeow, {mention}! x3",
+                "footer": "Maw'mew maw {count} meeeeow mow! :3",
+                "title": "Miiiiaw mew {guild}! :D"
+            },
+            "left": {
+                "description": "Meeeeow, {display}... 3:",
+                "title": "Meeeow {display} meow {guild}... 3:"
+            }
+        },
+        "set_channel": {
+            "description": "Meow maw meeeeow mew meow maw maaow meeeeeow! :3",
+            "embeds": {
+                "disabled": {
+                    "description": "Meeeeow mmeeeeeeeooww maw meeeow mow maw! 3:"
+                },
+                "enabled": {
+                    "description": "Meeeeow mmeeeeeeeooww mow maw!\nMaw meeeeeow meow maw mew mew {target_mention}! :3"
+                }
+            }
+        },
+        "set_rules_channel": {
+            "description": "Meow mew mew meeow meeeeow maw Mow mew meow mow! :3",
+            "embeds": {
+                "disabled": {
+                    "description": "Meeeeow mow meeow meeeeow meow maw meeeeow meeeeow! 3:"
+                },
+                "success": {
+                    "description": "Mow maw miiaw meeeeow maw {target_mention} mow maw meeeeow meeeeow! :3"
+                }
+            }
+        },
+        "test": {
+            "description": "Meow mew meeow meow maw mow meeeeow meeeeow! :3",
+            "embeds": {
+                "sent": {
+                    "description": "Meow meeeeow meow mow mow meeeeow meeeeow! >:D"
+                },
+                "unconfigured": {
+                    "description": "Maw meeeeow meeeeow meow'mow meow mow mow mow! 3:"
+                }
+            }
+        }
+    }
+}

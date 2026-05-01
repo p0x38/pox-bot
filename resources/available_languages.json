@@ -10,11 +10,6 @@
         "emoji": "🇯🇵"
     },
     {
-        "code": "ar",
-        "display": "عربي",
-        "emoji": "🇸🇦"
-    },
-    {
         "code": "ru",
         "display": "Русский",
         "emoji": "🇷🇺"
@@ -23,5 +18,10 @@
         "code": "tl",
         "display": "Tagalog",
         "emoji": "🇵🇭"
+    },
+    {
+        "code": "cat",
+        "display": "Meow",
+        "emoji": "🐈"
     }
 ]

@@ -1,0 +1,107 @@
+{
+    "DynamicInfoView": {
+        "buttons": {
+            "suggest_button": {
+                "label": "Meeeow mmeeeeeooww"
+            },
+            "url_button": {
+                "label": "Meeow mow MeeEow mmeeeeooww"
+            }
+        },
+        "data": {
+            "context": {
+                "memory": {
+                    "display": "Meeeeow Meeow"
+                },
+                "mode": {
+                    "display": "Meeeeow Meow"
+                },
+                "muted": {
+                    "display": "Mew Mow meeow?"
+                },
+                "title": "Meeow Meeow Miaw"
+            },
+            "hardware": {
+                "cpu": {
+                    "display": "MEW Meeow (meeow)"
+                },
+                "cpu_own": {
+                    "display": "MOW Meeow (meeeeow)"
+                },
+                "disk": {
+                    "display": "Meow Meeow"
+                },
+                "platform": {
+                    "display": "Meeeeeow"
+                },
+                "ram": {
+                    "display": "Meeeow Meeow (meeow)"
+                },
+                "ram_details": {
+                    "display": "Meeeow Meeeeow"
+                },
+                "ram_own": {
+                    "display": "Meeeow Meeow (meeeeow)"
+                },
+                "title": "Mmeeeooww Meeeeow"
+            },
+            "identity": {
+                "latency": {
+                    "display": "Meeeeow Meeeeow"
+                },
+                "owner": {
+                    "display": "Maw Mmeeeooww"
+                },
+                "signature": {
+                    "display": "Mmeeeooww"
+                },
+                "title": "Meeeeeow & Meeeeow",
+                "uptime": {
+                    "display": "Maw Meeeow"
+                },
+                "uuid": {
+                    "display": "Meeeeow MEOW"
+                },
+                "version": {
+                    "display": "Mow Meeeeow"
+                }
+            },
+            "stats": {
+                "cached_values": {
+                    "display": "Meeeow"
+                },
+                "channels": {
+                    "display": "Meeeeeow"
+                },
+                "guilds": {
+                    "display": "Meeeeow"
+                },
+                "interactions": {
+                    "display": "Mmeeeeeeooww"
+                },
+                "msgs": {
+                    "display": "Meeeeeow Meow"
+                },
+                "title": "Mew Mmeeeeooww",
+                "users": {
+                    "display": "Meeow"
+                }
+            }
+        },
+        "options": {
+            "context": {
+                "label": "Meeow Meeow Meow"
+            },
+            "hardware": {
+                "label": "Meeeeeow Mmeeeeeooww"
+            },
+            "identity": {
+                "label": "Meeeeow Mmeeeeeooww"
+            },
+            "placeholder": "Meeeow meeeeeow...",
+            "stats": {
+                "label": "Mmeeeeooww"
+            }
+        }
+    }
+}

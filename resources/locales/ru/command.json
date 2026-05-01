@@ -1,450 +1,762 @@
 {
     "8ball": {
-        "description": "Дает случайный классический магический ответ на вопрос пользователя 8 мяч.",
+        "description": "Даёт случайный классический ответ магического шара на твой вопрос.",
         "embeds": {
             "default": {
-                "title": "Ответ на '%{question}'"
+                "title": "Ответ на вопрос '{question}'"
             }
         }
     },
+    "admin": {
+        "reload_cogs": {
+            "description": "Перезагружает все расширения бота и синхронизирует слэш-команды.",
+            "embeds": {
+                "error": {
+                    "description": "Расширения перезагружены, но глобальная синхронизация команд не удалась.",
+                    "title": "Синхронизация не удалась!"
+                },
+                "loading": {
+                    "description": "Подожди немного, идёт перезагрузка...",
+                    "progress": "Подожди немного...\nСейчас загружается: `{current_cog}`\nПрогресс: **{current}/{total}**\nУспешно: **{loaded}** | Ошибки: **{failed}**",
+                    "title": "Перезагрузка в процессе..."
+                },
+                "success": {
+                    "description": "Всего **{loaded}** расширений обновлено!\nСинхронизировано **{synched}** команд.",
+                    "title": "Готово! :D"
+                }
+            },
+            "errors": {
+                "forbidden": "У бота нет прав `application.commands` на этом сервере.",
+                "generic": "Произошла какая-то неизвестная ошибка при синхронизации.",
+                "http_error": "Ошибка Discord API: не удалось связаться с сервером.",
+                "missing_id": "Критическая ошибка: отсутствует ID приложения.",
+                "sync_failure": "Ошибка синхронизации: у одной из команд неверная структура.",
+                "translation_error": "Синхронизация отменена из-за ошибки перевода."
+            }
+        }
+    },
+    "calculate": {
+        "description": "Группа для калькулятора.",
+        "percentage": {
+            "description": "Считает процент."
+        }
+    },
     "channel": {
-        "description": "Группа для управления ",
+        "description": "Управление каналами.",
         "info": {
-            "description": "Показывает информацию о канале.",
+            "description": "Показывает инфу о канале.",
             "embeds": {
                 "default": {
-                    "title": "Информация о %{name}"
+                    "title": "Информация о {name}"
                 }
             }
         },
         "slowmode": {
-            "description": "Задает задержку в режиме замедления",
+            "description": "Устанавливает slowmode.",
             "embeds": {
                 "successful": {
-                    "description": "Успешно установлен режим замедления **%{seconds}** для %{mention}.",
-                    "title": "Замедление обновлено"
+                    "description": "Slowmode теперь **{seconds}** для {mention}! :D",
+                    "title": "Готово!"
                 }
             }
         }
     },
-    "contributors": {
-        "description": "Группа для участников.",
-        "list": {
-            "description": "Список всех участников.",
+    "chatbot": {
+        "add_event": {
+            "description": "Добавляет событие в память."
+        },
+        "clear_memories": {
+            "description": "Очищает историю чата."
+        },
+        "description": "AI чат (Ollama).",
+        "mem": {
+            "description": "Проверить мозг Джима.",
             "embeds": {
                 "default": {
-                    "description": "Вот список участников, которые помогли моему боту! :3",
-                    "title": "Авторы"
+                    "title": "Состояние памяти"
+                }
+            },
+            "messages": {
+                "empty": "У меня пусто в голове... вообще ничего нет :("
+            }
+        },
+        "perf": {
+            "description": "Показывает производительность.",
+            "embeds": {
+                "default": {
+                    "description": "Данные за последние {generations} генераций.",
+                    "title": "Метрики системы"
+                }
+            },
+            "messages": {
+                "empty_logs": "Пока нет данных."
+            }
+        },
+        "stats": {
+            "description": "Глобальная статистика бота."
+        },
+        "unlock": {
+            "description": "Принудительно разблокирует канал.",
+            "messages": {
+                "already": "Я и так ничего не делаю, но ок...",
+                "unlock": "ок я вернулся :3"
+            }
+        },
+        "user_stats": {
+            "description": "Статистика пользователя."
+        }
+    },
+    "contributors": {
+        "description": "Контрибьюторы.",
+        "list": {
+            "description": "Показать всех контрибьюторов.",
+            "embeds": {
+                "default": {
+                    "description": "Вот кто помогал с ботом! :3",
+                    "title": "Контрибьюторы"
                 }
             }
         },
         "view": {
-            "description": "Показывает информацию о участнике.",
+            "description": "Инфо о контрибьюторе.",
             "embeds": {
                 "default": {
-                    "title": "Информация о участнике %{contributor}"
+                    "title": "Информация о {contributor}"
                 }
             }
+        }
+    },
+    "convert": {
+        "base64": {
+            "description": "Кодирует в Base64."
+        },
+        "base7777": {
+            "description": "Шифрует в Base7777."
+        },
+        "binary": {
+            "description": "Кодирует в бинарный вид."
+        },
+        "caesar": {
+            "description": "Шифр Цезаря."
+        },
+        "color_name": {
+            "description": "Получает название цвета."
+        },
+        "demorse": {
+            "description": "Декодирует морзе."
+        },
+        "description": "Конвертеры.",
+        "glitch": {
+            "description": "Ломает текст :3"
+        },
+        "invert_letters": {
+            "description": "Переворачивает буквы."
+        },
+        "meow": {
+            "description": "Делает текст мяу :3"
+        },
+        "morse": {
+            "description": "Кодирует в морзе."
+        },
+        "muffle": {
+            "description": "Делает текст приглушённым."
+        },
+        "nsrc1": {
+            "description": "Шифрует NSRC-1."
+        },
+        "psc1": {
+            "description": "Шифрует PSC-1."
+        },
+        "railfence": {
+            "description": "Rail fence шифр."
+        },
+        "reverse_words": {
+            "description": "Переворачивает слова."
+        },
+        "unbase64": {
+            "description": "Декодирует Base64."
+        },
+        "unbase7777": {
+            "description": "Декодирует Base7777."
+        },
+        "unbinary": {
+            "description": "Декодирует бинарный текст."
+        },
+        "uncaesar": {
+            "description": "Расшифровывает Цезаря."
+        },
+        "unnsrc1": {
+            "description": "Расшифровывает NSRC-1."
+        },
+        "unpsc1": {
+            "description": "Расшифровывает PSC-1."
+        },
+        "unrailfence": {
+            "description": "Расшифровывает rail fence."
+        },
+        "uwu": {
+            "description": "uwu версия текста :3"
+        }
+    },
+    "detect": {
+        "custom2": {
+            "description": "Насколько это высоко."
+        },
+        "custom_member": {
+            "description": "Насколько участник близок."
+        },
+        "description": "Разные проверки.",
+        "how_femboy": {
+            "description": "Насколько фембой :3"
+        },
+        "how_freaky": {
+            "description": "Насколько странненький."
+        },
+        "how_gay": {
+            "description": "Насколько гей."
+        },
+        "how_slop": {
+            "description": "Насколько слоп."
+        },
+        "vibecheck": {
+            "description": "Проверка вайба."
         }
     },
     "economy": {
         "balance": {
-            "description": "Проверьте ваш текущий баланс.",
+            "description": "Твой баланс.",
             "embeds": {
                 "default": {
-                    "footer": "Всего активов: %{coins} coin'ов",
-                    "title": "Баланс %{user}:3"
+                    "footer": "Всего: {coins} монет",
+                    "title": "Баланс {user} :3"
                 }
             },
             "fields": {
                 "bank": "Банк",
-                "wallet": "Кошельки"
+                "wallet": "Кошелёк"
             }
         },
         "buy": {
-            "description": "Купить в магазине.",
+            "description": "Купить предмет.",
             "embeds": {
                 "item_unavailable": {
-                    "description": "Этот товар недоступен для продажи! 3:<",
-                    "title": "Предмет недоступен"
+                    "description": "Этого нет в продаже! 3:<",
+                    "title": "Недоступно"
                 },
                 "not_afford": {
-                    "description": "У вас недостаточно монет на вашем кошельке, чтобы купить это! 3:<",
-                    "title": "Недостаточно монет"
+                    "description": "Мало монет! 3:<",
+                    "title": "Не хватает"
                 },
                 "purchased": {
-                    "description": "Успешно куплено **%{item_name}**! Проверьте ваш инвентарь ~ ;3",
-                    "title": "Покупка завершена"
+                    "description": "Ты купил **{item_name}**! :3",
+                    "title": "Куплено!"
                 }
             }
         },
         "daily": {
-            "description": "Заберите свою ежедневную награду.",
+            "description": "Ежедневная награда.",
             "embeds": {
                 "default": {
-                    "description": "Вы получаете %{amount} монет ежедневными наградами! :3",
-                    "title": "Вы получили ежедневные награды!"
+                    "description": "+{amount} монет :3",
+                    "title": "Получено!"
                 }
             }
         },
         "deposit": {
-            "description": "Переведите деньги с кошелька в банк.",
+            "description": "Положить деньги.",
             "embeds": {
                 "default": {
-                    "description": "Монеты %{amount} успешно сданы на хранение :3",
-                    "title": "Успешно внесено"
+                    "description": "Положено {amount} монет.",
+                    "title": "Готово"
                 }
             }
         },
-        "description": "A group for Economy system.",
+        "description": "Экономика.",
         "history": {
-            "description": "Просматривайте последние транзакции."
+            "description": ""
         },
         "inventory": {
-            "description": "Просмотр ваших элементов.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "Инвентарь %{user}"
+                    "title": ""
                 },
                 "empty": {
-                    "description": "Ваш рюкзак сейчас пуст. Купите что-нибудь, чтобы изменить этот текст я угадаю:3",
-                    "title": "Пустой рюкзак"
+                    "description": "",
+                    "title": ""
                 }
             }
         },
         "list": {
-            "description": "Просмотреть магазин предметов.",
+            "description": "",
+            "embeds": {
+                "closed": {
+                    "description": "",
+                    "title": ""
+                }
+            },
             "fields": {
-                "buy_price": "Цена: монеты %{price}",
-                "not_sale": "Не на продажу"
+                "buy_price": "",
+                "not_sale": ""
             }
         },
         "sell": {
-            "description": "Продавайте товар обратно в магазин.",
+            "description": "",
             "embeds": {
                 "sold": {
-                    "description": "Продано **%{item_name}",
-                    "title": "Продажа завершена"
+                    "description": "",
+                    "title": ""
                 },
                 "unable_to_sell": {
-                    "description": "Магазин не будет возвращен! 3:<",
-                    "title": "Не удается продать"
+                    "description": "",
+                    "title": ""
                 }
             }
         },
         "withdraw": {
-            "description": "Переведите деньги с банка на кошелек.",
+            "description": "Снять деньги.",
             "embeds": {
                 "default": {
-                    "description": "Снято монет %{amount} успешно. :3",
-                    "title": "Успешно снято"
+                    "description": "Снято {amount} монет.",
+                    "title": "Готово"
                 }
             }
         },
         "work": {
-            "description": "Зарабатывайте монеты, работая.",
+            "description": "Поработать.",
             "embeds": {
                 "default": {
-                    "description": "Вы получили %{amount} монеты за работу! :3",
-                    "title": "Вы работали на деньги!"
+                    "description": "+{amount} монет :3",
+                    "title": "Работа done!"
                 },
                 "tired": {
-                    "description": "You need to rest %{rem} more minutes. 3:",
-                    "title": "Вы не можете работать сейчас!"
+                    "description": "Подожди ещё {rem} минут.",
+                    "title": "Отдохни"
                 }
             }
         }
     },
+    "fun": {
+        "boop_member": {
+            "description": ""
+        },
+        "description": "",
+        "dice": {
+            "description": ""
+        },
+        "guess": {
+            "description": ""
+        },
+        "guess_game": {
+            "description": ""
+        },
+        "job_application": {
+            "description": ""
+        },
+        "ship": {
+            "description": ""
+        },
+        "stopguess": {
+            "description": ""
+        }
+    },
+    "generate": {
+        "cat_jard": {
+            "description": ""
+        },
+        "description": "",
+        "emoticon": {
+            "description": ""
+        },
+        "idek": {
+            "description": ""
+        },
+        "nyan_cat": {
+            "description": "",
+            "messages": {
+                "think_fast": ""
+            }
+        },
+        "target_close": {
+            "description": ""
+        }
+    },
+    "guild": {
+        "count": {
+            "description": ""
+        },
+        "description": "",
+        "icon": {
+            "description": ""
+        },
+        "info": {
+            "description": ""
+        },
+        "kickmembers": {
+            "description": ""
+        },
+        "logs": {
+            "description": ""
+        },
+        "members_list": {
+            "description": ""
+        },
+        "nsfw_level": {
+            "description": ""
+        },
+        "role_list": {
+            "description": ""
+        },
+        "search_members": {
+            "description": ""
+        }
+    },
     "info": {
         "commit_data": {
-            "description": "Показывает последний коммит git."
+            "description": ""
         },
-        "description": "Группа для информации",
+        "description": "",
         "invite": {
-            "description": "Приглашает бота к серверу по адресу приложения. (НЕ РАЗРЕШЕНО ДО 90)",
+            "description": "",
             "embeds": {
                 "default": {
-                    "description": "%{prefix}\n\nYou can add me to your server using [this link.](%{invite_url})",
-                    "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation.",
+                    "description": "",
+                    "footer": "",
                     "status": {
-                    "one": "Capacity: **%{formatted}** server",
-                    "other": "Capacity: **%{formatted}** servers"
+                        "one": "",
+                        "other": ""
                     },
-                    "title": "Invite TongueBot"
+                    "title": ""
                 }
             },
             "error": {
-                "hardlimited": "Вы не можете пригласить TongueBot прямо сейчас, так как лимит достигнут."
+                "hardlimited": ""
             }
         },
         "os_info": {
-            "description": "Показывает информацию об операционной системе.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "Operating System Information"
+                    "title": ""
                 }
             }
         },
         "ping": {
-            "description": "Pong!",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "Pong! (%{latency} ms)"
+                    "title": ""
                 }
             }
         },
         "retrieve": {
-            "description": "Получает информацию о боте.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "description": "Select a category below to view specific details.",
-                    "footer": "System: %{platform}",
-                    "title": "Bot Information"
+                    "description": "",
+                    "footer": "",
+                    "title": ""
                 }
             },
             "error": {
-                "forbidden": "У меня нет прав на **управление каналами**."
+                "forbidden": ""
             }
         },
         "sync": {
-            "description": "Синхронизация команд"
+            "description": ""
         },
         "timedate": {
-            "description": "Показывает время в указанном часовом поясе",
+            "description": "",
             "embeds": {
                 "default": {
-                    "description": "In %{timezone_name}, it's **%{timedate}**."
+                    "description": ""
                 }
             }
         }
     },
     "leveling": {
-        "description": "Система уровней.",
-        "rank": {
-            "description": "Проверка ранга.",
+        "configure": {
+            "description": "",
             "embeds": {
                 "default": {
-                    "fields": {
-                    "level": {
-                            "name": "Уровень"
-                    },
-                    "progress": {
-                            "name": "Прогресс"
-                    },
-                    "total": {
-                            "name": "Всего XP"
-                    }
-                    },
-                    "title": "Ранг %{user}"
+                    "description": "",
+                    "title": ""
                 }
             }
         },
-        "configure": {
-            "description": "Configures leveling system.",
+        "description": "",
+        "rank": {
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "Leveling system updated",
-                    "description": "The system has been updated."
+                    "fields": {
+                        "level": {
+                            "name": ""
+                        },
+                        "progress": {
+                            "name": ""
+                        },
+                        "total": {
+                            "name": ""
+                        }
+                    },
+                    "title": ""
                 }
             }
         }
     },
     "moderation": {
-        "description": "Управление модерацией.",
-        "togglefeature": {
-            "description": "Переключить возможности сервера.",
-            "embeds": {
-                "default": {
-                    "description": "Установить %{feature_name} на %{state}."
-                }
-            },
-            "parameters": {
-                "feature": {
-                    "description": "The feature to toggle"
-                },
-                "state": {
-                    "description": "On or Off"
-                }
-            }
-        },
         "blacklist": {
-            "description": "Blacklist system.",
             "add": {
-                "description": "Adds a word to the blacklists.",
+                "description": "Добавить слово.",
                 "embeds": {
                     "default": {
-                    "title": "Added word into blacklist",
-                    "description": "Added %{entry} into blacklist with type '%{type}', as %{id}."
+                        "description": "{entry} добавлено! :3",
+                        "title": "Добавлено"
+                    }
+                }
+            },
+            "description": "Чёрный список.",
+            "list": {
+                "description": "Список триггеров.",
+                "embeds": {
+                    "default": {
+                        "footer": "И ещё {remaining}...",
+                        "title": "Чёрный список"
+                    },
+                    "no_blacklist": {
+                        "description": "Пусто."
                     }
                 }
             },
             "remove": {
-                "description": "Removes matched query from blacklists.",
+                "description": "Удалить слово.",
                 "embeds": {
                     "default": {
-                    "title": "Removed matched queries from blacklist",
-                    "description": "Removed every query matching with '%{query}'."
+                        "description": "Удалено '{query}'",
+                        "title": "Удалено"
                     },
                     "not_found": {
-                    "title": "Triggers not found",
-                    "description": "Triggers were not found from blacklist with matching query '%{query}'."
+                        "description": "Ничего нет по '{query}'",
+                        "title": "Не найдено"
                     }
                 }
+            }
+        },
+        "description": "Модерация.",
+        "togglefeature": {
+            "description": "",
+            "embeds": {
+                "default": {
+                    "description": ""
+                }
             },
-            "list": {
-                "description": "Lists every blacklist triggers registered in this server.",
-                "embeds": {
-                    "default": {
-                    "title": "Blacklist triggers registered in this server",
-                    "footer": "And more %{remaining} triggers are registered."
-                    },
-                    "no_blacklist": {
-                    "description": "Blacklist trigger was not found from this server."
-                    }
+            "parameters": {
+                "feature": {
+                    "description": ""
+                },
+                "state": {
+                    "description": ""
                 }
             }
         }
     },
     "roblox": {
         "avatar": {
-            "description": "Получает аватар пользователя Roblox по имени пользователя.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "Roblox user %{username}'s Avatar"
+                    "title": ""
                 }
             }
         },
-        "description": "Группа для roblox API.",
+        "description": "",
         "user": {
-            "description": "Получить информацию о пользователе Roblox по имени пользователя.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "Информация о пользователе %{username}"
+                    "title": ""
                 }
             }
         }
     },
     "stats": {
-        "description": "Система уровней.",
+        "description": "",
         "top": {
-            "description": "Показать лучших пользователей.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "Глобальная таблица лидеров!! >:D"
+                    "title": ""
                 }
             }
         }
     },
     "ticket": {
-        "description": "Ticket system V2.",
+        "description": "",
         "setup": {
-            "description": "Configure the ticket system for this server."
+            "description": ""
         }
     },
     "tts": {
-        "description": "Центр речи",
+        "description": "",
         "embeds": {
             "default": {
-                "description": "Сгенерирован! >:D",
-                "footer": "Тип: %{tts_type}; Вход: %{input}",
-                "title": "Преобразование речи"
+                "description": "",
+                "footer": "",
+                "title": ""
             }
         },
         "google_translate": {
-            "description": "Генерирует TTS из Google Translate."
+            "description": ""
         }
     },
     "user": {
         "avatar": {
-            "description": "Показывает аватар пользователя Discord.",
+            "description": "Показать аватар.",
             "embeds": {
                 "default": {
-                    "footer": "Запрошен %{author}, результат кэшируется на минуту.",
-                    "title": "Аватар пользователя %{user}"
+                    "footer": "Запросил {author}",
+                    "title": "Аватар {user}"
                 }
             }
         },
-        "description": "Группа для пользователей.",
+        "description": "Пользователь.",
         "info": {
-            "description": "Получает информацию о пользователе.",
+            "description": "Информация о пользователе.",
             "embeds": {
                 "default": {
-                    "title": "Информация для %{user}"
+                    "title": "Инфо о {user}"
                 }
             },
             "fields": {
-                "stats": "Уровень %{level} (%{xp} XP) / %{messages} сообщения",
-                "wallet": "%{coins} Coin'ов"
+                "stats": "Уровень {level} ({xp} XP) / {messages} сообщений",
+                "wallet": "{coins} монет"
             }
         },
         "set_nick": {
-            "description": "Устанавливает имя пользователя.",
+            "description": "",
             "embeds": {
                 "changed": {
-                    "description": "%{author} Изменил прозвище %{user}на **%{new_nickname}**."
+                    "description": ""
                 },
                 "reset": {
-                    "description": "%{author} переслал псевдоним %{user}."
+                    "description": ""
                 }
             },
             "reasons": {
-                "changed": "Псевдоним изменен %{user} через /user nick",
-                "reset": "Ник сброшен %{user} через /user nick"
+                "changed": "",
+                "reset": ""
+            }
+        },
+        "set_profile": {
+            "description": "",
+            "embeds": {
+                "default": {
+                    "description": "",
+                    "title": ""
+                }
             }
         },
         "status": {
-            "description": "Получает статус пользователя.",
+            "description": "Статус пользователя.",
             "embeds": {
                 "default": {
-                    "title": "%{user}'s Discord status"
+                    "title": "Статус {user}"
+                }
+            }
+        }
+    },
+    "userphone": {
+        "call": {
+            "description": "",
+            "embeds": {
+                "paired": {
+                    "description": "",
+                    "title": ""
+                },
+                "searching": {
+                    "description": "",
+                    "title": ""
+                },
+                "status": {
+                    "description": "",
+                    "title": ""
+                }
+            }
+        },
+        "description": "",
+        "globalchat": {
+            "description": "",
+            "embeds": {
+                "default": {
+                    "description": "",
+                    "title": ""
+                }
+            }
+        },
+        "hangup": {
+            "description": "",
+            "embeds": {
+                "default": {
+                    "description": "",
+                    "title": ""
+                }
+            }
+        },
+        "userphone": {
+            "description": "",
+            "embeds": {
+                "default": {
+                    "description": "",
+                    "title": ""
                 }
             }
         }
     },
     "welcome": {
-        "description": "Группа для WelcomeCog",
+        "description": "",
         "embeds": {
             "join": {
-                "description": "Добро пожаловать, %{mention}! Пожалуйста, проверьте правила в %{rules_mention}.",
-                "description_no_rules": "Добро пожаловать на сервер, %{mention}!",
-                "footer": "Теперь у нас есть %{count} участники.",
-                "title": "Добро пожаловать в %{guild}!"
+                "description": "",
+                "description_no_rules": "",
+                "footer": "",
+                "title": ""
             },
             "left": {
-                "description": "Прощай, %{display}!",
-                "title": "Член %{display} покинул %{guild}!"
+                "description": "",
+                "title": ""
             }
         },
         "set_channel": {
-            "description": "Установить канал для отправки входящих/оставленных сообщений.",
+            "description": "",
             "embeds": {
                 "disabled": {
-                    "description": "Функция приветствия отключена."
+                    "description": ""
                 },
                 "enabled": {
-                    "description": "Welcome notification feature has been enabled.\n The welcome message will appear at %{target_mention}."
+                    "description": ""
                 }
             }
         },
         "set_rules_channel": {
-            "description": "Устанавливает канал правил для добавления ссылки в нем.",
+            "description": "",
             "embeds": {
                 "disabled": {
-                    "description": "Канал правил для приветственного сообщения был удален."
+                    "description": ""
                 },
                 "success": {
-                    "description": "Канал правил для приветственного сообщения был установлен в %{target_mention}."
+                    "description": ""
                 }
             }
         },
         "test": {
-            "description": "Запустить тест для канала приветствия",
+            "description": "",
             "embeds": {
                 "sent": {
-                    "description": "Тест успешно отправлен на приветственный канал!"
+                    "description": ""
                 },
                 "unconfigured": {
-                    "description": "Канал Welcome не настроен в этой гильдии."
+                    "description": ""
                 }
             }
         }

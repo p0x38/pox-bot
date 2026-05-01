@@ -3,8 +3,42 @@
         "description": "Gives a random, classic magic 8-ball response to a user's question.",
         "embeds": {
             "default": {
-                "title": "Answer to '%{question}'"
+                "title": "Answer to '{question}'"
             }
+        }
+    },
+    "admin": {
+        "reload_cogs": {
+            "description": "Nire-reload ang lahat ng extension ng bot at sini-synchronize ang mga slash command.",
+            "embeds": {
+                "error": {
+                    "description": "Nag-reload ang mga extension, ngunit nabigo ang global command sync.",
+                    "title": "Nabigo ang pag-synchronize!"
+                },
+                "loading": {
+                    "description": "Mangyaring maging mapagpasensya habang nagre-reload...",
+                    "progress": "Mangyaring maging mapagpasensya habang nagre-reload...\n\nKasalukuyang naglo-load: `{current_cog}`\n\nPag-unlad: **{current}/{total}**\n\nTagumpay: **{loaded}** | \nNabigo: **{failed}**",
+                    "title": "Pinoproseso ang pag-reload..."
+                },
+                "success": {
+                    "description": "Matagumpay na na-update ang kabuuang **{loaded}** extension.\n\nNaka-synchronize na **{synched}** slash command sa buong mundo.",
+                    "title": "Matagumpay na nagawa ang proseso ng pag-reload!"
+                }
+            },
+            "errors": {
+                "forbidden": "Ang bot ay kulang sa saklaw ng `application.commands` sa guild na ito.",
+                "generic": "Isang hindi kilalang error ang naganap sa panahon ng pag-synchronize ng command.",
+                "http_error": "Error sa Discord API: Nabigong makipag-ugnayan sa command gateway.",
+                "missing_id": "Kritikal na Error: Nawawala ang Application ID sa instance ng bot.",
+                "sync_failure": "Nabigong i-sync: Ang isa o higit pang mga command ay naglalaman ng di-wastong istraktura ng data.",
+                "translation_error": "Na-abort ang pag-sync: Nagkaroon ng error sa loob ng command translator."
+            }
+        }
+    },
+    "calculate": {
+        "description": "Isang pangkat para sa calculator.",
+        "percentage": {
+            "description": "Kinakalkula ang porsyento."
         }
     },
     "channel": {
@@ -13,7 +47,7 @@
             "description": "Shows channel information.",
             "embeds": {
                 "default": {
-                    "title": "Information of %{name}"
+                    "title": "Information of {name}"
                 }
             }
         },
@@ -21,10 +55,55 @@
             "description": "Sets slowmode delay",
             "embeds": {
                 "successful": {
-                    "description": "Successfully set slowmode to **%{seconds}** for %{mention}.",
+                    "description": "Successfully set slowmode to **{seconds}** for {mention}.",
                     "title": "Slowmode Updated"
                 }
             }
+        }
+    },
+    "chatbot": {
+        "add_event": {
+            "description": "Nagdaragdag ng pandaigdigang kaganapan sa kasaysayan."
+        },
+        "clear_memories": {
+            "description": "Ni-clear ang history ng chat para sa session ng chat ng AI."
+        },
+        "description": "Isang grupo para sa AI Chat bot gamit ang Ollama.",
+        "mem": {
+            "description": "Suriin ang espasyo ng utak ni Jim.",
+            "embeds": {
+                "default": {
+                    "title": "Katayuan ng Memorya ng Konteksto"
+                }
+            },
+            "messages": {
+                "empty": "Kasalukuyang walang laman ang utak ko. \n(Walang kasaysayan)"
+            }
+        },
+        "perf": {
+            "description": "Nagpapakita ng mga istatistika ng pagganap.",
+            "embeds": {
+                "default": {
+                    "description": "Mga istatistika batay sa huling {generations} na henerasyon.",
+                    "title": "Mga Sukatan sa Kahusayan ng Hardware"
+                }
+            },
+            "messages": {
+                "empty_logs": "Walang data na nakolekta para sa mga istatistika ng pagganap sa kasalukuyan."
+            }
+        },
+        "stats": {
+            "description": "Nagpapakita ng mga istatistika ng bot (global)."
+        },
+        "unlock": {
+            "description": "Pilit na ina-unlock ang channel kung natigil si Jim.",
+            "messages": {
+                "already": "Hindi man lang ako nag-iisip ngayon, pero okay!",
+                "unlock": "uh sige babalik na ako"
+            }
+        },
+        "user_stats": {
+            "description": "Nagpapakita ng mga istatistika ng bot (user)."
         }
     },
     "contributors": {
@@ -42,9 +121,105 @@
             "description": "Shows contributor information.",
             "embeds": {
                 "default": {
-                    "title": "Contributor Information of %{contributor}"
+                    "title": "Contributor Information of {contributor}"
                 }
             }
+        }
+    },
+    "convert": {
+        "base64": {
+            "description": "Nag-encode ng text sa Base64."
+        },
+        "base7777": {
+            "description": "Ini-encrypt ang teksto sa Base7777. \n(hiniling ng galaxy_fl3x)"
+        },
+        "binary": {
+            "description": "I-encode sa binary. \n(hiniling ni AnnaYarik999Alt)"
+        },
+        "caesar": {
+            "description": "I-encrypt ang text gamit ang Caesar cipher."
+        },
+        "color_name": {
+            "description": "Kinukuha ang pangalan ng kulay mula sa colornames.org."
+        },
+        "demorse": {
+            "description": "I-decode ang morse code. \n(hiniling ni AnnaYarik999Alt)"
+        },
+        "description": "Isang pangkat para sa mga nagko-convert.",
+        "glitch": {
+            "description": "Ginagawang parang sira ang text."
+        },
+        "invert_letters": {
+            "description": "Binabaliktad ang mga text letter."
+        },
+        "meow": {
+            "description": "Gumagawa ng text sa MEOW MEOW :3"
+        },
+        "morse": {
+            "description": "I-encode sa morse code. \n(hiniling ni AnnaYarik999Alt)"
+        },
+        "muffle": {
+            "description": "Nagbabago ng text sa mga tunog na parang muffled."
+        },
+        "nsrc1": {
+            "description": "Ine-encrypt ang text sa NSRC-1. \n(fah)"
+        },
+        "psc1": {
+            "description": "I-encrypt sa PSC-1."
+        },
+        "railfence": {
+            "description": "I-encrypt ang text gamit ang rail fence cipher."
+        },
+        "reverse_words": {
+            "description": "Baliktarin ang mga salita."
+        },
+        "unbase64": {
+            "description": "Nagde-decode ng text mula sa Base64."
+        },
+        "unbase7777": {
+            "description": "Nagde-decrypt ng text mula sa Base7777. \n(hiniling ng galaxy_fl3x)"
+        },
+        "unbinary": {
+            "description": "I-decode ang binary. \n(hiniling ni AnnaYarik999Alt)"
+        },
+        "uncaesar": {
+            "description": "I-decrypt ang text gamit ang Caesar cipher."
+        },
+        "unnsrc1": {
+            "description": "Nagde-decrypt ng text mula sa NSRC-1. \n(fah)"
+        },
+        "unpsc1": {
+            "description": "I-decrypt ang PSC-1."
+        },
+        "unrailfence": {
+            "description": "I-decrypt ang text gamit ang rail fence cipher."
+        },
+        "uwu": {
+            "description": "Pareho sa say_uwuify, ngunit may pagbanggit."
+        }
+    },
+    "detect": {
+        "custom2": {
+            "description": "Suriin kung gaano ito kataas."
+        },
+        "custom_member": {
+            "description": "Suriin kung gaano karaming miyembro ang malapit sa ilan."
+        },
+        "description": "Isang pangkat para sa pagtuklas.",
+        "how_femboy": {
+            "description": "Suriin kung gaano ka-femboy ang miyembro."
+        },
+        "how_freaky": {
+            "description": "Suriin kung gaano kataka-taka ang miyembro."
+        },
+        "how_gay": {
+            "description": "Suriin kung paano bakla ang miyembro."
+        },
+        "how_slop": {
+            "description": "Suriin kung paano slop ang miyembro."
+        },
+        "vibecheck": {
+            "description": "Suriin kung paano nanginginig ang miyembro."
         }
     },
     "economy": {
@@ -52,8 +227,8 @@
             "description": "Check your current balance.",
             "embeds": {
                 "default": {
-                    "footer": "Total Assets: %{coins} coins",
-                    "title": "%{user}'s Balance :3"
+                    "footer": "Total Assets: {coins} coins",
+                    "title": "{user}'s Balance :3"
                 }
             },
             "fields": {
@@ -73,7 +248,7 @@
                     "title": "Not enough coins"
                 },
                 "purchased": {
-                    "description": "Successfully bought **%{item_name}**! Check your inventory~ ;3",
+                    "description": "Successfully bought **{item_name}**! Check your inventory~ ;3",
                     "title": "Purchase completed"
                 }
             }
@@ -82,7 +257,7 @@
             "description": "Claim your daily reward.",
             "embeds": {
                 "default": {
-                    "description": "You got %{amount} coins by daily rewards! :3",
+                    "description": "You got {amount} coins by daily rewards! :3",
                     "title": "You've claimed daily reward!"
                 }
             }
@@ -91,7 +266,7 @@
             "description": "Move money from wallet to bank.",
             "embeds": {
                 "default": {
-                    "description": "Deposited %{amount} coins successfully. :3",
+                    "description": "Deposited {amount} coins successfully. :3",
                     "title": "Deposit success"
                 }
             }
@@ -104,7 +279,7 @@
             "description": "View your items.",
             "embeds": {
                 "default": {
-                    "title": "%{user}'s inventory"
+                    "title": "{user}'s inventory"
                 },
                 "empty": {
                     "description": "Your backpack is empty right now. buy something to change this text i guess. :3",
@@ -114,8 +289,14 @@
         },
         "list": {
             "description": "View the item shop.",
+            "embeds": {
+                "closed": {
+                    "description": "Subukang bumisita sa shop mamaya... 3:",
+                    "title": "Kasalukuyang sarado ang tindahan!"
+                }
+            },
             "fields": {
-                "buy_price": "Price: %{price} coins",
+                "buy_price": "Price: {price} coins",
                 "not_sale": "Not for sale"
             }
         },
@@ -123,7 +304,7 @@
             "description": "Sell on item back to the shop.",
             "embeds": {
                 "sold": {
-                    "description": "Sold **%{item_name}",
+                    "description": "Sold **{item_name}",
                     "title": "Sale completed"
                 },
                 "unable_to_sell": {
@@ -136,7 +317,7 @@
             "description": "Move money from bank to wallet.",
             "embeds": {
                 "default": {
-                    "description": "Withdrawed %{amount} coins successfully. :3",
+                    "description": "Withdrawed {amount} coins successfully. :3",
                     "title": "Withdraw success"
                 }
             }
@@ -145,14 +326,89 @@
             "description": "Earn some coins by working.",
             "embeds": {
                 "default": {
-                    "description": "You got %{amount} coins by working! :3",
+                    "description": "You got {amount} coins by working! :3",
                     "title": "You have worked for money!"
                 },
                 "tired": {
-                    "description": "You need to rest %{rem} more minutes. 3:",
+                    "description": "You need to rest {rem} more minutes. 3:",
                     "title": "You can't work right now!"
                 }
             }
+        }
+    },
+    "fun": {
+        "boop_member": {
+            "description": "Miyembro ng Boops."
+        },
+        "description": "Isang grupo para masaya.",
+        "dice": {
+            "description": "Gumagulo ng dice."
+        },
+        "guess": {
+            "description": "Hulaan ang numero."
+        },
+        "guess_game": {
+            "description": "Magsisimula ng bagong laro ng paghula ng numero. \n(1 ~ 100)"
+        },
+        "job_application": {
+            "description": "ISANG TRABAHO!!!"
+        },
+        "ship": {
+            "description": "Kinakalkula ang rate ng pag-ibig sa pagitan ng dalawang user."
+        },
+        "stopguess": {
+            "description": "Sapilitang itinigil ang patuloy na laro ng hula."
+        }
+    },
+    "generate": {
+        "cat_jard": {
+            "description": "Umiwas sa pusa."
+        },
+        "description": "Isang grupo para sa mga generator.",
+        "emoticon": {
+            "description": "Nagpapadala ng random na emoticon."
+        },
+        "idek": {
+            "description": "idek."
+        },
+        "nyan_cat": {
+            "description": "Nyan Cat! \n:D",
+            "messages": {
+                "think_fast": "MABILIS MAG-ISIP, CHUCKLE NUTS!"
+            }
+        },
+        "target_close": {
+            "description": "Target na closing algorithm"
+        }
+    },
+    "guild": {
+        "count": {
+            "description": "Kinukuha ang bilang ng mga miyembro ng server."
+        },
+        "description": "Isang grupo para sa server.",
+        "icon": {
+            "description": "Ipakita ang icon ng server."
+        },
+        "info": {
+            "description": "Suriin ang impormasyon ng server."
+        },
+        "kickmembers": {
+            "description": "Sinisipa ang bawat tunay na miyembro."
+        },
+        "logs": {
+            "description": "Nagpapakita ng menu para makakuha ng history ng mga kic, ban at timeout."
+        },
+        "members_list": {
+            "description": "Naglilista ng mga miyembro sa server."
+        },
+        "nsfw_level": {
+            "description": "Ipakita ang NSFW Level ng server."
+        },
+        "role_list": {
+            "description": "Naglilista ng mga tungkulin sa server."
+        },
+        "search_members": {
+            "description": "Mga paghahanap para sa mga miyembrong tumutugma sa query."
         }
     },
     "info": {
@@ -164,11 +420,11 @@
             "description": "Invites the bot to server by application url. (LIMITED TO 90)",
             "embeds": {
                 "default": {
-                    "description": "%{prefix}\n\nYou can add me to your server using [this link.](%{invite_url})",
+                    "description": "{prefix}\n\nYou can add me to your server using [this link.]({invite_url})",
                     "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation.",
                     "status": {
-                    "one": "Capacity: **%{formatted}** server",
-                    "other": "Capacity: **%{formatted}** servers"
+                        "one": "Capacity: **{formatted}** server",
+                        "other": "Capacity: **{formatted}** servers"
                     },
                     "title": "Invite TongueBot"
                 }
@@ -189,7 +445,7 @@
             "description": "Pong!",
             "embeds": {
                 "default": {
-                    "title": "Pong! (%{latency} ms)"
+                    "title": "Pong! ({latency} ms)"
                 }
             }
         },
@@ -198,7 +454,7 @@
             "embeds": {
                 "default": {
                     "description": "Select a category below to view specific details.",
-                    "footer": "System: %{platform}",
+                    "footer": "System: {platform}",
                     "title": "Bot Information"
                 }
             },
@@ -213,49 +469,86 @@
             "description": "Shows time in specified timezone",
             "embeds": {
                 "default": {
-                    "description": "In %{timezone_name}, it's **%{timedate}**."
+                    "description": "In {timezone_name}, it's **{timedate}**."
                 }
             }
         }
     },
     "leveling": {
+        "configure": {
+            "description": "Configures leveling system.",
+            "embeds": {
+                "default": {
+                    "description": "The system has been updated.",
+                    "title": "Leveling system updated"
+                }
+            }
+        },
         "description": "Leveling system.",
         "rank": {
             "description": "Check rank.",
             "embeds": {
                 "default": {
                     "fields": {
-                    "level": {
+                        "level": {
                             "name": "Level"
-                    },
-                    "progress": {
+                        },
+                        "progress": {
                             "name": "Progress"
-                    },
-                    "total": {
+                        },
+                        "total": {
                             "name": "Total XP"
-                    }
+                        }
                     },
-                    "title": "%{user}'s rank"
-                }
-            }
-        },
-        "configure": {
-            "description": "Configures leveling system.",
-            "embeds": {
-                "default": {
-                    "title": "Leveling system updated",
-                    "description": "The system has been updated."
+                    "title": "{user}'s rank"
                 }
             }
         }
     },
     "moderation": {
+        "blacklist": {
+            "add": {
+                "description": "Adds a word to the blacklists.",
+                "embeds": {
+                    "default": {
+                        "description": "Added {entry} into blacklist with type '{type}', as {id}.",
+                        "title": "Added word into blacklist"
+                    }
+                }
+            },
+            "description": "Blacklist system.",
+            "list": {
+                "description": "Lists every blacklist triggers registered in this server.",
+                "embeds": {
+                    "default": {
+                        "footer": "And more {remaining} triggers are registered.",
+                        "title": "Blacklist triggers registered in this server"
+                    },
+                    "no_blacklist": {
+                        "description": "Blacklist trigger was not found from this server."
+                    }
+                }
+            },
+            "remove": {
+                "description": "Removes matched query from blacklists.",
+                "embeds": {
+                    "default": {
+                        "description": "Removed every query matching with '{query}'.",
+                        "title": "Removed matched queries from blacklist"
+                    },
+                    "not_found": {
+                        "description": "Triggers were not found from blacklist with matching query '{query}'.",
+                        "title": "Triggers not found"
+                    }
+                }
+            }
+        },
         "description": "Moderation management.",
         "togglefeature": {
             "description": "Toggle server features.",
             "embeds": {
                 "default": {
-                    "description": "Set %{feature_name} to %{state}."
+                    "description": "Set {feature_name} to {state}."
                 }
             },
             "parameters": {
@@ -266,43 +559,6 @@
                     "description": "On or Off"
                 }
             }
-        },
-        "blacklist": {
-            "description": "Blacklist system.",
-            "add": {
-                "description": "Adds a word to the blacklists.",
-                "embeds": {
-                    "default": {
-                    "title": "Added word into blacklist",
-                    "description": "Added %{entry} into blacklist with type '%{type}', as %{id}."
-                    }
-                }
-            },
-            "remove": {
-                "description": "Removes matched query from blacklists.",
-                "embeds": {
-                    "default": {
-                    "title": "Removed matched queries from blacklist",
-                    "description": "Removed every query matching with '%{query}'."
-                    },
-                    "not_found": {
-                    "title": "Triggers not found",
-                    "description": "Triggers were not found from blacklist with matching query '%{query}'."
-                    }
-                }
-            },
-            "list": {
-                "description": "Lists every blacklist triggers registered in this server.",
-                "embeds": {
-                    "default": {
-                    "title": "Blacklist triggers registered in this server",
-                    "footer": "And more %{remaining} triggers are registered."
-                    },
-                    "no_blacklist": {
-                    "description": "Blacklist trigger was not found from this server."
-                    }
-                }
-            }
         }
     },
     "roblox": {
@@ -310,7 +566,7 @@
             "description": "Gets Roblox user's avatar by username.",
             "embeds": {
                 "default": {
-                    "title": "Roblox user %{username}'s Avatar"
+                    "title": "Roblox user {username}'s Avatar"
                 }
             }
         },
@@ -319,7 +575,7 @@
             "description": "Get Roblox user info by username.",
             "embeds": {
                 "default": {
-                    "title": "User %{username}'s Information"
+                    "title": "User {username}'s Information"
                 }
             }
         }
@@ -346,7 +602,7 @@
         "embeds": {
             "default": {
                 "description": "Generated! >:D",
-                "footer": "Type: %{tts_type}; Input: %{input}",
+                "footer": "Type: {tts_type}; Input: {input}",
                 "title": "TTS Conversion"
             }
         },
@@ -359,8 +615,8 @@
             "description": "Shows Discord user's avatar.",
             "embeds": {
                 "default": {
-                    "footer": "Requested by %{author}, the result is cached for a minute.",
-                    "title": "User %{user}'s avatar"
+                    "footer": "Requested by {author}, the result is cached for a minute.",
+                    "title": "User {user}'s avatar"
                 }
             }
         },
@@ -369,34 +625,90 @@
             "description": "Retrieves user's information.",
             "embeds": {
                 "default": {
-                    "title": "Information for %{user}"
+                    "title": "Information for {user}"
                 }
             },
             "fields": {
-                "stats": "Level %{level} (%{xp} XP) / %{messages} Messages",
-                "wallet": "%{coins} Coins"
+                "stats": "Level {level} ({xp} XP) / {messages} Messages",
+                "wallet": "{coins} Coins"
             }
         },
         "set_nick": {
             "description": "Sets user's nickname.",
             "embeds": {
                 "changed": {
-                    "description": "%{author} Changed %{user}'s nickname to **%{new_nickname}**."
+                    "description": "{author} Changed {user}'s nickname to **{new_nickname}**."
                 },
                 "reset": {
-                    "description": "%{author} Reseted %{user}'s nickname."
+                    "description": "{author} Reseted {user}'s nickname."
                 }
             },
             "reasons": {
-                "changed": "Nickname changed by %{user} via /user nick",
-                "reset": "Nickname reseted by %{user} via /user nick"
+                "changed": "Nickname changed by {user} via /user nick",
+                "reset": "Nickname reseted by {user} via /user nick"
+            }
+        },
+        "set_profile": {
+            "description": "Itinatakda ang iyong profile sa komunidad.",
+            "embeds": {
+                "default": {
+                    "description": "Itakda ang iyong paglalarawan sa '{description}' at nickname sa '{nickname}'. \n:3",
+                    "title": "Matagumpay na na-update ang iyong profile sa komunidad! \n:3"
+                }
             }
         },
         "status": {
             "description": "Retrieves user's status.",
             "embeds": {
                 "default": {
-                    "title": "%{user}'s Discord status"
+                    "title": "{user}'s Discord status"
+                }
+            }
+        }
+    },
+    "userphone": {
+        "call": {
+            "description": "Mga tawag sa random guild.",
+            "embeds": {
+                "paired": {
+                    "description": "Ipinares sa ibang guild!",
+                    "title": "Ipinares!"
+                },
+                "searching": {
+                    "description": "Naghahanap ng guild na makakatawag...",
+                    "title": "Naghahanap ng guild"
+                },
+                "status": {
+                    "description": "",
+                    "title": ""
+                }
+            }
+        },
+        "description": "Isang grupo para sa userphone.",
+        "globalchat": {
+            "description": "Kino-configure ang pandaigdigang chat.",
+            "embeds": {
+                "default": {
+                    "description": "Ang mga setting ay matagumpay na na-configure!",
+                    "title": "Matagumpay na na-configure"
+                }
+            }
+        },
+        "hangup": {
+            "description": "Ibinaba ang papasok na tawag.",
+            "embeds": {
+                "default": {
+                    "description": "Ibinaba ang tawag.",
+                    "title": "Hanged ingoing call up!"
+                }
+            }
+        },
+        "userphone": {
+            "description": "Kino-configure ang userphone.",
+            "embeds": {
+                "default": {
+                    "description": "Ang mga setting ay matagumpay na na-configure!",
+                    "title": "Matagumpay na na-configure"
                 }
             }
         }
@@ -405,14 +717,14 @@
         "description": "A group for WelcomeCog",
         "embeds": {
             "join": {
-                "description": "Welcome, %{mention}! Please check out the rules in %{rules_mention}.",
-                "description_no_rules": "Welcome to the server, %{mention}!",
-                "footer": "We now have %{count} members.",
-                "title": "Welcome to %{guild}!"
+                "description": "Welcome, {mention}! Please check out the rules in {rules_mention}.",
+                "description_no_rules": "Welcome to the server, {mention}!",
+                "footer": "We now have {count} members.",
+                "title": "Welcome to {guild}!"
             },
             "left": {
-                "description": "Goodbye, %{display}!",
-                "title": "Member %{display} has left %{guild}!"
+                "description": "Goodbye, {display}!",
+                "title": "Member {display} has left {guild}!"
             }
         },
         "set_channel": {
@@ -422,7 +734,7 @@
                     "description": "Welcome notification feature has been disabled."
                 },
                 "enabled": {
-                    "description": "Welcome notification feature has been enabled.\n The welcome message will appear at %{target_mention}."
+                    "description": "Welcome notification feature has been enabled.\n The welcome message will appear at {target_mention}."
                 }
             }
         },
@@ -433,7 +745,7 @@
                     "description": "Rules channel for welcome message has been removed."
                 },
                 "success": {
-                    "description": "Rules channel for welcome message has been set to %{target_mention}."
+                    "description": "Rules channel for welcome message has been set to {target_mention}."
                 }
             }
         },

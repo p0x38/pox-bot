@@ -1,8 +1,0 @@
-{
-    "fields": {
-        "embed_color": "**تضمين اللون**: %{hex}",
-        "locale": "**لغة العرض**: %{lang_code}"
-    },
-    "header_description": "إعدادات المستخدم",
-    "title": "إعدادات المستخدم"
-}

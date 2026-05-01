@@ -1,459 +1,492 @@
 {
     "8ball": {
-        "description": "Gives a random, classic magic 8-ball response to a user's question.",
+        "description": "Gives you a totally random magic 8-ball answer! :3",
         "embeds": {
             "default": {
-                "title": "Answer to a question '%{question}'"
+                "title": "The magic 8-ball says... '{question}'"
             }
         }
     },
     "admin": {
         "reload_cogs": {
-            "description": "Reloads all bot extensions and synchronizes slash commands.",
+            "description": "Reloads all my extensions and syncs the slash commands! >:D",
             "embeds": {
+                "error": {
+                    "description": "I reloaded the extensions, but syncing the commands totally failed... 3:",
+                    "title": "Oh no, synchronization failed! 3:"
+                },
                 "loading": {
-                    "title": "Processing reload...",
-                    "description": "Please be patient while reloading...",
-                    "progress": "Please be patient while reloading...\nCurrently loading: `%{current_cog}`\nProgress: **%{current}/%{total}**\nSuccess: **%{loaded}** | Failed: **%{failed}**"
+                    "description": "Gimme a sec, reloading everything~ :3",
+                    "progress": "Hang tight, I'm reloading stuff~ \nCurrently loading: `{current_cog}`\nProgress: **{current}/{total}**\nSuccess: **{loaded}** | Failed: **{failed}**",
+                    "title": "Processing reload... :3"
                 },
                 "success": {
-                    "title": "Reload process successfully done!",
-                    "description": "Total **%{loaded}** extensions updated successfully.\nSynchronized **%{synched}** slash commands globally."
-                },
-                "error": {
-                    "title": "Synchronization Failed!",
-                    "description": "The extensions reloaded, but the global command sync failed."
+                    "description": "Successfully updated **{loaded}** extensions! >:D\nAnd synced **{synched}** slash commands everywhere~",
+                    "title": "Reload finished successfully! :D"
                 }
             },
             "errors": {
-                "sync_failure": "Failed to sync: One or more commands contain invalid data structure.",
-                "forbidden": "The bot lacks the `application.commands` scope in this guild.",
-                "missing_id": "Critical Error: Application ID is missing from the bot instance.",
-                "translation_error": "Sync aborted: An error occurred within the command translator.",
-                "http_error": "Discord API error: Failed to communicate with the command gateway.",
-                "generic": "An unknown error occurred during command synchronization."
+                "forbidden": "I don't have the `application.commands` permissions in this server... 3:",
+                "generic": "Something weird went wrong while syncing commands! 3:",
+                "http_error": "Discord API is acting up! I couldn't reach the gateway. 3:",
+                "missing_id": "Critical error! My Application ID is missing somehow... 3:",
+                "sync_failure": "Sync failed! Some commands have wonky data. 3:",
+                "translation_error": "Sync aborted! Something broke in the command translator. 3:"
             }
         }
     },
     "calculate": {
-        "description": "A group for calculator.",
+        "description": "Math time! :3",
         "percentage": {
-            "description": "Calculates percentage."
+            "description": "Calculates the percentage for you~"
         }
     },
     "channel": {
-        "description": "A group for managing channels.",
+        "description": "A fun group for managing channels! :3",
         "info": {
-            "description": "Shows information for the target channel.",
+            "description": "Shows some cool info about the channel~",
             "embeds": {
                 "default": {
-                    "title": "Information for %{name}"
+                    "title": "Info for {name} :3"
                 }
             }
         },
         "slowmode": {
-            "description": "Sets slowmode delay",
+            "description": "Sets the slowmode delay!",
             "embeds": {
                 "successful": {
-                    "description": "Successfully set slowmode to **%{seconds}** for %{mention}! :D",
-                    "title": "Slowmode Updated"
+                    "description": "Boom! Set slowmode to **{seconds}** for {mention}! >:D",
+                    "title": "Slowmode Updated! :3"
                 }
             }
         }
     },
     "chatbot": {
-        "description": "A group for AI Chat bot using Ollama.",
         "add_event": {
-            "description": "Adds global event to history."
+            "description": "Adds a global event to my history! :3"
         },
+        "clear_memories": {
+            "description": "Wipes my chat memory clean! 3:"
+        },
+        "description": "A group for my AI chatbot stuff! :3",
         "mem": {
-            "description": "Check Jim's brain space.",
+            "description": "Let's peek into Jim's brain space~ :3",
             "embeds": {
                 "default": {
-                    "title": "Context Memory Status"
+                    "title": "Context Memory Status :3"
                 }
-            }
-        },
-        "unlock": {
-            "description": "Forcefully unlocks the channel if Jim is stuck.",
+            },
             "messages": {
-                "unlock": "uh ok i'm back",
-                "already": "I'm not even thinking right now, but okay!"
+                "empty": "My brain is completely empty right now. 3:"
             }
         },
         "perf": {
-            "description": "Shows performance stats."
+            "description": "Shows how hard my hardware is working! :3",
+            "embeds": {
+                "default": {
+                    "description": "Here are the stats based on the last {generations} generations~",
+                    "title": "Hardware Efficiency Metrics >:D"
+                }
+            },
+            "messages": {
+                "empty_logs": "I don't have any performance data right now... 3:"
+            }
         },
         "stats": {
-            "description": "Shows statistics of bot (global)."
+            "description": "Shows my global bot stats! :3"
+        },
+        "unlock": {
+            "description": "Forcefully unlocks the channel if I get stuck! >:D",
+            "messages": {
+                "already": "I'm not even thinking right now, but sure! :3",
+                "unlock": "uh ok i'm back >:D"
+            }
         },
         "user_stats": {
-            "description": "Shows statistics of bot (user)."
-        },
-        "clear_memories": {
-            "description": "Clears chat history for AI chat session."
+            "description": "Shows your bot stats! :3"
         }
     },
     "contributors": {
-        "description": "A group for contributors.",
+        "description": "A group for all the awesome contributors! :3",
         "list": {
-            "description": "Lists all contributors.",
+            "description": "Lists everyone who helped out~",
             "embeds": {
                 "default": {
-                    "description": "Here's a list of contributors who helped my bot! :3",
-                    "title": "Contributors"
+                    "description": "Here's a list of all the cool people who helped make me! :3",
+                    "title": "Awesome Contributors >:D"
                 }
             }
         },
         "view": {
-            "description": "Shows contributor information.",
+            "description": "Shows info about a specific contributor! :3",
             "embeds": {
                 "default": {
-                    "title": "Contributor Information for %{contributor}"
+                    "title": "Info for contributor {contributor}~"
                 }
             }
         }
     },
     "convert": {
-        "description": "A group for converters.",
-        "meow": {
-            "description": "Makes text to MEOW MEOW :3"
-        },
-        "uwu": {
-            "description": "Same with say_uwuify, but with mention."
-        },
         "base64": {
-            "description": "Encodes text into Base64."
-        },
-        "unbase64": {
-            "description": "Decodes text from Base64."
-        },
-        "muffle": {
-            "description": "Changes text to sounds like muffled."
+            "description": "Turns your text into Base64! :3"
         },
         "base7777": {
-            "description": "Encrypts text into Base7777. (requested by galaxy_fl3x)"
-        },
-        "unbase7777": {
-            "description": "Decrypts text from Base7777. (requested by galaxy_fl3x)"
-        },
-        "glitch": {
-            "description": "Makes the text looks like corrupted."
-        },
-        "nsrc1": {
-            "description": "Encrypts text into NSRC-1. (fah)"
-        },
-        "unnsrc1": {
-            "description": "Decrypts text from NSRC-1. (fah)"
-        },
-        "invert_letters": {
-            "description": "Reverses text letters."
-        },
-        "caesar": {
-            "description": "Encrypt text using the Caesar cipher."
-        },
-        "uncaesar": {
-            "description": "Decrypt text using the Caesar cipher."
-        },
-        "railfence": {
-            "description": "Encrypt text using the rail fence cipher."
-        },
-        "unrailfence": {
-            "description": "Decrypt text using the rail fence cipher."
-        },
-        "morse": {
-            "description": "Encode into morse code. (requested by AnnaYarik999Alt)"
-        },
-        "demorse": {
-            "description": "Decode morse code. (requested by AnnaYarik999Alt)"
+            "description": "Encrypts text into Base7777! (requested by galaxy_fl3x) :3"
         },
         "binary": {
-            "description": "Encode into binary. (requested by AnnaYarik999Alt)"
+            "description": "Turns it into beep-boop binary! (requested by AnnaYarik999Alt) :3"
         },
-        "unbinary": {
-            "description": "Decode binary. (requested by AnnaYarik999Alt)"
-        },
-        "reverse_words": {
-            "description": "Reverse words."
+        "caesar": {
+            "description": "Scrambles text using the Caesar cipher! >:D"
         },
         "color_name": {
-            "description": "Retrieves color name from colornames.org."
+            "description": "Grabs a color name from colornames.org! :3"
+        },
+        "demorse": {
+            "description": "Decodes those dots and dashes! (requested by AnnaYarik999Alt) :3"
+        },
+        "description": "A group full of converters! :3",
+        "glitch": {
+            "description": "M-makes y-your t-text l-look g-glitchy... >:D"
+        },
+        "invert_letters": {
+            "description": "Flips your letters backwards! :3"
+        },
+        "meow": {
+            "description": "Turns everything into MEOW MEOW :3"
+        },
+        "morse": {
+            "description": "Turns it into dots and dashes! (requested by AnnaYarik999Alt) :3"
+        },
+        "muffle": {
+            "description": "Makes it sound like you're talking into a pillow... :3"
+        },
+        "nsrc1": {
+            "description": "Encrypts text into NSRC-1! (fah) :3"
         },
         "psc1": {
-            "description": "Encrypt into PSC-1."
+            "description": "Encrypts it into PSC-1! :3"
+        },
+        "railfence": {
+            "description": "Scrambles text using the rail fence cipher! >:D"
+        },
+        "reverse_words": {
+            "description": "Flips your words around! :3"
+        },
+        "unbase64": {
+            "description": "Decodes text from Base64! :3"
+        },
+        "unbase7777": {
+            "description": "Decrypts text from Base7777! (requested by galaxy_fl3x) :3"
+        },
+        "unbinary": {
+            "description": "Translates beep-boops back to text! (requested by AnnaYarik999Alt) :3"
+        },
+        "uncaesar": {
+            "description": "Unscrambles a Caesar cipher! :3"
+        },
+        "unnsrc1": {
+            "description": "Decrypts text from NSRC-1! (fah) :3"
         },
         "unpsc1": {
-            "description": "Decrypt PSC-1."
+            "description": "Decrypts PSC-1! :3"
+        },
+        "unrailfence": {
+            "description": "Unscrambles the rail fence cipher! :3"
+        },
+        "uwu": {
+            "description": "UwUifies the text, but you mention someone! :3"
         }
     },
     "detect": {
-        "description": "A group for detection.",
-        "how_gay": {
-            "description": "Check how member is gay."
-        },
-        "how_slop": {
-            "description": "Check how member is slop."
-        },
-        "how_femboy": {
-            "description": "Check how member is femboy."
-        },
-        "how_freaky": {
-            "description": "Check how member is freaky."
-        },
-        "vibecheck": {
-            "description": "Check how member is vibing."
+        "custom2": {
+            "description": "Let's see how high it is~ :3"
         },
         "custom_member": {
-            "description": "Check how much member is close to some."
+            "description": "Checks how close a member is to something! :3"
         },
-        "custom2": {
-            "description": "Check how high is it."
+        "description": "A group for detecting stuff! >:D",
+        "how_femboy": {
+            "description": "Let's see how much of a femboy they are! :3"
+        },
+        "how_freaky": {
+            "description": "Let's see how freaky they are! >:D"
+        },
+        "how_gay": {
+            "description": "Let's see how gay they are! :3"
+        },
+        "how_slop": {
+            "description": "Let's see how much slop they are! :3"
+        },
+        "vibecheck": {
+            "description": "Time for a vibe check! >:D"
         }
     },
     "economy": {
         "balance": {
-            "description": "Check your current balance.",
+            "description": "Check how much shiny money you have! :3",
             "embeds": {
                 "default": {
-                    "footer": "Total Assets: %{coins} coins",
-                    "title": "%{user}'s Balance :3"
+                    "footer": "Total shiny assets: {coins} coins~",
+                    "title": "{user}'s Balance :3"
                 }
             },
             "fields": {
                 "bank": "Bank",
-                "wallet": "Wallets"
+                "wallet": "Wallet"
             }
         },
         "buy": {
-            "description": "Buy an item from the shop.",
+            "description": "Buy some cool stuff from the shop! :3",
             "embeds": {
                 "item_unavailable": {
-                    "description": "That item is not available for sale! 3:<",
-                    "title": "Item is unavailable"
+                    "description": "That item isn't even for sale! 3:<",
+                    "title": "Item unavailable 3:"
                 },
                 "not_afford": {
-                    "description": "You don't have enough coins in your wallet to buy that! 3:<",
-                    "title": "Not enough coins"
+                    "description": "You're too broke to buy that! 3:<",
+                    "title": "Not enough coins! 3:"
                 },
                 "purchased": {
-                    "description": "Successfully bought **%{item_name}**! Check your inventory~ ;3",
-                    "title": "Purchase completed"
+                    "description": "Yay! You bought **{item_name}**! Check your inventory~ :3",
+                    "title": "Purchase successful! >:D"
                 }
             }
         },
         "daily": {
-            "description": "Claim your daily reward.",
+            "description": "Grab your daily freebies! :3",
             "embeds": {
                 "default": {
-                    "description": "You got %{amount} coins by daily rewards! :3",
-                    "title": "You've claimed daily reward!"
+                    "description": "You got {amount} coins from your daily reward! :D",
+                    "title": "Daily reward claimed! :3"
                 }
             }
         },
         "deposit": {
-            "description": "Move money from wallet to bank.",
+            "description": "Stash your money safely in the bank~",
             "embeds": {
                 "default": {
-                    "description": "Deposited %{amount} coins successfully. :3",
-                    "title": "Deposit success"
+                    "description": "Safely deposited {amount} coins! :3",
+                    "title": "Deposit successful~"
                 }
             }
         },
-        "description": "A group for Economy system.",
+        "description": "A group for all the money stuff! :3",
         "history": {
-            "description": "View your recent transactions."
+            "description": "Peek at your recent transactions~"
         },
         "inventory": {
-            "description": "View your items.",
+            "description": "See all the junk in your trunk! :3",
             "embeds": {
                 "default": {
-                    "title": "%{user}'s inventory"
+                    "title": "{user}'s inventory~"
                 },
                 "empty": {
-                    "description": "Your backpack is empty right now. Buy something to change this text i guess. :3",
-                    "title": "Empty backpack"
+                    "description": "Your backpack is totally empty... buy something to change this! :3",
+                    "title": "Empty backpack 3:"
                 }
             }
         },
         "list": {
-            "description": "View the item shop.",
+            "description": "Take a look at the shop! :3",
             "embeds": {
                 "closed": {
-                    "description": "Try visit shop later... 3:",
-                    "title": "Shop is currently closed!"
+                    "description": "Come back later, we're closed! 3:",
+                    "title": "Shop is closed right now! 3:"
                 }
             },
             "fields": {
-                "buy_price": "Price: %{price} coins",
+                "buy_price": "Price: {price} coins",
                 "not_sale": "Not for sale!! 3:<"
             }
         },
         "sell": {
-            "description": "Sell an item back to the shop.",
+            "description": "Sell your junk back to the shop! >:D",
             "embeds": {
                 "sold": {
-                    "description": "Sold **%{item_name}! :D",
-                    "title": "Sale completed"
+                    "description": "Sold **{item_name}**! :D",
+                    "title": "Sale complete! :3"
                 },
                 "unable_to_sell": {
-                    "description": "The shop won't buy this back! 3:",
-                    "title": "Unable to sell"
+                    "description": "The shop doesn't want this! 3:",
+                    "title": "Can't sell that! 3:"
                 }
             }
         },
         "withdraw": {
-            "description": "Move money from bank to wallet.",
+            "description": "Take your money out of the bank! :3",
             "embeds": {
                 "default": {
-                    "description": "Withdrew %{amount} coins successfully. :3",
-                    "title": "Withdraw success"
+                    "description": "Withdrew {amount} coins! >:D",
+                    "title": "Withdraw successful~"
                 }
             }
         },
         "work": {
-            "description": "Earn some coins by working.",
+            "description": "Do some chores for coins! :3",
             "embeds": {
                 "default": {
-                    "description": "You got %{amount} coins by working! :3",
-                    "title": "You have worked for money!"
+                    "description": "You worked hard and earned {amount} coins! :3",
+                    "title": "You got paid! >:D"
                 },
                 "tired": {
-                    "description": "You need to rest %{rem} more minutes. 3:",
-                    "title": "You can't work right now!"
+                    "description": "You're too sleepy! Rest for {rem} more minutes. 3:",
+                    "title": "You can't work right now! 3:"
                 }
             }
         }
     },
     "fun": {
-        "description": "A group for fun.",
-        "guess_game": {
-            "description": "Starts a new number guessing game. (1 ~ 100)"
+        "boop_member": {
+            "description": "Boop someone right on the nose! :3"
+        },
+        "description": "A group for silly fun! :3",
+        "dice": {
+            "description": "Roll the dice! >:D"
         },
         "guess": {
-            "description": "Guess the number."
+            "description": "Try to guess the number! :3"
         },
-        "stopguess": {
-            "description": "Forcibly stops ongoing guess game."
+        "guess_game": {
+            "description": "Starts a new number guessing game! (1 ~ 100) :3"
         },
         "job_application": {
-            "description": "A JOB!!!"
-        },
-        "boop_member": {
-            "description": "Boops member."
-        },
-        "dice": {
-            "description": "Rolls a dice."
+            "description": "Get a JOB!!! >:D"
         },
         "ship": {
-            "description": "Calculates the love rate between two users."
+            "description": "Calculates the true love rate between two people! :3"
+        },
+        "stopguess": {
+            "description": "Forcefully ruins the guessing game! >:D"
+        }
+    },
+    "generate": {
+        "cat_jard": {
+            "description": "Evade the cat! >:D"
+        },
+        "description": "A group for generating silly stuff! :3",
+        "emoticon": {
+            "description": "Sends a totally random text emoticon! :3"
+        },
+        "idek": {
+            "description": "i honestly don't even know. :3"
+        },
+        "nyan_cat": {
+            "description": "Nyan Cat time!! :D",
+            "messages": {
+                "think_fast": "THINK FAST, CHUCKLE NUTS! >:D"
+            }
+        },
+        "target_close": {
+            "description": "Target closing algorithm... >:D"
         }
     },
     "guild": {
-        "description": "A group for server.",
+        "count": {
+            "description": "Counts how many people are in here! :3"
+        },
+        "description": "A group for server stuff! :3",
+        "icon": {
+            "description": "Shows off the server icon! :3"
+        },
         "info": {
-            "description": "Check the server information."
+            "description": "Check out all the server info! :3"
         },
         "kickmembers": {
-            "description": "Kicks every real members."
-        },
-        "nsfw_level": {
-            "description": "Show the server NSFW Level."
-        },
-        "icon": {
-            "description": "Show the server icon."
-        },
-        "count": {
-            "description": "Retrieves the count of server members."
-        },
-        "members_list": {
-            "description": "Lists members in the server."
-        },
-        "search_members": {
-            "description": "Searches for members matching with query."
-        },
-        "role_list": {
-            "description": "Lists roles in the server."
+            "description": "Kicks every single real member! >:D"
         },
         "logs": {
-            "description": "Shows a menu to get history of kics, bans and timeouts."
+            "description": "Shows the history of kicks, bans, and timeouts! 3:"
+        },
+        "members_list": {
+            "description": "Lists all the cool people here! :3"
+        },
+        "nsfw_level": {
+            "description": "Checks the server's spicy level! :3"
+        },
+        "role_list": {
+            "description": "Lists all the roles in the server! :3"
+        },
+        "search_members": {
+            "description": "Hunts for members matching your query! >:D"
         }
     },
     "info": {
         "commit_data": {
-            "description": "Shows bot's latest git commit."
+            "description": "Shows my latest git commit! :3"
         },
-        "description": "A group for information",
+        "description": "A group for info and stuff! :3",
         "invite": {
-            "description": "Invites the bot to server by application url. (LIMITED TO 90)",
+            "description": "Grabs my invite link so you can add me! (Limited to 90 servers though 3:)",
             "embeds": {
                 "default": {
-                    "description": "%{prefix}\n\nYou can add me to your server using [this link!](%{invite_url}) :D",
-                    "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation!",
+                    "description": "{prefix}\n\nYou can add me to your server using [this link!]({invite_url}) :D",
+                    "footer": "Note: I need advanced permissions to work right, and I'm limited to 90 servers because of Discord! 3:",
                     "status": {
-                        "one": "Capacity: **%{formatted}** server",
-                        "other": "Capacity: **%{formatted}** servers"
+                        "one": "Capacity: **{formatted}** server",
+                        "other": "Capacity: **{formatted}** servers"
                     },
-                    "title": "Invite TongueBot"
+                    "title": "Invite TongueBot! :3"
                 }
             },
             "error": {
-                "hardlimited": "You can't invite TongueBot right now, since the limit has been reached... 3:"
+                "hardlimited": "Aww, you can't invite me right now, I hit my server limit... 3:"
             }
         },
         "os_info": {
-            "description": "Shows operating system information.",
+            "description": "Shows what OS I'm running on! :3",
             "embeds": {
                 "default": {
-                    "title": "Operating System Information"
+                    "title": "Operating System Info :3"
                 }
             }
         },
         "ping": {
-            "description": "Pong!",
+            "description": "Pong! :D",
             "embeds": {
                 "default": {
-                    "title": "Pong! (%{latency} ms) :D"
+                    "title": "Pong! ({latency} ms) :D"
                 }
             }
         },
         "retrieve": {
-            "description": "Retrieves bot information.",
+            "description": "Gets all my bot info! :3",
             "embeds": {
                 "default": {
-                    "description": "Select a category below to view specific details! >:D",
-                    "footer": "System: %{platform}",
-                    "title": "Bot Information"
+                    "description": "Pick a category below to see the details! >:D",
+                    "footer": "Running on: {platform} :3",
+                    "title": "Bot Info~"
                 }
             },
             "error": {
-                "forbidden": "I do not have the **Manage Channels** permission to do that! D:"
+                "forbidden": "I need the **Manage Channels** permission to do that! 3:"
             }
         },
         "sync": {
-            "description": "Synchronizes commands"
+            "description": "Syncs my commands up! :3"
         },
         "timedate": {
-            "description": "Shows time in specified timezone",
+            "description": "Shows the time in a specific timezone! :3",
             "embeds": {
                 "default": {
-                    "description": "In %{timezone_name}, it's **%{timedate}**. :3"
+                    "description": "Over in {timezone_name}, it's currently **{timedate}**! :3"
                 }
             }
         }
     },
     "leveling": {
         "configure": {
-            "description": "Configures leveling system.",
+            "description": "Tweaks the leveling system! :3",
             "embeds": {
                 "default": {
-                    "description": "The system has been updated! :D",
-                    "title": "Leveling system updated"
+                    "description": "System updated! >:D",
+                    "title": "Leveling system has been tweaked! :3"
                 }
             }
         },
-        "description": "Leveling system.",
+        "description": "Leveling stuff! :3",
         "rank": {
-            "description": "Check rank.",
+            "description": "Check your rank! :3",
             "embeds": {
                 "default": {
                     "fields": {
@@ -467,7 +500,7 @@
                             "name": "Total XP"
                         }
                     },
-                    "title": "%{user}'s rank"
+                    "title": "{user}'s Rank! :3"
                 }
             }
         }
@@ -475,251 +508,255 @@
     "moderation": {
         "blacklist": {
             "add": {
-                "description": "Adds a word to the blacklists.",
+                "description": "Adds a bad word to the blacklist! >:D",
                 "embeds": {
                     "default": {
-                        "description": "Added %{entry} into blacklist with type '%{type}', and searchable with ID '%{id}'! :3",
-                        "title": "Added word into blacklist"
+                        "description": "Added '{entry}' to the blacklist as type '{type}', searchable with ID '{id}'! :3",
+                        "title": "Word blacklisted! >:D"
                     }
                 }
             },
-            "description": "Blacklist system.",
+            "description": "Blacklist stuff! :3",
             "list": {
-                "description": "Lists every blacklist triggers registered in this server.",
+                "description": "Lists all the blocked words in this server! :3",
                 "embeds": {
                     "default": {
-                        "footer": "And more %{remaining} triggers are registered. :3",
-                        "title": "Blacklist triggers registered in this server"
+                        "footer": "Plus {remaining} more triggers hiding here! :3",
+                        "title": "Blacklist triggers for this server~"
                     },
                     "no_blacklist": {
-                        "description": "Blacklist trigger was not found from this server. 3:"
+                        "description": "Couldn't find any blacklist triggers here! :3"
                     }
                 }
             },
             "remove": {
-                "description": "Removes matched query from blacklists.",
+                "description": "Removes a word from the blacklist! :3",
                 "embeds": {
                     "default": {
-                        "description": "Removed every query matching with '%{query}'! :3",
-                        "title": "Removed matched queries from blacklist"
+                        "description": "Scrubbed everything matching '{query}' from the blacklist! :3",
+                        "title": "Removed queries! :D"
                     },
                     "not_found": {
-                        "description": "Triggers were not found from blacklist with matching query '%{query}'... 3:",
-                        "title": "Triggers not found"
+                        "description": "Couldn't find anything matching '{query}' in the blacklist... 3:",
+                        "title": "Triggers not found! 3:"
                     }
                 }
             }
         },
-        "description": "Moderation management.",
+        "description": "Moderation tools! >:D",
         "togglefeature": {
-            "description": "Toggle server features.",
+            "description": "Turns server features on or off! :3",
             "embeds": {
                 "default": {
-                    "description": "Set %{feature_name} to %{state}! :3"
+                    "description": "Flipped {feature_name} to {state}! :3"
                 }
             },
             "parameters": {
                 "feature": {
-                    "description": "The feature to toggle"
+                    "description": "The feature you wanna toggle~"
                 },
                 "state": {
-                    "description": "On or Off"
+                    "description": "On or Off! :3"
                 }
             }
         }
     },
     "roblox": {
         "avatar": {
-            "description": "Gets Roblox user's avatar by username.",
+            "description": "Grabs a Roblox user's avatar by their username! :3",
             "embeds": {
                 "default": {
-                    "title": "Roblox user %{username}'s Avatar"
+                    "title": "{username}'s Roblox Avatar! :3"
                 }
             }
         },
-        "description": "A group for roblox APIs.",
+        "description": "A group for all the Roblox APIs! :3",
         "user": {
-            "description": "Get Roblox user info by username.",
+            "description": "Gets Roblox user info by their username! :3",
             "embeds": {
                 "default": {
-                    "title": "User %{username}'s Information"
+                    "title": "{username}'s Info! :3"
                 }
             }
         }
     },
     "stats": {
-        "description": "Leaderboard and statistics.",
+        "description": "Leaderboards and stats! :3",
         "top": {
-            "description": "Show the top users.",
+            "description": "Shows the top users! >:D",
             "embeds": {
                 "default": {
-                    "title": "Global leaderboard!! >:D"
+                    "title": "Global Leaderboard!! >:D"
                 }
             }
         }
     },
     "ticket": {
-        "description": "Ticket system V2.",
+        "description": "Ticket system V2! :3",
         "setup": {
-            "description": "Configure the ticket system for this server."
+            "description": "Sets up the ticket system for this server! :3"
         }
     },
     "tts": {
-        "description": "Center of TTS stuff",
+        "description": "Center of all the TTS stuff! :3",
         "embeds": {
             "default": {
                 "description": "Generated! >:D",
-                "footer": "Type: %{tts_type}; Input: %{input}",
-                "title": "TTS Conversion"
+                "footer": "Type: {tts_type}; Input: {input}",
+                "title": "TTS Conversion :3"
             }
         },
         "google_translate": {
-            "description": "Generates TTS from Google Translate."
+            "description": "Makes TTS from Google Translate! :3"
         }
     },
     "user": {
         "avatar": {
-            "description": "Shows Discord user's avatar.",
+            "description": "Shows someone's Discord avatar! :3",
             "embeds": {
                 "default": {
-                    "footer": "Requested by %{author}, the result is cached for a minute. :3",
-                    "title": "User %{user}'s avatar"
+                    "footer": "Requested by {author}, cached for a minute! :3",
+                    "title": "{user}'s avatar! :3"
                 }
             }
         },
-        "description": "A group for users.",
+        "description": "A group for user stuff! :3",
         "info": {
-            "description": "Retrieves user's information.",
+            "description": "Gets all the juicy info about a user! :3",
             "embeds": {
                 "default": {
-                    "title": "Information for %{user}"
+                    "title": "Info for {user}~"
                 }
             },
             "fields": {
-                "stats": "Level %{level} (%{xp} XP) / %{messages} Messages",
-                "wallet": "%{coins} Coins"
+                "stats": "Level {level} ({xp} XP) / {messages} Messages :3",
+                "wallet": "{coins} Coins!"
             }
         },
         "set_nick": {
-            "description": "Sets user's nickname.",
+            "description": "Changes someone's nickname! >:D",
             "embeds": {
                 "changed": {
-                    "description": "%{author} Changed %{user}'s nickname to **%{new_nickname}**! :3"
+                    "description": "{author} changed {user}'s nickname to **{new_nickname}**! :3"
                 },
                 "reset": {
-                    "description": "%{author} Reset %{user}'s nickname! :D"
+                    "description": "{author} reset {user}'s nickname! :D"
                 }
             },
             "reasons": {
-                "changed": "Nickname changed by %{user} via /user nick",
-                "reset": "Nickname reset by %{user} via /user nick"
+                "changed": "Nickname changed by {user} via /user nick! :3",
+                "reset": "Nickname reset by {user} via /user nick! :3"
             }
         },
         "set_profile": {
-            "description": "Sets your community profile.",
+            "description": "Sets up your cool community profile! :3",
             "embeds": {
                 "default": {
-                    "title": "Successfully updated your community profile! :3",
-                    "description": "Set your description to '%{description}' and nickname to '%{nickname}'. :3"
+                    "description": "Set your bio to '{description}' and your nickname to '{nickname}'! :3",
+                    "title": "Profile updated successfully! :D"
                 }
             }
         },
         "status": {
-            "description": "Retrieves user's status.",
+            "description": "Checks a user's Discord status! :3",
             "embeds": {
                 "default": {
-                    "title": "%{user}'s Discord status"
+                    "title": "{user}'s status! :3"
                 }
             }
         }
     },
     "userphone": {
-        "description": "A group for userphone.",
         "call": {
-            "description": "Calls to random guild.",
+            "description": "Calls a totally random server! :3",
             "embeds": {
                 "paired": {
-                    "title": "Paired!",
-                    "description": "Paired to another guild!"
+                    "description": "We paired up with another server! >:D",
+                    "title": "Paired! :D"
                 },
                 "searching": {
-                    "title": "Searching guild",
-                    "description": "Searching for a guild that's able to call..."
+                    "description": "Searching for a fun server to all... :3",
+                    "title": "Searching for a fun server to call..!"
+                },
+                "status": {
+                    "description": "Looking for a fun server to call... :3",
+                    "title": "Status"
+                }
+            }
+        },
+        "description": "A group for the userphone! :3",
+        "globalchat": {
+            "description": "Tweaks the global chat settings! :3",
+            "embeds": {
+                "default": {
+                    "description": "Settings are all configured! :3",
+                    "title": "Configured successfully! :D"
                 }
             }
         },
         "hangup": {
-            "description": "Hangs up the ingoing call.",
+            "description": "Hangs up the current call! 3:",
             "embeds": {
                 "default": {
-                    "title": "Hanged ingoing call up!",
-                    "description": "Hanged the call up."
-                }
-            }
-        },
-        "globalchat": {
-            "description": "Configures global chat.",
-            "embeds": {
-                "default": {
-                    "title": "Successfully configured",
-                    "description": "Settings has been successfully configured!"
+                    "description": "Hung up the call! 3:",
+                    "title": "Call ended! 3:"
                 }
             }
         },
         "userphone": {
-            "description": "Configures userphone.",
+            "description": "Tweaks the userphone settings! :3",
             "embeds": {
                 "default": {
-                    "title": "Successfully configured",
-                    "description": "Settings has been successfully configured!"
+                    "description": "Settings are all configured! :3",
+                    "title": "Configured successfully! :D"
                 }
             }
         }
     },
     "welcome": {
-        "description": "A group for WelcomeCog",
+        "description": "A group for welcome messages! :3",
         "embeds": {
             "join": {
-                "description": "Welcome, %{mention}! Please check out the rules in %{rules_mention}. :3",
-                "description_no_rules": "Welcome to the server, %{mention}! x3",
-                "footer": "We now have %{count} members.",
-                "title": "Welcome to %{guild}!"
+                "description": "Welcome, {mention}! Make sure to read the rules in {rules_mention}~ :3",
+                "description_no_rules": "Welcome to the server, {mention}! x3",
+                "footer": "We've got {count} members now! :3",
+                "title": "Welcome to {guild}! :D"
             },
             "left": {
-                "description": "Goodbye, %{display}! :3",
-                "title": "Member %{display} has left %{guild}... 3:"
+                "description": "Goodbye, {display}... 3:",
+                "title": "Member {display} left {guild}... 3:"
             }
         },
         "set_channel": {
-            "description": "Set channel to send join / leave message.",
+            "description": "Sets the channel for join and leave messages! :3",
             "embeds": {
                 "disabled": {
-                    "description": "Welcome notification feature has been disabled! :3"
+                    "description": "Welcome notifications are turned off now! 3:"
                 },
                 "enabled": {
-                    "description": "Welcome notification feature has been enabled.\n The welcome message will appear at %{target_mention}! :3"
+                    "description": "Welcome notifications are on!\nThe messages will pop up in {target_mention}! :3"
                 }
             }
         },
         "set_rules_channel": {
-            "description": "Sets rule channel for adding link in it.",
+            "description": "Sets up the rules channel so I can link it! :3",
             "embeds": {
                 "disabled": {
-                    "description": "Rules channel for welcome message has been removed! :3"
+                    "description": "Removed the rules channel from the welcome message! 3:"
                 },
                 "success": {
-                    "description": "Rules channel for welcome message has been set to %{target_mention}! :3"
+                    "description": "Set the rules channel to {target_mention} for the welcome message! :3"
                 }
             }
         },
         "test": {
-            "description": "Run a test for welcome channel",
+            "description": "Runs a quick test on the welcome channel! :3",
             "embeds": {
                 "sent": {
-                    "description": "Test successfully sent to welcome channel! :D"
+                    "description": "Test message sent to the welcome channel! >:D"
                 },
                 "unconfigured": {
-                    "description": "Welcome channel hasn't been configured. 3:"
+                    "description": "The welcome channel hasn't been set up yet! 3:"
                 }
             }
         }

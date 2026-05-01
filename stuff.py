@@ -620,10 +620,10 @@ def crop_word(text, needle_word, padding=8, emphasis=True):
     if start == -1: return None
 
     if emphasis:
-        # emphasis the needle word in text
+        
         needle_len = len(needle_word)
         text = (text[:start] + "**" + text[start:start+needle_len] + "**" + text[start+needle_len:])
-        start += 2  # account for added asterisks
+        start += 2  
 
     low = max(0, start - padding)
     high = min(len(text), start + len(needle_word) + padding)

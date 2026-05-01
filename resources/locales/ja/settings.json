@@ -1,8 +1,9 @@
 {
     "fields": {
-        "embed_color": "**埋め込みカラー**: %{hex}",
-        "locale": "**表示言語**: %{lang_code}"
+        "embed_color": "**埋め込みカラー**: {hex}",
+        "locale": "**表示言語**: {lang_code}"
     },
     "header_description": "ユーザー設定",
+    "page": "タングボット :3",
     "title": "ユーザー設定"
 }

@@ -27,7 +27,7 @@
     "user_id": "User ID",
     "user_join": "Joined at",
     "user_message_count": "Messages seen",
-    "user_message_count_value": "%{messages} messages",
+    "user_message_count_value": "{messages} messages",
     "user_name": "Name",
     "user_nickname": "Nickname",
     "user_nitro": "Nitro since",

@@ -51,6 +51,8 @@ class I18nTranslator:
         self.available_files: set[str] = set()
         self._sync_cache_locales()
         
+        self._brace_pattern = re.compile(r"\{(\w+)\}")
+        
         self.missing_keys_buffer: dict[str, set[str]] = {}
         self.batch_delay = 5.0
         self.batch_task: asyncio.Task | None = None
@@ -68,6 +70,11 @@ class I18nTranslator:
             return self.MISSING
         
         i18n.set('on_missing_translation', missing_handler)
+    
+    def _convert_placeholders(self, text: str) -> str:
+        if "%{" in text:
+            return text
+        return self._brace_pattern.sub(r"%{\1}", text)
     
     async def _flush_missing_keys(self):
         await asyncio.sleep(self.batch_delay)
@@ -154,13 +161,13 @@ class I18nTranslator:
     def translate_string(self, text: str, locale: str | Locale, **kwargs) -> str:
         lang = self._normalize_locale(locale)
         
-        translated = i18n.t(text, locale=lang, **kwargs)
+        translated = i18n.t(text, locale=lang)
         
         is_missing = (translated is self.MISSING) or (isinstance(translated, str) and not translated.strip())
         
         is_same_as_en = False
         if not is_missing and lang != "en":
-            en_val = i18n.t(text, locale="en", **kwargs)
+            en_val = i18n.t(text, locale="en")
             if translated == en_val:
                 is_same_as_en = True
         
@@ -180,10 +187,17 @@ class I18nTranslator:
                     pass
             
             if is_missing and lang != "en":
-                translated = i18n.t(text, locale="en", **kwargs)
+                translated = i18n.t(text, locale="en")
         
         if translated is self.MISSING:
             return text
+        
+        if isinstance(translated, str):
+            translated = self._convert_placeholders(translated)
+            
+            if kwargs:
+                for k, v in kwargs.items():
+                    translated = translated.replace(f"%{{{k}}}", str(v))
         
         return translated
     

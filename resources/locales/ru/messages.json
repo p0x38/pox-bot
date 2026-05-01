@@ -1,7 +1,10 @@
 {
-    "ban_user": "%{user} был забанен.",
-    "kick_user": "%{user} был кикнут.",
-    "timed_out_user": "%{user} истекло время ожидания для %{length}.",
-    "warn_user": "%{user} был предупрежден.",
-    "level_up": "%{mention} повышен до %{new_level}."
+    "ban_user": "{user} был забанен.",
+    "chatbot_empty": "У меня нет слов! \n3:",
+    "chatbot_request_error": "Кажется, владелец бота забыл указать модель для создания. \n:/",
+    "chatbot_response_error": "Кажется, сервер перестал работать. \n:/",
+    "kick_user": "{user} был кикнут.",
+    "level_up": "{mention} повышен до {new_level}.",
+    "timed_out_user": "{user} истекло время ожидания для {length}.",
+    "warn_user": "{user} был предупрежден."
 }

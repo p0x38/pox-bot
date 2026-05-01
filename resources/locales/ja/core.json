@@ -12,7 +12,7 @@
     "errors": {
         "title": "おっと！",
         "generic": "問題が発生しました。後でもう一度お試しください。",
-        "cooldown": "再度使用する前に %{remaining}秒お待ちください。",
+        "cooldown": "再度使用する前に {remaining}秒お待ちください。",
         "user_not_found": "そのユーザーが見つかりませんでした。",
         "user_missing_permissions": "それを行う権限がありません。",
         "bot_missing_permissions": "僕にはそれを行う権限がないよ。",

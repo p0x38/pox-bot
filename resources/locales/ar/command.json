@@ -1,450 +1,762 @@
 {
     "8ball": {
-        "description": "يعطي استجابة عشوائية للسحر الكلاسيكي 8 كرات لسؤال المستخدم.",
+        "description": "",
         "embeds": {
             "default": {
-                "title": "الإجابة على '%{question}'"
+                "title": ""
             }
         }
     },
+    "admin": {
+        "reload_cogs": {
+            "description": "",
+            "embeds": {
+                "error": {
+                    "description": "",
+                    "title": ""
+                },
+                "loading": {
+                    "description": "",
+                    "progress": "",
+                    "title": ""
+                },
+                "success": {
+                    "description": "",
+                    "title": ""
+                }
+            },
+            "errors": {
+                "forbidden": "",
+                "generic": "",
+                "http_error": "",
+                "missing_id": "",
+                "sync_failure": "",
+                "translation_error": ""
+            }
+        }
+    },
+    "calculate": {
+        "description": "",
+        "percentage": {
+            "description": ""
+        }
+    },
     "channel": {
-        "description": "مجموعة للادارة ",
+        "description": "",
         "info": {
-            "description": "يعرض معلومات القناة.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "معلومات من %{name}"
+                    "title": ""
                 }
             }
         },
         "slowmode": {
-            "description": "تعيين تأخير الوضع البطيء",
+            "description": "",
             "embeds": {
                 "successful": {
-                    "description": "تم تعيين وضع البطء بنجاح إلى **%{seconds}** لـ %{mention}.",
-                    "title": "تم تحديث الوضع البطيء"
+                    "description": "",
+                    "title": ""
                 }
             }
         }
     },
-    "contributors": {
-        "description": "مجموعة للمساهمين.",
-        "list": {
-            "description": "يسرد جميع المساهمين.",
+    "chatbot": {
+        "add_event": {
+            "description": ""
+        },
+        "clear_memories": {
+            "description": ""
+        },
+        "description": "",
+        "mem": {
+            "description": "",
             "embeds": {
                 "default": {
-                    "description": "إليك قائمة من المساهمين الذين ساعدوا بوتي! :3",
-                    "title": "المساهمون"
+                    "title": ""
+                }
+            },
+            "messages": {
+                "empty": ""
+            }
+        },
+        "perf": {
+            "description": "",
+            "embeds": {
+                "default": {
+                    "description": "",
+                    "title": ""
+                }
+            },
+            "messages": {
+                "empty_logs": ""
+            }
+        },
+        "stats": {
+            "description": ""
+        },
+        "unlock": {
+            "description": "",
+            "messages": {
+                "already": "",
+                "unlock": ""
+            }
+        },
+        "user_stats": {
+            "description": ""
+        }
+    },
+    "contributors": {
+        "description": "",
+        "list": {
+            "description": "",
+            "embeds": {
+                "default": {
+                    "description": "",
+                    "title": ""
                 }
             }
         },
         "view": {
-            "description": "إظهار معلومات المساهمين.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "معلومات المساهم من %{contributor}"
+                    "title": ""
                 }
             }
+        }
+    },
+    "convert": {
+        "base64": {
+            "description": ""
+        },
+        "base7777": {
+            "description": ""
+        },
+        "binary": {
+            "description": ""
+        },
+        "caesar": {
+            "description": ""
+        },
+        "color_name": {
+            "description": ""
+        },
+        "demorse": {
+            "description": ""
+        },
+        "description": "",
+        "glitch": {
+            "description": ""
+        },
+        "invert_letters": {
+            "description": ""
+        },
+        "meow": {
+            "description": ""
+        },
+        "morse": {
+            "description": ""
+        },
+        "muffle": {
+            "description": ""
+        },
+        "nsrc1": {
+            "description": ""
+        },
+        "psc1": {
+            "description": ""
+        },
+        "railfence": {
+            "description": ""
+        },
+        "reverse_words": {
+            "description": ""
+        },
+        "unbase64": {
+            "description": ""
+        },
+        "unbase7777": {
+            "description": ""
+        },
+        "unbinary": {
+            "description": ""
+        },
+        "uncaesar": {
+            "description": ""
+        },
+        "unnsrc1": {
+            "description": ""
+        },
+        "unpsc1": {
+            "description": ""
+        },
+        "unrailfence": {
+            "description": ""
+        },
+        "uwu": {
+            "description": ""
+        }
+    },
+    "detect": {
+        "custom2": {
+            "description": ""
+        },
+        "custom_member": {
+            "description": ""
+        },
+        "description": "",
+        "how_femboy": {
+            "description": ""
+        },
+        "how_freaky": {
+            "description": ""
+        },
+        "how_gay": {
+            "description": ""
+        },
+        "how_slop": {
+            "description": ""
+        },
+        "vibecheck": {
+            "description": ""
         }
     },
     "economy": {
         "balance": {
-            "description": "تحقق من رصيدك الحالي.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "footer": "مجموع الأصول: %{coins} عملات معدنية",
-                    "title": "رصيد %{user}:3"
+                    "footer": "",
+                    "title": ""
                 }
             },
             "fields": {
-                "bank": "البنك",
-                "wallet": "المحافظ"
+                "bank": "",
+                "wallet": ""
             }
         },
         "buy": {
-            "description": "اشتري من المنتج من المتجر.",
+            "description": "",
             "embeds": {
                 "item_unavailable": {
-                    "description": "هذا العنصر غير متوفر للبيع! 3:<",
-                    "title": "العنصر غير متوفر"
+                    "description": "",
+                    "title": ""
                 },
                 "not_afford": {
-                    "description": "ليس لديك ما يكفي من العملات في محفظتك لشراء هذا! 3:<",
-                    "title": "عملات معدنية غير كافية"
+                    "description": "",
+                    "title": ""
                 },
                 "purchased": {
-                    "description": "اشتريت بنجاح **%{item_name}**! تحقق من مخزونك ~ 3",
-                    "title": "اكتمل الشراء"
+                    "description": "",
+                    "title": ""
                 }
             }
         },
         "daily": {
-            "description": "احصل على مكافأتك اليومية.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "description": "لقد حصلت على %{amount} من العملات المعدنية كمكافآت يومية! :3",
-                    "title": "لقد حصلت على مكافأة يومية!"
+                    "description": "",
+                    "title": ""
                 }
             }
         },
         "deposit": {
-            "description": "نقل المال من المحفظة إلى البنك.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "description": "تم إيداع عملات %{amount} بنجاح. :3",
-                    "title": "تم الإيداع بنجاح"
+                    "description": "",
+                    "title": ""
                 }
             }
         },
-        "description": "مجموعة لنظام الاقتصاد.",
+        "description": "",
         "history": {
-            "description": "عرض المعاملات الأخيرة الخاصة بك."
+            "description": ""
         },
         "inventory": {
-            "description": "عرض العناصر الخاصة بك.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "مخزون %{user}"
+                    "title": ""
                 },
                 "empty": {
-                    "description": "حزمة الظهر الخاصة بك فارغة الآن. قم بشراء شيء لتغيير هذا النص تخميني. :3",
-                    "title": "باقة خلفية فارغة"
+                    "description": "",
+                    "title": ""
                 }
             }
         },
         "list": {
-            "description": "عرض متجر العناصر.",
+            "description": "",
+            "embeds": {
+                "closed": {
+                    "description": "",
+                    "title": ""
+                }
+            },
             "fields": {
-                "buy_price": "السعر: %{price} عملة",
-                "not_sale": "ليس للبيع"
+                "buy_price": "",
+                "not_sale": ""
             }
         },
         "sell": {
-            "description": "قم ببيع العنصر مرة أخرى إلى المتجر.",
+            "description": "",
             "embeds": {
                 "sold": {
-                    "description": "بيع**%{item_name}",
-                    "title": "تم البيع"
+                    "description": "",
+                    "title": ""
                 },
                 "unable_to_sell": {
-                    "description": "المتجر لن يشتري هذا مرة أخرى! 3:<",
-                    "title": "تعذر البيع"
+                    "description": "",
+                    "title": ""
                 }
             }
         },
         "withdraw": {
-            "description": "نقل المال من بنك إلى محفظة.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "description": "تم سحب عملات %{amount} بنجاح. :3",
-                    "title": "تم السحب بنجاح"
+                    "description": "",
+                    "title": ""
                 }
             }
         },
         "work": {
-            "description": "اكسب بعض العملات عن طريق العمل.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "description": "لقد حصلت على %{amount} عملة معدنية بالعمل! :3",
-                    "title": "لقد عملت من أجل المال!"
+                    "description": "",
+                    "title": ""
                 },
                 "tired": {
-                    "description": "تحتاج إلى الاستراحة %{rem} دقائق أخرى:",
-                    "title": "لا يمكنك العمل الآن!"
+                    "description": "",
+                    "title": ""
                 }
             }
         }
     },
+    "fun": {
+        "boop_member": {
+            "description": ""
+        },
+        "description": "",
+        "dice": {
+            "description": ""
+        },
+        "guess": {
+            "description": ""
+        },
+        "guess_game": {
+            "description": ""
+        },
+        "job_application": {
+            "description": ""
+        },
+        "ship": {
+            "description": ""
+        },
+        "stopguess": {
+            "description": ""
+        }
+    },
+    "generate": {
+        "cat_jard": {
+            "description": ""
+        },
+        "description": "",
+        "emoticon": {
+            "description": ""
+        },
+        "idek": {
+            "description": ""
+        },
+        "nyan_cat": {
+            "description": "",
+            "messages": {
+                "think_fast": ""
+            }
+        },
+        "target_close": {
+            "description": ""
+        }
+    },
+    "guild": {
+        "count": {
+            "description": ""
+        },
+        "description": "",
+        "icon": {
+            "description": ""
+        },
+        "info": {
+            "description": ""
+        },
+        "kickmembers": {
+            "description": ""
+        },
+        "logs": {
+            "description": ""
+        },
+        "members_list": {
+            "description": ""
+        },
+        "nsfw_level": {
+            "description": ""
+        },
+        "role_list": {
+            "description": ""
+        },
+        "search_members": {
+            "description": ""
+        }
+    },
     "info": {
         "commit_data": {
-            "description": "يظهر أحدث التزام git للبوت"
+            "description": ""
         },
-        "description": "مجموعة معلومات",
+        "description": "",
         "invite": {
-            "description": "دعوة البوت إلى الخادم عن طريق رابط التطبيق. (محدود إلى 90)",
+            "description": "",
             "embeds": {
                 "default": {
-                    "description": "%{prefix}\n\nYou can add me to your server using [this link.](%{invite_url})",
-                    "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation.",
+                    "description": "",
+                    "footer": "",
                     "status": {
-                    "one": "Capacity: **%{formatted}** server",
-                    "other": "Capacity: **%{formatted}** servers"
+                        "one": "",
+                        "other": ""
                     },
-                    "title": "Invite TongueBot"
+                    "title": ""
                 }
             },
             "error": {
-                "hardlimited": "لا يمكنك دعوة تونغي بوت الآن، منذ أن تم الوصول إلى الحد الأقصى."
+                "hardlimited": ""
             }
         },
         "os_info": {
-            "description": "يعرض معلومات نظام التشغيل.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "Operating System Information"
+                    "title": ""
                 }
             }
         },
         "ping": {
-            "description": "Pong!",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "Pong! (%{latency} ms)"
+                    "title": ""
                 }
             }
         },
         "retrieve": {
-            "description": "يسترجع معلومات البوت.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "description": "Select a category below to view specific details.",
-                    "footer": "System: %{platform}",
-                    "title": "Bot Information"
+                    "description": "",
+                    "footer": "",
+                    "title": ""
                 }
             },
             "error": {
-                "forbidden": "ليس لدي إذن **إدارة القنوات** للقيام بذلك."
+                "forbidden": ""
             }
         },
         "sync": {
-            "description": "مزامنة الأوامر"
+            "description": ""
         },
         "timedate": {
-            "description": "إظهار الوقت في المنطقة الزمنية المحددة",
+            "description": "",
             "embeds": {
                 "default": {
-                    "description": "In %{timezone_name}, it's **%{timedate}**."
+                    "description": ""
                 }
             }
         }
     },
     "leveling": {
-        "description": "نظام المستوى.",
-        "rank": {
-            "description": "تحقق من الرتبة.",
+        "configure": {
+            "description": "",
             "embeds": {
                 "default": {
-                    "fields": {
-                    "level": {
-                            "name": "المستوى"
-                    },
-                    "progress": {
-                            "name": "التقدم"
-                    },
-                    "total": {
-                            "name": "مجموع XP"
-                    }
-                    },
-                    "title": "رتبة %{user}"
+                    "description": "",
+                    "title": ""
                 }
             }
         },
-        "configure": {
-            "description": "Configures leveling system.",
+        "description": "",
+        "rank": {
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "Leveling system updated",
-                    "description": "The system has been updated."
+                    "fields": {
+                        "level": {
+                            "name": ""
+                        },
+                        "progress": {
+                            "name": ""
+                        },
+                        "total": {
+                            "name": ""
+                        }
+                    },
+                    "title": ""
                 }
             }
         }
     },
     "moderation": {
-        "description": "إدارة الاعتدال",
-        "togglefeature": {
-            "description": "تبديل ميزات الخادم.",
-            "embeds": {
-                "default": {
-                    "description": "تعيين %{feature_name} إلى %{state}."
-                }
-            },
-            "parameters": {
-                "feature": {
-                    "description": "The feature to toggle"
-                },
-                "state": {
-                    "description": "On or Off"
-                }
-            }
-        },
         "blacklist": {
-            "description": "Blacklist system.",
             "add": {
-                "description": "Adds a word to the blacklists.",
+                "description": "",
                 "embeds": {
                     "default": {
-                    "title": "Added word into blacklist",
-                    "description": "Added %{entry} into blacklist with type '%{type}', as %{id}."
+                        "description": "",
+                        "title": ""
+                    }
+                }
+            },
+            "description": "",
+            "list": {
+                "description": "",
+                "embeds": {
+                    "default": {
+                        "footer": "",
+                        "title": ""
+                    },
+                    "no_blacklist": {
+                        "description": ""
                     }
                 }
             },
             "remove": {
-                "description": "Removes matched query from blacklists.",
+                "description": "",
                 "embeds": {
                     "default": {
-                    "title": "Removed matched queries from blacklist",
-                    "description": "Removed every query matching with '%{query}'."
+                        "description": "",
+                        "title": ""
                     },
                     "not_found": {
-                    "title": "Triggers not found",
-                    "description": "Triggers were not found from blacklist with matching query '%{query}'."
+                        "description": "",
+                        "title": ""
                     }
                 }
+            }
+        },
+        "description": "",
+        "togglefeature": {
+            "description": "",
+            "embeds": {
+                "default": {
+                    "description": ""
+                }
             },
-            "list": {
-                "description": "Lists every blacklist triggers registered in this server.",
-                "embeds": {
-                    "default": {
-                    "title": "Blacklist triggers registered in this server",
-                    "footer": "And more %{remaining} triggers are registered."
-                    },
-                    "no_blacklist": {
-                    "description": "Blacklist trigger was not found from this server."
-                    }
+            "parameters": {
+                "feature": {
+                    "description": ""
+                },
+                "state": {
+                    "description": ""
                 }
             }
         }
     },
     "roblox": {
         "avatar": {
-            "description": "يحصل على الصورة الرمزية لمستخدم Roblox عن طريق اسم المستخدم.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "روبلوكس المستخدم %{username}الصورة الرمزية"
+                    "title": ""
                 }
             }
         },
-        "description": "مجموعة لـ Rblox APIs.",
+        "description": "",
         "user": {
-            "description": "احصل على معلومات مستخدم Roblox عن طريق اسم المستخدم.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "معلومات المستخدم %{username}"
+                    "title": ""
                 }
             }
         }
     },
     "stats": {
-        "description": "نظام المستوى.",
+        "description": "",
         "top": {
-            "description": "إظهار أعلى المستخدمين.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "المتصدرين العالمي!! >:D"
+                    "title": ""
                 }
             }
         }
     },
     "ticket": {
-        "description": "Ticket system V2.",
+        "description": "",
         "setup": {
-            "description": "Configure the ticket system for this server."
+            "description": ""
         }
     },
     "tts": {
-        "description": "مركز اشياء TTS",
+        "description": "",
         "embeds": {
             "default": {
-                "description": "تم إنشاؤه! >:D",
-                "footer": "النوع: %{tts_type}؛ المدخلات: %{input}",
-                "title": "تحويل TTS"
+                "description": "",
+                "footer": "",
+                "title": ""
             }
         },
         "google_translate": {
-            "description": "توليد TTS من ترجمة جوجل."
+            "description": ""
         }
     },
     "user": {
         "avatar": {
-            "description": "إظهار صورة مستخدم ديسكورد.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "footer": "طلب من %{author}، يتم تخزين النتيجة مؤقتاً لمدة دقيقة.",
-                    "title": "صورة المستخدم %{user}"
+                    "footer": "",
+                    "title": ""
                 }
             }
         },
-        "description": "مجموعة للمستخدمين.",
+        "description": "",
         "info": {
-            "description": "استرداد معلومات المستخدم.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "معلومات ل %{user}"
+                    "title": ""
                 }
             },
             "fields": {
-                "stats": "المستوى %{level} (%{xp} XP) / %{messages} رسائل",
-                "wallet": "%{coins} عملات"
+                "stats": "",
+                "wallet": ""
             }
         },
         "set_nick": {
-            "description": "تعيين الاسم المستعار للمستخدم.",
+            "description": "",
             "embeds": {
                 "changed": {
-                    "description": "%{author} غير الاسم المستعار %{user}إلى **%{new_nickname}**."
+                    "description": ""
                 },
                 "reset": {
-                    "description": "%{author} أعاد الاسم المستعار ل %{user}."
+                    "description": ""
                 }
             },
             "reasons": {
-                "changed": "تم تغيير الاسم المستعار بواسطة %{user} عبر /user nick",
-                "reset": "تمت إعادة تعيين الاسم المستعار بواسطة %{user} عبر /user nick"
+                "changed": "",
+                "reset": ""
+            }
+        },
+        "set_profile": {
+            "description": "",
+            "embeds": {
+                "default": {
+                    "description": "",
+                    "title": ""
+                }
             }
         },
         "status": {
-            "description": "استرداد حالة المستخدم.",
+            "description": "",
             "embeds": {
                 "default": {
-                    "title": "%{user}'s Discord status"
+                    "title": ""
+                }
+            }
+        }
+    },
+    "userphone": {
+        "call": {
+            "description": "",
+            "embeds": {
+                "paired": {
+                    "description": "",
+                    "title": ""
+                },
+                "searching": {
+                    "description": "",
+                    "title": ""
+                },
+                "status": {
+                    "description": "",
+                    "title": ""
+                }
+            }
+        },
+        "description": "",
+        "globalchat": {
+            "description": "",
+            "embeds": {
+                "default": {
+                    "description": "",
+                    "title": ""
+                }
+            }
+        },
+        "hangup": {
+            "description": "",
+            "embeds": {
+                "default": {
+                    "description": "",
+                    "title": ""
+                }
+            }
+        },
+        "userphone": {
+            "description": "",
+            "embeds": {
+                "default": {
+                    "description": "",
+                    "title": ""
                 }
             }
         }
     },
     "welcome": {
-        "description": "مجموعة من WelcomeCog",
+        "description": "",
         "embeds": {
             "join": {
-                "description": "مرحبا، %{mention}! الرجاء التحقق من القواعد في %{rules_mention}.",
-                "description_no_rules": "مرحبا بكم في الخادم، %{mention}!",
-                "footer": "لدينا الآن أعضاء %{count}.",
-                "title": "مرحبا بكم في %{guild}!"
+                "description": "",
+                "description_no_rules": "",
+                "footer": "",
+                "title": ""
             },
             "left": {
-                "description": "وداعاً، %{display}!",
-                "title": "العضو %{display} غادر %{guild}!"
+                "description": "",
+                "title": ""
             }
         },
         "set_channel": {
-            "description": "تعيين قناة لإرسال رسالة الانضمام / تركه.",
+            "description": "",
             "embeds": {
                 "disabled": {
-                    "description": "تم تعطيل ميزة إشعار الترحيب."
+                    "description": ""
                 },
                 "enabled": {
-                    "description": "تم تفعيل خاصية إشعارات الترحيب.\n ستظهر رسالة الترحيب على %{target_mention}."
+                    "description": ""
                 }
             }
         },
         "set_rules_channel": {
-            "description": "تعيين قناة قاعدة لإضافة رابط فيها.",
+            "description": "",
             "embeds": {
                 "disabled": {
-                    "description": "تم إزالة قناة القواعد لرسالة الترحيب."
+                    "description": ""
                 },
                 "success": {
-                    "description": "تم تعيين قناة القواعد لرسالة الترحيب إلى %{target_mention}."
+                    "description": ""
                 }
             }
         },
         "test": {
-            "description": "تشغيل اختبار لقناة الترحيب",
+            "description": "",
             "embeds": {
                 "sent": {
-                    "description": "تم إرسال الاختبار بنجاح لقناة الترحيب!"
+                    "description": ""
                 },
                 "unconfigured": {
-                    "description": "لم يتم تكوين قناة الترحيب في هذه الرابطة."
+                    "description": ""
                 }
             }
         }

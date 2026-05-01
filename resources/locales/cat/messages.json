@@ -1,0 +1,10 @@
+{
+    "ban_user": "{user} maw meow meeeow! :3",
+    "kick_user": "{user} maw meow meeeow! :3",
+    "timed_out_user": "{user} maw meow meeow mow mew {length}! :3",
+    "warn_user": "{user} mow meow meeeow! :3",
+    "level_up": "{mention} mew meow meeeeow mew mew meeow {new_level}! :3",
+    "chatbot_empty": "Mew meow maw meeow! 3:",
+    "chatbot_request_error": "Mow meeow mew meeow meeeow mow meeeeow mow meeow mow meeeeeow. :/",
+    "chatbot_response_error": "Mew meeow meeeow meeeeow miiiiaw. :/"
+}

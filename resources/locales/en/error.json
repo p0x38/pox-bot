@@ -1,130 +1,130 @@
 {
     "custom": {
-        "cannot_timeout_higher": "My role is not high enough to timeout this user.. 3:",
-        "channel_has_no_slowmode_property": "This channel has no property to set slowmode delay! D:<",
-        "forbidden_timeout": "I don't have permission to timeout members! D:",
-        "guild_only": "The command is usable only in Guild! :3",
-        "insufficient_permission_ban": "You do not have permission to ban member %{user}! 3:<",
-        "insufficient_permission_kick": "You do not have permission to kick member %{user}! D:<",
-        "invalidated_cache": "The command only works on guild because of the issue with caches. :3",
-        "missing_category": "Missing Category",
-        "no_git_commithash": "No commit hash found",
-        "no_git_lastcommit": "No commit message found",
-        "roblox_failed_retrieve_avatar": "Failed trying to retrieve Roblox user %{username}'s avatar! 3:",
-        "roblox_forbidden": "Couldn't retrieve data from Roblox API because the client doesn't have, or using invalid CSRF Token. :3",
-        "roblox_user_not_found": "A Roblox user named '%{username}' doesn't exist. :3",
-        "timeout_duration_lessflow": "Duration must be greater than 0! 3:",
-        "tried_to_timeout_higher": "Your role is not high enough to timeout the user! :3",
-        "tried_to_timeout_himself": "You cannot timeout yourself! 3:",
-        "tried_to_timeout_owner": "You cannot timeout the server owner! 3:<",
-        "unknown_signature": "Unknown Signature",
-        "unsupported_channel": "The channel isn't supported by bot! :3",
-        "user_not_found": "User not found..! :3",
-        "description_not_found": "No description yet... 3:"
+        "cannot_timeout_higher": "My role isn't high enough to put this user in timeout... 3:",
+        "channel_has_no_slowmode_property": "This channel doesn't even have a slowmode setting! D:<",
+        "description_not_found": "No description yet... 3:",
+        "forbidden_timeout": "I don't have the permissions to put members in timeout! D:",
+        "guild_only": "You can only use this command in a server! :3",
+        "insufficient_permission_ban": "You don't have permission to ban {user}! 3:<",
+        "insufficient_permission_kick": "You don't have permission to kick {user}! D:<",
+        "invalidated_cache": "This command only works in a server because of some cache weirdness. :3",
+        "missing_category": "Missing Category! 3:",
+        "no_git_commithash": "Couldn't find a commit hash! 3:",
+        "no_git_lastcommit": "Couldn't find a commit message! 3:",
+        "roblox_failed_retrieve_avatar": "Failed trying to grab Roblox user {username}'s avatar! 3:",
+        "roblox_forbidden": "Couldn't grab data from the Roblox API... either I'm missing it or the CSRF Token is broken! :3",
+        "roblox_user_not_found": "A Roblox user named '{username}' totally doesn't exist. :3",
+        "timeout_duration_lessflow": "The duration needs to be more than 0! 3:",
+        "tried_to_timeout_higher": "Your role isn't high enough to timeout that user! :3",
+        "tried_to_timeout_himself": "You can't put yourself in timeout, silly! 3:",
+        "tried_to_timeout_owner": "You definitely can't timeout the server owner! 3:<",
+        "unknown_signature": "Unknown Signature! 3:",
+        "unsupported_channel": "I don't support this kind of channel! :3",
+        "user_not_found": "Couldn't find that user... :3"
     },
     "embeds": {
-        "contributor_not_found": {
-            "description": "The contributor %{contributor} has been not found... 3:",
-            "title": "Contributor not found"
-        },
-        "database_not_available": {
-            "description": "Database pool is not available at this time! :3",
-            "title": "Database not available"
-        },
-        "edge_tts_not_installed": {
-            "description": "Server has no package to generate speech from edge-tts :/",
-            "title": "Edge TTS not installed"
-        },
-        "guild_only": {
-            "description": "This command is only for guild! :3",
-            "title": "Invalid run context"
-        },
-        "only_positive_value": {
-            "description": "Negative value is not allowed for this command!! 3:<",
-            "title": "Negative value is not allowed"
-        },
-        "send_error": {
-            "description": "An error thrown while trying to send: %{e}",
-            "title": "Send error"
-        },
-        "slowmode_out_of_range": {
-            "description": "Slowmode delay must be between 0 and 21600 seconds! :3",
-            "title": "Out of range"
-        },
-        "too_high_value": {
-            "description": "The value mustn't over %{max}~ :3",
-            "title": "Value cannot be higher than %{max}"
-        },
-        "tts_generation_error": {
-            "description": "An error thrown while trying to generate speech: %{e}",
-            "title": "TTS Generation Error"
-        },
-        "tts_no_text": {
-            "description": "Input cannot be empty. Retry again later with input! :3",
-            "title": "Input must be not empty"
-        },
-        "unsupported_channel_slowmode": {
-            "description": "Channel %{channel} doesn't support slowmode.",
-            "title": "Unsupported channel"
-        },
-        "unsupported_channel_type": {
-            "description": "You have chose a channel that is unsupported.",
-            "title": "Unsupported channel type"
-        },
-        "welcome_channel_not_enabled": {
-            "description": "Welcome channel has not enabled in this guild. Make sure to set welcome channel to use this command.",
-            "title": "Welcome channel not enabled"
-        },
-        "user_data_not_found": {
-            "description": "Data for user %{user} was not found.",
-            "title": "Data not found"
-        },
         "blacklist_not_configured": {
-            "title": "Blacklist is not configured",
-            "description": "The blacklist is not configured for this server."
+            "description": "The blacklist hasn't been configured for this server yet.",
+            "title": "Blacklist isn't set up! 3:"
+        },
+        "contributor_not_found": {
+            "description": "Couldn't find the contributor {contributor}... 3:",
+            "title": "Contributor not found! 3:"
         },
         "daily_cooldown": {
-            "title": "You can't claim daily rewards right now!",
-            "description": "You need to wait more %{h} hours %{m} minutes to get daily again! 3:<"
+            "description": "You gotta wait {h} hours and {m} minutes to claim your daily again! 3:<",
+            "title": "No daily rewards for you yet!"
         },
-        "phone_in_call": {
-            "title": "Your guild already in call",
-            "description": "Your guild is already in call."
+        "database_not_available": {
+            "description": "The database pool is taking a nap right now! :3",
+            "title": "Database unavailable! 3:"
         },
-        "not_in_call": {
-            "title": "Your guild isn't in call",
-            "description": "Your guild is not in call."
+        "edge_tts_not_installed": {
+            "description": "This server doesn't have the package to make edge-tts speech! :/",
+            "title": "Edge TTS missing! 3:"
+        },
+        "guild_only": {
+            "description": "This command is only for servers! :3",
+            "title": "Wrong place! :3"
         },
         "need_hangup": {
-            "title": "You can't configure while in call",
-            "description": "Please hang the call up to use this command."
+            "description": "Please hang up the call before configuring this stuff.",
+            "title": "Hang up first! 3:"
+        },
+        "not_in_call": {
+            "description": "Your server isn't even in a call right now.",
+            "title": "Not on a call! 3:"
+        },
+        "only_positive_value": {
+            "description": "You can't use negative values here! 3:<",
+            "title": "No negative numbers! 3:<"
+        },
+        "phone_in_call": {
+            "description": "Your server is already in a call!",
+            "title": "Already calling! :3"
+        },
+        "send_error": {
+            "description": "Threw an error trying to send: {e}",
+            "title": "Oops, send error! 3:"
+        },
+        "slowmode_out_of_range": {
+            "description": "Slowmode delay gotta be between 0 and 21600 seconds! :3",
+            "title": "Out of range! 3:"
+        },
+        "too_high_value": {
+            "description": "That value can't be over {max}! :3",
+            "title": "Way too high! 3:"
+        },
+        "tts_generation_error": {
+            "description": "Something broke while making the speech: {e}",
+            "title": "TTS Generation Error! 3:"
+        },
+        "tts_no_text": {
+            "description": "You gotta type something! Try again with some input! :3",
+            "title": "Input can't be empty! 3:"
+        },
+        "unsupported_channel_slowmode": {
+            "description": "The channel {channel} doesn't do slowmode.",
+            "title": "Unsupported channel! 3:"
+        },
+        "unsupported_channel_type": {
+            "description": "You picked a channel type I don't support!",
+            "title": "Unsupported channel type! 3:"
+        },
+        "user_data_not_found": {
+            "description": "Couldn't find any data for {user}.",
+            "title": "Data not found! 3:"
+        },
+        "welcome_channel_not_enabled": {
+            "description": "Welcome channels aren't enabled here! Make sure to set one up to use this.",
+            "title": "Welcome channel is off! 3:"
         }
     },
     "exceptions": {
-        "AppCommandError": "Unknown Command error was thrown!",
-        "BotMissingPermissions": "I do not have the required permissions to execute it.",
-        "CheckFailure": "You do not have permission to use this command.",
-        "CommandAlreadyRegistered": "The command is already registered.",
-        "CommandInvokeError": "An error thrown while executing the command.",
-        "CommandLimitReached": "The command usage is currently limited due to command limitation.",
-        "CommandNotFound": "The command was not found.",
-        "CommandOnCooldown": "The command is on cooldown. Please try again after passing %{remaining} more seconds.",
-        "CommandSignatureMismatch": "The command is out of sync with the latest version.",
-        "CommandSyncFailure": "Failed to synchronize command(s).",
-        "HTTPException": "The operation has failed due to HTTP Error.",
-        "MissingAnyRole": "You do not have any of required roles to use it.",
-        "MissingPermissions": "You do not have required permissions to use it.",
-        "MissingRole": "You do not have required role to use it.",
-        "NoPrivateMessage": "The command cannot be used on private messages.",
-        "TransformerError": "An error thrown while processing command arguments.",
-        "TranslationError": "An error thrown while translating the command.",
-        "Unknown": "An Uncaught error was thrown! %{e}"
+        "AppCommandError": "Some weird Command error happened! 3:",
+        "BotMissingPermissions": "I don't have the right permissions to do that! 3:",
+        "CheckFailure": "You don't have permission to use this command! 3:<",
+        "CommandAlreadyRegistered": "This command is already registered! :3",
+        "CommandInvokeError": "An error popped up while running the command! 3:",
+        "CommandLimitReached": "Hit a limit with this command! Gotta slow down! 3:",
+        "CommandNotFound": "Couldn't find that command! :3",
+        "CommandOnCooldown": "Woah there, cooldown! Try again in {remaining} seconds! :3",
+        "CommandSignatureMismatch": "Command is out of sync with the latest version! 3:",
+        "CommandSyncFailure": "Failed to sync the commands! 3:",
+        "HTTPException": "Oops, an HTTP error ruined everything! 3:",
+        "MissingAnyRole": "You don't have the required roles to use this! 3:",
+        "MissingPermissions": "You're missing the permissions to use this! 3:<",
+        "MissingRole": "You're missing the required role for this! 3:<",
+        "NoPrivateMessage": "You can't use this command in DMs! :3",
+        "TransformerError": "Something broke while processing the command arguments! 3:",
+        "TranslationError": "An error popped up while translating the command! 3:",
+        "Unknown": "Uh oh, an uncaught error happened! {e} 3:"
     },
     "http": {
-        "400": "Error 400: Bad Request. Input contains invalid syntax.",
-        "403": "Error 403: Forbidden. You do not have permission to access the resource.",
-        "404": "Error 404: Not Found. There's no file exist.",
-        "429": "Error 429: Too Many Requests. API has ratelimit client. Try again later.",
-        "500": "Error 500: Internal Server Error. Server has encountered unknown error while processing."
+        "400": "Error 400: Bad Request! Your input looks a bit wonky. 3:",
+        "403": "Error 403: Forbidden! You totally aren't allowed to see this. >:D",
+        "404": "Error 404: Not Found! That file is gone like the wind. 3:",
+        "429": "Error 429: Too Many Requests! The API is ratelimiting us, chill for a bit! :3",
+        "500": "Error 500: Internal Server Error! The server tripped and fell while processing. 3:"
     }
 }
