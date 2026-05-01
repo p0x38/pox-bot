@@ -1,9 +1,9 @@
 {
     "fields": {
-        "embed_color": "**Embed Color**: {hex}",
-        "locale": "**Display Language**: {lang_code}"
+        "embed_color": "**Kulay ng Embed**: {hex}",
+        "locale": "**Wika**: {lang_code}"
     },
-    "header_description": "User settings",
-    "page": "TongueBot :3",
-    "title": "User Settings"
+    "header_description": "Mga setting ng user",
+    "title": "Mga Setting ng User",
+    "page": "TongueBot :3"
 }

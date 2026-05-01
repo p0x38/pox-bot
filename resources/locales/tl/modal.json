@@ -2,48 +2,48 @@
     "DynamicInfoView": {
         "buttons": {
             "suggest_button": {
-                "label": "Submit suggestions"
+                "label": "Magpadala ng mga mungkahi"
             },
             "url_button": {
-                "label": "Visit the GitHub repository"
+                "label": "Bisitahin ang GitHub repository"
             }
         },
         "data": {
             "context": {
                 "memory": {
-                    "display": "Context Usage"
+                    "display": "Paggamit ng Konteksto"
                 },
                 "mode": {
-                    "display": "Current Mood"
+                    "display": "Kasalukuyang Mood"
                 },
                 "muted": {
-                    "display": "Is Jim muted?"
+                    "display": "Naka-mute ba si Jim?"
                 },
-                "title": "Local Brain Data"
+                "title": "Lokal na Data ng Utak"
             },
             "hardware": {
                 "cpu": {
-                    "display": "CPU Usage (total)"
+                    "display": "Paggamit ng CPU (kabuuan)"
                 },
                 "cpu_own": {
-                    "display": "CPU Usage (program)"
+                    "display": "Paggamit ng CPU (programa)"
                 },
                 "disk": {
-                    "display": "Disk Usage"
+                    "display": "Paggamit ng Disk"
                 },
                 "platform": {
                     "display": "Platform"
                 },
                 "ram": {
-                    "display": "Memory Usage (total)"
+                    "display": "Paggamit ng Memory (kabuuan)"
                 },
                 "ram_details": {
-                    "display": "Memory Details"
+                    "display": "Mga Detalye ng Memory"
                 },
                 "ram_own": {
-                    "display": "Memory Usage (program)"
+                    "display": "Paggamit ng Memory (programa)"
                 },
-                "title": "Technical Details"
+                "title": "Mga Teknikal na Detalye"
             },
             "identity": {
                 "latency": {
@@ -53,54 +53,54 @@
                     "display": "Bot Developer"
                 },
                 "signature": {
-                    "display": "Signature"
+                    "display": "Lagda"
                 },
-                "title": "Identity & Version",
+                "title": "Pagkakakilanlan at Bersyon",
                 "uptime": {
-                    "display": "Bot Uptime"
+                    "display": "Uptime ng Bot"
                 },
                 "uuid": {
                     "display": "Session UUID"
                 },
                 "version": {
-                    "display": "Bot Version"
+                    "display": "Bersyon ng Bot"
                 }
             },
             "stats": {
                 "cached_values": {
-                    "display": "Caches"
+                    "display": "Mga Cache"
                 },
                 "channels": {
-                    "display": "Channels"
+                    "display": "Mga Channel"
                 },
                 "guilds": {
-                    "display": "Servers"
+                    "display": "Mga Server"
                 },
                 "interactions": {
-                    "display": "Interactions"
+                    "display": "Mga Interaksyon"
                 },
                 "msgs": {
-                    "display": "Messages Seen"
+                    "display": "Mga Nakitang Mensahe"
                 },
-                "title": "Bot Statistics",
+                "title": "Estadistika ng Bot",
                 "users": {
-                    "display": "Users"
+                    "display": "Mga User"
                 }
             }
         },
         "options": {
             "context": {
-                "label": "Local Brain Data"
+                "label": "Lokal na Data ng Utak"
             },
             "hardware": {
-                "label": "Hardware Information"
+                "label": "Impormasyon sa Hardware"
             },
             "identity": {
-                "label": "General Information"
+                "label": "Pangkalahatang Impormasyon"
             },
-            "placeholder": "Choose category...",
+            "placeholder": "Pumili ng kategorya...",
             "stats": {
-                "label": "Statistics"
+                "label": "Estadistika"
             }
         }
     }

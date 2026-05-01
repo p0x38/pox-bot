@@ -1,492 +1,492 @@
 {
     "8ball": {
-        "description": "Gives a random, classic magic 8-ball response to a user's question.",
+        "description": "Nagbibigay sa iyo ng ganap na random na magic 8-ball na sagot! :3",
         "embeds": {
             "default": {
-                "title": "Answer to '{question}'"
+                "title": "Sabi ng magic 8-ball... '{question}'"
             }
         }
     },
     "admin": {
         "reload_cogs": {
-            "description": "Nire-reload ang lahat ng extension ng bot at sini-synchronize ang mga slash command.",
+            "description": "Nire-reload ang lahat ng aking mga extension at nagsa-sync ng mga slash command! >:D",
             "embeds": {
                 "error": {
-                    "description": "Nag-reload ang mga extension, ngunit nabigo ang global command sync.",
-                    "title": "Nabigo ang pag-synchronize!"
+                    "description": "Na-reload ko ang mga extension, pero nabigong i-sync ang mga command... 3:",
+                    "title": "Hala, nabigo ang synchronization! 3:"
                 },
                 "loading": {
-                    "description": "Mangyaring maging mapagpasensya habang nagre-reload...",
-                    "progress": "Mangyaring maging mapagpasensya habang nagre-reload...\n\nKasalukuyang naglo-load: `{current_cog}`\n\nPag-unlad: **{current}/{total}**\n\nTagumpay: **{loaded}** | \nNabigo: **{failed}**",
-                    "title": "Pinoproseso ang pag-reload..."
+                    "description": "Teka lang, nire-reload ang lahat~ :3",
+                    "progress": "Sandali lang, nire-reload ko ang mga bagay-bagay~ \nKasalukuyang naglo-load: `{current_cog}`\nProgreso: **{current}/{total}**\nTagumpay: **{loaded}** | Nabigo: **{failed}**",
+                    "title": "Pinoproseso ang pag-reload... :3"
                 },
                 "success": {
-                    "description": "Matagumpay na na-update ang kabuuang **{loaded}** extension.\n\nNaka-synchronize na **{synched}** slash command sa buong mundo.",
-                    "title": "Matagumpay na nagawa ang proseso ng pag-reload!"
+                    "description": "Matagumpay na na-update ang **{loaded}** na mga extension! >:D\nAt na-sync ang **{synched}** na mga slash command kahit saan~",
+                    "title": "Matagumpay na natapos ang pag-reload! :D"
                 }
             },
             "errors": {
-                "forbidden": "Ang bot ay kulang sa saklaw ng `application.commands` sa guild na ito.",
-                "generic": "Isang hindi kilalang error ang naganap sa panahon ng pag-synchronize ng command.",
-                "http_error": "Error sa Discord API: Nabigong makipag-ugnayan sa command gateway.",
-                "missing_id": "Kritikal na Error: Nawawala ang Application ID sa instance ng bot.",
-                "sync_failure": "Nabigong i-sync: Ang isa o higit pang mga command ay naglalaman ng di-wastong istraktura ng data.",
-                "translation_error": "Na-abort ang pag-sync: Nagkaroon ng error sa loob ng command translator."
+                "forbidden": "Wala akong mga pahintulot na `application.commands` sa server na ito... 3:",
+                "generic": "May nangyaring kakaiba habang nagsa-sync ng mga command! 3:",
+                "http_error": "Nag-iinarte ang Discord API! Hindi ko maabot ang gateway. 3:",
+                "missing_id": "Kritikal na error! Nawawala ang aking Application ID kahit papaano... 3:",
+                "sync_failure": "Nabigong i-sync! May maling data ang ilang command. 3:",
+                "translation_error": "Naantala ang pag-sync! May nasira sa command translator. 3:"
             }
         }
     },
     "calculate": {
-        "description": "Isang pangkat para sa calculator.",
+        "description": "Oras na para sa Math! :3",
         "percentage": {
-            "description": "Kinakalkula ang porsyento."
+            "description": "Kinakalkula ang porsyento para sa iyo~"
         }
     },
     "channel": {
-        "description": "A group for managing ",
+        "description": "Isang masayang grupo para sa pamamahala ng mga channel! :3",
         "info": {
-            "description": "Shows channel information.",
+            "description": "Nagpapakita ng magandang impormasyon tungkol sa channel~",
             "embeds": {
                 "default": {
-                    "title": "Information of {name}"
+                    "title": "Impormasyon para sa {name} :3"
                 }
             }
         },
         "slowmode": {
-            "description": "Sets slowmode delay",
+            "description": "Itinatakda ang slowmode delay!",
             "embeds": {
                 "successful": {
-                    "description": "Successfully set slowmode to **{seconds}** for {mention}.",
-                    "title": "Slowmode Updated"
+                    "description": "Boom! Itinakda ang slowmode sa **{seconds}** para sa {mention}! >:D",
+                    "title": "Na-update ang Slowmode! :3"
                 }
             }
         }
     },
     "chatbot": {
         "add_event": {
-            "description": "Nagdaragdag ng pandaigdigang kaganapan sa kasaysayan."
+            "description": "Nagdaragdag ng isang global na kaganapan sa aking kasaysayan! :3"
         },
         "clear_memories": {
-            "description": "Ni-clear ang history ng chat para sa session ng chat ng AI."
+            "description": "Lilinisan ang aking chat memory! 3:"
         },
-        "description": "Isang grupo para sa AI Chat bot gamit ang Ollama.",
+        "description": "Isang grupo para sa aking mga AI chatbot na bagay! :3",
         "mem": {
-            "description": "Suriin ang espasyo ng utak ni Jim.",
+            "description": "Sumilip tayo sa utak ni Jim~ :3",
             "embeds": {
                 "default": {
-                    "title": "Katayuan ng Memorya ng Konteksto"
+                    "title": "Status ng Memory Context :3"
                 }
             },
             "messages": {
-                "empty": "Kasalukuyang walang laman ang utak ko. \n(Walang kasaysayan)"
+                "empty": "Walang-wala sa isip ko ngayon. 3:"
             }
         },
         "perf": {
-            "description": "Nagpapakita ng mga istatistika ng pagganap.",
+            "description": "Ipinapakita kung gaano kahirap magtrabaho ang aking hardware! :3",
             "embeds": {
                 "default": {
-                    "description": "Mga istatistika batay sa huling {generations} na henerasyon.",
-                    "title": "Mga Sukatan sa Kahusayan ng Hardware"
+                    "description": "Narito ang mga istatistika base sa nakaraang {generations} na henerasyon~",
+                    "title": "Hardware Efficiency Metrics >:D"
                 }
             },
             "messages": {
-                "empty_logs": "Walang data na nakolekta para sa mga istatistika ng pagganap sa kasalukuyan."
+                "empty_logs": "Wala akong anumang data sa performance sa ngayon... 3:"
             }
         },
         "stats": {
-            "description": "Nagpapakita ng mga istatistika ng bot (global)."
+            "description": "Ipinapakita ang aking global bot stats! :3"
         },
         "unlock": {
-            "description": "Pilit na ina-unlock ang channel kung natigil si Jim.",
+            "description": "Piliting i-unlock ang channel kapag na-stuck ako! >:D",
             "messages": {
-                "already": "Hindi man lang ako nag-iisip ngayon, pero okay!",
-                "unlock": "uh sige babalik na ako"
+                "already": "Hindi naman ako nag-iisip ngayon, pero sige! :3",
+                "unlock": "uh ok nakabalik na ako >:D"
             }
         },
         "user_stats": {
-            "description": "Nagpapakita ng mga istatistika ng bot (user)."
+            "description": "Ipinapakita ang iyong bot stats! :3"
         }
     },
     "contributors": {
-        "description": "A group for contributors.",
+        "description": "Isang grupo para sa lahat ng mga astig na contributor! :3",
         "list": {
-            "description": "Lists all contributors.",
+            "description": "Inililista ang lahat ng nakatulong~",
             "embeds": {
                 "default": {
-                    "description": "Here's a list of contributors who helped my bot! :3",
-                    "title": "Contributors"
+                    "description": "Narito ang listahan ng lahat ng astig na tao na tumulong para gawin ako! :3",
+                    "title": "Mga Astig na Contributor >:D"
                 }
             }
         },
         "view": {
-            "description": "Shows contributor information.",
+            "description": "Ipinapakita ang impormasyon tungkol sa isang partikular na contributor! :3",
             "embeds": {
                 "default": {
-                    "title": "Contributor Information of {contributor}"
+                    "title": "Impormasyon para sa contributor {contributor}~"
                 }
             }
         }
     },
     "convert": {
         "base64": {
-            "description": "Nag-encode ng text sa Base64."
+            "description": "Ginagawang Base64 ang iyong text! :3"
         },
         "base7777": {
-            "description": "Ini-encrypt ang teksto sa Base7777. \n(hiniling ng galaxy_fl3x)"
+            "description": "Nag-e-encrypt ng text sa Base7777! (hiniling ni galaxy_fl3x) :3"
         },
         "binary": {
-            "description": "I-encode sa binary. \n(hiniling ni AnnaYarik999Alt)"
+            "description": "Ginagawa itong beep-boop na binary! (hiniling ni AnnaYarik999Alt) :3"
         },
         "caesar": {
-            "description": "I-encrypt ang text gamit ang Caesar cipher."
+            "description": "Pinagugulo ang text gamit ang Caesar cipher! >:D"
         },
         "color_name": {
-            "description": "Kinukuha ang pangalan ng kulay mula sa colornames.org."
+            "description": "Kumukuha ng pangalan ng kulay mula sa colornames.org! :3"
         },
         "demorse": {
-            "description": "I-decode ang morse code. \n(hiniling ni AnnaYarik999Alt)"
+            "description": "Dine-decode ang mga tuldok at gitling na 'yan! (hiniling ni AnnaYarik999Alt) :3"
         },
-        "description": "Isang pangkat para sa mga nagko-convert.",
+        "description": "Isang grupo na puno ng mga converter! :3",
         "glitch": {
-            "description": "Ginagawang parang sira ang text."
+            "description": "G-ginagawang p-parang g-glitchy a-ang t-text m-mo... >:D"
         },
         "invert_letters": {
-            "description": "Binabaliktad ang mga text letter."
+            "description": "Binabaliktad ang iyong mga titik! :3"
         },
         "meow": {
-            "description": "Gumagawa ng text sa MEOW MEOW :3"
+            "description": "Ginagawang MEOW MEOW ang lahat :3"
         },
         "morse": {
-            "description": "I-encode sa morse code. \n(hiniling ni AnnaYarik999Alt)"
+            "description": "Ginagawa itong mga tuldok at gitling! (hiniling ni AnnaYarik999Alt) :3"
         },
         "muffle": {
-            "description": "Nagbabago ng text sa mga tunog na parang muffled."
+            "description": "Pinapatunog kang parang nagsasalita sa unan... :3"
         },
         "nsrc1": {
-            "description": "Ine-encrypt ang text sa NSRC-1. \n(fah)"
+            "description": "Nag-e-encrypt ng text sa NSRC-1! (fah) :3"
         },
         "psc1": {
-            "description": "I-encrypt sa PSC-1."
+            "description": "Nag-e-encrypt ito sa PSC-1! :3"
         },
         "railfence": {
-            "description": "I-encrypt ang text gamit ang rail fence cipher."
+            "description": "Pinagugulo ang text gamit ang rail fence cipher! >:D"
         },
         "reverse_words": {
-            "description": "Baliktarin ang mga salita."
+            "description": "Binabaliktad ang iyong mga salita! :3"
         },
         "unbase64": {
-            "description": "Nagde-decode ng text mula sa Base64."
+            "description": "Dine-decode ang text mula sa Base64! :3"
         },
         "unbase7777": {
-            "description": "Nagde-decrypt ng text mula sa Base7777. \n(hiniling ng galaxy_fl3x)"
+            "description": "Dine-decrypt ang text mula sa Base7777! (hiniling ni galaxy_fl3x) :3"
         },
         "unbinary": {
-            "description": "I-decode ang binary. \n(hiniling ni AnnaYarik999Alt)"
+            "description": "Isinasalin ang mga beep-boop pabalik sa text! (hiniling ni AnnaYarik999Alt) :3"
         },
         "uncaesar": {
-            "description": "I-decrypt ang text gamit ang Caesar cipher."
+            "description": "Binubuo ang isang Caesar cipher! :3"
         },
         "unnsrc1": {
-            "description": "Nagde-decrypt ng text mula sa NSRC-1. \n(fah)"
+            "description": "Dine-decrypt ang text mula sa NSRC-1! (fah) :3"
         },
         "unpsc1": {
-            "description": "I-decrypt ang PSC-1."
+            "description": "Dine-decrypt ang PSC-1! :3"
         },
         "unrailfence": {
-            "description": "I-decrypt ang text gamit ang rail fence cipher."
+            "description": "Binubuo ang rail fence cipher! :3"
         },
         "uwu": {
-            "description": "Pareho sa say_uwuify, ngunit may pagbanggit."
+            "description": "UwUifies ang text, pero nagme-mention ka ng tao! :3"
         }
     },
     "detect": {
         "custom2": {
-            "description": "Suriin kung gaano ito kataas."
+            "description": "Tingnan natin kung gaano kataas~ :3"
         },
         "custom_member": {
-            "description": "Suriin kung gaano karaming miyembro ang malapit sa ilan."
+            "description": "Tinitingnan kung gaano kalapit ang isang miyembro sa isang bagay! :3"
         },
-        "description": "Isang pangkat para sa pagtuklas.",
+        "description": "Isang grupo para sa paghahanap ng mga bagay-bagay! >:D",
         "how_femboy": {
-            "description": "Suriin kung gaano ka-femboy ang miyembro."
+            "description": "Tingnan natin kung gaano siya ka-femboy! :3"
         },
         "how_freaky": {
-            "description": "Suriin kung gaano kataka-taka ang miyembro."
+            "description": "Tingnan natin kung gaano sila ka-freaky! >:D"
         },
         "how_gay": {
-            "description": "Suriin kung paano bakla ang miyembro."
+            "description": "Tingnan natin kung gaano sila ka-gay! :3"
         },
         "how_slop": {
-            "description": "Suriin kung paano slop ang miyembro."
+            "description": "Tingnan natin kung gaano sila ka-slop! :3"
         },
         "vibecheck": {
-            "description": "Suriin kung paano nanginginig ang miyembro."
+            "description": "Oras na para sa vibe check! >:D"
         }
     },
     "economy": {
         "balance": {
-            "description": "Check your current balance.",
+            "description": "Suriin kung gaano karaming pera ang mayroon ka! :3",
             "embeds": {
                 "default": {
-                    "footer": "Total Assets: {coins} coins",
-                    "title": "{user}'s Balance :3"
+                    "footer": "Kabuuang assets: {coins} coins~",
+                    "title": "Balanse ni {user} :3"
                 }
             },
             "fields": {
-                "bank": "Bank",
-                "wallet": "Wallets"
+                "bank": "Bangko",
+                "wallet": "Wallet"
             }
         },
         "buy": {
-            "description": "Buy on item from the shop.",
+            "description": "Bumili ng mga magagandang gamit sa shop! :3",
             "embeds": {
                 "item_unavailable": {
-                    "description": "That item is not available for sale! 3:<",
-                    "title": "Item is unavailable"
+                    "description": "Hindi man lang for sale ang item na iyan! 3:<",
+                    "title": "Hindi available ang item 3:"
                 },
                 "not_afford": {
-                    "description": "You don't have enough coins in your wallet to buy that! 3:<",
-                    "title": "Not enough coins"
+                    "description": "Wala kang sapat na pera para bilhin iyan! 3:<",
+                    "title": "Hindi sapat ang pera! 3:"
                 },
                 "purchased": {
-                    "description": "Successfully bought **{item_name}**! Check your inventory~ ;3",
-                    "title": "Purchase completed"
+                    "description": "Yehey! Bumili ka ng **{item_name}**! Silipin ang iyong imbentaryo~ :3",
+                    "title": "Matagumpay ang pagbili! >:D"
                 }
             }
         },
         "daily": {
-            "description": "Claim your daily reward.",
+            "description": "Kunin ang iyong pang-araw-araw na libre! :3",
             "embeds": {
                 "default": {
-                    "description": "You got {amount} coins by daily rewards! :3",
-                    "title": "You've claimed daily reward!"
+                    "description": "Nakatanggap ka ng {amount} coins mula sa iyong daily reward! :D",
+                    "title": "Nakuha na ang daily reward! :3"
                 }
             }
         },
         "deposit": {
-            "description": "Move money from wallet to bank.",
+            "description": "Itabi ng ligtas ang iyong pera sa bangko~",
             "embeds": {
                 "default": {
-                    "description": "Deposited {amount} coins successfully. :3",
-                    "title": "Deposit success"
+                    "description": "Matagumpay na nagdeposito ng {amount} coins! :3",
+                    "title": "Matagumpay na deposito~"
                 }
             }
         },
-        "description": "A group for Economy system.",
+        "description": "Isang grupo para sa lahat ng tungkol sa pera! :3",
         "history": {
-            "description": "View your recent transactions."
+            "description": "Silipin ang iyong mga kamakailang transaksyon~"
         },
         "inventory": {
-            "description": "View your items.",
+            "description": "Tingnan ang lahat ng kalat sa iyong baul! :3",
             "embeds": {
                 "default": {
-                    "title": "{user}'s inventory"
+                    "title": "Imbentaryo ni {user}~"
                 },
                 "empty": {
-                    "description": "Your backpack is empty right now. buy something to change this text i guess. :3",
-                    "title": "Empty backpack"
+                    "description": "Ang iyong backpack ay walang laman... bumili ka ng kahit ano para magbago ito! :3",
+                    "title": "Walang laman ang backpack 3:"
                 }
             }
         },
         "list": {
-            "description": "View the item shop.",
+            "description": "Tingnan mo ang shop! :3",
             "embeds": {
                 "closed": {
-                    "description": "Subukang bumisita sa shop mamaya... 3:",
-                    "title": "Kasalukuyang sarado ang tindahan!"
+                    "description": "Bumalik ka mamaya, sarado kami! 3:",
+                    "title": "Sarado ang shop ngayon! 3:"
                 }
             },
             "fields": {
-                "buy_price": "Price: {price} coins",
-                "not_sale": "Not for sale"
+                "buy_price": "Presyo: {price} coins",
+                "not_sale": "Hindi binebenta!! 3:<"
             }
         },
         "sell": {
-            "description": "Sell on item back to the shop.",
+            "description": "Ibenta pabalik sa shop ang iyong mga gamit! >:D",
             "embeds": {
                 "sold": {
-                    "description": "Sold **{item_name}",
-                    "title": "Sale completed"
+                    "description": "Naibenta ang **{item_name}**! :D",
+                    "title": "Tapos na ang benta! :3"
                 },
                 "unable_to_sell": {
-                    "description": "The shop won't buy this back! 3:<",
-                    "title": "Unable to sell"
+                    "description": "Ayaw ng shop ang item na ito! 3:",
+                    "title": "Hindi pwedeng ibenta iyan! 3:"
                 }
             }
         },
         "withdraw": {
-            "description": "Move money from bank to wallet.",
+            "description": "Kunin ang iyong pera mula sa bangko! :3",
             "embeds": {
                 "default": {
-                    "description": "Withdrawed {amount} coins successfully. :3",
-                    "title": "Withdraw success"
+                    "description": "Nag-withdraw ng {amount} coins! >:D",
+                    "title": "Matagumpay na pag-withdraw~"
                 }
             }
         },
         "work": {
-            "description": "Earn some coins by working.",
+            "description": "Gumawa ng ilang gawain para sa mga barya! :3",
             "embeds": {
                 "default": {
-                    "description": "You got {amount} coins by working! :3",
-                    "title": "You have worked for money!"
+                    "description": "Nagtrabaho ka nang mabuti at kumita ng {amount} coins! :3",
+                    "title": "Binayaran ka na! >:D"
                 },
                 "tired": {
-                    "description": "You need to rest {rem} more minutes. 3:",
-                    "title": "You can't work right now!"
+                    "description": "Masyado kang inaantok! Magpahinga pa ng {rem} na minuto. 3:",
+                    "title": "Hindi ka maaaring magtrabaho ngayon! 3:"
                 }
             }
         }
     },
     "fun": {
         "boop_member": {
-            "description": "Miyembro ng Boops."
+            "description": "Pitik-in ang ilong ng isang tao! :3"
         },
-        "description": "Isang grupo para masaya.",
+        "description": "Isang grupo para sa katatawanan! :3",
         "dice": {
-            "description": "Gumagulo ng dice."
+            "description": "Pagulong ang dice! >:D"
         },
         "guess": {
-            "description": "Hulaan ang numero."
+            "description": "Hulaan ang numero! :3"
         },
         "guess_game": {
-            "description": "Magsisimula ng bagong laro ng paghula ng numero. \n(1 ~ 100)"
+            "description": "Magsisimula ng bagong number guessing game! (1 ~ 100) :3"
         },
         "job_application": {
-            "description": "ISANG TRABAHO!!!"
+            "description": "Maghanap ka ng TRABAHO!!! >:D"
         },
         "ship": {
-            "description": "Kinakalkula ang rate ng pag-ibig sa pagitan ng dalawang user."
+            "description": "Kinakalkula ang rate ng tunay na pag-ibig sa pagitan ng dalawang tao! :3"
         },
         "stopguess": {
-            "description": "Sapilitang itinigil ang patuloy na laro ng hula."
+            "description": "Pinipilit sirain ang laro ng paghula! >:D"
         }
     },
     "generate": {
         "cat_jard": {
-            "description": "Umiwas sa pusa."
+            "description": "Iwasan ang pusa! >:D"
         },
-        "description": "Isang grupo para sa mga generator.",
+        "description": "Isang grupo para sa paggawa ng mga nakakatawang bagay! :3",
         "emoticon": {
-            "description": "Nagpapadala ng random na emoticon."
+            "description": "Nagpapadala ng isang random na text emoticon! :3"
         },
         "idek": {
-            "description": "idek."
+            "description": "hindi ko alam tbh. :3"
         },
         "nyan_cat": {
-            "description": "Nyan Cat! \n:D",
+            "description": "Oras ng Nyan Cat!! :D",
             "messages": {
-                "think_fast": "MABILIS MAG-ISIP, CHUCKLE NUTS!"
+                "think_fast": "BILISAN MAG-ISIP, CHUCKLE NUTS! >:D"
             }
         },
         "target_close": {
-            "description": "Target na closing algorithm"
+            "description": "Target closing algorithm... >:D"
         }
     },
     "guild": {
         "count": {
-            "description": "Kinukuha ang bilang ng mga miyembro ng server."
+            "description": "Binibilang kung ilang tao ang nandito! :3"
         },
-        "description": "Isang grupo para sa server.",
+        "description": "Isang grupo para sa server stuff! :3",
         "icon": {
-            "description": "Ipakita ang icon ng server."
+            "description": "Pinapakita ang icon ng server! :3"
         },
         "info": {
-            "description": "Suriin ang impormasyon ng server."
+            "description": "Silipin ang lahat ng impormasyon sa server! :3"
         },
         "kickmembers": {
-            "description": "Sinisipa ang bawat tunay na miyembro."
+            "description": "Kini-kick ang bawat totoong miyembro! >:D"
         },
         "logs": {
-            "description": "Nagpapakita ng menu para makakuha ng history ng mga kic, ban at timeout."
+            "description": "Pinapakita ang kasaysayan ng mga kick, ban, at timeout! 3:"
         },
         "members_list": {
-            "description": "Naglilista ng mga miyembro sa server."
+            "description": "Inililista ang lahat ng mga cool na tao dito! :3"
         },
         "nsfw_level": {
-            "description": "Ipakita ang NSFW Level ng server."
+            "description": "Sinisiyasat ang antas ng anghang ng server! :3"
         },
         "role_list": {
-            "description": "Naglilista ng mga tungkulin sa server."
+            "description": "Inililista ang lahat ng mga role sa server! :3"
         },
         "search_members": {
-            "description": "Mga paghahanap para sa mga miyembrong tumutugma sa query."
+            "description": "Naghahanap ng mga miyembro na tumutugma sa iyong query! >:D"
         }
     },
     "info": {
         "commit_data": {
-            "description": "Shows bot's latest git commit."
+            "description": "Ipinapakita ang aking pinakabagong git commit! :3"
         },
-        "description": "A group for information",
+        "description": "Isang grupo para sa impormasyon at mga bagay-bagay! :3",
         "invite": {
-            "description": "Invites the bot to server by application url. (LIMITED TO 90)",
+            "description": "Kumukuha ng aking invite link para maisali mo ako! (Limitado lang sa 90 na server 3:)",
             "embeds": {
                 "default": {
-                    "description": "{prefix}\n\nYou can add me to your server using [this link.]({invite_url})",
-                    "footer": "Note: Requires advanced permissions for full functionality, and the invitation is limited to 90 servers due to discord limitation.",
+                    "description": "{prefix}\n\nMaaari mo akong idagdag sa iyong server gamit ang [link na ito!]({invite_url}) :D",
+                    "footer": "Paalala: Kailangan ko ng mga karagdagang pahintulot para gumana nang tama, at limitado ako sa 90 servers dahil sa Discord! 3:",
                     "status": {
-                        "one": "Capacity: **{formatted}** server",
-                        "other": "Capacity: **{formatted}** servers"
+                        "one": "Kapasidad: **{formatted}** server",
+                        "other": "Kapasidad: **{formatted}** na mga server"
                     },
-                    "title": "Invite TongueBot"
+                    "title": "Imbitahan si TongueBot! :3"
                 }
             },
             "error": {
-                "hardlimited": "You can't invite TongueBot right now, since the limit has been reached."
+                "hardlimited": "Aww, hindi mo ako maaaring i-invite ngayon, umabot na ako sa server limit... 3:"
             }
         },
         "os_info": {
-            "description": "Shows operating system information.",
+            "description": "Ipinapakita kung anong OS ang ginagamit ko! :3",
             "embeds": {
                 "default": {
-                    "title": "Operating System Information"
+                    "title": "Impormasyon sa Operating System :3"
                 }
             }
         },
         "ping": {
-            "description": "Pong!",
+            "description": "Pong! :D",
             "embeds": {
                 "default": {
-                    "title": "Pong! ({latency} ms)"
+                    "title": "Pong! ({latency} ms) :D"
                 }
             }
         },
         "retrieve": {
-            "description": "Retrieves bot information.",
+            "description": "Kinukuha ang lahat ng impormasyon tungkol sa akin! :3",
             "embeds": {
                 "default": {
-                    "description": "Select a category below to view specific details.",
-                    "footer": "System: {platform}",
-                    "title": "Bot Information"
+                    "description": "Pumili ng kategorya sa ibaba para makita ang mga detalye! >:D",
+                    "footer": "Tumatakbo sa: {platform} :3",
+                    "title": "Impormasyon sa Bot~"
                 }
             },
             "error": {
-                "forbidden": "I do not have the **Manage Channels** permission to do that."
+                "forbidden": "Kailangan ko ng pahintulot na **Manage Channels** para gawin iyon! 3:"
             }
         },
         "sync": {
-            "description": "Synchronizes commands"
+            "description": "Nag-sync ng aking mga command! :3"
         },
         "timedate": {
-            "description": "Shows time in specified timezone",
+            "description": "Ipinapakita ang oras sa isang partikular na timezone! :3",
             "embeds": {
                 "default": {
-                    "description": "In {timezone_name}, it's **{timedate}**."
+                    "description": "Sa {timezone_name}, ang kasalukuyang oras ay **{timedate}**! :3"
                 }
             }
         }
     },
     "leveling": {
         "configure": {
-            "description": "Configures leveling system.",
+            "description": "Inaayos ang sistema ng pag-level! :3",
             "embeds": {
                 "default": {
-                    "description": "The system has been updated.",
-                    "title": "Leveling system updated"
+                    "description": "Na-update ang system! >:D",
+                    "title": "Na-adjust na ang sistema ng pag-level! :3"
                 }
             }
         },
-        "description": "Leveling system.",
+        "description": "Mga bagay sa pag-level! :3",
         "rank": {
-            "description": "Check rank.",
+            "description": "Suriin ang iyong rank! :3",
             "embeds": {
                 "default": {
                     "fields": {
@@ -494,13 +494,13 @@
                             "name": "Level"
                         },
                         "progress": {
-                            "name": "Progress"
+                            "name": "Progreso"
                         },
                         "total": {
-                            "name": "Total XP"
+                            "name": "Kabuuang XP"
                         }
                     },
-                    "title": "{user}'s rank"
+                    "title": "Rank ni {user}! :3"
                 }
             }
         }
@@ -508,255 +508,255 @@
     "moderation": {
         "blacklist": {
             "add": {
-                "description": "Adds a word to the blacklists.",
+                "description": "Nagdaragdag ng masamang salita sa blacklist! >:D",
                 "embeds": {
                     "default": {
-                        "description": "Added {entry} into blacklist with type '{type}', as {id}.",
-                        "title": "Added word into blacklist"
+                        "description": "Idinagdag ang '{entry}' sa blacklist bilang uri ng '{type}', mahahanap gamit ang ID na '{id}'! :3",
+                        "title": "Salita na naka-blacklist! >:D"
                     }
                 }
             },
-            "description": "Blacklist system.",
+            "description": "Mga bagay sa blacklist! :3",
             "list": {
-                "description": "Lists every blacklist triggers registered in this server.",
+                "description": "Naglilista ng lahat ng naka-block na salita sa server na ito! :3",
                 "embeds": {
                     "default": {
-                        "footer": "And more {remaining} triggers are registered.",
-                        "title": "Blacklist triggers registered in this server"
+                        "footer": "Mayroon pang {remaining} na mga triggers na nagtatago dito! :3",
+                        "title": "Mga blacklist trigger para sa server na ito~"
                     },
                     "no_blacklist": {
-                        "description": "Blacklist trigger was not found from this server."
+                        "description": "Walang mahanap na kahit anong blacklist triggers dito! :3"
                     }
                 }
             },
             "remove": {
-                "description": "Removes matched query from blacklists.",
+                "description": "Nagtatanggal ng salita mula sa blacklist! :3",
                 "embeds": {
                     "default": {
-                        "description": "Removed every query matching with '{query}'.",
-                        "title": "Removed matched queries from blacklist"
+                        "description": "Inalis ang lahat ng tumutugma sa '{query}' mula sa blacklist! :3",
+                        "title": "Inalis ang mga query! :D"
                     },
                     "not_found": {
-                        "description": "Triggers were not found from blacklist with matching query '{query}'.",
-                        "title": "Triggers not found"
+                        "description": "Walang nahanap na tumutugma sa '{query}' sa blacklist... 3:",
+                        "title": "Hindi mahanap ang mga trigger! 3:"
                     }
                 }
             }
         },
-        "description": "Moderation management.",
+        "description": "Mga tool sa moderation! >:D",
         "togglefeature": {
-            "description": "Toggle server features.",
+            "description": "Binubuksan o isinasara ang mga feature ng server! :3",
             "embeds": {
                 "default": {
-                    "description": "Set {feature_name} to {state}."
+                    "description": "Pinalitan ang {feature_name} sa {state}! :3"
                 }
             },
             "parameters": {
                 "feature": {
-                    "description": "The feature to toggle"
+                    "description": "Ang feature na gusto mong i-toggle~"
                 },
                 "state": {
-                    "description": "On or Off"
+                    "description": "Buksan o Isara! :3"
                 }
             }
         }
     },
     "roblox": {
         "avatar": {
-            "description": "Gets Roblox user's avatar by username.",
+            "description": "Kumukuha ng avatar ng Roblox user gamit ang kanilang username! :3",
             "embeds": {
                 "default": {
-                    "title": "Roblox user {username}'s Avatar"
+                    "title": "Roblox Avatar ni {username}! :3"
                 }
             }
         },
-        "description": "A group for roblox APIs.",
+        "description": "Isang grupo para sa lahat ng Roblox API! :3",
         "user": {
-            "description": "Get Roblox user info by username.",
+            "description": "Kumukuha ng impormasyon ng Roblox user gamit ang kanilang username! :3",
             "embeds": {
                 "default": {
-                    "title": "User {username}'s Information"
+                    "title": "Impormasyon ni {username}! :3"
                 }
             }
         }
     },
     "stats": {
-        "description": "Leveling system.",
+        "description": "Mga leaderboard at istatistika! :3",
         "top": {
-            "description": "Show the top users.",
+            "description": "Ipinapakita ang mga nangungunang user! >:D",
             "embeds": {
                 "default": {
-                    "title": "Global leaderboard!! >:D"
+                    "title": "Global na Leaderboard!! >:D"
                 }
             }
         }
     },
     "ticket": {
-        "description": "Ticket system V2.",
+        "description": "Sistema ng ticket V2! :3",
         "setup": {
-            "description": "Configure the ticket system for this server."
+            "description": "Nagsasaayos ng sistema ng ticket para sa server na ito! :3"
         }
     },
     "tts": {
-        "description": "Center of TTS stuff",
+        "description": "Sentro ng lahat ng TTS na bagay! :3",
         "embeds": {
             "default": {
-                "description": "Generated! >:D",
-                "footer": "Type: {tts_type}; Input: {input}",
-                "title": "TTS Conversion"
+                "description": "Nagawa na! >:D",
+                "footer": "Uri: {tts_type}; Input: {input}",
+                "title": "Pagbabago sa TTS :3"
             }
         },
         "google_translate": {
-            "description": "Generates TTS from Google Translate."
+            "description": "Gumagawa ng TTS mula sa Google Translate! :3"
         }
     },
     "user": {
         "avatar": {
-            "description": "Shows Discord user's avatar.",
+            "description": "Nagpapakita ng Discord avatar ng isang tao! :3",
             "embeds": {
                 "default": {
-                    "footer": "Requested by {author}, the result is cached for a minute.",
-                    "title": "User {user}'s avatar"
+                    "footer": "Hiningi ni {author}, naka-cache sa isang minuto! :3",
+                    "title": "Avatar ni {user}! :3"
                 }
             }
         },
-        "description": "A group for users.",
+        "description": "Isang grupo para sa mga user! :3",
         "info": {
-            "description": "Retrieves user's information.",
+            "description": "Kinukuha ang lahat ng nakakatuwang impormasyon tungkol sa isang user! :3",
             "embeds": {
                 "default": {
-                    "title": "Information for {user}"
+                    "title": "Impormasyon para kay {user}~"
                 }
             },
             "fields": {
-                "stats": "Level {level} ({xp} XP) / {messages} Messages",
-                "wallet": "{coins} Coins"
+                "stats": "Level {level} ({xp} XP) / {messages} Mensahe :3",
+                "wallet": "{coins} Barya!"
             }
         },
         "set_nick": {
-            "description": "Sets user's nickname.",
+            "description": "Binabago ang palayaw ng isang tao! >:D",
             "embeds": {
                 "changed": {
-                    "description": "{author} Changed {user}'s nickname to **{new_nickname}**."
+                    "description": "Pinalitan ni {author} ang palayaw ni {user} sa **{new_nickname}**! :3"
                 },
                 "reset": {
-                    "description": "{author} Reseted {user}'s nickname."
+                    "description": "Ni-reset ni {author} ang palayaw ni {user}! :D"
                 }
             },
             "reasons": {
-                "changed": "Nickname changed by {user} via /user nick",
-                "reset": "Nickname reseted by {user} via /user nick"
+                "changed": "Pinalitan ang palayaw ni {user} gamit ang /user nick! :3",
+                "reset": "Ni-reset ang palayaw ni {user} gamit ang /user nick! :3"
             }
         },
         "set_profile": {
-            "description": "Itinatakda ang iyong profile sa komunidad.",
+            "description": "Nag-aayos ng iyong community profile! :3",
             "embeds": {
                 "default": {
-                    "description": "Itakda ang iyong paglalarawan sa '{description}' at nickname sa '{nickname}'. \n:3",
-                    "title": "Matagumpay na na-update ang iyong profile sa komunidad! \n:3"
+                    "description": "Inayos ang iyong bio sa '{description}' at ang iyong palayaw sa '{nickname}'! :3",
+                    "title": "Matagumpay na na-update ang profile! :D"
                 }
             }
         },
         "status": {
-            "description": "Retrieves user's status.",
+            "description": "Sinisiyasat ang Discord status ng isang user! :3",
             "embeds": {
                 "default": {
-                    "title": "{user}'s Discord status"
+                    "title": "Status ni {user}! :3"
                 }
             }
         }
     },
     "userphone": {
         "call": {
-            "description": "Mga tawag sa random guild.",
+            "description": "Tumatawag ng isang random na server! :3",
             "embeds": {
                 "paired": {
-                    "description": "Ipinares sa ibang guild!",
-                    "title": "Ipinares!"
+                    "description": "Nagpares tayo sa ibang server! >:D",
+                    "title": "Magkapares! :D"
                 },
                 "searching": {
-                    "description": "Naghahanap ng guild na makakatawag...",
-                    "title": "Naghahanap ng guild"
+                    "description": "Naghahanap ng masayang server na tatawagan... :3",
+                    "title": "Naghahanap ng masayang server na tatawagan..!"
                 },
                 "status": {
-                    "description": "",
-                    "title": ""
+                    "description": "Naghahanap ng masayang server na tatawagan... :3",
+                    "title": "Status"
                 }
             }
         },
-        "description": "Isang grupo para sa userphone.",
+        "description": "Isang grupo para sa userphone! :3",
         "globalchat": {
-            "description": "Kino-configure ang pandaigdigang chat.",
+            "description": "Inaayos ang mga setting ng global chat! :3",
             "embeds": {
                 "default": {
-                    "description": "Ang mga setting ay matagumpay na na-configure!",
-                    "title": "Matagumpay na na-configure"
+                    "description": "Ang lahat ng setting ay na-configure na! :3",
+                    "title": "Matagumpay na na-configure! :D"
                 }
             }
         },
         "hangup": {
-            "description": "Ibinaba ang papasok na tawag.",
+            "description": "Pinabababa ang kasalukuyang tawag! 3:",
             "embeds": {
                 "default": {
-                    "description": "Ibinaba ang tawag.",
-                    "title": "Hanged ingoing call up!"
+                    "description": "Binaba ang tawag! 3:",
+                    "title": "Tapos na ang tawag! 3:"
                 }
             }
         },
         "userphone": {
-            "description": "Kino-configure ang userphone.",
+            "description": "Inaayos ang mga setting ng userphone! :3",
             "embeds": {
                 "default": {
-                    "description": "Ang mga setting ay matagumpay na na-configure!",
-                    "title": "Matagumpay na na-configure"
+                    "description": "Ang lahat ng setting ay na-configure na! :3",
+                    "title": "Matagumpay na na-configure! :D"
                 }
             }
         }
     },
     "welcome": {
-        "description": "A group for WelcomeCog",
+        "description": "Isang grupo para sa mga mensahe ng pagtanggap! :3",
         "embeds": {
             "join": {
-                "description": "Welcome, {mention}! Please check out the rules in {rules_mention}.",
-                "description_no_rules": "Welcome to the server, {mention}!",
-                "footer": "We now have {count} members.",
-                "title": "Welcome to {guild}!"
+                "description": "Maligayang pagdating, {mention}! Siguraduhing basahin ang mga rules sa {rules_mention}~ :3",
+                "description_no_rules": "Maligayang pagdating sa server, {mention}! x3",
+                "footer": "Mayroon na tayong {count} na mga miyembro! :3",
+                "title": "Maligayang pagdating sa {guild}! :D"
             },
             "left": {
-                "description": "Goodbye, {display}!",
-                "title": "Member {display} has left {guild}!"
+                "description": "Paalam, {display}... 3:",
+                "title": "Ang miyembrong si {display} ay umalis sa {guild}... 3:"
             }
         },
         "set_channel": {
-            "description": "Set channel to send join / leave message.",
+            "description": "Itinatakda ang channel para sa mga join at leave message! :3",
             "embeds": {
                 "disabled": {
-                    "description": "Welcome notification feature has been disabled."
+                    "description": "Naka-off na ang mga welcome notification! 3:"
                 },
                 "enabled": {
-                    "description": "Welcome notification feature has been enabled.\n The welcome message will appear at {target_mention}."
+                    "description": "Bukas na ang mga welcome notification!\nAng mga mensahe ay lalabas sa {target_mention}! :3"
                 }
             }
         },
         "set_rules_channel": {
-            "description": "Sets rule channel for adding link in it.",
+            "description": "Itinatakda ang rules channel para mai-link ko ito! :3",
             "embeds": {
                 "disabled": {
-                    "description": "Rules channel for welcome message has been removed."
+                    "description": "Tinanggal ang rules channel mula sa welcome message! 3:"
                 },
                 "success": {
-                    "description": "Rules channel for welcome message has been set to {target_mention}."
+                    "description": "Itinakda ang rules channel sa {target_mention} para sa welcome message! :3"
                 }
             }
         },
         "test": {
-            "description": "Run a test for welcome channel",
+            "description": "Nagpapatakbo ng mabilis na pagsubok sa welcome channel! :3",
             "embeds": {
                 "sent": {
-                    "description": "Test successfully sent to welcome channel!"
+                    "description": "Ang mensahe sa pagsubok ay naipadala sa welcome channel! >:D"
                 },
                 "unconfigured": {
-                    "description": "Welcome channel hasn't configured in this guild."
+                    "description": "Hindi pa naka-set up ang welcome channel! 3:"
                 }
             }
         }

@@ -1,30 +1,30 @@
 {
     "common": {
-        "comfirm": "Confirm",
-        "cancel": "Cancel",
-        "loading": "Please wait...",
+        "comfirm": "Kumpirmahin",
+        "cancel": "Kanselahin",
+        "loading": "Medyo maghintay...",
         "status": {
             "online": "Online",
-            "idle": "Idling",
-            "dnd": "Do Not Disturb"
+            "idle": "Idle",
+            "dnd": "Huwag Istorbohin"
         }
     },
     "errors": {
-        "title": "Whoopsie!",
-        "generic": "Something went wrong. Please try again later.",
-        "cooldown": "Please wait {remaining}s before using this again.",
-        "user_not_found": "I couldn't find that user.",
-        "user_missing_permissions": "You do not have permission to do that.",
-        "bot_missing_permissions": "I don't have permission to do it.",
-        "not_owner": "Only the bot developer can use this command."
+        "title": "Hala!",
+        "generic": "May nangyaring mali. Pakisubukan muli mamaya.",
+        "cooldown": "Maghintay ng {remaining}s bago ito gamitin muli.",
+        "user_not_found": "Hindi ko mahanap ang user na iyon.",
+        "user_missing_permissions": "Wala kang pahintulot na gawin iyon.",
+        "bot_missing_permissions": "Wala akong pahintulot na gawin iyon.",
+        "not_owner": "Tanging ang developer ng bot ang makakagamit ng command na ito."
     },
     "units": {
         "seconds": {
-            "one": "second",
-            "other": "seconds"
+            "one": "segundo",
+            "other": "segundo"
         }
     },
     "bot": {
-        "sync_success": "Commands have been synchronized successfully."
+        "sync_success": "Matagumpay na na-sync ang mga command."
     }
 }

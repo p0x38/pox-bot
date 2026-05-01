@@ -1,130 +1,130 @@
 {
     "custom": {
-        "cannot_timeout_higher": "My role is not high enough to timeout this user.",
-        "channel_has_no_slowmode_property": "This channel has no property to set slowmode delay.",
+        "cannot_timeout_higher": "Hindi sapat ang taas ng role ko para i-timeout ang user na ito... 3:",
+        "channel_has_no_slowmode_property": "Wala namang slowmode setting ang channel na ito! D:<",
         "description_not_found": "Wala pang paglalarawan... 3:",
-        "forbidden_timeout": "I don't have permission to timeout members.",
-        "guild_only": "The command is usable only in Guild.",
-        "insufficient_permission_ban": "You do not have permission to ban member {user}.",
-        "insufficient_permission_kick": "You do not have permission to kick member {user}.",
-        "invalidated_cache": "The command only works on guild because of the issue with caches.",
-        "missing_category": "Missing Category",
-        "no_git_commithash": "No commit hash found",
-        "no_git_lastcommit": "No commit message found",
-        "roblox_failed_retrieve_avatar": "Failed trying to retrieve Roblox user {username}'s avatar.",
-        "roblox_forbidden": "Couldn't retrieve data from Roblox API because the client doesn't have, or using invalid CSRF Token.",
-        "roblox_user_not_found": "A Roblox user named '{username}' doesn't exist.",
-        "timeout_duration_lessflow": "Duration must be greater than 0",
-        "tried_to_timeout_higher": "Your role is not high enough to timeout the user.",
-        "tried_to_timeout_himself": "You cannot timeout yourself",
-        "tried_to_timeout_owner": "You cannot timeout the server owner",
-        "unknown_signature": "Unknown Signature",
-        "unsupported_channel": "The channel isn't supported by bot.",
-        "user_not_found": "User not found."
+        "forbidden_timeout": "Wala akong mga pahintulot na i-timeout ang mga miyembro! D:",
+        "guild_only": "Magagamit mo lang ang command na ito sa isang server! :3",
+        "insufficient_permission_ban": "Wala kang pahintulot na i-ban si {user}! 3:<",
+        "insufficient_permission_kick": "Wala kang pahintulot na i-kick si {user}! D:<",
+        "invalidated_cache": "Gumagana lang ang command na ito sa isang server dahil sa kakaibang cache. :3",
+        "missing_category": "Nawawala ang Kategorya! 3:",
+        "no_git_commithash": "Hindi mahanap ang commit hash! 3:",
+        "no_git_lastcommit": "Hindi mahanap ang mensahe ng commit! 3:",
+        "roblox_failed_retrieve_avatar": "Nabigong kunin ang avatar ng Roblox user na si {username}! 3:",
+        "roblox_forbidden": "Hindi makuha ang data mula sa Roblox API... nawawala ba o sira ang CSRF Token! :3",
+        "roblox_user_not_found": "Walang Roblox user na may pangalang '{username}'. :3",
+        "timeout_duration_lessflow": "Dapat higit sa 0 ang tagal! 3:",
+        "tried_to_timeout_higher": "Hindi sapat ang taas ng role mo para i-timeout ang user na iyon! :3",
+        "tried_to_timeout_himself": "Hindi mo pwedeng i-timeout ang sarili mo, sira! 3:",
+        "tried_to_timeout_owner": "Talagang hindi mo pwedeng i-timeout ang may-ari ng server! 3:<",
+        "unknown_signature": "Hindi Kilalang Lagda! 3:",
+        "unsupported_channel": "Hindi ko sinusuportahan ang ganitong uri ng channel! :3",
+        "user_not_found": "Hindi mahanap ang user na iyon... :3"
     },
     "embeds": {
         "blacklist_not_configured": {
-            "description": "The blacklist is not configured for this server.",
-            "title": "Blacklist is not configured"
+            "description": "Hindi pa naka-configure ang blacklist para sa server na ito.",
+            "title": "Hindi naka-setup ang blacklist! 3:"
         },
         "contributor_not_found": {
-            "description": "The contributor {contributor} has been not found.",
-            "title": "Contributor not found"
+            "description": "Hindi mahanap ang contributor na si {contributor}... 3:",
+            "title": "Hindi mahanap ang contributor! 3:"
         },
         "daily_cooldown": {
-            "description": "Kailangan mong maghintay ng higit pang {h} oras {m} minuto upang makakuha muli araw-araw! \n3:<",
-            "title": "Hindi ka makakapag-claim ng mga pang-araw-araw na reward sa ngayon!"
+            "description": "Kailangan mong maghintay ng {h} oras at {m} minuto bago muling makuha ang iyong daily! 3:<",
+            "title": "Walang daily rewards para sa iyo ngayon!"
         },
         "database_not_available": {
-            "description": "Database pool hasn't available this time.",
-            "title": "Database not available"
+            "description": "Natutulog muna ngayon ang database pool! :3",
+            "title": "Hindi available ang database! 3:"
         },
         "edge_tts_not_installed": {
-            "description": "Server has no package to generate speech from edge-tts.",
-            "title": "Edge TTS not installed"
+            "description": "Walang package ang server na ito para gumawa ng edge-tts speech! :/",
+            "title": "Nawawala ang Edge TTS! 3:"
         },
         "guild_only": {
-            "description": "This command is only for guild.",
-            "title": "Invalid run context"
+            "description": "Ang command na ito ay para lang sa mga server! :3",
+            "title": "Maling lugar! :3"
         },
         "need_hangup": {
-            "description": "Mangyaring ibaba ang tawag para magamit ang utos na ito.",
-            "title": "Hindi ka makakapag-configure habang nasa tawag"
+            "description": "Pakibaba muna ang tawag bago i-configure ang mga ito.",
+            "title": "I-hang up muna! 3:"
         },
         "not_in_call": {
-            "description": "Ang iyong guild ay hindi tumatawag.",
-            "title": "Ang iyong guild ay hindi tumatawag"
+            "description": "Hindi naman nasa tawag ang server mo ngayon.",
+            "title": "Wala sa tawag! 3:"
         },
         "only_positive_value": {
-            "description": "Negative value is not allowed for this command.",
-            "title": "Negative value is not allowed"
+            "description": "Hindi ka pwedeng gumamit ng negatibong numero dito! 3:<",
+            "title": "Walang negatibong numero! 3:<"
         },
         "phone_in_call": {
-            "description": "Tumatawag na ang iyong guild.",
-            "title": "Tumatawag na ang iyong guild"
+            "description": "Nasa tawag na ang server mo!",
+            "title": "Tumatawag na! :3"
         },
         "send_error": {
-            "description": "An error thrown while trying to send: {e}",
-            "title": "Send error"
+            "description": "Nagka-error sa pagpapadala: {e}",
+            "title": "Hala, error sa pagpapadala! 3:"
         },
         "slowmode_out_of_range": {
-            "description": "Slowmode delay must be between 0 and 21600 seconds.",
-            "title": "Out of range"
+            "description": "Dapat nasa pagitan ng 0 at 21600 segundo ang slowmode delay! :3",
+            "title": "Wala sa limitasyon! 3:"
         },
         "too_high_value": {
-            "description": "The value mustn't over {max}.",
-            "title": "Value cannot be higher than {max}"
+            "description": "Hindi pwede lumagpas sa {max} ang halaga na iyan! :3",
+            "title": "Masyadong mataas! 3:"
         },
         "tts_generation_error": {
-            "description": "An error thrown while trying to generate speech: {e}",
-            "title": "TTS Generation Error"
+            "description": "May nasira habang ginagawa ang speech: {e}",
+            "title": "Error sa Paggawa ng TTS! 3:"
         },
         "tts_no_text": {
-            "description": "You've set input empty. Retry again later with input.",
-            "title": "Input must be not empty"
+            "description": "Kailangan mong mag-type ng isang bagay! Subukan ulit na may kasamang input! :3",
+            "title": "Hindi pwedeng walang laman ang input! 3:"
         },
         "unsupported_channel_slowmode": {
-            "description": "Channel {channel} doesn't support slowmode.",
-            "title": "Unsupported channel"
+            "description": "Hindi gumagana ang slowmode sa channel na {channel}.",
+            "title": "Hindi sinusuportahang channel! 3:"
         },
         "unsupported_channel_type": {
-            "description": "You have chose a channel that is unsupported.",
-            "title": "Unsupported channel type"
+            "description": "Pumili ka ng uri ng channel na hindi ko sinusuportahan!",
+            "title": "Hindi sinusuportahang uri ng channel! 3:"
         },
         "user_data_not_found": {
-            "description": "Data for user {user} was not found.",
-            "title": "Data not found"
+            "description": "Walang nahanap na data para kay {user}.",
+            "title": "Hindi mahanap ang data! 3:"
         },
         "welcome_channel_not_enabled": {
-            "description": "Welcome channel has not enabled in this guild. Make sure to set welcome channel to use this command.",
-            "title": "Welcome channel not enabled"
+            "description": "Naka-disable ang mga welcome channel dito! Siguraduhing mag-set up para magamit ito.",
+            "title": "Naka-off ang welcome channel! 3:"
         }
     },
     "exceptions": {
-        "AppCommandError": "Unknown Command error was thrown!",
-        "BotMissingPermissions": "I do not have the required permissions to execute it.",
-        "CheckFailure": "You do not have permission to use this command.",
-        "CommandAlreadyRegistered": "The command were already registered before.",
-        "CommandInvokeError": "An error occured while executing the command.",
-        "CommandLimitReached": "The command usage is currently limited due to command limitation.",
-        "CommandNotFound": "The command was not found.",
-        "CommandOnCooldown": "The command is on cooldown. Please try again after passing {remaining} more seconds.",
-        "CommandSignatureMismatch": "The command has out of sync from latest one.",
-        "CommandSyncFailure": "Failed to synchronize command(s).",
-        "HTTPException": "The operation has failed due to HTTP Error.",
-        "MissingAnyRole": "You do not have any of required roles to use it.",
-        "MissingPermissions": "You do not have required permissions to use it.",
-        "MissingRole": "You do not have required role to use it.",
-        "NoPrivateMessage": "The command cannot be used on private messages.",
-        "TransformerError": "An error occured while processing command arguments.",
-        "TranslationError": "An error occured while translating the command.",
-        "Unknown": "An Uncaught error was thrown! {e}"
+        "AppCommandError": "May kakaibang error sa Command na nangyari! 3:",
+        "BotMissingPermissions": "Wala akong tamang mga pahintulot para gawin iyon! 3:",
+        "CheckFailure": "Wala kang pahintulot na gamitin ang command na ito! 3:<",
+        "CommandAlreadyRegistered": "Nakarehistro na ang command na ito! :3",
+        "CommandInvokeError": "May lumabas na error habang pinapatakbo ang command! 3:",
+        "CommandLimitReached": "Umabot sa limitasyon sa command na ito! Dahan-dahan lang! 3:",
+        "CommandNotFound": "Hindi mahanap ang command na iyon! :3",
+        "CommandOnCooldown": "Teka lang, naka-cooldown! Subukan muli pagkatapos ng {remaining} segundo! :3",
+        "CommandSignatureMismatch": "Hindi naka-sync ang command sa pinakabagong bersyon! 3:",
+        "CommandSyncFailure": "Nabigong i-sync ang mga command! 3:",
+        "HTTPException": "Hala, isang HTTP error ang sumira sa lahat! 3:",
+        "MissingAnyRole": "Wala kang mga kinakailangang role para gamitin ito! 3:",
+        "MissingPermissions": "Nawawala ang iyong mga pahintulot para gamitin ito! 3:<",
+        "MissingRole": "Nawawala ang kinakailangang role para dito! 3:<",
+        "NoPrivateMessage": "Hindi mo pwedeng gamitin ang command na ito sa DMs! :3",
+        "TransformerError": "May nasira habang pinoproseso ang mga argument ng command! 3:",
+        "TranslationError": "May lumabas na error habang isinasalin ang command! 3:",
+        "Unknown": "Uh oh, may hindi nahuling error na nangyari! {e} 3:"
     },
     "http": {
-        "400": "Error 400: Bad Request. Input contains invalid syntax.",
-        "403": "Error 403: Forbidden. You do not have permission to access the resource.",
-        "404": "Error 404: Not Found. There's no file exist.",
-        "429": "Error 429: Too Many Requests. API has ratelimit client. Try again later.",
-        "500": "Error 500: Internal Server Error. Server has encountered unknown error while processing."
+        "400": "Error 400: Bad Request! Medyo mali ang iyong input. 3:",
+        "403": "Error 403: Forbidden! Talagang hindi ka pinapayagang makita ito. >:D",
+        "404": "Error 404: Not Found! Nawala ang file na iyon na parang hangin. 3:",
+        "429": "Error 429: Too Many Requests! Nire-ratelimit tayo ng API, kalma muna! :3",
+        "500": "Error 500: Internal Server Error! Nadapa at bumagsak ang server habang nagpoproseso. 3:"
     }
 }
