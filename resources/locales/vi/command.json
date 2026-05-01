@@ -1,0 +1,764 @@
+{
+    "8ball": {
+        "description": "Trả lời câu hỏi ngẫu nhiên bằng quả cầu ma thuật 8-ball nha~",
+        "embeds": {
+            "default": {
+                "title": "Câu trả lời cho '{question}' nè~"
+            }
+        }
+    },
+    "admin": {
+        "reload_cogs": {
+            "description": "Tải lại tất cả extension của bot và đồng bộ các lệnh slash luôn~",
+            "embeds": {
+                "error": {
+                    "description": "Tải lại extension được rồi nhưng đồng bộ lệnh thất bại... 3:",
+                    "title": "Đồng bộ thất bại mất rồi..."
+                },
+                "loading": {
+                    "description": "Đợi xíu nha, đang tải lại nè~",
+                    "progress": "Chờ xíu nha~\nĐang tải: `{current_cog}`\nTiến độ: **{current}/{total}**\nThành công: **{loaded}** | Thất bại: **{failed}**",
+                    "title": "Đang tải lại nè~"
+                },
+                "success": {
+                    "description": "Đã cập nhật **{loaded}** extension,\nvà đồng bộ **{synched}** lệnh rồi nha! :3",
+                    "title": "Tải lại xong rồi nè~!"
+                }
+            },
+            "errors": {
+                "forbidden": "Tớ thiếu quyền `application.commands` ở máy chủ này... 3:",
+                "generic": "Có lỗi lạ xảy ra rồi...",
+                "http_error": "Không kết nối được với Discord API...",
+                "missing_id": "Lỗi nghiêm trọng: Không thấy Application ID!?",
+                "sync_failure": "Đồng bộ thất bại: Dữ liệu lệnh có vấn đề...",
+                "translation_error": "Hủy đồng bộ: Lỗi xử lý dịch lệnh..."
+            }
+        }
+    },
+    "calculate": {
+        "description": "Các lệnh về tính toán nè~",
+        "percentage": {
+            "description": "Tính phần trăm nha!"
+        }
+    },
+    "channel": {
+        "description": "Nhóm lệnh quản lý kênh.",
+        "info": {
+            "description": "Xem thông tin kênh nha.",
+            "embeds": {
+                "default": {
+                    "title": "Thông tin của {name}"
+                }
+            }
+        },
+        "slowmode": {
+            "description": "Cài đặt thời gian slowmode nè.",
+            "embeds": {
+                "successful": {
+                    "description": "Đã đặt slowmode cho {mention} thành **{seconds} giây** nha! :3",
+                    "title": "Cập nhật Slowmode"
+                }
+            }
+        }
+    },
+    "chatbot": {
+        "add_event": {
+            "description": "Thêm sự kiện vào lịch sử nè~"
+        },
+        "clear_memories": {
+            "description": "Xóa sạch lịch sử trò chuyện luôn!"
+        },
+        "description": "Nhóm lệnh cho AI Chat (Ollama) nha~",
+        "mem": {
+            "description": "Xem não của Jim đang có gì.",
+            "embeds": {
+                "default": {
+                    "title": "Trạng thái trí nhớ nè~"
+                }
+            },
+            "messages": {
+                "empty": "Đang trống rỗng á~ (không có lịch sử) 3:"
+            }
+        },
+        "perf": {
+            "description": "Xem hiệu suất phần cứng nè~",
+            "embeds": {
+                "default": {
+                    "description": "Dữ liệu của {generations} lần tạo gần nhất nha~",
+                    "title": "Thông tin Hiệu suất"
+                }
+            },
+            "messages": {
+                "empty_logs": "Chưa có dữ liệu luôn... 3:"
+            }
+        },
+        "stats": {
+            "description": "Xem thống kê của bot nè~"
+        },
+        "unlock": {
+            "description": "Nếu tớ bị kẹt thì dùng lệnh này để ép mở lại nha.",
+            "messages": {
+                "already": "Đang hổng làm gì cả... nhưng mà được thôi!",
+                "unlock": "À, tớ trở lại rồi nè~"
+            }
+        },
+        "user_stats": {
+            "description": "Xem thống kê của cậu nha~"
+        }
+    },
+    "contributors": {
+        "description": "Nhóm lệnh về người đóng góp.",
+        "list": {
+            "description": "Xem danh sách người đóng góp nè.",
+            "embeds": {
+                "default": {
+                    "description": "Đây là những người đã góp phần tạo ra bot! Cảm ơn nha~ :3",
+                    "title": "Những người đóng góp"
+                }
+            }
+        },
+        "view": {
+            "description": "Xem thông tin của người đóng góp nha.",
+            "embeds": {
+                "default": {
+                    "title": "Thông tin của {contributor}"
+                }
+            }
+        }
+    },
+    "convert": {
+        "base64": {
+            "description": "Chuyển chữ thành Base64 nha~"
+        },
+        "base7777": {
+            "description": "Mã hóa Base7777 nha~ (hàng được request á)"
+        },
+        "binary": {
+            "description": "Chuyển thành mã nhị phân nè~"
+        },
+        "caesar": {
+            "description": "Mã hóa Caesar nè~"
+        },
+        "color_name": {
+            "description": "Tìm tên màu từ mã màu nè~"
+        },
+        "demorse": {
+            "description": "Dịch mã Morse nè~"
+        },
+        "description": "Các lệnh về chuyển đổi nha~",
+        "glitch": {
+            "description": "Làm chữ bị lỗi giật giật nè~"
+        },
+        "invert_letters": {
+            "description": "Đảo ngược các chữ cái nha~"
+        },
+        "meow": {
+            "description": "Làm mọi thứ hóa thành mèo nè :3"
+        },
+        "morse": {
+            "description": "Chuyển thành mã Morse nha~"
+        },
+        "muffle": {
+            "description": "Làm chữ nghe có vẻ lẩm bẩm nghẹt nghẹt~"
+        },
+        "nsrc1": {
+            "description": "Mã hóa NSRC-1 nè~"
+        },
+        "psc1": {
+            "description": "Mã hóa PSC-1 nha~"
+        },
+        "railfence": {
+            "description": "Mã hóa Rail Fence nè~"
+        },
+        "reverse_words": {
+            "description": "Đảo ngược thứ tự từ nha~"
+        },
+        "unbase64": {
+            "description": "Giải mã Base64 nè~"
+        },
+        "unbase7777": {
+            "description": "Giải mã Base7777 nha~"
+        },
+        "unbinary": {
+            "description": "Dịch nhị phân ra chữ nè~"
+        },
+        "uncaesar": {
+            "description": "Giải mã Caesar nè~"
+        },
+        "unnsrc1": {
+            "description": "Giải mã NSRC-1 nha~"
+        },
+        "unpsc1": {
+            "description": "Giải mã PSC-1 nha~"
+        },
+        "unrailfence": {
+            "description": "Giải mã Rail Fence nè~"
+        },
+        "uwu": {
+            "description": "UwU hóa nè~ (nhớ tag ai đó nha)"
+        }
+    },
+    "detect": {
+        "custom2": {
+            "description": "Xem nó cao đến cỡ nào nè~"
+        },
+        "custom_member": {
+            "description": "Xem khoảng cách bao xa nha~"
+        },
+        "description": "Các lệnh chẩn đoán nè~",
+        "how_femboy": {
+            "description": "Đo độ femboy nè~"
+        },
+        "how_freaky": {
+            "description": "Đo độ biến thái nha~"
+        },
+        "how_gay": {
+            "description": "Đo độ gay nè~"
+        },
+        "how_slop": {
+            "description": "Đo độ slop nè~"
+        },
+        "vibecheck": {
+            "description": "Xem độ hợp cạ (vibe) thế nào nè~"
+        }
+    },
+    "economy": {
+        "balance": {
+            "description": "Kiểm tra số xu hiện có nha.",
+            "embeds": {
+                "default": {
+                    "footer": "Tổng tài sản: {coins} xu",
+                    "title": "Số dư của {user} :3"
+                }
+            },
+            "fields": {
+                "bank": "Ngân hàng",
+                "wallet": "Ví tiền"
+            }
+        },
+        "buy": {
+            "description": "Mua đồ trong cửa hàng nè.",
+            "embeds": {
+                "item_unavailable": {
+                    "description": "Món này hiện tại không bán... 3:<",
+                    "title": "Hổng mua được!"
+                },
+                "not_afford": {
+                    "description": "Thiếu xu rồi nha! 3:<",
+                    "title": "Không đủ xu!"
+                },
+                "purchased": {
+                    "description": "Đã mua **{item_name}**! Vào túi đồ xem đi nha~ ;3",
+                    "title": "Mua xong rồi!"
+                }
+            }
+        },
+        "daily": {
+            "description": "Nhận thưởng hằng ngày nha.",
+            "embeds": {
+                "default": {
+                    "description": "Nhận được {amount} xu rồi nè! :3",
+                    "title": "Nhận thưởng hằng ngày xong!"
+                }
+            }
+        },
+        "deposit": {
+            "description": "Gửi xu vào ngân hàng nè.",
+            "embeds": {
+                "default": {
+                    "description": "Đã gửi {amount} xu!",
+                    "title": "Gửi tiền xong rồi!"
+                }
+            }
+        },
+        "description": "Nhóm lệnh về kinh tế nha.",
+        "history": {
+            "description": "Xem lịch sử giao dịch gần đây."
+        },
+        "inventory": {
+            "description": "Xem các món đồ đang có.",
+            "embeds": {
+                "default": {
+                    "title": "Túi đồ của {user}"
+                },
+                "empty": {
+                    "description": "Chưa có món nào hết... Mua thử gì đi~ :3",
+                    "title": "Trống trơn!"
+                }
+            }
+        },
+        "list": {
+            "description": "Xem danh sách đồ trong cửa hàng nha.",
+            "embeds": {
+                "closed": {
+                    "description": "Ghé lại sau nha, đang đóng cửa... 3:",
+                    "title": "Cửa hàng đóng cửa rồi~"
+                }
+            },
+            "fields": {
+                "buy_price": "Giá: {price} xu",
+                "not_sale": "Hổng có bán nha..."
+            }
+        },
+        "sell": {
+            "description": "Bán đồ lại cho cửa hàng nè.",
+            "embeds": {
+                "sold": {
+                    "description": "Đã bán **{item_name}**!",
+                    "title": "Bán xong rồi!"
+                },
+                "unable_to_sell": {
+                    "description": "Món này hổng thu mua nha... 3:",
+                    "title": "Không bán được..."
+                }
+            }
+        },
+        "withdraw": {
+            "description": "Rút xu ra khỏi ngân hàng nha.",
+            "embeds": {
+                "default": {
+                    "description": "Đã rút {amount} xu.",
+                    "title": "Rút tiền xong rồi!"
+                }
+            }
+        },
+        "work": {
+            "description": "Làm việc kiếm xu nè.",
+            "embeds": {
+                "default": {
+                    "description": "Làm việc xong, nhận được {amount} xu! :3",
+                    "title": "Xong việc!"
+                },
+                "tired": {
+                    "description": "Nghỉ ngơi thêm khoảng {rem} phút nha.",
+                    "title": "Chưa làm việc được đâu!"
+                }
+            }
+        }
+    },
+    "fun": {
+        "boop_member": {
+            "description": "Bóp mũi ai đó một cái nè :3"
+        },
+        "description": "Lệnh giải trí vui nhộn nha~",
+        "dice": {
+            "description": "Đổ xúc xắc nè~"
+        },
+        "guess": {
+            "description": "Chơi đoán số nha~"
+        },
+        "guess_game": {
+            "description": "Bắt đầu game đoán số mới nè! (1〜100)"
+        },
+        "job_application": {
+            "description": "Xin việc nè!? :0"
+        },
+        "ship": {
+            "description": "Đo độ hợp đôi của 2 người nha~"
+        },
+        "stopguess": {
+            "description": "Tắt game đoán số đang dở nha~"
+        }
+    },
+    "generate": {
+        "cat_jard": {
+            "description": "Tránh con mèo nè (?)"
+        },
+        "description": "Các lệnh tạo nội dung nha~",
+        "emoticon": {
+            "description": "Gửi một biểu tượng cảm xúc ngẫu nhiên nè~"
+        },
+        "idek": {
+            "description": "Ai biết đâu. :3"
+        },
+        "nyan_cat": {
+            "description": "Nyan Cat đây~!",
+            "messages": {
+                "think_fast": "NGHĨ NHANH LÊN NÀO!! >:D"
+            }
+        },
+        "target_close": {
+            "description": "Thuật toán nhắm mục tiêu đóng... (nghe nguy hiểm vậy)"
+        }
+    },
+    "guild": {
+        "count": {
+            "description": "Đếm số lượng thành viên nha~"
+        },
+        "description": "Lệnh về máy chủ nè~",
+        "icon": {
+            "description": "Xem icon máy chủ nè~"
+        },
+        "info": {
+            "description": "Xem thông tin máy chủ nha~"
+        },
+        "kickmembers": {
+            "description": "Sút tất cả thành viên (cực kỳ nguy hiểm)"
+        },
+        "logs": {
+            "description": "Xem lịch sử nhật ký nha~"
+        },
+        "members_list": {
+            "description": "Danh sách thành viên nè~"
+        },
+        "nsfw_level": {
+            "description": "Xem mức độ NSFW nha~"
+        },
+        "role_list": {
+            "description": "Danh sách các vai trò (role) nè~"
+        },
+        "search_members": {
+            "description": "Tìm kiếm thành viên nha~"
+        }
+    },
+    "info": {
+        "commit_data": {
+            "description": "Xem thông tin commit Git mới nhất nha."
+        },
+        "description": "Nhóm lệnh về thông tin nè.",
+        "invite": {
+            "description": "Lấy link để mời bot vào máy chủ. (Tối đa 90 server nha)",
+            "embeds": {
+                "default": {
+                    "description": "{prefix}\n\nThêm tớ từ [link này]({invite_url}) nha!",
+                    "footer": "Lưu ý: Cần quyền nâng cao để chạy bình thường, và do giới hạn của Discord với bot chưa xác thực, tớ chỉ tham gia được tối đa 90 server thôi.",
+                    "status": {
+                        "one": "Hiện tại: **{formatted}** máy chủ",
+                        "other": "Hiện tại: **{formatted}** máy chủ"
+                    },
+                    "title": "Mời TongueBot"
+                }
+            },
+            "error": {
+                "hardlimited": "Hiện tại đã chạm giới hạn nên không thể mời thêm được đâu."
+            }
+        },
+        "os_info": {
+            "description": "Xem thông tin OS nè.",
+            "embeds": {
+                "default": {
+                    "title": "Thông tin OS"
+                }
+            }
+        },
+        "ping": {
+            "description": "Pong!",
+            "embeds": {
+                "default": {
+                    "title": "Pong! ({latency} ms)"
+                }
+            }
+        },
+        "retrieve": {
+            "description": "Lấy thông tin của bot nha.",
+            "embeds": {
+                "default": {
+                    "description": "Chọn một mục bên dưới nha.",
+                    "footer": "Hệ thống: {platform}",
+                    "title": "Thông tin Bot"
+                }
+            },
+            "error": {
+                "forbidden": "Cần có quyền **Quản lý Kênh** nha."
+            }
+        },
+        "sync": {
+            "description": "Đồng bộ lệnh nè."
+        },
+        "timedate": {
+            "description": "Xem thời gian ở múi giờ nha.",
+            "embeds": {
+                "default": {
+                    "description": "Thời gian hiện tại ở {timezone_name} là **{timedate}** nè."
+                }
+            }
+        }
+    },
+    "leveling": {
+        "configure": {
+            "description": "Cài đặt hệ thống cấp độ nha.",
+            "embeds": {
+                "default": {
+                    "description": "Hệ thống đã được cập nhật nha.",
+                    "title": "Cập nhật hệ thống cấp độ"
+                }
+            }
+        },
+        "description": "Nhóm lệnh về cấp độ nè.",
+        "rank": {
+            "description": "Xem rank của cậu nha.",
+            "embeds": {
+                "default": {
+                    "fields": {
+                        "level": {
+                            "name": "Cấp độ"
+                        },
+                        "progress": {
+                            "name": "Tiến trình"
+                        },
+                        "total": {
+                            "name": "Tổng XP"
+                        }
+                    },
+                    "title": "Rank của {user}"
+                }
+            }
+        }
+    },
+    "moderation": {
+        "blacklist": {
+            "add": {
+                "description": "Thêm từ khóa vào danh sách đen nha.",
+                "embeds": {
+                    "default": {
+                        "description": "Thêm {entry} vào danh sách đen loại '{type}' rồi nè! ID nhận dạng là {id} nha!",
+                        "title": "Đã thêm vào danh sách đen!"
+                    }
+                }
+            },
+            "description": "Nhóm lệnh quản lý (moderation) nè.",
+            "list": {
+                "description": "Xem toàn bộ danh sách từ bị chặn ở server này nha.",
+                "embeds": {
+                    "default": {
+                        "footer": "Ngoài ra còn {remaining} từ kích hoạt nữa nha.",
+                        "title": "Danh sách đen của máy chủ này"
+                    },
+                    "no_blacklist": {
+                        "description": "Máy chủ này không có từ khóa nào bị chặn hết."
+                    }
+                }
+            },
+            "remove": {
+                "description": "Xóa từ khóa khớp khỏi danh sách đen nha.",
+                "embeds": {
+                    "default": {
+                        "description": "Xóa hết các từ khớp với '{query}' rồi nè!",
+                        "title": "Đã xóa từ khóa!"
+                    },
+                    "not_found": {
+                        "description": "Hổng tìm thấy từ khóa nào khớp với '{query}' đâu... 3:",
+                        "title": "Hổng tìm thấy..."
+                    }
+                }
+            }
+        },
+        "description": "Lệnh quản trị máy chủ nè.",
+        "togglefeature": {
+            "description": "Bật/tắt các tính năng của máy chủ nha.",
+            "embeds": {
+                "default": {
+                    "description": "Đặt {feature_name} thành {state} rồi nha."
+                }
+            },
+            "parameters": {
+                "feature": {
+                    "description": "Tính năng muốn chuyển đổi"
+                },
+                "state": {
+                    "description": "Bật (On) hay Tắt (Off)"
+                }
+            }
+        }
+    },
+    "roblox": {
+        "avatar": {
+            "description": "Lấy ảnh đại diện Roblox qua tên đăng nhập nha.",
+            "embeds": {
+                "default": {
+                    "title": "Ảnh đại diện của {username}"
+                }
+            }
+        },
+        "description": "Nhóm lệnh về Roblox nè.",
+        "user": {
+            "description": "Lấy thông tin Roblox qua tên đăng nhập nha.",
+            "embeds": {
+                "default": {
+                    "title": "Thông tin của {username}"
+                }
+            }
+        }
+    },
+    "stats": {
+        "description": "Nhóm lệnh bảng xếp hạng nè.",
+        "top": {
+            "description": "Xem những người đứng đầu nha.",
+            "embeds": {
+                "default": {
+                    "title": "Bảng Xếp Hạng Toàn Cầu!! >:D"
+                }
+            }
+        }
+    },
+    "ticket": {
+        "description": "Hệ thống Ticket V2 nè.",
+        "setup": {
+            "description": "Cấu hình hệ thống ticket cho máy chủ nha."
+        }
+    },
+    "tts": {
+        "description": "Nhóm lệnh về TTS nè.",
+        "embeds": {
+            "default": {
+                "description": "Đã tạo nha! >:D",
+                "footer": "Engine TTS: {tts_type};\nĐầu vào: {input}",
+                "title": "Chuyển Đổi TTS"
+            }
+        },
+        "google_translate": {
+            "description": "Tạo TTS từ Google Dịch nha."
+        }
+    },
+    "user": {
+        "avatar": {
+            "description": "Xem ảnh đại diện Discord nè.",
+            "embeds": {
+                "default": {
+                    "footer": "Yêu cầu từ {author}, được lưu trong cache 1 phút nha.",
+                    "title": "Ảnh đại diện của {user}"
+                }
+            }
+        },
+        "description": "Nhóm lệnh về người dùng nha.",
+        "info": {
+            "description": "Lấy thông tin của người dùng nè.",
+            "embeds": {
+                "default": {
+                    "title": "Thông tin của {user}"
+                }
+            },
+            "fields": {
+                "stats": "Cấp độ {level} ({xp} XP) / {messages} tin nhắn",
+                "wallet": "{coins} xu"
+            }
+        },
+        "set_nick": {
+            "description": "Cài đặt biệt danh nha.",
+            "embeds": {
+                "changed": {
+                    "description": "{author} đã đổi biệt danh của {user} thành **{new_nickname}** nha."
+                },
+                "reset": {
+                    "description": "{author} đã đặt lại biệt danh cho {user} nha."
+                }
+            },
+            "reasons": {
+                "changed": "Đổi bởi {user} thông qua lệnh /user nick nha",
+                "reset": "Đặt lại bởi {user} thông qua lệnh /user nick nha"
+            }
+        },
+        "set_profile": {
+            "description": "Cài đặt hồ sơ cá nhân nha~",
+            "embeds": {
+                "default": {
+                    "description": "Tiểu sử đặt thành '{description}', biệt danh đặt thành '{nickname}' rồi nè! :3",
+                    "title": "Cập nhật hồ sơ xong rồi~!"
+                }
+            }
+        },
+        "status": {
+            "description": "Xem trạng thái Discord của người dùng nè.",
+            "embeds": {
+                "default": {
+                    "title": "Trạng thái của {user}"
+                }
+            }
+        }
+    },
+    "userphone": {
+        "call": {
+            "description": "Gọi cho một máy chủ ngẫu nhiên nha~",
+            "embeds": {
+                "paired": {
+                    "description": "Kết nối được với máy chủ khác rồi nè!",
+                    "title": "Kết nối thành công!"
+                },
+                "searching": {
+                    "description": "Đang tìm máy chủ để kết nối nha~",
+                    "title": "Đang tìm kiếm~"
+                },
+                "status": {
+                    "description": "",
+                    "title": ""
+                }
+            }
+        },
+        "description": "Nhóm lệnh gọi điện liên server nha~",
+        "globalchat": {
+            "description": "Cài đặt kênh chat toàn cầu nè~",
+            "embeds": {
+                "default": {
+                    "description": "Cài đặt xong rồi nha~!",
+                    "title": "Cài đặt thành công!"
+                }
+            }
+        },
+        "hangup": {
+            "description": "Cúp máy nha~",
+            "embeds": {
+                "default": {
+                    "description": "Đã tắt máy rồi nè~",
+                    "title": "Cuộc gọi kết thúc!"
+                }
+            }
+        },
+        "userphone": {
+            "description": "Cài đặt điện thoại nha~",
+            "embeds": {
+                "default": {
+                    "description": "Cài đặt xong rồi nha~!",
+                    "title": "Cài đặt thành công!"
+                }
+            }
+        }
+    },
+    "welcome": {
+        "description": "Nhóm lệnh về tin nhắn chào mừng nha.",
+        "embeds": {
+            "join": {
+                "description": "Chào mừng cậu, {mention}! Đọc luật ở {rules_mention} nha.",
+                "description_no_rules": "Chào mừng đến với máy chủ, {mention} nha!",
+                "footer": "Hiện tại máy chủ có {count} người nè.",
+                "title": "Chào mừng đến với {guild}!"
+            },
+            "left": {
+                "description": "Tạm biệt, {display}!",
+                "title": "Thành viên {display} đã rời khỏi {guild} rồi!"
+            }
+        },
+        "set_channel": {
+            "description": "Đặt kênh gửi tin nhắn tham gia/rời đi nha.",
+            "embeds": {
+                "disabled": {
+                    "description": "Chức năng thông báo chào mừng đã bị tắt rồi."
+                },
+                "enabled": {
+                    "description": "Chức năng thông báo chào mừng đã được bật!\nTin nhắn sẽ được hiển thị ở {target_mention} nha."
+                }
+            }
+        },
+        "set_rules_channel": {
+            "description": "Đặt kênh thông báo luật lệ nè.",
+            "embeds": {
+                "disabled": {
+                    "description": "Kênh luật lệ đã bị xóa khỏi tin nhắn chào mừng rồi. :3"
+                },
+                "success": {
+                    "description": "Kênh luật lệ đã được đặt thành {target_mention} nha. :3"
+                }
+            }
+        },
+        "test": {
+            "description": "Chạy thử thông báo chào mừng nha.",
+            "embeds": {
+                "sent": {
+                    "description": "Gửi thử nghiệm thành công rồi! :3"
+                },
+                "unconfigured": {
+                    "description": "Kênh chào mừng chưa được cài đặt ở máy chủ này. 3:"
+                }
+            }
+        }
+    }
+}

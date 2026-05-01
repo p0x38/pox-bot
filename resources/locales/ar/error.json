@@ -1,0 +1,130 @@
+{
+    "custom": {
+        "cannot_timeout_higher": "رتبتي ليست عالية بما يكفي لإسكات هذا المستخدم... 3:",
+        "channel_has_no_slowmode_property": "هذه القناة لا تمتلك خاصية الوضع البطيء أصلاً! D:<",
+        "description_not_found": "لا يوجد وصف بعد... 3:",
+        "forbidden_timeout": "ليس لدي الصلاحيات لإسكات الأعضاء! D:",
+        "guild_only": "يمكنك استخدام هذا الأمر في خادم فقط! :3",
+        "insufficient_permission_ban": "ليس لديك الصلاحية لحظر {user}! 3:<",
+        "insufficient_permission_kick": "ليس لديك الصلاحية لطرد {user}! D:<",
+        "invalidated_cache": "هذا الأمر يعمل فقط في خادم بسبب بعض المشاكل في الذاكرة المخبأة~ :3",
+        "missing_category": "الفئة مفقودة! 3:",
+        "no_git_commithash": "لم أتمكن من العثور على تجزئة الالتزام (Commit Hash)! 3:",
+        "no_git_lastcommit": "لم أتمكن من العثور على رسالة الالتزام! 3:",
+        "roblox_failed_retrieve_avatar": "فشلت محاولة جلب صورة حساب روبلوكس للمستخدم {username}! 3:",
+        "roblox_forbidden": "لم أتمكن من جلب البيانات من API روبلوكس... إما أنني أفتقدها أو أن الـ CSRF Token مكسور! :3",
+        "roblox_user_not_found": "لا يوجد مستخدم في روبلوكس باسم '{username}' إطلاقاً~ :3",
+        "timeout_duration_lessflow": "المدة يجب أن تكون أكثر من 0! 3:",
+        "tried_to_timeout_higher": "رتبتك ليست عالية بما يكفي لإسكات هذا المستخدم! :3",
+        "tried_to_timeout_himself": "لا يمكنك إسكات نفسك، يا غبي! 3:",
+        "tried_to_timeout_owner": "لا يمكنك بالتأكيد إسكات مالك الخادم! 3:<",
+        "unknown_signature": "توقيع غير معروف! 3:",
+        "unsupported_channel": "أنا لا أدعم هذا النوع من القنوات! :3",
+        "user_not_found": "لم أتمكن من العثور على هذا المستخدم... :3"
+    },
+    "embeds": {
+        "blacklist_not_configured": {
+            "description": "لم يتم إعداد القائمة السوداء لهذا الخادم بعد.",
+            "title": "القائمة السوداء غير معدة! 3:"
+        },
+        "contributor_not_found": {
+            "description": "لم أتمكن من العثور على المساهم {contributor}... 3:",
+            "title": "لم يتم العثور على المساهم! 3:"
+        },
+        "daily_cooldown": {
+            "description": "عليك الانتظار {h} ساعات و {m} دقائق للمطالبة بمكافأتك اليومية مجدداً! 3:<",
+            "title": "لا توجد مكافآت يومية لك بعد!"
+        },
+        "database_not_available": {
+            "description": "قاعدة البيانات تأخذ قيلولة الآن! :3",
+            "title": "قاعدة البيانات غير متاحة! 3:"
+        },
+        "edge_tts_not_installed": {
+            "description": "هذا الخادم لا يحتوي على الحزمة اللازمة لإنشاء أصوات edge-tts! :/",
+            "title": "حزمة Edge TTS مفقودة! 3:"
+        },
+        "guild_only": {
+            "description": "هذا الأمر مخصص للخوادم فقط! :3",
+            "title": "المكان الخطأ! :3"
+        },
+        "need_hangup": {
+            "description": "يرجى إنهاء المكالمة قبل إعداد هذه الأشياء~",
+            "title": "أنهِ المكالمة أولاً! 3:"
+        },
+        "not_in_call": {
+            "description": "خادمك ليس في مكالمة الآن أصلاً.",
+            "title": "لست في مكالمة! 3:"
+        },
+        "only_positive_value": {
+            "description": "لا يمكنك استخدام قيم سالبة هنا! 3:<",
+            "title": "لا توجد أرقام سالبة! 3:<"
+        },
+        "phone_in_call": {
+            "description": "خادمك في مكالمة بالفعل!",
+            "title": "أنت تتصل بالفعل! :3"
+        },
+        "send_error": {
+            "description": "حدث خطأ أثناء محاولة الإرسال: {e}",
+            "title": "أوبس، خطأ في الإرسال! 3:"
+        },
+        "slowmode_out_of_range": {
+            "description": "تأخير الوضع البطيء يجب أن يكون بين 0 و 21600 ثانية! :3",
+            "title": "خارج النطاق! 3:"
+        },
+        "too_high_value": {
+            "description": "هذه القيمة لا يمكن أن تتجاوز {max}! :3",
+            "title": "عالية جداً! 3:"
+        },
+        "tts_generation_error": {
+            "description": "انكسر شيء ما أثناء توليد الصوت: {e}",
+            "title": "خطأ في توليد الصوت! 3:"
+        },
+        "tts_no_text": {
+            "description": "يجب عليك كتابة شيء! حاول مرة أخرى ببعض النص! :3",
+            "title": "المدخل لا يمكن أن يكون فارغاً! 3:"
+        },
+        "unsupported_channel_slowmode": {
+            "description": "القناة {channel} لا تدعم الوضع البطيء.",
+            "title": "قناة غير مدعومة! 3:"
+        },
+        "unsupported_channel_type": {
+            "description": "لقد اخترت نوع قناة لا أدعمه!",
+            "title": "نوع قناة غير مدعوم! 3:"
+        },
+        "user_data_not_found": {
+            "description": "لم أتمكن من العثور على أية بيانات لـ {user}.",
+            "title": "البيانات غير موجودة! 3:"
+        },
+        "welcome_channel_not_enabled": {
+            "description": "قنوات الترحيب غير مفعلة هنا! تأكد من إعداد واحدة لاستخدام هذا.",
+            "title": "قناة الترحيب متوقفة! 3:"
+        }
+    },
+    "exceptions": {
+        "AppCommandError": "حدث خطأ غريب في الأمر! 3:",
+        "BotMissingPermissions": "ليس لدي الصلاحيات المناسبة لفعل ذلك! 3:",
+        "CheckFailure": "ليس لديك الصلاحية لاستخدام هذا الأمر! 3:<",
+        "CommandAlreadyRegistered": "هذا الأمر مسجل بالفعل! :3",
+        "CommandInvokeError": "ظهر خطأ أثناء تشغيل الأمر! 3:",
+        "CommandLimitReached": "تم الوصول إلى الحد الأقصى لهذا الأمر! يجب أن تبطئ! 3:",
+        "CommandNotFound": "لم أتمكن من العثور على هذا الأمر! :3",
+        "CommandOnCooldown": "مهلاً، هناك فترة انتظار! حاول مرة أخرى بعد {remaining} ثانية! :3",
+        "CommandSignatureMismatch": "الأمر غير متزامن مع أحدث إصدار! 3:",
+        "CommandSyncFailure": "فشلت مزامنة الأوامر! 3:",
+        "HTTPException": "أوبس، خطأ HTTP أفسد كل شيء! 3:",
+        "MissingAnyRole": "لا تملك الرتب المطلوبة لاستخدام هذا! 3:",
+        "MissingPermissions": "تفتقد الصلاحيات لاستخدام هذا! 3:<",
+        "MissingRole": "تفتقد الرتبة المطلوبة لهذا! 3:<",
+        "NoPrivateMessage": "لا يمكنك استخدام هذا الأمر في الرسائل الخاصة! :3",
+        "TransformerError": "انكسر شيء ما أثناء معالجة وسائط الأمر! 3:",
+        "TranslationError": "ظهر خطأ أثناء ترجمة الأمر! 3:",
+        "Unknown": "أوه لا، حدث خطأ غير متوقع! {e} 3:"
+    },
+    "http": {
+        "400": "خطأ 400: طلب سيئ! مدخلاتك تبدو غريبة بعض الشيء. 3:",
+        "403": "خطأ 403: ممنوع! لا يُسمح لك تماماً برؤية هذا. >:D",
+        "404": "خطأ 404: غير موجود! ذهب هذا الملف مع الرياح. 3:",
+        "429": "خطأ 429: طلبات كثيرة جداً! الـ API يقوم بتحديد سرعتنا، استرخِ قليلاً! :3",
+        "500": "خطأ 500: خطأ داخلي في الخادم! تعثر الخادم وسقط أثناء المعالجة. 3:"
+    }
+}

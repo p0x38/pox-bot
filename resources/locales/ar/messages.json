@@ -1,0 +1,10 @@
+{
+    "ban_user": "تم حظر {user}! :3",
+    "kick_user": "تم طرد {user}! :3",
+    "timed_out_user": "تم إسكات {user} لمدة {length}! :3",
+    "warn_user": "تم تحذير {user}! :3",
+    "level_up": "لقد وصل {mention} إلى المستوى {new_level}! :3",
+    "chatbot_empty": "لقد نفدت الكلمات مني! 3:",
+    "chatbot_request_error": "يبدو أن مالك البوت نسي تحديد النموذج الذي سيتم استخدامه. :/",
+    "chatbot_response_error": "يبدو أن الخادم توقف عن العمل. :/"
+}

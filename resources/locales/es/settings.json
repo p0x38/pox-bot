@@ -1,0 +1,9 @@
+{
+    "fields": {
+        "embed_color": "**Color del Embed**: {hex}",
+        "locale": "**Idioma de Pantalla**: {lang_code}"
+    },
+    "header_description": "Configuración de usuario",
+    "title": "Configuración de Usuario",
+    "page": "TongueBot :3"
+}

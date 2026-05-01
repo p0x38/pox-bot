@@ -1,0 +1,107 @@
+{
+    "DynamicInfoView": {
+        "buttons": {
+            "suggest_button": {
+                "label": "Gửi góp ý"
+            },
+            "url_button": {
+                "label": "Ghé thăm kho lưu trữ GitHub"
+            }
+        },
+        "data": {
+            "context": {
+                "memory": {
+                    "display": "Sử dụng Context"
+                },
+                "mode": {
+                    "display": "Tâm trạng hiện tại"
+                },
+                "muted": {
+                    "display": "Jim có bị tắt tiếng không?"
+                },
+                "title": "Dữ liệu Não Cục bộ"
+            },
+            "hardware": {
+                "cpu": {
+                    "display": "Sử dụng CPU (tổng)"
+                },
+                "cpu_own": {
+                    "display": "Sử dụng CPU (chương trình)"
+                },
+                "disk": {
+                    "display": "Sử dụng Ổ cứng"
+                },
+                "platform": {
+                    "display": "Nền tảng"
+                },
+                "ram": {
+                    "display": "Sử dụng RAM (tổng)"
+                },
+                "ram_details": {
+                    "display": "Chi tiết RAM"
+                },
+                "ram_own": {
+                    "display": "Sử dụng RAM (chương trình)"
+                },
+                "title": "Chi tiết Kỹ thuật"
+            },
+            "identity": {
+                "latency": {
+                    "display": "Độ trễ Mạng"
+                },
+                "owner": {
+                    "display": "Người phát triển Bot"
+                },
+                "signature": {
+                    "display": "Chữ ký"
+                },
+                "title": "Danh tính & Phiên bản",
+                "uptime": {
+                    "display": "Thời gian hoạt động"
+                },
+                "uuid": {
+                    "display": "UUID Phiên"
+                },
+                "version": {
+                    "display": "Phiên bản Bot"
+                }
+            },
+            "stats": {
+                "cached_values": {
+                    "display": "Bộ nhớ đệm"
+                },
+                "channels": {
+                    "display": "Các Kênh"
+                },
+                "guilds": {
+                    "display": "Các Máy chủ"
+                },
+                "interactions": {
+                    "display": "Tương tác"
+                },
+                "msgs": {
+                    "display": "Tin nhắn đã thấy"
+                },
+                "title": "Thống kê Bot",
+                "users": {
+                    "display": "Người dùng"
+                }
+            }
+        },
+        "options": {
+            "context": {
+                "label": "Dữ liệu Não Cục bộ"
+            },
+            "hardware": {
+                "label": "Thông tin Phần cứng"
+            },
+            "identity": {
+                "label": "Thông tin Chung"
+            },
+            "placeholder": "Chọn danh mục...",
+            "stats": {
+                "label": "Thống kê"
+            }
+        }
+    }
+}

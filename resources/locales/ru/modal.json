@@ -5,7 +5,7 @@
                 "label": "Отправить предложения"
             },
             "url_button": {
-                "label": "Посетите GitHub репозиторий"
+                "label": "Зайти на GitHub репо"
             }
         },
         "data": {
@@ -17,16 +17,16 @@
                     "display": "Текущее настроение"
                 },
                 "muted": {
-                    "display": "Джим заглушен?"
+                    "display": "Джим в муте?"
                 },
-                "title": "Локальные данные мозга"
+                "title": "Локальные мозги"
             },
             "hardware": {
                 "cpu": {
-                    "display": "Загрузка ЦП (сумма)"
+                    "display": "Использование проца (общее)"
                 },
                 "cpu_own": {
-                    "display": "Использование ЦП (программа)"
+                    "display": "Использование проца (прога)"
                 },
                 "disk": {
                     "display": "Использование диска"
@@ -35,32 +35,32 @@
                     "display": "Платформа"
                 },
                 "ram": {
-                    "display": "Использование памяти (сумма)"
+                    "display": "Использование ОЗУ (общее)"
                 },
                 "ram_details": {
-                    "display": "Детали памяти"
+                    "display": "Детали ОЗУ"
                 },
                 "ram_own": {
-                    "display": "Использование памяти (программа)"
+                    "display": "Использование ОЗУ (прога)"
                 },
                 "title": "Технические детали"
             },
             "identity": {
                 "latency": {
-                    "display": "Задержка сети"
+                    "display": "Пинг"
                 },
                 "owner": {
-                    "display": "Бот разработчик"
+                    "display": "Разраб бота"
                 },
                 "signature": {
                     "display": "Подпись"
                 },
-                "title": "Идентификация и версия",
+                "title": "Инфа и версия",
                 "uptime": {
-                    "display": "Bot Uptime"
+                    "display": "Аптайм"
                 },
                 "uuid": {
-                    "display": "UUID сеанса"
+                    "display": "UUID сессии"
                 },
                 "version": {
                     "display": "Версия бота"
@@ -68,37 +68,37 @@
             },
             "stats": {
                 "cached_values": {
-                    "display": "Тайники"
+                    "display": "Кеши"
                 },
                 "channels": {
                     "display": "Каналы"
                 },
                 "guilds": {
-                    "display": "Серверы"
+                    "display": "Серваки"
                 },
                 "interactions": {
                     "display": "Взаимодействия"
                 },
                 "msgs": {
-                    "display": "Сообщения просмотрены"
+                    "display": "Увидено сообщений"
                 },
-                "title": "Bot Statistics",
+                "title": "Стата бота",
                 "users": {
-                    "display": "Пользователи"
+                    "display": "Юзеры"
                 }
             }
         },
         "options": {
             "context": {
-                "label": "Локальные данные мозга"
+                "label": "Локальные мозги"
             },
             "hardware": {
-                "label": "Информация об оборудовании"
+                "label": "Инфа об оборудовании"
             },
             "identity": {
-                "label": "Общая информация"
+                "label": "Общая инфа"
             },
-            "placeholder": "Выберите категорию...",
+            "placeholder": "Выбери категорию...",
             "stats": {
                 "label": "Статистика"
             }

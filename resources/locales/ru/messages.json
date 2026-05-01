@@ -1,10 +1,10 @@
 {
-    "ban_user": "{user} был забанен.",
-    "chatbot_empty": "У меня нет слов! \n3:",
-    "chatbot_request_error": "Кажется, владелец бота забыл указать модель для создания. \n:/",
-    "chatbot_response_error": "Кажется, сервер перестал работать. \n:/",
-    "kick_user": "{user} был кикнут.",
-    "level_up": "{mention} повышен до {new_level}.",
-    "timed_out_user": "{user} истекло время ожидания для {length}.",
-    "warn_user": "{user} был предупрежден."
+    "ban_user": "{user} улетел в бан! :3",
+    "kick_user": "{user} был кикнут! :3",
+    "timed_out_user": "{user} получил мут на {length}! :3",
+    "warn_user": "{user} получил предупреждение! :3",
+    "level_up": "{mention} апнул {new_level} уровень! :3",
+    "chatbot_empty": "У меня нет слов! 3:",
+    "chatbot_request_error": "Кажется, оунер бота забыл указать модель для генерации. :/",
+    "chatbot_response_error": "Кажется, сервак лег. :/"
 }

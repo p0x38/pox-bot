@@ -1,0 +1,107 @@
+{
+    "DynamicInfoView": {
+        "buttons": {
+            "suggest_button": {
+                "label": "Enviar sugerencias"
+            },
+            "url_button": {
+                "label": "Visitar el repositorio de GitHub"
+            }
+        },
+        "data": {
+            "context": {
+                "memory": {
+                    "display": "Uso de Contexto"
+                },
+                "mode": {
+                    "display": "Estado de Ánimo Actual"
+                },
+                "muted": {
+                    "display": "¿Jim está silenciado?"
+                },
+                "title": "Datos Cerebrales Locales"
+            },
+            "hardware": {
+                "cpu": {
+                    "display": "Uso de CPU (total)"
+                },
+                "cpu_own": {
+                    "display": "Uso de CPU (programa)"
+                },
+                "disk": {
+                    "display": "Uso de Disco"
+                },
+                "platform": {
+                    "display": "Plataforma"
+                },
+                "ram": {
+                    "display": "Uso de Memoria (total)"
+                },
+                "ram_details": {
+                    "display": "Detalles de Memoria"
+                },
+                "ram_own": {
+                    "display": "Uso de Memoria (programa)"
+                },
+                "title": "Detalles Técnicos"
+            },
+            "identity": {
+                "latency": {
+                    "display": "Latencia de Red"
+                },
+                "owner": {
+                    "display": "Desarrollador del Bot"
+                },
+                "signature": {
+                    "display": "Firma"
+                },
+                "title": "Identidad y Versión",
+                "uptime": {
+                    "display": "Tiempo de Actividad"
+                },
+                "uuid": {
+                    "display": "UUID de Sesión"
+                },
+                "version": {
+                    "display": "Versión del Bot"
+                }
+            },
+            "stats": {
+                "cached_values": {
+                    "display": "Cachés"
+                },
+                "channels": {
+                    "display": "Canales"
+                },
+                "guilds": {
+                    "display": "Servidores"
+                },
+                "interactions": {
+                    "display": "Interacciones"
+                },
+                "msgs": {
+                    "display": "Mensajes Vistos"
+                },
+                "title": "Estadísticas del Bot",
+                "users": {
+                    "display": "Usuarios"
+                }
+            }
+        },
+        "options": {
+            "context": {
+                "label": "Datos Cerebrales Locales"
+            },
+            "hardware": {
+                "label": "Información de Hardware"
+            },
+            "identity": {
+                "label": "Información General"
+            },
+            "placeholder": "Elige una categoría...",
+            "stats": {
+                "label": "Estadísticas"
+            }
+        }
+    }
+}

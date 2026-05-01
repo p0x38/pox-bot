@@ -1,0 +1,11 @@
+{
+    "ban_member": {
+        "name": "Banear"
+    },
+    "kick_member": {
+        "name": "Expulsar"
+    },
+    "timeout_member": {
+        "name": "Aislar"
+    }
+}

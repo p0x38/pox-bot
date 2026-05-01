@@ -23,5 +23,20 @@
         "code": "cat",
         "display": "Meow",
         "emoji": "🐈"
+    },
+    {
+        "code": "vi",
+        "display": "Tiếng Việt",
+        "emoji": "🇻🇳"
+    },
+    {
+        "code": "es",
+        "display": "Español",
+        "emoji": "🇪🇸"
+    },
+    {
+        "code": "ar",
+        "display": "العربية",
+        "emoji": "🇸🇦"
     }
 ]

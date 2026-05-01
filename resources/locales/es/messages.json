@@ -1,0 +1,10 @@
+{
+    "ban_user": "¡{user} ha sido baneado! :3",
+    "kick_user": "¡{user} ha sido expulsado! :3",
+    "timed_out_user": "¡{user} ha sido aislado por {length}! :3",
+    "warn_user": "¡{user} ha sido advertido! :3",
+    "level_up": "¡{mention} ha subido al nivel {new_level}! :3",
+    "chatbot_empty": "¡Me quedé sin palabras! 3:",
+    "chatbot_request_error": "Parece que el creador del bot olvidó especificar el modelo a generar. :/",
+    "chatbot_response_error": "Parece que el servidor dejó de funcionar. :/"
+}

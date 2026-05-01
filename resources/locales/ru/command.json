@@ -1,506 +1,506 @@
 {
     "8ball": {
-        "description": "Даёт случайный классический ответ магического шара на твой вопрос.",
+        "description": "Дает тебе абсолютно рандомный ответ от магического шара 8! :3",
         "embeds": {
             "default": {
-                "title": "Ответ на вопрос '{question}'"
+                "title": "Магический шар говорит... '{question}'"
             }
         }
     },
     "admin": {
         "reload_cogs": {
-            "description": "Перезагружает все расширения бота и синхронизирует слэш-команды.",
+            "description": "Перезагружает все мои экстеншены и синкает слеш команды! >:D",
             "embeds": {
                 "error": {
-                    "description": "Расширения перезагружены, но глобальная синхронизация команд не удалась.",
-                    "title": "Синхронизация не удалась!"
+                    "description": "Я перезагрузил экстеншены, но синхронизация отвалилась... 3:",
+                    "title": "Ой-ой, синхронизация провалилась! 3:"
                 },
                 "loading": {
-                    "description": "Подожди немного, идёт перезагрузка...",
-                    "progress": "Подожди немного...\nСейчас загружается: `{current_cog}`\nПрогресс: **{current}/{total}**\nУспешно: **{loaded}** | Ошибки: **{failed}**",
-                    "title": "Перезагрузка в процессе..."
+                    "description": "Сек, перезагружаю все~ :3",
+                    "progress": "Подожди, я тут перезагружаюсь~\nЩа грузится: `{current_cog}`\nПрогресс: **{current}/{total}**\nУспех: **{loaded}** | Фейл: **{failed}**",
+                    "title": "В процессе... :3"
                 },
                 "success": {
-                    "description": "Всего **{loaded}** расширений обновлено!\nСинхронизировано **{synched}** команд.",
-                    "title": "Готово! :D"
+                    "description": "Успешно обновил **{loaded}** экстеншенов! >:D\nИ синхронизировал **{synched}** слеш команд везде~",
+                    "title": "Перезагрузка успешна! :D"
                 }
             },
             "errors": {
-                "forbidden": "У бота нет прав `application.commands` на этом сервере.",
-                "generic": "Произошла какая-то неизвестная ошибка при синхронизации.",
-                "http_error": "Ошибка Discord API: не удалось связаться с сервером.",
-                "missing_id": "Критическая ошибка: отсутствует ID приложения.",
-                "sync_failure": "Ошибка синхронизации: у одной из команд неверная структура.",
-                "translation_error": "Синхронизация отменена из-за ошибки перевода."
+                "forbidden": "У меня нет прав `application.commands` на этом серваке... 3:",
+                "generic": "Что-то странное пошло не так при синке команд! 3:",
+                "http_error": "Discord API как-то странно себя ведет! Не могу достучаться. 3:",
+                "missing_id": "Критическая ошибка! Мой Application ID куда-то пропал... 3:",
+                "sync_failure": "Синхронизация провалилась! У некоторых команд странные данные. 3:",
+                "translation_error": "Синхронизация прервана! Что-то сломалось в переводчике команд. 3:"
             }
         }
     },
     "calculate": {
-        "description": "Группа для калькулятора.",
+        "description": "Время математики! :3",
         "percentage": {
-            "description": "Считает процент."
+            "description": "Считает для тебя проценты~"
         }
     },
     "channel": {
-        "description": "Управление каналами.",
+        "description": "Крутая группа для управления каналами! :3",
         "info": {
-            "description": "Показывает инфу о канале.",
+            "description": "Показывает клевую инфу о канале~",
             "embeds": {
                 "default": {
-                    "title": "Информация о {name}"
+                    "title": "Инфа для {name} :3"
                 }
             }
         },
         "slowmode": {
-            "description": "Устанавливает slowmode.",
+            "description": "Устанавливает задержку слоумода!",
             "embeds": {
                 "successful": {
-                    "description": "Slowmode теперь **{seconds}** для {mention}! :D",
-                    "title": "Готово!"
+                    "description": "Бум! Установил слоумод на **{seconds}** для {mention}! >:D",
+                    "title": "Слоумод обновлен! :3"
                 }
             }
         }
     },
     "chatbot": {
         "add_event": {
-            "description": "Добавляет событие в память."
+            "description": "Добавляет глобальное событие в мою историю! :3"
         },
         "clear_memories": {
-            "description": "Очищает историю чата."
+            "description": "Очищает память моего чата! 3:"
         },
-        "description": "AI чат (Ollama).",
+        "description": "Группа для фич моего ИИ чатбота! :3",
         "mem": {
-            "description": "Проверить мозг Джима.",
+            "description": "Давай заглянем в мозги Джима~ :3",
             "embeds": {
                 "default": {
-                    "title": "Состояние памяти"
+                    "title": "Состояние памяти контекста :3"
                 }
             },
             "messages": {
-                "empty": "У меня пусто в голове... вообще ничего нет :("
+                "empty": "Мои мозги сейчас совершенно пусты. 3:"
             }
         },
         "perf": {
-            "description": "Показывает производительность.",
+            "description": "Показывает насколько усердно работает мое железо! :3",
             "embeds": {
                 "default": {
-                    "description": "Данные за последние {generations} генераций.",
-                    "title": "Метрики системы"
+                    "description": "Вот статистика на основе последних {generations} генераций~",
+                    "title": "Метрики эффективности железа >:D"
                 }
             },
             "messages": {
-                "empty_logs": "Пока нет данных."
+                "empty_logs": "У меня сейчас нет никаких данных о производительности... 3:"
             }
         },
         "stats": {
-            "description": "Глобальная статистика бота."
+            "description": "Показывает мою глобальную стату бота! :3"
         },
         "unlock": {
-            "description": "Принудительно разблокирует канал.",
+            "description": "Принудительно разблокирует канал, если я зависну! >:D",
             "messages": {
-                "already": "Я и так ничего не делаю, но ок...",
-                "unlock": "ок я вернулся :3"
+                "already": "Я вообще-то сейчас ни о чем не думаю, но окей! :3",
+                "unlock": "а ок я вернулся >:D"
             }
         },
         "user_stats": {
-            "description": "Статистика пользователя."
+            "description": "Показывает твою стату с ботом! :3"
         }
     },
     "contributors": {
-        "description": "Контрибьюторы.",
+        "description": "Группа для всех потрясных контрибьюторов! :3",
         "list": {
-            "description": "Показать всех контрибьюторов.",
+            "description": "Показывает всех, кто помогал~",
             "embeds": {
                 "default": {
-                    "description": "Вот кто помогал с ботом! :3",
-                    "title": "Контрибьюторы"
+                    "description": "Вот список всех клевых ребят, кто помогал меня создавать! :3",
+                    "title": "Потрясные контрибьюторы >:D"
                 }
             }
         },
         "view": {
-            "description": "Инфо о контрибьюторе.",
+            "description": "Показывает инфу об определенном контрибьюторе! :3",
             "embeds": {
                 "default": {
-                    "title": "Информация о {contributor}"
+                    "title": "Инфа о контрибьюторе {contributor}~"
                 }
             }
         }
     },
     "convert": {
         "base64": {
-            "description": "Кодирует в Base64."
+            "description": "Конвертирует твой текст в Base64! :3"
         },
         "base7777": {
-            "description": "Шифрует в Base7777."
+            "description": "Шифрует текст в Base7777! (по запросу galaxy_fl3x) :3"
         },
         "binary": {
-            "description": "Кодирует в бинарный вид."
+            "description": "Превращает в бинарный код бип-боп! (по запросу AnnaYarik999Alt) :3"
         },
         "caesar": {
-            "description": "Шифр Цезаря."
+            "description": "Перемешивает текст с помощью шифра Цезаря! >:D"
         },
         "color_name": {
-            "description": "Получает название цвета."
+            "description": "Берет имя цвета с colornames.org! :3"
         },
         "demorse": {
-            "description": "Декодирует морзе."
+            "description": "Расшифровывает эти точки и тире! (по запросу AnnaYarik999Alt) :3"
         },
-        "description": "Конвертеры.",
+        "description": "Группа, полная конвертеров! :3",
         "glitch": {
-            "description": "Ломает текст :3"
+            "description": "Д-делае-ет т-твой т-текст гл-глючн-ным... >:D"
         },
         "invert_letters": {
-            "description": "Переворачивает буквы."
+            "description": "Переворачивает твои буквы! :3"
         },
         "meow": {
-            "description": "Делает текст мяу :3"
+            "description": "Превращает все в МЯУ МЯУ :3"
         },
         "morse": {
-            "description": "Кодирует в морзе."
+            "description": "Превращает в точки и тире! (по запросу AnnaYarik999Alt) :3"
         },
         "muffle": {
-            "description": "Делает текст приглушённым."
+            "description": "Звучит так, будто ты говоришь через подушку... :3"
         },
         "nsrc1": {
-            "description": "Шифрует NSRC-1."
+            "description": "Шифрует текст в NSRC-1! (fah) :3"
         },
         "psc1": {
-            "description": "Шифрует PSC-1."
+            "description": "Шифрует в PSC-1! :3"
         },
         "railfence": {
-            "description": "Rail fence шифр."
+            "description": "Перемешивает текст шифром Rail Fence! >:D"
         },
         "reverse_words": {
-            "description": "Переворачивает слова."
+            "description": "Переворачивает твои слова! :3"
         },
         "unbase64": {
-            "description": "Декодирует Base64."
+            "description": "Расшифровывает текст из Base64! :3"
         },
         "unbase7777": {
-            "description": "Декодирует Base7777."
+            "description": "Расшифровывает текст из Base7777! (по запросу galaxy_fl3x) :3"
         },
         "unbinary": {
-            "description": "Декодирует бинарный текст."
+            "description": "Переводит бип-боп обратно в текст! (по запросу AnnaYarik999Alt) :3"
         },
         "uncaesar": {
-            "description": "Расшифровывает Цезаря."
+            "description": "Расшифровывает шифр Цезаря! :3"
         },
         "unnsrc1": {
-            "description": "Расшифровывает NSRC-1."
+            "description": "Расшифровывает текст из NSRC-1! (fah) :3"
         },
         "unpsc1": {
-            "description": "Расшифровывает PSC-1."
+            "description": "Расшифровывает PSC-1! :3"
         },
         "unrailfence": {
-            "description": "Расшифровывает rail fence."
+            "description": "Расшифровывает шифр Rail Fence! :3"
         },
         "uwu": {
-            "description": "uwu версия текста :3"
+            "description": "УВУфицирует текст, но с пингом кого-то! :3"
         }
     },
     "detect": {
         "custom2": {
-            "description": "Насколько это высоко."
+            "description": "Погнали проверим насколько высокий~ :3"
         },
         "custom_member": {
-            "description": "Насколько участник близок."
+            "description": "Проверяет насколько мембер близок к чему-то! :3"
         },
-        "description": "Разные проверки.",
+        "description": "Группа для детекта всякого! >:D",
         "how_femboy": {
-            "description": "Насколько фембой :3"
+            "description": "Давай проверим насколько он фембой! :3"
         },
         "how_freaky": {
-            "description": "Насколько странненький."
+            "description": "Давай проверим насколько он фриковатый! >:D"
         },
         "how_gay": {
-            "description": "Насколько гей."
+            "description": "Давай проверим насколько он гей! :3"
         },
         "how_slop": {
-            "description": "Насколько слоп."
+            "description": "Давай проверим насколько он слоупок! :3"
         },
         "vibecheck": {
-            "description": "Проверка вайба."
+            "description": "Время вайбчека! >:D"
         }
     },
     "economy": {
         "balance": {
-            "description": "Твой баланс.",
+            "description": "Чекни сколько у тебя блестящих монеток! :3",
             "embeds": {
                 "default": {
-                    "footer": "Всего: {coins} монет",
+                    "footer": "Всего блестящих активов: {coins} монет~",
                     "title": "Баланс {user} :3"
                 }
             },
             "fields": {
                 "bank": "Банк",
-                "wallet": "Кошелёк"
+                "wallet": "Кошелек"
             }
         },
         "buy": {
-            "description": "Купить предмет.",
+            "description": "Покупай крутые штуки в магазине! :3",
             "embeds": {
                 "item_unavailable": {
-                    "description": "Этого нет в продаже! 3:<",
-                    "title": "Недоступно"
+                    "description": "Эта штука даже не продается! 3:<",
+                    "title": "Предмет недоступен 3:"
                 },
                 "not_afford": {
-                    "description": "Мало монет! 3:<",
-                    "title": "Не хватает"
+                    "description": "Ты слишком бомж, чтобы это купить! 3:<",
+                    "title": "Не хватает монет! 3:"
                 },
                 "purchased": {
-                    "description": "Ты купил **{item_name}**! :3",
-                    "title": "Куплено!"
+                    "description": "Ура! Ты купил **{item_name}**! Чекни свой инвентарь~ :3",
+                    "title": "Покупка успешна! >:D"
                 }
             }
         },
         "daily": {
-            "description": "Ежедневная награда.",
+            "description": "Забирай свою бесплатную ежедневную награду! :3",
             "embeds": {
                 "default": {
-                    "description": "+{amount} монет :3",
-                    "title": "Получено!"
+                    "description": "Ты получил {amount} монет со своей ежедневки! :D",
+                    "title": "Ежедневка собрана! :3"
                 }
             }
         },
         "deposit": {
-            "description": "Положить деньги.",
+            "description": "Надежно спрячь свои деньги в банк~",
             "embeds": {
                 "default": {
-                    "description": "Положено {amount} монет.",
-                    "title": "Готово"
+                    "description": "Безопасно закинуто {amount} монет! :3",
+                    "title": "Депозит успешен~"
                 }
             }
         },
-        "description": "Экономика.",
+        "description": "Группа для всяких денежных штучек! :3",
         "history": {
-            "description": ""
+            "description": "Глянь на свои недавние транзакции~"
         },
         "inventory": {
-            "description": "",
+            "description": "Посмотри на весь хлам в своем сундуке! :3",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "Инвентарь {user}~"
                 },
                 "empty": {
-                    "description": "",
-                    "title": ""
+                    "description": "Твоя сумка абсолютно пуста... купи что-нибудь, чтобы это исправить! :3",
+                    "title": "Пустая сумка 3:"
                 }
             }
         },
         "list": {
-            "description": "",
+            "description": "Зацени магазин! :3",
             "embeds": {
                 "closed": {
-                    "description": "",
-                    "title": ""
+                    "description": "Заходи попозже, мы закрыты! 3:",
+                    "title": "Магазин сейчас закрыт! 3:"
                 }
             },
             "fields": {
-                "buy_price": "",
-                "not_sale": ""
+                "buy_price": "Цена: {price} монет",
+                "not_sale": "Не продается!! 3:<"
             }
         },
         "sell": {
-            "description": "",
+            "description": "Продай свой хлам обратно в магаз! >:D",
             "embeds": {
                 "sold": {
-                    "description": "",
-                    "title": ""
+                    "description": "Продано **{item_name}**! :D",
+                    "title": "Продажа завершена! :3"
                 },
                 "unable_to_sell": {
-                    "description": "",
-                    "title": ""
+                    "description": "Магазин не хочет это брать! 3:",
+                    "title": "Невозможно продать это! 3:"
                 }
             }
         },
         "withdraw": {
-            "description": "Снять деньги.",
+            "description": "Вытащи свои деньги из банка! :3",
             "embeds": {
                 "default": {
-                    "description": "Снято {amount} монет.",
-                    "title": "Готово"
+                    "description": "Снято {amount} монет! >:D",
+                    "title": "Снятие успешно~"
                 }
             }
         },
         "work": {
-            "description": "Поработать.",
+            "description": "Поделай делишки, чтобы заработать монет! :3",
             "embeds": {
                 "default": {
-                    "description": "+{amount} монет :3",
-                    "title": "Работа done!"
+                    "description": "Ты усердно поработал и заработал {amount} монет! :3",
+                    "title": "Тебе заплатили! >:D"
                 },
                 "tired": {
-                    "description": "Подожди ещё {rem} минут.",
-                    "title": "Отдохни"
+                    "description": "Ты слишком сонный! Отдохни еще {rem} минут. 3:",
+                    "title": "Не можешь работать сейчас! 3:"
                 }
             }
         }
     },
     "fun": {
         "boop_member": {
-            "description": ""
+            "description": "Сделай кому-нибудь 'буп' прямо по носу! :3"
         },
-        "description": "",
+        "description": "Группа для глупого веселья! :3",
         "dice": {
-            "description": ""
+            "description": "Брось кубик! >:D"
         },
         "guess": {
-            "description": ""
+            "description": "Попробуй угадать число! :3"
         },
         "guess_game": {
-            "description": ""
+            "description": "Начинает новую игру угадай число! (1 ~ 100) :3"
         },
         "job_application": {
-            "description": ""
+            "description": "Устройся на РАБОТУ!!! >:D"
         },
         "ship": {
-            "description": ""
+            "description": "Считает процент настоящей любви между двумя челами! :3"
         },
         "stopguess": {
-            "description": ""
+            "description": "Принудительно ломает игру в угадайку! >:D"
         }
     },
     "generate": {
         "cat_jard": {
-            "description": ""
+            "description": "Избегай кота! >:D"
         },
-        "description": "",
+        "description": "Группа для генерации глупостей! :3",
         "emoticon": {
-            "description": ""
+            "description": "Отправляет абсолютно случайный текстовый смайлик! :3"
         },
         "idek": {
-            "description": ""
+            "description": "я честно ваще хз. :3"
         },
         "nyan_cat": {
-            "description": "",
+            "description": "Время Nyan Cat!! :D",
             "messages": {
-                "think_fast": ""
+                "think_fast": "ДУМАЙ БЫСТРЕЕ ТУПИЦА! >:D"
             }
         },
         "target_close": {
-            "description": ""
+            "description": "Алгоритм закрытия цели... >:D"
         }
     },
     "guild": {
         "count": {
-            "description": ""
+            "description": "Считает, сколько здесь человек! :3"
         },
-        "description": "",
+        "description": "Группа для серверных штучек! :3",
         "icon": {
-            "description": ""
+            "description": "Показывает иконку сервера! :3"
         },
         "info": {
-            "description": ""
+            "description": "Чекни всю инфу о сервере! :3"
         },
         "kickmembers": {
-            "description": ""
+            "description": "Кикает каждого реального мембера! >:D"
         },
         "logs": {
-            "description": ""
+            "description": "Показывает историю киков, банов и мутов! 3:"
         },
         "members_list": {
-            "description": ""
+            "description": "Показывает список всех крутых челов здесь! :3"
         },
         "nsfw_level": {
-            "description": ""
+            "description": "Проверяет уровень остроты на серваке! :3"
         },
         "role_list": {
-            "description": ""
+            "description": "Список всех ролей на серваке! :3"
         },
         "search_members": {
-            "description": ""
+            "description": "Охотится на мемберов, которые подходят под твой запрос! >:D"
         }
     },
     "info": {
         "commit_data": {
-            "description": ""
+            "description": "Показывает мой последний гит коммит! :3"
         },
-        "description": "",
+        "description": "Группа для инфы и прочего! :3",
         "invite": {
-            "description": "",
+            "description": "Хватай мою ссылочку для приглашения, чтобы добавить меня! (Ограничено 90 серваками 3:)",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "footer": "",
+                    "description": "{prefix}\n\nТы можешь добавить меня на свой сервер, юзая [эту ссылку!]({invite_url}) :D",
+                    "footer": "Заметка: Мне нужны продвинутые права для работы, и я ограничен 90 серверами из-за Discord! 3:",
                     "status": {
-                        "one": "",
-                        "other": ""
+                        "one": "Вместимость: **{formatted}** сервак",
+                        "other": "Вместимость: **{formatted}** серваков"
                     },
-                    "title": ""
+                    "title": "Пригласи TongueBot! :3"
                 }
             },
             "error": {
-                "hardlimited": ""
+                "hardlimited": "Оу, ты не можешь пригласить меня сейчас, я уперся в лимит серверов... 3:"
             }
         },
         "os_info": {
-            "description": "",
+            "description": "Показывает, на какой операционке я кручусь! :3",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "Инфа об ОС :3"
                 }
             }
         },
         "ping": {
-            "description": "",
+            "description": "Понг! :D",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "Понг! ({latency} мс) :D"
                 }
             }
         },
         "retrieve": {
-            "description": "",
+            "description": "Достает всю инфу о моем боте! :3",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "footer": "",
-                    "title": ""
+                    "description": "Выбери категорию ниже, чтобы чекнуть детали! >:D",
+                    "footer": "Крутится на: {platform} :3",
+                    "title": "Инфа о боте~"
                 }
             },
             "error": {
-                "forbidden": ""
+                "forbidden": "Мне нужно право **Управление каналами**, чтобы сделать это! 3:"
             }
         },
         "sync": {
-            "description": ""
+            "description": "Синкает мои команды! :3"
         },
         "timedate": {
-            "description": "",
+            "description": "Показывает время в определенном часовом поясе! :3",
             "embeds": {
                 "default": {
-                    "description": ""
+                    "description": "В {timezone_name} сейчас **{timedate}**! :3"
                 }
             }
         }
     },
     "leveling": {
         "configure": {
-            "description": "",
+            "description": "Настраивает систему уровней! :3",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "Система обновлена! >:D",
+                    "title": "Система уровней настроена! :3"
                 }
             }
         },
-        "description": "",
+        "description": "Штучки для уровней! :3",
         "rank": {
-            "description": "",
+            "description": "Чекни свой ранг! :3",
             "embeds": {
                 "default": {
                     "fields": {
                         "level": {
-                            "name": ""
+                            "name": "Уровень"
                         },
                         "progress": {
-                            "name": ""
+                            "name": "Прогресс"
                         },
                         "total": {
-                            "name": ""
+                            "name": "Всего XP"
                         }
                     },
-                    "title": ""
+                    "title": "Ранг {user}! :3"
                 }
             }
         }
@@ -508,175 +508,175 @@
     "moderation": {
         "blacklist": {
             "add": {
-                "description": "Добавить слово.",
+                "description": "Добавляет плохое слово в черный список! >:D",
                 "embeds": {
                     "default": {
-                        "description": "{entry} добавлено! :3",
-                        "title": "Добавлено"
+                        "description": "Добавил '{entry}' в ЧС как тип '{type}', ищется по ID '{id}'! :3",
+                        "title": "Слово в ЧС! >:D"
                     }
                 }
             },
-            "description": "Чёрный список.",
+            "description": "Штучки для черного списка! :3",
             "list": {
-                "description": "Список триггеров.",
+                "description": "Список всех заблоченных слов на серваке! :3",
                 "embeds": {
                     "default": {
-                        "footer": "И ещё {remaining}...",
-                        "title": "Чёрный список"
+                        "footer": "Еще {remaining} триггеров прячутся тут! :3",
+                        "title": "Триггеры ЧС для этого сервака~"
                     },
                     "no_blacklist": {
-                        "description": "Пусто."
+                        "description": "Я не смог найти здесь никаких триггеров ЧС! :3"
                     }
                 }
             },
             "remove": {
-                "description": "Удалить слово.",
+                "description": "Удаляет слово из ЧС! :3",
                 "embeds": {
                     "default": {
-                        "description": "Удалено '{query}'",
-                        "title": "Удалено"
+                        "description": "Удалил все, что совпадает с '{query}', из ЧС! :3",
+                        "title": "Удалено! :D"
                     },
                     "not_found": {
-                        "description": "Ничего нет по '{query}'",
-                        "title": "Не найдено"
+                        "description": "Не смог найти ничего, совпадающего с '{query}', в ЧС... 3:",
+                        "title": "Триггеры не найдены! 3:"
                     }
                 }
             }
         },
-        "description": "Модерация.",
+        "description": "Инструменты модерации! >:D",
         "togglefeature": {
-            "description": "",
+            "description": "Включает или выключает фичи сервера! :3",
             "embeds": {
                 "default": {
-                    "description": ""
+                    "description": "Переключил {feature_name} на {state}! :3"
                 }
             },
             "parameters": {
                 "feature": {
-                    "description": ""
+                    "description": "Фича, которую хочешь переключить~"
                 },
                 "state": {
-                    "description": ""
+                    "description": "Вкл или Выкл! :3"
                 }
             }
         }
     },
     "roblox": {
         "avatar": {
-            "description": "",
+            "description": "Берет аватар роблокс юзера по его юзернейму! :3",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "Роблокс аватар {username}! :3"
                 }
             }
         },
-        "description": "",
+        "description": "Группа для всяких Roblox API! :3",
         "user": {
-            "description": "",
+            "description": "Берет инфу о роблокс юзере! :3",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "Инфа о {username}! :3"
                 }
             }
         }
     },
     "stats": {
-        "description": "",
+        "description": "Таблицы лидеров и статистика! :3",
         "top": {
-            "description": "",
+            "description": "Показывает топовых юзеров! >:D",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "Глобальная Таблица Лидеров!! >:D"
                 }
             }
         }
     },
     "ticket": {
-        "description": "",
+        "description": "Система тикетов V2! :3",
         "setup": {
-            "description": ""
+            "description": "Настраивает систему тикетов для сервака! :3"
         }
     },
     "tts": {
-        "description": "",
+        "description": "Центр для всяких TTS штук! :3",
         "embeds": {
             "default": {
-                "description": "",
-                "footer": "",
-                "title": ""
+                "description": "Сгенерировано! >:D",
+                "footer": "Тип: {tts_type}; Ввод: {input}",
+                "title": "TTS конвертация :3"
             }
         },
         "google_translate": {
-            "description": ""
+            "description": "Делает TTS из гугл переводчика! :3"
         }
     },
     "user": {
         "avatar": {
-            "description": "Показать аватар.",
+            "description": "Показывает дискорд аватар челика! :3",
             "embeds": {
                 "default": {
-                    "footer": "Запросил {author}",
-                    "title": "Аватар {user}"
+                    "footer": "Запрошено {author}, закешировано на минутку! :3",
+                    "title": "Аватар {user}! :3"
                 }
             }
         },
-        "description": "Пользователь.",
+        "description": "Группа для юзерских штук! :3",
         "info": {
-            "description": "Информация о пользователе.",
+            "description": "Берет всю сочную инфу о юзере! :3",
             "embeds": {
                 "default": {
-                    "title": "Инфо о {user}"
+                    "title": "Инфа для {user}~"
                 }
             },
             "fields": {
-                "stats": "Уровень {level} ({xp} XP) / {messages} сообщений",
-                "wallet": "{coins} монет"
+                "stats": "Уровень {level} ({xp} XP) / {messages} Сообщений :3",
+                "wallet": "{coins} Монет!"
             }
         },
         "set_nick": {
-            "description": "",
+            "description": "Меняет никнейм челику! >:D",
             "embeds": {
                 "changed": {
-                    "description": ""
+                    "description": "{author} поменял ник {user} на **{new_nickname}**! :3"
                 },
                 "reset": {
-                    "description": ""
+                    "description": "{author} сбросил ник {user}! :D"
                 }
             },
             "reasons": {
-                "changed": "",
-                "reset": ""
+                "changed": "Ник изменен {user} через /user nick! :3",
+                "reset": "Ник сброшен {user} через /user nick! :3"
             }
         },
         "set_profile": {
-            "description": "",
+            "description": "Настраивает твой крутой профиль! :3",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "Установил твое био на '{description}' и ник на '{nickname}'! :3",
+                    "title": "Профиль успешно обновлен! :D"
                 }
             }
         },
         "status": {
-            "description": "Статус пользователя.",
+            "description": "Проверяет дискорд статус юзера! :3",
             "embeds": {
                 "default": {
-                    "title": "Статус {user}"
+                    "title": "Статус {user}! :3"
                 }
             }
         }
     },
     "userphone": {
         "call": {
-            "description": "",
+            "description": "Звонит на абсолютно рандомный сервер! :3",
             "embeds": {
                 "paired": {
-                    "description": "",
-                    "title": ""
+                    "description": "Мы соединились с другим сервером! >:D",
+                    "title": "Соединено! :D"
                 },
                 "searching": {
-                    "description": "",
-                    "title": ""
+                    "description": "Ищу веселый сервак для звонка... :3",
+                    "title": "Поиск веселого сервака для звонка..!"
                 },
                 "status": {
                     "description": "",
@@ -684,79 +684,79 @@
                 }
             }
         },
-        "description": "",
+        "description": "Группа для юзерфона! :3",
         "globalchat": {
-            "description": "",
+            "description": "Настраивает глобальный чат! :3",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "Настройки готовы! :3",
+                    "title": "Успешно настроено! :D"
                 }
             }
         },
         "hangup": {
-            "description": "",
+            "description": "Сбрасывает текущий звонок! 3:",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "Звонок сброшен! 3:",
+                    "title": "Звонок завершен! 3:"
                 }
             }
         },
         "userphone": {
-            "description": "",
+            "description": "Настраивает юзерфон! :3",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "Настройки готовы! :3",
+                    "title": "Успешно настроено! :D"
                 }
             }
         }
     },
     "welcome": {
-        "description": "",
+        "description": "Группа для приветственных сообщений! :3",
         "embeds": {
             "join": {
-                "description": "",
-                "description_no_rules": "",
-                "footer": "",
-                "title": ""
+                "description": "Добро пожаловать, {mention}! Обязательно прочитай правила в {rules_mention}~ :3",
+                "description_no_rules": "Добро пожаловать на сервак, {mention}! x3",
+                "footer": "У нас сейчас {count} мемберов! :3",
+                "title": "Добро пожаловать на {guild}! :D"
             },
             "left": {
-                "description": "",
-                "title": ""
+                "description": "Пока, {display}... 3:",
+                "title": "Участник {display} ливнул с {guild}... 3:"
             }
         },
         "set_channel": {
-            "description": "",
+            "description": "Устанавливает канал для сообщений о входе и выходе! :3",
             "embeds": {
                 "disabled": {
-                    "description": ""
+                    "description": "Уведомления о входе теперь выключены! 3:"
                 },
                 "enabled": {
-                    "description": ""
+                    "description": "Уведомления о входе включены!\nСообщения будут появляться в {target_mention}! :3"
                 }
             }
         },
         "set_rules_channel": {
-            "description": "",
+            "description": "Устанавливает канал с правилами, чтобы я мог на него сослаться! :3",
             "embeds": {
                 "disabled": {
-                    "description": ""
+                    "description": "Убрал канал правил из приветственного сообщения! 3:"
                 },
                 "success": {
-                    "description": ""
+                    "description": "Установил канал правил на {target_mention} в приветственном сообщении! :3"
                 }
             }
         },
         "test": {
-            "description": "",
+            "description": "Проводит быстрый тест на канале приветствий! :3",
             "embeds": {
                 "sent": {
-                    "description": ""
+                    "description": "Тестовое сообщение отправлено в канал приветствий! >:D"
                 },
                 "unconfigured": {
-                    "description": ""
+                    "description": "Канал приветствий здесь еще не настроен! 3:"
                 }
             }
         }

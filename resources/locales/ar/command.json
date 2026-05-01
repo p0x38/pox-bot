@@ -1,506 +1,506 @@
 {
     "8ball": {
-        "description": "",
+        "description": "يعطيك إجابة عشوائية تماماً من الكرة السحرية 8-ball! :3",
         "embeds": {
             "default": {
-                "title": ""
+                "title": "الكرة السحرية تقول... '{question}'"
             }
         }
     },
     "admin": {
         "reload_cogs": {
-            "description": "",
+            "description": "يعيد تحميل جميع إضافاتي ويزامن أوامر السلاش! >:D",
             "embeds": {
                 "error": {
-                    "description": "",
-                    "title": ""
+                    "description": "قمت بإعادة تحميل الإضافات، لكن المزامنة فشلت... 3:",
+                    "title": "أوه لا، فشلت المزامنة! 3:"
                 },
                 "loading": {
-                    "description": "",
-                    "progress": "",
-                    "title": ""
+                    "description": "أعطني ثانية، جاري إعادة تحميل كل شيء~ :3",
+                    "progress": "انتظر لحظة، أنا أعيد التحميل~\nيتم تحميل: `{current_cog}`\nالتقدم: **{current}/{total}**\nالنجاح: **{loaded}** | الفشل: **{failed}**",
+                    "title": "جاري المعالجة... :3"
                 },
                 "success": {
-                    "description": "",
-                    "title": ""
+                    "description": "تم تحديث **{loaded}** إضافات بنجاح! >:D\nوتمت مزامنة **{synched}** أوامر سلاش في كل مكان~",
+                    "title": "اكتملت إعادة التحميل! :D"
                 }
             },
             "errors": {
-                "forbidden": "",
-                "generic": "",
-                "http_error": "",
-                "missing_id": "",
-                "sync_failure": "",
-                "translation_error": ""
+                "forbidden": "لا أملك صلاحيات `application.commands` في هذا الخادم... 3:",
+                "generic": "حدث خطأ غريب أثناء مزامنة الأوامر! 3:",
+                "http_error": "واجهة Discord تتصرف بغرابة! لم أتمكن من الوصول. 3:",
+                "missing_id": "خطأ حرج! معرف تطبيقي مفقود بطريقة ما... 3:",
+                "sync_failure": "فشلت المزامنة! بعض الأوامر تحتوي على بيانات غريبة. 3:",
+                "translation_error": "تم إحباط المزامنة! انكسر شيء ما في مترجم الأوامر. 3:"
             }
         }
     },
     "calculate": {
-        "description": "",
+        "description": "وقت الرياضيات! :3",
         "percentage": {
-            "description": ""
+            "description": "يحسب النسبة المئوية لك~"
         }
     },
     "channel": {
-        "description": "",
+        "description": "مجموعة ممتعة لإدارة القنوات! :3",
         "info": {
-            "description": "",
+            "description": "يعرض بعض المعلومات الرائعة حول القناة~",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "معلومات {name} :3"
                 }
             }
         },
         "slowmode": {
-            "description": "",
+            "description": "يضبط تأخير الوضع البطيء!",
             "embeds": {
                 "successful": {
-                    "description": "",
-                    "title": ""
+                    "description": "بوم! تم ضبط الوضع البطيء على **{seconds}** لـ {mention}! >:D",
+                    "title": "تم تحديث الوضع البطيء! :3"
                 }
             }
         }
     },
     "chatbot": {
         "add_event": {
-            "description": ""
+            "description": "يضيف حدثاً عالمياً إلى تاريخي! :3"
         },
         "clear_memories": {
-            "description": ""
+            "description": "يمسح ذاكرة محادثاتي! 3:"
         },
-        "description": "",
+        "description": "مجموعة لأشياء الشات بوت الذكي الخاص بي! :3",
         "mem": {
-            "description": "",
+            "description": "دعنا نلقي نظرة على دماغ جيم~ :3",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "حالة ذاكرة السياق :3"
                 }
             },
             "messages": {
-                "empty": ""
+                "empty": "دماغي فارغ تماماً الآن. 3:"
             }
         },
         "perf": {
-            "description": "",
+            "description": "يعرض مدى جدية عمل الأجهزة الخاصة بي! :3",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "إليك الإحصائيات بناءً على آخر {generations} أجيال~",
+                    "title": "مقاييس كفاءة الأجهزة >:D"
                 }
             },
             "messages": {
-                "empty_logs": ""
+                "empty_logs": "ليس لدي أي بيانات أداء الآن... 3:"
             }
         },
         "stats": {
-            "description": ""
+            "description": "يعرض إحصائياتي العالمية! :3"
         },
         "unlock": {
-            "description": "",
+            "description": "يفتح القناة بالقوة إذا علقت! >:D",
             "messages": {
-                "already": "",
-                "unlock": ""
+                "already": "أنا حتى لا أفكر الآن، ولكن حسناً! :3",
+                "unlock": "أوه حسناً لقد عدت >:D"
             }
         },
         "user_stats": {
-            "description": ""
+            "description": "يعرض إحصائياتك مع البوت! :3"
         }
     },
     "contributors": {
-        "description": "",
+        "description": "مجموعة لجميع المساهمين الرائعين! :3",
         "list": {
-            "description": "",
+            "description": "يسرد كل من ساعد~",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "إليك قائمة بجميع الأشخاص الرائعين الذين ساعدوا في صنعي! :3",
+                    "title": "مساهمون رائعون >:D"
                 }
             }
         },
         "view": {
-            "description": "",
+            "description": "يعرض معلومات حول مساهم معين! :3",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "معلومات المساهم {contributor}~"
                 }
             }
         }
     },
     "convert": {
         "base64": {
-            "description": ""
+            "description": "يحول نصك إلى Base64! :3"
         },
         "base7777": {
-            "description": ""
+            "description": "يشفر النص إلى Base7777! (مطلوب من galaxy_fl3x) :3"
         },
         "binary": {
-            "description": ""
+            "description": "يحوله إلى كود ثنائي! (مطلوب من AnnaYarik999Alt) :3"
         },
         "caesar": {
-            "description": ""
+            "description": "يخلط النص باستخدام شفرة قيصر! >:D"
         },
         "color_name": {
-            "description": ""
+            "description": "يجلب اسم اللون من colornames.org! :3"
         },
         "demorse": {
-            "description": ""
+            "description": "يفك شفرة النقاط والشرطات تلك! (مطلوب من AnnaYarik999Alt) :3"
         },
-        "description": "",
+        "description": "مجموعة مليئة بالمحولات! :3",
         "glitch": {
-            "description": ""
+            "description": "يـ-يجعـ-عل نـ-نصـ-صك يـ-يبد-دو فـ-فيه جـ-جليتـ-تش... >:D"
         },
         "invert_letters": {
-            "description": ""
+            "description": "يقلب حروفك! :3"
         },
         "meow": {
-            "description": ""
+            "description": "يحول كل شيء إلى مياو مياو :3"
         },
         "morse": {
-            "description": ""
+            "description": "يحوله إلى نقاط وشرطات! (مطلوب من AnnaYarik999Alt) :3"
         },
         "muffle": {
-            "description": ""
+            "description": "يجعله يبدو وكأنك تتحدث في وسادة... :3"
         },
         "nsrc1": {
-            "description": ""
+            "description": "يشفر النص إلى NSRC-1! (fah) :3"
         },
         "psc1": {
-            "description": ""
+            "description": "يشفر النص إلى PSC-1! :3"
         },
         "railfence": {
-            "description": ""
+            "description": "يخلط النص باستخدام شفرة السياج! >:D"
         },
         "reverse_words": {
-            "description": ""
+            "description": "يقلب كلماتك! :3"
         },
         "unbase64": {
-            "description": ""
+            "description": "يفك تشفير النص من Base64! :3"
         },
         "unbase7777": {
-            "description": ""
+            "description": "يفك تشفير النص من Base7777! (مطلوب من galaxy_fl3x) :3"
         },
         "unbinary": {
-            "description": ""
+            "description": "يترجم الثنائي إلى نص! (مطلوب من AnnaYarik999Alt) :3"
         },
         "uncaesar": {
-            "description": ""
+            "description": "يفك شفرة قيصر! :3"
         },
         "unnsrc1": {
-            "description": ""
+            "description": "يفك تشفير النص من NSRC-1! (fah) :3"
         },
         "unpsc1": {
-            "description": ""
+            "description": "يفك تشفير PSC-1! :3"
         },
         "unrailfence": {
-            "description": ""
+            "description": "يفك شفرة السياج! :3"
         },
         "uwu": {
-            "description": ""
+            "description": "يقوم بـ UwU-ify للنص، لكنك تذكر شخصاً! :3"
         }
     },
     "detect": {
         "custom2": {
-            "description": ""
+            "description": "دعنا نرى كم هو مرتفع~ :3"
         },
         "custom_member": {
-            "description": ""
+            "description": "يتحقق من مدى قرب عضو لشيء ما! :3"
         },
-        "description": "",
+        "description": "مجموعة لاكتشاف الأشياء! >:D",
         "how_femboy": {
-            "description": ""
+            "description": "دعنا نرى مدى كونهم فيمبوي! :3"
         },
         "how_freaky": {
-            "description": ""
+            "description": "دعنا نرى مدى غرابتهم! >:D"
         },
         "how_gay": {
-            "description": ""
+            "description": "دعنا نرى مدى شذوذهم! :3"
         },
         "how_slop": {
-            "description": ""
+            "description": "دعنا نرى مدى كونهم slop! :3"
         },
         "vibecheck": {
-            "description": ""
+            "description": "وقت التحقق من الأجواء! >:D"
         }
     },
     "economy": {
         "balance": {
-            "description": "",
+            "description": "تحقق من كمية الأموال اللامعة لديك! :3",
             "embeds": {
                 "default": {
-                    "footer": "",
-                    "title": ""
+                    "footer": "إجمالي الأصول: {coins} عملة~",
+                    "title": "رصيد {user} :3"
                 }
             },
             "fields": {
-                "bank": "",
-                "wallet": ""
+                "bank": "البنك",
+                "wallet": "المحفظة"
             }
         },
         "buy": {
-            "description": "",
+            "description": "اشترِ بعض الأشياء الرائعة من المتجر! :3",
             "embeds": {
                 "item_unavailable": {
-                    "description": "",
-                    "title": ""
+                    "description": "هذا العنصر ليس للبيع حتى! 3:<",
+                    "title": "العنصر غير متاح 3:"
                 },
                 "not_afford": {
-                    "description": "",
-                    "title": ""
+                    "description": "أنت مفلس جداً لشراء هذا! 3:<",
+                    "title": "لا توجد عملات كافية! 3:"
                 },
                 "purchased": {
-                    "description": "",
-                    "title": ""
+                    "description": "ياي! لقد اشتريت **{item_name}**! تحقق من مخزونك~ :3",
+                    "title": "شراء ناجح! >:D"
                 }
             }
         },
         "daily": {
-            "description": "",
+            "description": "احصل على هديتك اليومية المجانية! :3",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "لقد حصلت على {amount} عملات من مكافأتك اليومية! :D",
+                    "title": "تم استلام المكافأة! :3"
                 }
             }
         },
         "deposit": {
-            "description": "",
+            "description": "خبئ أموالك بأمان في البنك~",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "تم إيداع {amount} عملات بأمان! :3",
+                    "title": "إيداع ناجح~"
                 }
             }
         },
-        "description": "",
+        "description": "مجموعة لكل شيء يتعلق بالمال! :3",
         "history": {
-            "description": ""
+            "description": "ألق نظرة على معاملاتك الأخيرة~"
         },
         "inventory": {
-            "description": "",
+            "description": "شاهد كل الخردة في صندوقك! :3",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "مخزون {user}~"
                 },
                 "empty": {
-                    "description": "",
-                    "title": ""
+                    "description": "حقيبتك فارغة تماماً... اشترِ شيئاً لتغيير هذا! :3",
+                    "title": "حقيبة فارغة 3:"
                 }
             }
         },
         "list": {
-            "description": "",
+            "description": "ألق نظرة على المتجر! :3",
             "embeds": {
                 "closed": {
-                    "description": "",
-                    "title": ""
+                    "description": "عد لاحقاً، نحن مغلقون! 3:",
+                    "title": "المتجر مغلق الآن! 3:"
                 }
             },
             "fields": {
-                "buy_price": "",
-                "not_sale": ""
+                "buy_price": "السعر: {price} عملات",
+                "not_sale": "ليس للبيع!! 3:<"
             }
         },
         "sell": {
-            "description": "",
+            "description": "بع خردتك مرة أخرى إلى المتجر! >:D",
             "embeds": {
                 "sold": {
-                    "description": "",
-                    "title": ""
+                    "description": "تم بيع **{item_name}**! :D",
+                    "title": "اكتمل البيع! :3"
                 },
                 "unable_to_sell": {
-                    "description": "",
-                    "title": ""
+                    "description": "المتجر لا يريد هذا! 3:",
+                    "title": "لا يمكن بيع ذلك! 3:"
                 }
             }
         },
         "withdraw": {
-            "description": "",
+            "description": "اسحب أموالك من البنك! :3",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "تم سحب {amount} عملات! >:D",
+                    "title": "سحب ناجح~"
                 }
             }
         },
         "work": {
-            "description": "",
+            "description": "قم ببعض الأعمال لكسب العملات! :3",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "لقد عملت بجد وكسبت {amount} عملات! :3",
+                    "title": "لقد حصلت على راتبك! >:D"
                 },
                 "tired": {
-                    "description": "",
-                    "title": ""
+                    "description": "أنت تشعر بالنعاس الشديد! استرح لمدة {rem} دقائق أخرى. 3:",
+                    "title": "لا يمكنك العمل الآن! 3:"
                 }
             }
         }
     },
     "fun": {
         "boop_member": {
-            "description": ""
+            "description": "المس أنف شخص ما بـ Boop! :3"
         },
-        "description": "",
+        "description": "مجموعة للمرح السخيف! :3",
         "dice": {
-            "description": ""
+            "description": "ارمِ النرد! >:D"
         },
         "guess": {
-            "description": ""
+            "description": "حاول تخمين الرقم! :3"
         },
         "guess_game": {
-            "description": ""
+            "description": "يبدأ لعبة تخمين أرقام جديدة! (1 ~ 100) :3"
         },
         "job_application": {
-            "description": ""
+            "description": "احصل على وظيفة!!! >:D"
         },
         "ship": {
-            "description": ""
+            "description": "يحسب نسبة الحب الحقيقي بين شخصين! :3"
         },
         "stopguess": {
-            "description": ""
+            "description": "يفسد لعبة التخمين بالقوة! >:D"
         }
     },
     "generate": {
         "cat_jard": {
-            "description": ""
+            "description": "تجنب القط! >:D"
         },
-        "description": "",
+        "description": "مجموعة لتوليد أشياء سخيفة! :3",
         "emoticon": {
-            "description": ""
+            "description": "يرسل رمزاً تعبيرياً نصياً عشوائياً تماماً! :3"
         },
         "idek": {
-            "description": ""
+            "description": "أنا بصراحة لا أعرف حتى. :3"
         },
         "nyan_cat": {
-            "description": "",
+            "description": "وقت قطة نيان!! :D",
             "messages": {
-                "think_fast": ""
+                "think_fast": "فكر بسرعة! >:D"
             }
         },
         "target_close": {
-            "description": ""
+            "description": "خوارزمية إغلاق الهدف... >:D"
         }
     },
     "guild": {
         "count": {
-            "description": ""
+            "description": "يحسب عدد الأشخاص هنا! :3"
         },
-        "description": "",
+        "description": "مجموعة لأشياء الخادم! :3",
         "icon": {
-            "description": ""
+            "description": "يعرض أيقونة الخادم! :3"
         },
         "info": {
-            "description": ""
+            "description": "تحقق من جميع معلومات الخادم! :3"
         },
         "kickmembers": {
-            "description": ""
+            "description": "يطرد كل عضو حقيقي! >:D"
         },
         "logs": {
-            "description": ""
+            "description": "يعرض تاريخ الطرد والحظر والإسكات! 3:"
         },
         "members_list": {
-            "description": ""
+            "description": "يسرد جميع الأشخاص الرائعين هنا! :3"
         },
         "nsfw_level": {
-            "description": ""
+            "description": "يتحقق من مستوى الـ NSFW في الخادم! :3"
         },
         "role_list": {
-            "description": ""
+            "description": "يسرد جميع الرتب في الخادم! :3"
         },
         "search_members": {
-            "description": ""
+            "description": "يصطاد الأعضاء الذين يطابقون بحثك! >:D"
         }
     },
     "info": {
         "commit_data": {
-            "description": ""
+            "description": "يعرض أحدث إصدار git لي! :3"
         },
-        "description": "",
+        "description": "مجموعة للمعلومات والأشياء الأخرى! :3",
         "invite": {
-            "description": "",
+            "description": "يأخذ رابط دعوتي لتتمكن من إضافتي! (مقتصر على 90 خادماً فقط 3:)",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "footer": "",
+                    "description": "{prefix}\n\nيمكنك إضافتي إلى خادمك باستخدام [هذا الرابط!]({invite_url}) :D",
+                    "footer": "ملاحظة: أحتاج إلى صلاحيات متقدمة للعمل بشكل صحيح، وأنا مقيد بـ 90 خادماً بسبب ديسكورد! 3:",
                     "status": {
-                        "one": "",
-                        "other": ""
+                        "one": "السعة: **{formatted}** خادم",
+                        "other": "السعة: **{formatted}** خوادم"
                     },
-                    "title": ""
+                    "title": "ادعُ TongueBot! :3"
                 }
             },
             "error": {
-                "hardlimited": ""
+                "hardlimited": "أوو، لا يمكنك دعوتي الآن، لقد وصلت إلى الحد الأقصى... 3:"
             }
         },
         "os_info": {
-            "description": "",
+            "description": "يعرض نظام التشغيل الذي أعمل عليه! :3",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "معلومات نظام التشغيل :3"
                 }
             }
         },
         "ping": {
-            "description": "",
+            "description": "بونغ! :D",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "بونغ! ({latency} مللي ثانية) :D"
                 }
             }
         },
         "retrieve": {
-            "description": "",
+            "description": "يحصل على جميع معلومات البوت الخاص بي! :3",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "footer": "",
-                    "title": ""
+                    "description": "اختر فئة أدناه لرؤية التفاصيل! >:D",
+                    "footer": "يعمل على: {platform} :3",
+                    "title": "معلومات البوت~"
                 }
             },
             "error": {
-                "forbidden": ""
+                "forbidden": "أحتاج إلى إذن **إدارة القنوات** للقيام بذلك! 3:"
             }
         },
         "sync": {
-            "description": ""
+            "description": "يزامن أوامري! :3"
         },
         "timedate": {
-            "description": "",
+            "description": "يعرض الوقت في منطقة زمنية معينة! :3",
             "embeds": {
                 "default": {
-                    "description": ""
+                    "description": "هناك في {timezone_name}، الوقت حالياً **{timedate}**! :3"
                 }
             }
         }
     },
     "leveling": {
         "configure": {
-            "description": "",
+            "description": "يضبط نظام المستويات! :3",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "تم تحديث النظام! >:D",
+                    "title": "تم ضبط نظام المستويات! :3"
                 }
             }
         },
-        "description": "",
+        "description": "أشياء المستويات! :3",
         "rank": {
-            "description": "",
+            "description": "تحقق من رتبتك! :3",
             "embeds": {
                 "default": {
                     "fields": {
                         "level": {
-                            "name": ""
+                            "name": "المستوى"
                         },
                         "progress": {
-                            "name": ""
+                            "name": "التقدم"
                         },
                         "total": {
-                            "name": ""
+                            "name": "إجمالي الـ XP"
                         }
                     },
-                    "title": ""
+                    "title": "رتبة {user}! :3"
                 }
             }
         }
@@ -508,175 +508,175 @@
     "moderation": {
         "blacklist": {
             "add": {
-                "description": "",
+                "description": "يضيف كلمة سيئة إلى القائمة السوداء! >:D",
                 "embeds": {
                     "default": {
-                        "description": "",
-                        "title": ""
+                        "description": "تمت إضافة '{entry}' إلى القائمة السوداء كنوع '{type}'، مع المعرف '{id}'! :3",
+                        "title": "تمت الإضافة إلى القائمة السوداء! >:D"
                     }
                 }
             },
-            "description": "",
+            "description": "أشياء القائمة السوداء! :3",
             "list": {
-                "description": "",
+                "description": "يسرد جميع الكلمات المحظورة في هذا الخادم! :3",
                 "embeds": {
                     "default": {
-                        "footer": "",
-                        "title": ""
+                        "footer": "بالإضافة إلى {remaining} كلمات مختبئة هنا! :3",
+                        "title": "كلمات القائمة السوداء لهذا الخادم~"
                     },
                     "no_blacklist": {
-                        "description": ""
+                        "description": "لم أتمكن من العثور على أي كلمات في القائمة السوداء هنا! :3"
                     }
                 }
             },
             "remove": {
-                "description": "",
+                "description": "يزيل كلمة من القائمة السوداء! :3",
                 "embeds": {
                     "default": {
-                        "description": "",
-                        "title": ""
+                        "description": "تمت إزالة كل شيء يطابق '{query}' من القائمة السوداء! :3",
+                        "title": "تمت الإزالة! :D"
                     },
                     "not_found": {
-                        "description": "",
-                        "title": ""
+                        "description": "لم أتمكن من العثور على أي شيء يطابق '{query}' في القائمة السوداء... 3:",
+                        "title": "لم يتم العثور! 3:"
                     }
                 }
             }
         },
-        "description": "",
+        "description": "أدوات الإدارة! >:D",
         "togglefeature": {
-            "description": "",
+            "description": "يُشغل أو يُوقف ميزات الخادم! :3",
             "embeds": {
                 "default": {
-                    "description": ""
+                    "description": "تم تغيير {feature_name} إلى {state}! :3"
                 }
             },
             "parameters": {
                 "feature": {
-                    "description": ""
+                    "description": "الميزة التي تريد تبديلها~"
                 },
                 "state": {
-                    "description": ""
+                    "description": "تشغيل أو إيقاف! :3"
                 }
             }
         }
     },
     "roblox": {
         "avatar": {
-            "description": "",
+            "description": "يجلب صورة حساب روبلوكس عبر اسم المستخدم! :3",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "صورة روبلوكس لـ {username}! :3"
                 }
             }
         },
-        "description": "",
+        "description": "مجموعة لكل شيء يتعلق بروبلوكس! :3",
         "user": {
-            "description": "",
+            "description": "يحصل على معلومات مستخدم روبلوكس! :3",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "معلومات {username}! :3"
                 }
             }
         }
     },
     "stats": {
-        "description": "",
+        "description": "قوائم المتصدرين والإحصائيات! :3",
         "top": {
-            "description": "",
+            "description": "يعرض أفضل المستخدمين! >:D",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "قائمة المتصدرين العالمية!! >:D"
                 }
             }
         }
     },
     "ticket": {
-        "description": "",
+        "description": "نظام التذاكر الإصدار 2! :3",
         "setup": {
-            "description": ""
+            "description": "يُعد نظام التذاكر لهذا الخادم! :3"
         }
     },
     "tts": {
-        "description": "",
+        "description": "مركز كل شيء يتعلق بتحويل النص إلى كلام! :3",
         "embeds": {
             "default": {
-                "description": "",
-                "footer": "",
-                "title": ""
+                "description": "تم الإنشاء! >:D",
+                "footer": "النوع: {tts_type}; المدخل: {input}",
+                "title": "تحويل النص إلى كلام :3"
             }
         },
         "google_translate": {
-            "description": ""
+            "description": "ينشئ صوتاً من ترجمة جوجل! :3"
         }
     },
     "user": {
         "avatar": {
-            "description": "",
+            "description": "يعرض الصورة الرمزية في ديسكورد لأي شخص! :3",
             "embeds": {
                 "default": {
-                    "footer": "",
-                    "title": ""
+                    "footer": "طُلب بواسطة {author}، محفوظ مؤقتاً لمدة دقيقة! :3",
+                    "title": "صورة {user}! :3"
                 }
             }
         },
-        "description": "",
+        "description": "مجموعة لأشياء المستخدم! :3",
         "info": {
-            "description": "",
+            "description": "يحصل على جميع المعلومات حول مستخدم! :3",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "معلومات {user}~"
                 }
             },
             "fields": {
-                "stats": "",
-                "wallet": ""
+                "stats": "المستوى {level} ({xp} XP) / {messages} رسائل :3",
+                "wallet": "{coins} عملات!"
             }
         },
         "set_nick": {
-            "description": "",
+            "description": "يُغير لقب شخص ما! >:D",
             "embeds": {
                 "changed": {
-                    "description": ""
+                    "description": "{author} قام بتغيير لقب {user} إلى **{new_nickname}**! :3"
                 },
                 "reset": {
-                    "description": ""
+                    "description": "{author} قام بإعادة تعيين لقب {user}! :D"
                 }
             },
             "reasons": {
-                "changed": "",
-                "reset": ""
+                "changed": "تم تغيير اللقب بواسطة {user} عبر أمر /user nick! :3",
+                "reset": "تم إعادة تعيين اللقب بواسطة {user} عبر أمر /user nick! :3"
             }
         },
         "set_profile": {
-            "description": "",
+            "description": "يُعد ملفك الشخصي الرائع! :3",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "تم تعيين السيرة الذاتية إلى '{description}' واللقب إلى '{nickname}'! :3",
+                    "title": "تم تحديث الملف الشخصي بنجاح! :D"
                 }
             }
         },
         "status": {
-            "description": "",
+            "description": "يتحقق من حالة ديسكورد لمستخدم! :3",
             "embeds": {
                 "default": {
-                    "title": ""
+                    "title": "حالة {user}! :3"
                 }
             }
         }
     },
     "userphone": {
         "call": {
-            "description": "",
+            "description": "يتصل بخادم عشوائي تماماً! :3",
             "embeds": {
                 "paired": {
-                    "description": "",
-                    "title": ""
+                    "description": "تم التوصيل بخادم آخر! >:D",
+                    "title": "تم التوصيل! :D"
                 },
                 "searching": {
-                    "description": "",
-                    "title": ""
+                    "description": "جاري البحث عن خادم ممتع للاتصال به... :3",
+                    "title": "جاري البحث عن خادم ممتع للاتصال..!"
                 },
                 "status": {
                     "description": "",
@@ -684,79 +684,79 @@
                 }
             }
         },
-        "description": "",
+        "description": "مجموعة لهاتف المستخدم! :3",
         "globalchat": {
-            "description": "",
+            "description": "يعدل إعدادات المحادثة العالمية! :3",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "تم تكوين الإعدادات! :3",
+                    "title": "تم التكوين بنجاح! :D"
                 }
             }
         },
         "hangup": {
-            "description": "",
+            "description": "ينهي المكالمة الحالية! 3:",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "تم إنهاء المكالمة! 3:",
+                    "title": "انتهت المكالمة! 3:"
                 }
             }
         },
         "userphone": {
-            "description": "",
+            "description": "يعدل إعدادات هاتف المستخدم! :3",
             "embeds": {
                 "default": {
-                    "description": "",
-                    "title": ""
+                    "description": "تم تكوين الإعدادات! :3",
+                    "title": "تم التكوين بنجاح! :D"
                 }
             }
         }
     },
     "welcome": {
-        "description": "",
+        "description": "مجموعة لرسائل الترحيب! :3",
         "embeds": {
             "join": {
-                "description": "",
-                "description_no_rules": "",
-                "footer": "",
-                "title": ""
+                "description": "مرحباً، {mention}! تأكد من قراءة القوانين في {rules_mention}~ :3",
+                "description_no_rules": "مرحباً بك في الخادم، {mention}! x3",
+                "footer": "لدينا الآن {count} أعضاء! :3",
+                "title": "مرحباً بك في {guild}! :D"
             },
             "left": {
-                "description": "",
-                "title": ""
+                "description": "وداعاً، {display}... 3:",
+                "title": "غادر العضو {display} الخادم {guild}... 3:"
             }
         },
         "set_channel": {
-            "description": "",
+            "description": "يعين قناة لرسائل الدخول والخروج! :3",
             "embeds": {
                 "disabled": {
-                    "description": ""
+                    "description": "إشعارات الترحيب متوقفة الآن! 3:"
                 },
                 "enabled": {
-                    "description": ""
+                    "description": "إشعارات الترحيب قيد التشغيل!\nستظهر الرسائل في {target_mention}! :3"
                 }
             }
         },
         "set_rules_channel": {
-            "description": "",
+            "description": "يُعد قناة القوانين حتى أتمكن من ربطها! :3",
             "embeds": {
                 "disabled": {
-                    "description": ""
+                    "description": "تمت إزالة قناة القوانين من رسالة الترحيب! 3:"
                 },
                 "success": {
-                    "description": ""
+                    "description": "تم تعيين قناة القوانين إلى {target_mention} في رسالة الترحيب! :3"
                 }
             }
         },
         "test": {
-            "description": "",
+            "description": "يُجري اختباراً سريعاً على قناة الترحيب! :3",
             "embeds": {
                 "sent": {
-                    "description": ""
+                    "description": "تم إرسال رسالة الاختبار إلى قناة الترحيب! >:D"
                 },
                 "unconfigured": {
-                    "description": ""
+                    "description": "لم يتم إعداد قناة الترحيب بعد! 3:"
                 }
             }
         }

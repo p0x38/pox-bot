@@ -1,0 +1,30 @@
+{
+    "common": {
+        "comfirm": "Confirmar",
+        "cancel": "Cancelar",
+        "loading": "Espera un momento...",
+        "status": {
+            "online": "En línea",
+            "idle": "Ausente",
+            "dnd": "No Molestar"
+        }
+    },
+    "errors": {
+        "title": "¡Ups!",
+        "generic": "Algo salió mal. Inténtalo de nuevo más tarde~",
+        "cooldown": "Espera {remaining}s antes de usar esto otra vez~",
+        "user_not_found": "No pude encontrar a ese usuario.",
+        "user_missing_permissions": "No tienes permiso para hacer eso.",
+        "bot_missing_permissions": "No tengo permiso para hacer eso~",
+        "not_owner": "Solo el creador del bot puede usar este comando."
+    },
+    "units": {
+        "seconds": {
+            "one": "segundo",
+            "other": "segundos"
+        }
+    },
+    "bot": {
+        "sync_success": "Los comandos se sincronizaron con éxito~"
+    }
+}

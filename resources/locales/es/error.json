@@ -1,0 +1,130 @@
+{
+    "custom": {
+        "cannot_timeout_higher": "Mi rol no es lo suficientemente alto para aislar a este usuario... 3:",
+        "channel_has_no_slowmode_property": "¡Este canal ni siquiera tiene ajuste de modo lento! D:<",
+        "description_not_found": "Sin descripción aún... 3:",
+        "forbidden_timeout": "¡No tengo los permisos para aislar a los miembros! D:",
+        "guild_only": "¡Solo puedes usar este comando en un servidor! :3",
+        "insufficient_permission_ban": "¡No tienes permiso para banear a {user}! 3:<",
+        "insufficient_permission_kick": "¡No tienes permiso para expulsar a {user}! D:<",
+        "invalidated_cache": "Este comando solo funciona en un servidor debido a un problema con el caché~ :3",
+        "missing_category": "¡Falta la Categoría! 3:",
+        "no_git_commithash": "¡No pude encontrar un hash de commit! 3:",
+        "no_git_lastcommit": "¡No pude encontrar un mensaje de commit! 3:",
+        "roblox_failed_retrieve_avatar": "¡Falló al intentar obtener el avatar del usuario de Roblox {username}! 3:",
+        "roblox_forbidden": "No pude obtener datos de la API de Roblox... ¡o me falta el Token CSRF o está roto! :3",
+        "roblox_user_not_found": "Un usuario de Roblox llamado '{username}' definitivamente no existe. :3",
+        "timeout_duration_lessflow": "¡La duración debe ser mayor a 0! 3:",
+        "tried_to_timeout_higher": "¡Tu rol no es lo suficientemente alto para aislar a ese usuario! :3",
+        "tried_to_timeout_himself": "¡No puedes aislarte a ti mismo, tontito! 3:",
+        "tried_to_timeout_owner": "¡Definitivamente no puedes aislar al dueño del servidor! 3:<",
+        "unknown_signature": "¡Firma Desconocida! 3:",
+        "unsupported_channel": "¡No soporto este tipo de canal! :3",
+        "user_not_found": "No pude encontrar a ese usuario... :3"
+    },
+    "embeds": {
+        "blacklist_not_configured": {
+            "description": "La lista negra aún no se ha configurado para este servidor.",
+            "title": "¡La lista negra no está configurada! 3:"
+        },
+        "contributor_not_found": {
+            "description": "No pude encontrar al colaborador {contributor}... 3:",
+            "title": "¡Colaborador no encontrado! 3:"
+        },
+        "daily_cooldown": {
+            "description": "¡Tienes que esperar {h} horas y {m} minutos para reclamar tu premio diario otra vez! 3:<",
+            "title": "¡Aún no hay recompensas diarias para ti!"
+        },
+        "database_not_available": {
+            "description": "¡El pool de la base de datos está tomando una siesta ahora mismo! :3",
+            "title": "¡Base de datos no disponible! 3:"
+        },
+        "edge_tts_not_installed": {
+            "description": "¡Este servidor no tiene el paquete para hacer voces con edge-tts! :/",
+            "title": "¡Falta Edge TTS! 3:"
+        },
+        "guild_only": {
+            "description": "¡Este comando es solo para servidores! :3",
+            "title": "¡Lugar equivocado! :3"
+        },
+        "need_hangup": {
+            "description": "Por favor, cuelga la llamada antes de configurar estas cosas.",
+            "title": "¡Cuelga primero! 3:"
+        },
+        "not_in_call": {
+            "description": "Tu servidor ni siquiera está en una llamada en este momento.",
+            "title": "¡No estás en una llamada! 3:"
+        },
+        "only_positive_value": {
+            "description": "¡No puedes usar valores negativos aquí! 3:<",
+            "title": "¡Nada de números negativos! 3:<"
+        },
+        "phone_in_call": {
+            "description": "¡Tu servidor ya está en una llamada!",
+            "title": "¡Ya estás llamando! :3"
+        },
+        "send_error": {
+            "description": "Ocurrió un error al intentar enviar: {e}",
+            "title": "¡Ups, error de envío! 3:"
+        },
+        "slowmode_out_of_range": {
+            "description": "¡El retraso del modo lento debe estar entre 0 y 21600 segundos! :3",
+            "title": "¡Fuera de rango! 3:"
+        },
+        "too_high_value": {
+            "description": "¡Ese valor no puede ser superior a {max}! :3",
+            "title": "¡Demasiado alto! 3:"
+        },
+        "tts_generation_error": {
+            "description": "Algo se rompió mientras se hacía el audio: {e}",
+            "title": "¡Error de Generación de TTS! 3:"
+        },
+        "tts_no_text": {
+            "description": "¡Tienes que escribir algo! ¡Inténtalo de nuevo con algo de texto! :3",
+            "title": "¡La entrada no puede estar vacía! 3:"
+        },
+        "unsupported_channel_slowmode": {
+            "description": "El canal {channel} no admite el modo lento.",
+            "title": "¡Canal no compatible! 3:"
+        },
+        "unsupported_channel_type": {
+            "description": "¡Elegiste un tipo de canal que no soporto!",
+            "title": "¡Tipo de canal no compatible! 3:"
+        },
+        "user_data_not_found": {
+            "description": "No pude encontrar ningún dato para {user}.",
+            "title": "¡Datos no encontrados! 3:"
+        },
+        "welcome_channel_not_enabled": {
+            "description": "¡Los canales de bienvenida no están activados aquí! Asegúrate de configurar uno para usar esto.",
+            "title": "¡El canal de bienvenida está apagado! 3:"
+        }
+    },
+    "exceptions": {
+        "AppCommandError": "¡Ocurrió un error extraño con el comando! 3:",
+        "BotMissingPermissions": "¡No tengo los permisos adecuados para hacer eso! 3:",
+        "CheckFailure": "¡No tienes permiso para usar este comando! 3:<",
+        "CommandAlreadyRegistered": "¡Este comando ya está registrado! :3",
+        "CommandInvokeError": "¡Apareció un error mientras se ejecutaba el comando! 3:",
+        "CommandLimitReached": "¡Se alcanzó un límite con este comando! ¡Hay que ir más despacio! 3:",
+        "CommandNotFound": "¡No pude encontrar ese comando! :3",
+        "CommandOnCooldown": "¡Woah, cálmate, estás en cooldown! ¡Inténtalo de nuevo en {remaining} segundos! :3",
+        "CommandSignatureMismatch": "¡El comando no está sincronizado con la última versión! 3:",
+        "CommandSyncFailure": "¡Falló la sincronización de los comandos! 3:",
+        "HTTPException": "¡Ups, un error HTTP lo arruinó todo! 3:",
+        "MissingAnyRole": "¡No tienes los roles requeridos para usar esto! 3:",
+        "MissingPermissions": "¡Te faltan los permisos para usar esto! 3:<",
+        "MissingRole": "¡Te falta el rol requerido para esto! 3:<",
+        "NoPrivateMessage": "¡No puedes usar este comando en mensajes directos! :3",
+        "TransformerError": "¡Algo se rompió mientras se procesaban los argumentos del comando! 3:",
+        "TranslationError": "¡Apareció un error mientras se traducía el comando! 3:",
+        "Unknown": "¡Uh oh, ocurrió un error no capturado! {e} 3:"
+    },
+    "http": {
+        "400": "Error 400: ¡Mala Petición! Tu entrada se ve un poco rara. 3:",
+        "403": "Error 403: ¡Prohibido! Definitivamente no se te permite ver esto. >:D",
+        "404": "Error 404: ¡No Encontrado! Ese archivo se ha ido con el viento. 3:",
+        "429": "Error 429: ¡Demasiadas Peticiones! La API nos está limitando, ¡relájate un poco! :3",
+        "500": "Error 500: ¡Error Interno del Servidor! El servidor se tropezó y cayó mientras procesaba. 3:"
+    }
+}

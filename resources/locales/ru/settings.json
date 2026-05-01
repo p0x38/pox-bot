@@ -1,9 +1,9 @@
 {
     "fields": {
-        "embed_color": "**Встроенный цвет**: {hex}",
-        "locale": "**Отобразить язык**: {lang_code}"
+        "embed_color": "**Цвет эмбеда**: {hex}",
+        "locale": "**Язык**: {lang_code}"
     },
-    "header_description": "Настройки пользователя",
-    "page": "ЯзыкБот :3",
-    "title": "Настройки пользователя"
+    "header_description": "Настройки юзера",
+    "title": "Настройки Юзера",
+    "page": "TongueBot :3"
 }
