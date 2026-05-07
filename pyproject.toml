@@ -50,5 +50,5 @@ dev = [
     "deptry>=0.25.1",
     "fawltydeps>=0.20.0",
     "pip-audit>=2.10.0",
-    "pipdeptree>=2.35.1",
+    "pipdeptree>=2.35.2",
 ]
