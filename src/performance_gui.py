@@ -1,9 +1,10 @@
 import math
 import sys
 import time
+
 import psutil
-from PyQt6 import QtWidgets, QtCore
 import pyqtgraph as pg
+from PyQt6 import QtCore, QtWidgets
 
 pg.setConfigOptions(antialias=True)
 pg.setConfigOptions(useOpenGL=True)

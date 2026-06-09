@@ -1,28 +1,39 @@
-import sys
 import subprocess
+import sys
 import time
 
+from pytz import UTC
+
 import stuff
+
 stuff.create_dir_if_not_exists("./logs")
 
 import os
+from datetime import datetime
+
 import discord
-from datetime import UTC, datetime
+import psutil
+from discord import (
+    Color,
+    Embed,
+    Forbidden,
+    HTTPException,
+    Interaction,
+    MissingApplicationID,
+    app_commands,
+)
 from discord.ext import commands
-from discord import Color, Embed, Forbidden, HTTPException, Interaction, MissingApplicationID, app_commands
+
 from bot import PoxBot
 from logger import logger
 from src.translator import translator_instance as i18n
 
-import psutil
 process_ps = psutil.Process(os.getpid())
 process_ps.nice(psutil.ABOVE_NORMAL_PRIORITY_CLASS)
 
 bot_token = stuff.get_bot_token()
 
 intents = discord.Intents.all()
-intents.message_content = True
-intents.members = True
 
 bot = PoxBot(
     intents=intents,
@@ -62,7 +73,7 @@ async def reload_cogs(interaction: Interaction):
             try:
                 await bot.reload_extension(f"cogs.{ext_name}")
                 loaded += 1
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.exception(f"[{e.__class__.__name__}] Failed to load {ext_name}: {e}")
                 failed += 1
         
@@ -72,6 +83,7 @@ async def reload_cogs(interaction: Interaction):
                 "command.admin.reload_cogs.embeds.loading.progress",
                 loc,
                 {
+                    "current_cog": f"cogs.{ext_name}",
                     "current": index + 1,
                     "total": total,
                     "loaded": loaded,
@@ -138,7 +150,7 @@ async def try_returnerror(interaction: Interaction, embed: Embed):
             await interaction.followup.send(embed=embed, ephemeral=True)
     except HTTPException as e:
         logger.error(f"Could not send error embed due to network/Discord error: {e}")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.exception(f"Unexpected failure in try_returnerror: {e}")
 
 @tree.error
@@ -163,11 +175,21 @@ async def on_app_command_error(interaction: Interaction, error: app_commands.App
     if description == key:
         description = i18n.T("error.exceptions.AppCommandError", str(loc))
     
+    if isinstance(error, app_commands.CommandInvokeError):
+        original_error_name = error.original.__class__.__name__
+        original_key = f"error.exceptions.{original_error_name}"
+        original_description = i18n.T(original_key, loc, kwargs)
+        
+        if original_description == original_key:
+            original_description = i18n.T("error.exceptions.Unknown", str(loc), {"e": original_error_name})
+        
+        description += f"\n\n{original_description}"
+    
     embed = Embed(
-        title=f"Error thrown: {error_name}",
+        title=f"Error: {error_name}",
         description=description,
         color=Color.red(),
-        timestamp=datetime.now()
+        timestamp=datetime.now(UTC)
     )
     
     return await try_returnerror(interaction, embed)
@@ -237,7 +259,7 @@ def start_monitor():
 if __name__ == "__main__":
     if not bot_token:
         logger.critical("You should to put the bot token to 'TOKEN' in .env!")
-        exit()
+        sys.exit()
     else:
         #monitor_proc = start_monitor()
         
@@ -245,8 +267,7 @@ if __name__ == "__main__":
             bot.run(bot_token, log_handler=None)
         except KeyboardInterrupt:
             logger.info("Shutting down...")
-            pass
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.exception(f"Uncaught exception: {e}")
         finally:
             #monitor_proc.terminate()

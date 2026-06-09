@@ -1,7 +1,8 @@
-from operator import isub
 import string
 import textwrap
+
 import data
+
 
 def letter_reverser(input: str, decode: bool) -> str:
     alphabet = string.ascii_letters + string.digits
@@ -94,7 +95,7 @@ def morse_code(input: str, decode: bool = False):
     result = []
     if not decode:
         for char in list(input):
-            if char in table.keys():
+            if char in table:
                 result.append(table[char])
             elif char == " ":
                 result.append("/")
@@ -103,7 +104,7 @@ def morse_code(input: str, decode: bool = False):
         return " ".join(result)
     else:
         for code in input.split(" "):
-            if code in table.keys():
+            if code in table:
                 result.append(table[code])
             elif code == "/":
                 result.append(" ")

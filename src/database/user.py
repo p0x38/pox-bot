@@ -18,8 +18,7 @@ class UserDatabase(PostgreSQLDatabase):
         if not self.pool:
             return
         
-        async with self.pool.acquire() as conn:
-            async with conn.transaction():
+        async with self.pool.acquire() as conn, conn.transaction():
                 await conn.execute("""
                     INSERT INTO user_profiles (user_id, description, nickname)
                     VALUES ($1, $2, $3)

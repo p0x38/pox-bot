@@ -381,6 +381,55 @@
             "description": "Target closing algorithm... >:D"
         }
     },
+    "globalchat": {
+        "description": "A group for global chat! :3",
+        "texts": {
+            "including_attachments": {
+                "one": "Including an attachment",
+                "many": "Including {count} attachments"
+            },
+            "including_attachments_no_text": {
+                "one": "User sent an attachment",
+                "many": "User sent {count} attachments"
+            }
+        },
+        "toggle": {
+            "description": "Toggle global chat! :3",
+            "embeds": {
+                "default": {
+                    "description": "Global chat is now {toggle}! :3",
+                    "title": "Global chat toggled! >:D"
+                }
+            },
+            "parameters": {
+                "enabled": "Enable global chat? (yes/no)"
+            }
+        },
+        "setchannel": {
+            "description": "Set the global chat channel! :3",
+            "embeds": {
+                "default": {
+                    "description": "Global chat channel set to {channel}! :3",
+                    "title": "Global chat channel set! >:D"
+                }
+            },
+            "parameters": {
+                "channel": "Channel to set global chat"
+            }
+        },
+        "silentmode": {
+            "description": "Toggle silent mode! :3",
+            "embeds": {
+                "default": {
+                    "description": "Silent mode is now set to {toggle}! :3",
+                    "title": "Silent mode toggled! >:D"
+                }
+            },
+            "parameters": {
+                "toggle": "Enable silent mode? (yes/no)"
+            }
+        }
+    },
     "guild": {
         "count": {
             "description": "Counts how many people are in here! :3"
@@ -503,6 +552,22 @@
                     "title": "{user}'s Rank! :3"
                 }
             }
+        }
+    },
+    "minecraft": {
+        "profile": {
+            "description": "Retrieves minecraft user profile.",
+            "embeds": {
+                "default": {
+                    "title": "Profile for {name}"
+                }
+            }
+        },
+        "server": {
+            "description": "Lookups minecraft server."
+        },
+        "uuid": {
+            "description": "Retrieves Minecraft UUID from username."
         }
     },
     "moderation": {
@@ -685,15 +750,6 @@
             }
         },
         "description": "A group for the userphone! :3",
-        "globalchat": {
-            "description": "Tweaks the global chat settings! :3",
-            "embeds": {
-                "default": {
-                    "description": "Settings are all configured! :3",
-                    "title": "Configured successfully! :D"
-                }
-            }
-        },
         "hangup": {
             "description": "Hangs up the current call! 3:",
             "embeds": {
@@ -715,49 +771,40 @@
     },
     "welcome": {
         "description": "A group for welcome messages! :3",
-        "embeds": {
-            "join": {
-                "description": "Welcome, {mention}! Make sure to read the rules in {rules_mention}~ :3",
-                "description_no_rules": "Welcome to the server, {mention}! x3",
-                "footer": "We've got {count} members now! :3",
-                "title": "Welcome to {guild}! :D"
+        "toggle": {
+            "description": "Toggle the welcome message! :3",
+            "embeds": {
+                "default": {
+                    "description": "Welcome message is now {toggle}! :3",
+                    "title": "Welcome message toggled! >:D"
+                }
             },
-            "left": {
-                "description": "Goodbye, {display}... 3:",
-                "title": "Member {display} left {guild}... 3:"
+            "parameters": {
+                "enabled": "Enable welcome message? (yes/no)"
             }
         },
-        "set_channel": {
-            "description": "Sets the channel for join and leave messages! :3",
+        "joinchannel": {
+            "description": "Set the welcome message channel! :3",
             "embeds": {
-                "disabled": {
-                    "description": "Welcome notifications are turned off now! 3:"
-                },
-                "enabled": {
-                    "description": "Welcome notifications are on!\nThe messages will pop up in {target_mention}! :3"
+                "default": {
+                    "description": "Welcome message channel set to {channel}! :3",
+                    "title": "Welcome message channel set! >:D"
                 }
+            },
+            "parameters": {
+                "channel": "Channel to set welcome message"
             }
         },
-        "set_rules_channel": {
-            "description": "Sets up the rules channel so I can link it! :3",
+        "leavechannel": {
+            "description": "Set the leave message channel! :3",
             "embeds": {
-                "disabled": {
-                    "description": "Removed the rules channel from the welcome message! 3:"
-                },
-                "success": {
-                    "description": "Set the rules channel to {target_mention} for the welcome message! :3"
+                "default": {
+                    "description": "Leave message channel set to {channel}! :3",
+                    "title": "Leave message channel set! >:D"
                 }
-            }
-        },
-        "test": {
-            "description": "Runs a quick test on the welcome channel! :3",
-            "embeds": {
-                "sent": {
-                    "description": "Test message sent to the welcome channel! >:D"
-                },
-                "unconfigured": {
-                    "description": "The welcome channel hasn't been set up yet! 3:"
-                }
+            },
+            "parameters": {
+                "channel": "Channel to set leave message"
             }
         }
     }

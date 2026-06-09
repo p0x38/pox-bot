@@ -1,9 +1,11 @@
-from collections import Counter, defaultdict
 import random
+from collections import Counter, defaultdict
+
 from discord import Locale, app_commands
 from discord.app_commands import locale_str
 
 import data
+
 
 class MyTranslator(app_commands.Translator):
     async def translate(self, string: locale_str, locale: Locale, context: app_commands.TranslationContext):

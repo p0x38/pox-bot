@@ -26,12 +26,13 @@
 			"stream": "ext://sys.stdout"
 		},
 		"file": {
-			"class": "logging.handlers.RotatingFileHandler",
+			"class": "logging.handlers.TimedRotatingFileHandler",
 			"level": "DEBUG",
 			"formatter": "default",
 			"filename": "logs/discord.log",
-			"maxBytes": 33554432,
-			"backupCount": 128,
+			"when": "midnight",
+			"interval": 1,
+			"backupCount": 365,
 			"encoding": "utf-8"
 		},
 		"file_interact": {

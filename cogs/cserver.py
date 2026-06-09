@@ -1,13 +1,23 @@
+
 from aiocache import cached
-from discord import AuditLogAction, ButtonStyle, Color, Embed, Guild, Interaction, NSFWLevel, SelectOption, app_commands, ui
-from discord.app_commands import locale_str
+from discord import (
+    AuditLogAction,
+    ButtonStyle,
+    Color,
+    Embed,
+    Guild,
+    Interaction,
+    SelectOption,
+    app_commands,
+    ui,
+)
+from discord.app_commands import Choice, locale_str
 from discord.ext import commands
-from enum import IntFlag, auto
 
 from bot import PoxBot
 from logger import logger
-
 from src.translator import translator_instance as i18n
+
 
 class LoggingView(ui.View):
     def __init__(self, data_dict, user, default):
@@ -148,6 +158,58 @@ class GuildCog(commands.Cog):
         else:
             return await interaction.followup.send("Guild not found.")
     
+    @checker_group.command(name="listmembers", description=app_commands.locale_str("command.guild.listmembers.description"))
+    @app_commands.guild_only()
+    @app_commands.checks.has_permissions(administrator=True)
+    @app_commands.choices(
+        sort_by=[
+            Choice(name="ID", value="id"),
+            Choice(name="Username", value="username"),
+            Choice(name="Created at", value="created_at"),
+            Choice(name="Joined at", value="joined_at"),
+        ]
+    )
+    async def list_all_realusers(self, interaction: Interaction, sort_by: str | None = None):
+        guild = interaction.guild
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
+        
+        await interaction.response.defer(thinking=True)
+        
+        embed = Embed(color=Color.red())
+        members = []
+        final_texts = []
+        
+        if not guild:
+            embed.description = i18n.T("error.embeds.guild_only.description", loc)
+            embed.title = i18n.T("error.embeds.guild_only.title", loc)
+            return await interaction.followup.send(embed=embed)
+        
+        if sort_by:
+            if sort_by == "id":
+                members = sorted(guild.members, key=lambda m: m.id)
+            elif sort_by == "username":
+                members = sorted(guild.members, key=lambda m: m.name)
+            elif sort_by == "created_at":
+                members = sorted(guild.members, key=lambda m: m.created_at or 0)
+            elif sort_by == "joined_at":
+                members = sorted(guild.members, key=lambda m: m.joined_at or 0)
+        else:
+            members = guild.members
+        
+        for i, member in enumerate(members):
+            if member.bot: continue
+            final_texts.append(f"{i}. {member.mention}")
+        
+        if not final_texts:
+            embed.description = i18n.T("error.embeds.no_members.description", loc)
+            embed.title = i18n.T("error.embeds.no_members.title", loc)
+            return await interaction.followup.send(embed=embed)
+        
+        embed.description = "\n".join(final_texts)
+        embed.title = f"Members in {guild.name}"
+        
+        return await interaction.followup.send(embed=embed)
+    
     @cached(300)
     @checker_group.command(name="nsfw_level",description=app_commands.locale_str("command.guild.nsfw_level.description"))
     @app_commands.guild_only()
@@ -201,8 +263,12 @@ class GuildCog(commands.Cog):
         
         if total_members > 0:
             lines.append(f"Total: {total_members}")
-            lines.append("Bot ratio: {}%".format(round((bots/total_members) * 100)))
+            lines.append(f"Bot ratio: {round((bots/total_members) * 100)}%")
             lines.append(f"Nitro users: {nitros}")
+            
+        embed.description = "\n".join(lines)
+        
+        return await interaction.followup.send(embed=embed)
     
     @cached(60)
     @checker_group.command(name="members_list", description=app_commands.locale_str("command.guild.members_list.description"))
@@ -302,9 +368,7 @@ class GuildCog(commands.Cog):
                 history['kicks'].append(f"**Target:** {target} | **Mod:** {user}\n- *Reason: {reason}*")
             elif entry.action == AuditLogAction.ban:
                 history['bans'].append(f"**Target:** {target} | **Mod:** {user}\n- *Reason: {reason}*")
-            elif entry.action == AuditLogAction.member_update:
-                if hasattr(entry.after, 'communication_disabled_until'):
-                    if entry.after.communication_disabled_until:
+            elif entry.action == AuditLogAction.member_update and hasattr(entry.after, 'communication_disabled_until') and entry.after.communication_disabled_until:
                         until = entry.after.communication_disabled_until.strftime("%Y-%m-%d %H:%M")
                         history["timeouts"].append(f"**Target:** {target} | **Until:** {until}\n- *Reason: {reason}*")
         

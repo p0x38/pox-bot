@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from typing import Any, Dict, Union, cast
+from typing import Any, cast
 
 import orjson
+
 
 @dataclass
 class EconomyData:

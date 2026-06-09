@@ -1,9 +1,10 @@
+import uuid
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from enum import IntEnum
-import uuid
 
 from pytz import UTC
+
 
 @dataclass
 class BaseConfigData:
@@ -20,6 +21,9 @@ class WelcomeChannels:
     join: int | None = 0
     leave: int | None = 0
     rules: int | None = 0
+
+class EEWProviderType(IntEnum):
+    jma = 0
 
 class PhoneStatus(IntEnum):
     idle = 0
@@ -87,6 +91,7 @@ class TicketConfig(BaseConfigData):
 class GlobalChatConfig(BaseConfigData):
     channel_id: int | None = None
     webhook_url: str | None = None
+    silent: bool = False
 
 @dataclass
 class UserphoneConfig(BaseConfigData):

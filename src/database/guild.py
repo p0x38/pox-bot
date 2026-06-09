@@ -3,12 +3,11 @@ from datetime import datetime
 import orjson
 from pytz import UTC
 
-from src.database import PostgreSQLDatabase
-from src.models.guild_settings import ServerFeatureEntry
-from src.models.guild_settings import GuildConfig
-from src.models.guild_settings import ServerFeatureType
-from src.utils import Cache
 from logger import logger
+from src.database import PostgreSQLDatabase
+from src.models.guild_settings import GuildConfig, ServerFeatureEntry, ServerFeatureType
+from src.utils import Cache
+
 
 class GuildSettingsDatabase(PostgreSQLDatabase):
     def __init__(self, dsn: str):

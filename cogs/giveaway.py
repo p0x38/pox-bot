@@ -1,15 +1,16 @@
-from datetime import datetime, timedelta
 import json
 import random
-import discord
-from discord.ext import commands, tasks
-from discord import Colour, Embed, TextChannel, app_commands
+from datetime import datetime, timedelta
 from os.path import exists, join
 
 import aiofiles
+import discord
+from discord import Colour, Embed, TextChannel, app_commands
+from discord.ext import commands, tasks
+from pytz import UTC
 
-from logger import logger
 from bot import PoxBot
+from logger import logger
 
 GIVEAWAYS_FILE = 'data/giveaways.json'
 GIVEAWAYS_EMOJI = "🥳"
@@ -44,7 +45,7 @@ class GiveawayCog(commands.Cog):
                     logger.info(f"Loaded {len(self.giveaways)} active giveaways.")
                 else:
                     self.giveaways = {}
-                    logger.warning(f"Giveaways file was empty.")
+                    logger.warning("Giveaways file was empty.")
             except json.JSONDecodeError:
                 logger.error("Error loading giveaways.json. Starting with empty list.")
                 self.giveaways = {}
@@ -57,7 +58,7 @@ class GiveawayCog(commands.Cog):
     async def _save_giveaways(self):
         active_giveaways = {
             mid: data for mid, data in self.giveaways.items()
-            if data['end_time'] > datetime.now().timestamp()
+            if data['end_time'] > datetime.now(UTC).timestamp()
         }
 
         async with aiofiles.open(self.path, mode='w+') as f:
@@ -133,7 +134,7 @@ class GiveawayCog(commands.Cog):
     @tasks.loop(seconds=10.0)
     async def giveaway_task(self):
         expired_giveaways = []
-        current_time = datetime.now().timestamp()
+        current_time = datetime.now(UTC).timestamp()
 
         for message_id, data in self.giveaways.items():
             if data['end_time'] <= current_time:

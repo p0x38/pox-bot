@@ -1,28 +1,44 @@
+import asyncio
 import datetime
+import json
 import os
 import random
-import subprocess
-from time import time
-from typing import Optional
 import uuid
+from time import time
+
+import aiofiles
 import aiomysql
+import aiosqlite
 import discord
+import profanityfilter
+import psutil
+import roblox
+from discord import (
+    Color,
+    Embed,
+    Forbidden,
+    HTTPException,
+    MissingApplicationID,
+    app_commands,
+)
 from discord.ext import commands
 from gtts.lang import tts_langs
-import psutil
-from src.database import GuildSettingsDatabaseV2, UserDatabase
-from src.utils.cache import Cache
-from classes import EmoticonGenerator
-from src.database import EconomyDatabase, SettingsDatabase, StatsDatabase
+from openai import OpenAI
+from pytz import UTC
+from urlextract import URLExtract
+
 import stuff
-import aiosqlite
-import profanityfilter
-import roblox
+from classes import EmoticonGenerator
 from logger import logger
-from discord import Color, Embed, Forbidden, HTTPException, MissingApplicationID, app_commands
-import aiofiles
-import json
+from src.database import (
+    EconomyDatabase,
+    GuildSettingsDatabaseV2,
+    SettingsDatabase,
+    StatsDatabase,
+    UserDatabase,
+)
 from src.translator import discord_translator
+from src.utils.cache import Cache
 
 DB_CONFIG = {
     'host': 'localhost',
@@ -80,20 +96,22 @@ class PoxBot(commands.AutoShardedBot):
         self.server_data2_loaded = False
         self.auth_code = str(random.randint(10000000,99999999))
         self.EXCLUDE_EXTENSIONS = [
-            "chat", "chatbot",
+            "chat", "chatbot", "eew",
             "log",
             "others", "websockets"
         ]
         self.bot_servers_limit = 90
         self.pid = stuff.get_pid()
         self.proc = psutil.Process(self.pid)
+        self.openai_client = OpenAI(api_key=stuff.get_openai_api_key())
+        self.url_extrator = URLExtract()
     
     def _(self, s): return s
     
     async def setup_hook(self):
         try:
             await self.tree.set_translator(discord_translator)
-        except Exception:
+        except TypeError:
             logger.exception("Failed to set command translator")
         
         stuff.setup_database("./leaderboard.db")
@@ -101,7 +119,7 @@ class PoxBot(commands.AutoShardedBot):
         dsn = stuff.get_postgresql_dsn()
         
         if not dsn:
-            raise Exception("No DSN specified.")
+            raise TypeError("No DSN specified.")
         
         self.settings_db = SettingsDatabase(dsn)
         self.stats_db = StatsDatabase(dsn)
@@ -182,7 +200,7 @@ class PoxBot(commands.AutoShardedBot):
                 row = await cursor.fetchone()
                 if row:
                     self.handled_messages = row[0]
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.exception(e)
         
         """
@@ -197,10 +215,12 @@ class PoxBot(commands.AutoShardedBot):
             logger.exception(f"Error occured while trying to get activity message list: {e}")
         """
         try:
-            output = subprocess.run(['git','rev-parse','--short','HEAD'], capture_output=True, text=True, check=True)
-            self.commit_hash = output.stdout.strip()
-        except subprocess.CalledProcessError as e:
-            logger.error(f"Error occured: {e}")
+            process = await asyncio.create_subprocess_shell('git rev-parse --short HEAD', stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+            stdout, stderr = await process.communicate()
+            if process.returncode == 0:
+                self.commit_hash = stdout.decode().strip()
+            else:
+                logger.error(f"Git command failed: {stderr.decode()}")
         except FileNotFoundError:
             logger.error("Git command not found. make sure to check if Git is installed.")
         
@@ -223,8 +243,6 @@ class PoxBot(commands.AutoShardedBot):
                     logger.exception(f"Extension {fname[:-3]} has no entrypoint to load.")
                 except commands.ExtensionFailed as e:
                     logger.exception(f"Extension {fname[:-3]} has failed to load due to {e}.")
-                except Exception as e:
-                    logger.exception(f"Uncaught exception thrown while reloading, due to {e}.")
         try:
             synced = await self.tree.sync()
             logger.info(f"Synchronized {len(synced)} commands.")
@@ -235,12 +253,12 @@ class PoxBot(commands.AutoShardedBot):
         except MissingApplicationID:
             logger.error("MissingApplicationID: The application ID is empty or missing")
         except app_commands.TranslationError as e:
-            logger.exception(f"TranslationError: Error thrown while translating key {str(e.string)} in {e.locale} ({e.context.location.name})")
+            logger.exception(f"TranslationError: Error thrown while translating key {e.string!s} in {e.locale} ({e.context.location.name})")
         except HTTPException:
             logger.error("HTTPException: Failed to sync commands")
 
     async def on_ready(self):
-        logger.info("Auth-code is {}".format(self.auth_code))
+        logger.info(f"Auth-code is {self.auth_code}")
         if self.user:
             logger.info("\n".join((
                 "The client is logged into a bot!",
@@ -269,11 +287,11 @@ class PoxBot(commands.AutoShardedBot):
             logger.exception(f"Exception thrown: {e}!")
 
             embed = Embed(title="Error thrown while processing this command",
-                          timestamp=datetime.datetime.now(),
+                          timestamp=datetime.datetime.now(UTC),
                           color=Color.red())
             
             await ctx.reply(embed=embed)
-        except Exception as e2:
+        except (HTTPException, Forbidden, TypeError, ValueError) as e2:
             logger.exception(f"Couldn't send error embed: {e2}")
     
     async def on_interaction(self,inter: discord.Interaction):

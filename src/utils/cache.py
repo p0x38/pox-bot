@@ -1,5 +1,6 @@
 import time
 
+
 class Cache:
     def __init__(self, ttl):
         self.ttl = ttl

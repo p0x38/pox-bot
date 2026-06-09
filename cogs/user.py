@@ -1,24 +1,44 @@
 import asyncio
-from datetime import datetime, timedelta
 import inspect
 import math
-from multiprocessing import Value
 import random
 import re
+from datetime import datetime, timedelta
+from textwrap import shorten
 from typing import Any, cast
-from discord.ext import commands
-from discord import Activity, ActivityType, ClientStatus, Color, CustomActivity, Embed, Forbidden, Game, HTTPException, Interaction, Locale, Member, Role, SelectOption, Spotify, Status, Streaming, TextChannel, TextStyle, User, app_commands, ui
+
 from aiocache import cached
+from discord import (
+    Activity,
+    ActivityType,
+    ClientStatus,
+    Color,
+    CustomActivity,
+    Embed,
+    Forbidden,
+    Game,
+    HTTPException,
+    Interaction,
+    Locale,
+    Member,
+    SelectOption,
+    Spotify,
+    Status,
+    Streaming,
+    TextChannel,
+    TextStyle,
+    User,
+    app_commands,
+    ui,
+)
+from discord.ext import commands
 from pytz import UTC
 
 from bot import PoxBot
-
 from logger import logger
-from textwrap import shorten
-
 from src.translator import translator_instance as i18n
-
 from stuff import crop_word
+
 
 def format_status(client_status: ClientStatus, locale: Locale | str):
     result = ""
@@ -121,8 +141,7 @@ class TimeoutModal(ui.Modal, title="User timeout"):
             if td.total_seconds() <= 0:
                 raise ValueError(i18n.T("error.custom.timeout_duration_lessflow", loc))
             
-            if td > MAX_TIMEOUT:
-                td = MAX_TIMEOUT
+            td = min(td, MAX_TIMEOUT)
             
             if not interaction.guild:
                 raise Exception(i18n.T("error.custom.guild_only", loc))
@@ -534,14 +553,21 @@ class UserCog(commands.Cog):
         await interaction.response.defer()
         
         embed = Embed()
-
-        if new_nick is None:
-            await member.edit(nick=None, reason=i18n.T("command.user.set_nick.reasons.reset", loc, {"user": member.mention, "author": interaction.user.name}))
-            embed.description = i18n.T("command.user.set_nick.embeds.reset.description", loc, {"user": member.mention})
-            return await interaction.followup.send(embed=embed)
-        else:
-            await member.edit(nick=None, reason=i18n.T("command.user.set_nick.reasons.changed", loc, {"user": member.mention, "author": interaction.user.name}))
-            embed.description = i18n.T("command.user.set_nick.embeds.changed.description", loc, {"user": member.mention, "new_nickname": new_nick})
+        
+        try:
+            if new_nick is None:
+                await member.edit(nick=None, reason=i18n.T("command.user.set_nick.reasons.reset", loc, {"user": member.mention, "author": interaction.user.name}))
+                embed.description = i18n.T("command.user.set_nick.embeds.reset.description", loc, {"user": member.mention})
+                return await interaction.followup.send(embed=embed)
+            else:
+                await member.edit(nick=None, reason=i18n.T("command.user.set_nick.reasons.changed", loc, {"user": member.mention, "author": interaction.user.name}))
+                embed.description = i18n.T("command.user.set_nick.embeds.changed.description", loc, {"user": member.mention, "new_nickname": new_nick})
+                return await interaction.followup.send(embed=embed)
+        except Forbidden:
+            embed.title = i18n.T("error.embeds.missing_permission.title", loc)
+            embed.description = i18n.T("error.embeds.missing_permission.description", loc, {"missing": "Manage Nicknames"})
+            embed.timestamp = datetime.now(UTC)
+            embed.color = Color.red()
             return await interaction.followup.send(embed=embed)
     
     @group.command(name="status", description=app_commands.locale_str("command.user.status.description"))

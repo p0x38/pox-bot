@@ -1,14 +1,16 @@
-import re
-
-import i18n
-import os
-import orjson
-import aiofiles
 import asyncio
+import os
+import re
 from typing import Any, overload
+
+import aiofiles
+import i18n
+import icu
+import orjson
 from discord import Interaction, Locale, SelectOption, app_commands
 
 from logger import logger
+
 
 class TranslationManager:
     def __init__(self, locales_path: str = "locales"):
@@ -16,9 +18,8 @@ class TranslationManager:
         try:
             with open("resources/available_languages.json", "r", encoding="utf-8") as f:
                 data = orjson.loads(f.read())
-                # Convert the list to a dict for easy lookup: {"en": {"display": "English", ...}}
                 self.lang_info = {item["code"]: item for item in data}
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.error(f"Failed to load available_languages.json: {e}")
             self.lang_info = {}
     
@@ -80,14 +81,12 @@ class I18nTranslator:
         await asyncio.sleep(self.batch_delay)
         
         if self.missing_keys_buffer:
-            report = ["\n----  Translation Missing Report ----"]
+            report = ["Translation Missing Report:"]
             for key in sorted(self.missing_keys_buffer, key=natural_key):
                 langs = self.missing_keys_buffer[key]
                 report.append(f"* Key: '{key}' in {', '.join(sorted(langs))}")
-                
-            report.append("-------------------------------------")
             
-            logger.warning("\n".join(report))
+            logger.warning("\n".join(report) + "\n")
             self.missing_keys_buffer.clear()
         
         self.batch_task = None
@@ -127,29 +126,27 @@ class I18nTranslator:
                         data = orjson.loads(content)
                         
                         i18n.translations.add(locale, {namespace: data})
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     logger.error(f"Failed to load {filename} for {locale}: {e}")
 
     def _normalize_locale(self, locale: str | Locale) -> str:
         if not locale:
             return "en"
         
-        if isinstance(locale, list):
-            locale = locale[0]
+        locale_str = str(locale).replace("_", "-").lower()
         
-        locale = str(locale).replace("_", "-").lower()
-
-        base = locale.split("-")[0]
-
-        if base not in self.available_files:
-            return "en"
+        if locale_str in self.available_files:
+            return locale_str
         
-        return base
+        base = locale_str.split("-")[0]
+        if base in self.available_files:
+            return base
+        
+        return "en"
     
     def get_best_locale(self, user_locale: str | None, interaction_locale: Locale) -> str:
-        if user_locale:
-            if user_locale in self.available_files:
-                return user_locale
+        if user_locale and user_locale in self.available_files:
+            return user_locale
         
         return self._normalize_locale(interaction_locale)
     
@@ -160,7 +157,6 @@ class I18nTranslator:
     
     def translate_string(self, text: str, locale: str | Locale, **kwargs) -> str:
         lang = self._normalize_locale(locale)
-        
         translated = i18n.t(text, locale=lang)
         
         is_missing = (translated is self.MISSING) or (isinstance(translated, str) and not translated.strip())
@@ -193,11 +189,18 @@ class I18nTranslator:
             return text
         
         if isinstance(translated, str):
-            translated = self._convert_placeholders(translated)
-            
-            if kwargs:
-                for k, v in kwargs.items():
-                    translated = translated.replace(f"%{{{k}}}", str(v))
+            try:
+                icu_locale = icu.Locale(lang.replace("-", "_")) # type: ignore
+                msg_format = icu.MessageFormat(translated) # type: ignore
+                msg_format.setLocale(icu_locale)
+                
+                return str(msg_format.format(kwargs))
+            except Exception:  # noqa: BLE001
+                #logger.debug(f"ICU format failed for {text}, falling back: {e}")
+                if kwargs:
+                    for k, v in kwargs.items():
+                        translated = translated.replace(f"{{{k}}}", str(v))
+                return translated
         
         return translated
     
@@ -224,7 +227,7 @@ class I18nTranslator:
         
         return self.translate_string(text, locale, **merged_kwargs)
     
-    def translate_map(self, data_dict: dict[str, Any], locale: str, prefix: str = "label") -> dict:
+    def translate_map(self, data_dict: dict[str, Any], locale: str | Locale, prefix: str = "label") -> dict:
         """
         Translates all keys in a dictionary based on a specific i18n prefix.
         """

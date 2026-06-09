@@ -1,10 +1,10 @@
-from typing import Optional, Union
-from discord.ext import commands
 from discord import Embed, Interaction, app_commands
+from discord.ext import commands
 
 from bot import PoxBot
 
-def _get_command_signature(command: Union[app_commands.Command, app_commands.Group], prefix: str = "") -> str:
+
+def _get_command_signature(command: app_commands.Command | app_commands.Group, prefix: str = "") -> str:
     """Recursively formats the command name and its parameters."""
     
     # Base command name (Group or Command)
@@ -52,7 +52,7 @@ class HelpCog(commands.Cog):
         self.commands_per_page = 12
     
     @app_commands.command(name="help_v2")
-    async def help_command(self, interaction: Interaction, index_number: Optional[int] = 0):
+    async def help_command(self, interaction: Interaction, index_number: int | None = 0):
         if index_number is None:
             index_number = 0
 

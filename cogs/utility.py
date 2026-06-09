@@ -1,14 +1,12 @@
-from discord.ext import commands
-from discord import Color, app_commands, Interaction, Embed
-
-from typing import Optional
-
 import random
-from bot import PoxBot
-import data
 
-from logger import logger
+from discord import Color, Embed, Interaction, app_commands
+from discord.ext import commands
+
+import data
+from bot import PoxBot
 from src.translator import translator_instance as i18n
+
 
 class UtilityCog(commands.Cog):
     def __init__(self, bot):
@@ -41,7 +39,7 @@ class UtilityCog(commands.Cog):
     
     @app_commands.command(name="coinflip", description="Flips a coin and says 'Heads' or 'Tails'.")
     @app_commands.describe(input="Text to desire.")
-    async def coin_flip(self, interaction: Interaction, input: Optional[str] = None):
+    async def coin_flip(self, interaction: Interaction, input: str | None = None):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         await interaction.response.defer()
         result = i18n.T("text.coinflip.true" if random.randint(0, 1) == 1 else "text.coinflip.false")

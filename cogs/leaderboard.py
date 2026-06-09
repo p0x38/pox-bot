@@ -1,12 +1,22 @@
 import asyncio
+
 from aiocache import cached
-from discord import Color, Embed, Forbidden, Guild, Interaction, Member, NotFound, app_commands
+from discord import (
+    Color,
+    Embed,
+    Forbidden,
+    Guild,
+    Interaction,
+    Member,
+    NotFound,
+    app_commands,
+)
 from discord.ext.commands import Cog, guild_only
 
-from data import MemberFetchStatus
-
 from bot import PoxBot
+from data import MemberFetchStatus
 from logger import logger
+
 
 async def get_all_guild_members(guild: Guild):
     cached_members = guild.members

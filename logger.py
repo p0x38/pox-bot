@@ -1,10 +1,10 @@
 import json
 from logging import getLogger
 from logging.config import dictConfig
+
 from rich.logging import RichHandler
 
 logger = getLogger('bot')
-
 interact_logger = getLogger("interactions")
 
 with open('conf/logging.json', 'r') as f:

@@ -170,6 +170,106 @@
         "offline": "Offline",
         "online": "Online"
     },
+    "moderation": {
+        "categories": {
+            "harassment": "Harassment",
+            "harassment/threatening": "Threatening to Harassment",
+            "hate": "Hate Speech",
+            "hate/threatening": "Serious Threats",
+            "illicit": "Illcit Content",
+            "illicit/violent": "Illcitly Violent Content",
+            "self-harm": "Self Harm",
+            "self-harm/intent": "Intent of Self Harm",
+            "self-harm/instructions": "Sharing Instructions to Self Harm",
+            "sexual": "Sexual/Sensitive Content",
+            "sexual/minors": "Sensitive Minor Content",
+            "violence": "Violence",
+            "violence/graphic": "Graphic Violence"
+        },
+        "moderation": {
+            "format": {
+                "zero": "No content has been flagged. might be a false positive.",
+                "single": "{content}",
+                "two": "{first} and {last}",
+                "multiple": "{list}, and {last}"
+            }
+        },
+        "flagged_message": "The content has been flagged as {categories}."
+    },
+    "earthquake_reports": {
+        "jma": {
+            "issue_type": {
+                "ScalePrompt": "Intensity Report",
+                "Destination": "Epicenter Report",
+                "ScaleAndDestination": "Intensity & Epicenter Report",
+                "DetailScale": "Intensity Report (Detailed)",
+                "Foreign": "Foreign Earthquake Report",
+                "Other": "Miscillaneous Report"
+            },
+            "issue_correction": {
+                "None": "No correction has been provided from provider.",
+                "Unknown": "Correction is unavailable.",
+                "ScaleOnly": "Correction(s) for intensity has been provided.",
+                "DestinationOnly": "Correction(s) for epicenter has been provided.",
+                "ScaleAndDestination": "Correction(s) for intensity and epicenter has been provided."
+            },
+            "earthquake_max_scale": {
+                "-1": "N/A",
+                "10": "JMA Intensity 1",
+                "20": "JMA Intensity 2",
+                "30": "JMA Intensity 3",
+                "40": "JMA Intensity 4",
+                "45": "JMA Intensity 5-",
+                "50": "JMA Intensity 5+",
+                "55": "JMA Intensity 6-",
+                "60": "JMA Intensity 6+",
+                "70": "JMA Intensity 7"
+            },
+            "domestic_tsunami": {
+                "None": "No tsunami warnings are reported.",
+                "Unknown": "The tsunami warnings are not available to show.",
+                "Checking": "JMA has been checking for tsunami warnings.",
+                "NonEffective": "No tsunami expected, although small sea level changes may be observed.",
+                "Watch": "Tsunami watch has been issued.",
+                "Warning": "Tsunami warning has been issued."
+            },
+            "foreign_tsunami": {
+                "None": "No damage by tsunami is expected in Japan.",
+                "Unknown": "The tsunami warnings are not available to show.",
+                "Checking": "JMA has been checking for tsunami damage probability in Japan.",
+                "NonEffectiveNearby": "No damage has been expected nearby, although small sea level changes may be observed nearby the epicenter.",
+                "WarningNearby": "There is a possibility of tsunami damage nearby the epicenter.",
+                "WarningPacific": "There is a possibility of tsunami damage in the Pacific region.",
+                "WarningPacificWide": "There is a possibility of tsunami damage across the Pacific region.",
+                "WarningIndian": "There is a possibility of tsunami damage in the Indian Ocean region.",
+                "WarningIndianWide": "There is a possibility of tsunami damage across the Indian Ocean region.",
+                "Potential": "There is enough possibility of tsunami damage in the region in this scale generally."
+            },
+            "point_intensity_scale": {
+                "10": "JMA Intensity 1",
+                "20": "JMA Intensity 2",
+                "30": "JMA Intensity 3",
+                "40": "JMA Intensity 4",
+                "45": "JMA Intensity 5-",
+                "46": "Possibly over JMA Intensity 5-, unconfirmed",
+                "50": "JMA Intensity 5+",
+                "55": "JMA Intensity 6-",
+                "60": "JMA Intensity 6+",
+                "70": "JMA Intensity 7"
+            },
+            "tsunami_grade": {
+                "MajorWarning": "Major Tsunami Warning",
+                "Warning": "Tsunami Warning",
+                "Watch": "Tsunami Advisory",
+                "Unknown": "Unknown grade"
+            },
+            "tsunami_first_height_conditions": {
+                "ただちに津波来襲と予測": "The tsunami is expected to arrive immediately",
+                "津波到達中と推測": "The tsunami is presumed to be arriving",
+                "第１波の到達を確認": "The arrival of the first wave has been confirmed"
+            }
+        }
+    },
     "unknown": "Unknown",
     "unknown_join": "Cannot find the date when this bro joined."
 }

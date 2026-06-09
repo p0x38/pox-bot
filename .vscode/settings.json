@@ -1,6 +1,5 @@
 {
     "python-envs.defaultEnvManager": "ms-python.python:venv",
-    "python-envs.pythonProjects": [],
     "todo-tree.tree.scanMode": "workspace",
     "python.REPL.enableREPLSmartSend": false,
     "i18n-ally.localesPaths": ["resources/locales"],
@@ -71,5 +70,5 @@
     "i18n-ally.extract.keyMaxLength": 0,
     "i18n-ally.translate.saveAsCandidates": true,
     "i18n-ally.review.user.name": "p0x38",
-    "i18n-ally.review.user.email": "ryuuking0410@gmail.com"
+    "python.analysis.autoImportCompletions": true
 }

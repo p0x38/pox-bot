@@ -1,5 +1,7 @@
 from dataclasses import field
+
 from attr import dataclass
+
 
 @dataclass
 class UserStats:

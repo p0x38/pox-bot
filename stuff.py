@@ -1,17 +1,19 @@
+import base64
 import datetime
-import subprocess
 import json
+import logging
 import os
 import random
+import re
 import sqlite3
+import subprocess
 import time
 import unicodedata
-import logging
-import re
-import base64
+import urllib.parse
+
 import aiofiles
 import dotenv
-import urllib.parse
+from pytz import UTC
 
 dotenv.load_dotenv()
 
@@ -38,6 +40,9 @@ def get_lmstudio_token():
 def get_openai_api_key():
     return os.getenv("OPENAI_API_KEY")
 
+def get_openrouter_api_key():
+    return os.getenv("OPENROUTER_API_KEY")
+
 def get_mysql_credentials():
     logger.debug("Retrieving MySQL credentials...")
     user = os.getenv('MYSQL_USER')
@@ -54,7 +59,7 @@ def get_postgresql_dsn():
     
     if any(v is None for v in [user, password, database_name, host]):
         required = [i for i, v in {"POSTGRESQL_USER": user, "POSTGRESQL_PASS": password, "POSTGRESQL_DATABASE": database_name, "POSTGRESQL_HOST": host}.items() if v is None]
-        raise Exception(f"Requires {', '.join(required)} are not empty.")
+        raise ValueError(f"Requires {', '.join(required)} are not empty.")
     
     password = urllib.parse.quote_plus(str(password))
     
@@ -65,31 +70,30 @@ def get_pid():
 
 def _find_key_recursive(config: dict,key) -> bool:
     if key in config:
-        logging.debug(f"Found key '{key}' at a nested level.")
+        logger.debug(f"Found key '{key}' at a nested level.")
         return True
     
     for value in config.values():
-        if isinstance(value, dict):
-            if _find_key_recursive(value,key):
+        if isinstance(value, dict) and _find_key_recursive(value, key):
                 return True
     
     return False
 
 def set_if_not_exists(config: dict, key, value):
     try:
-        for k,v in config.items():
+        for k in config:
             logger.debug(f"ArrayKey: {k}")
             if k == key:
                 return
         config[key] = value
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(f"Exception occured; {e} 3:")
         return False
     return True
 
 def cset(config: dict, key, value):
     try: config[key] = value
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(f"Exception occured while trying to set config {key} to {value}: {e} 3:") 
         return False
     return True
@@ -120,7 +124,7 @@ def muffle(text: str):
         logger.debug(f"Target: {char}")
         target = char
         if target.isalpha():
-            logger.debug(f"The char is alphabet")
+            logger.debug("The char is alphabet")
             if target not in 'whpmnuf':
                 logger.debug(f"The char {char} will be replaced with 'm'")
                 target = "m"
@@ -136,7 +140,7 @@ def uwuify(uwu,text: str):
     return uwu.uwuify(text)
 
 def save(config: dict):
-    logger.debug(f"Saving data to settings.json")
+    logger.debug("Saving data to settings.json")
     with open("settings.json","w",encoding="utf-8") as f:
         json.dump(config,f,ensure_ascii=False,indent=4)
 
@@ -148,7 +152,7 @@ def create_dir_if_not_exists(path):
 def format_extra(input:str):
     logger.debug(f"Input: {input}")
     if not input:
-        logger.debug(f"Input shouldn't be empty")
+        logger.debug("Input shouldn't be empty")
         return ""
     
     result = ""
@@ -233,34 +237,22 @@ def three_commas(x):
 def is_weekday(time: datetime.datetime):
     weekday = time.weekday()
 
-    if weekday >= 0 and weekday <= 4:
-        return True
-    else:
-        return False
+    return bool(weekday >= 0 and weekday <= 4)
 
 def is_specificweek(time: datetime.datetime,week:int):
     weekday = time.weekday()
 
-    if weekday == week:
-        return True
-    else:
-        return False
+    return weekday == week
 
 def is_within_hour(time: datetime.datetime,fromhour:int,tohour:int):
     hour = time.hour
 
-    if hour >= fromhour and hour < tohour:
-        return True
-    else:
-        return False
+    return bool(hour >= fromhour and hour < tohour)
 
 def is_sleeping(time: datetime.datetime,fromhour:int,tohour:int):
     hour = time.hour
 
-    if hour >= fromhour or hour < tohour:
-        return True
-    else:
-        return False
+    return bool(hour >= fromhour or hour < tohour)
 
 """
 def check_map(score: float,max:int):
@@ -312,7 +304,7 @@ def to_meow_weighted(word):
     weightgg = [50,2,1]
     ran = random.choices(numberd,weights=weightgg)[0]
     meows = ["meow","miaw","maow"]
-    first_char = word[0] if word else None
+    #first_char = word[0] if word else None
     length = len(word)
     if not length:
         return ""
@@ -488,7 +480,7 @@ def to_uwu(text: str) -> str:
             words[index] = word
         
         return " ".join(words)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(e)
         return text
 
@@ -532,7 +524,7 @@ def approach_target(target: float,max_iterations: int = 125, x: float = 1.75,cur
     history = [current]
     iterations = 0
     
-    while abs((target - current)) > 0.25 or iterations < max_iterations:
+    while abs(target - current) > 0.25 or iterations < max_iterations:
         diff = target - current
         smin,smax = step_varience
         step = diff*random.uniform(smin,smax)*x
@@ -569,7 +561,7 @@ def get_latency_from_uhhh_time(interval: float = 1, iterations: int = 2):
     last = None
     
     for i in range(iterations):
-        current = datetime.datetime.now()
+        current = datetime.datetime.now(UTC)
         
         if last:
             delay = (current - last)
@@ -635,7 +627,7 @@ def get_int(i):
         return int(i)
     except ValueError:
         return 0
-    except Exception:
+    except Exception:  # noqa: BLE001
         return -1
 
 def format_boolean(i: bool | None, true_text: str = "Yes", false_text: str = "No", missing_text: str = "None"):

@@ -1,8 +1,7 @@
-from typing import Optional
-
-from src.database.bases import PostgreSQLDatabase
 from logger import logger
-from src.models import UserStats, LeaderboardData
+from src.database.bases import PostgreSQLDatabase
+from src.models import LeaderboardData, UserStats
+
 
 class StatsDatabase(PostgreSQLDatabase):
     async def on_load(self):
@@ -29,7 +28,7 @@ class StatsDatabase(PostgreSQLDatabase):
             return await self.pool.fetchrow(query, user_id, count)
         return False
     
-    async def get_user_stats(self, user_id: int) -> Optional[UserStats]:
+    async def get_user_stats(self, user_id: int) -> UserStats | None:
         if not self.pool:
             return None
         row = await self.pool.fetchrow("SELECT * FROM user_stats WHERE user_id = $1", user_id)

@@ -1,12 +1,15 @@
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 
+from pytz import UTC
+
+
 @dataclass
 class TicketData:
     channel_id: int
     user_id: int
     guild_id: int
-    opened_at: float = field(default_factory=lambda: datetime.now().timestamp())
+    opened_at: float = field(default_factory=lambda: datetime.now(UTC).timestamp())
     status: str = "open"
     
     @classmethod

@@ -29,9 +29,8 @@ class TicketDatabase(PostgreSQLDatabase):
         if not self.pool:
             return
         
-        async with self.pool.acquire() as conn:
-            async with conn.transaction():
-                await conn.execute("""
+        async with self.pool.acquire() as conn, conn.transaction():
+            await conn.execute("""
                     INSERT INTO active_tickets (channel_id, user_id, guild_id)
                     VALUES ($1, $2, $3)
                 """, channel_id, user_id, guild_id)

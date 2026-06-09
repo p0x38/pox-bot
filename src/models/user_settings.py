@@ -3,6 +3,7 @@ from typing import Any, cast
 
 import orjson
 
+
 @dataclass
 class SettingsData:
     _locale: str = field(default="en", repr=False)

@@ -1,5 +1,6 @@
+import json
+import re
 from enum import IntEnum, IntFlag, auto
-import re, json
 
 with open("emoticons.txt", 'r', encoding="utf-8") as f:
     emoticons = f.read().split("\n")

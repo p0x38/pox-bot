@@ -2,12 +2,13 @@ import glob
 from itertools import islice
 import os
 from pathlib import Path
+import re
 from time import time
 import uuid
 from aiocache import cached
 import aiofiles
 from discord.ext.commands import Cog
-from discord import Message, app_commands, Embed, Interaction, File
+from discord import Color, Message, app_commands, Embed, Interaction, File
 from discord.app_commands import AppInstallationType, locale_str, AppCommandContext
 import markovify
 from io import BytesIO
@@ -19,6 +20,9 @@ from moviepy.video.fx.fadein import fadein
 from moviepy.video.fx.loop import loop
 from moviepy.config import change_settings
 import PIL.Image
+import numpy as np
+import numexpr as ne
+from scipy.io import wavfile
 
 from typing import Optional
 
@@ -355,7 +359,60 @@ class GenerationCog(Cog):
             return await interaction.followup.send(f"Image name: {id}",file=pic)
         else:
             return await interaction.followup.send("I couldn't find that")
+    
+    @group.command(name="bytebeat", description=app_commands.locale_str("commands.generate.bytebeat.description"))
+    async def generate_bytebeat(
+        self,
+        interaction: Interaction,
+        formula: str,
+        duration: float | None = None,
+        sample_rate: int | None = None
+    ):
+        loc = (
+            await self.bot.settings_db.get_locale(interaction)
+            if self.bot.settings_db
+            else interaction.locale
+        )
+        await interaction.response.defer()
         
+        embed = Embed()
+        
+        pattern = re.compile(r'[0-9t\s\+\-\*\/\&\ \|\>\<\%\(\)]+$')
+        
+        if not bool(pattern.match(formula)):
+            embed.color = Color.red()
+            embed.description = i18n.T("error.embeds.invalid_bytebeat_formula.description", loc)
+            
+            return await interaction.followup.send(embed=embed)
+        
+        if duration is None:
+            duration = 10
+        
+        if sample_rate is None:
+            sample_rate = 44100
+        
+        try:
+            t = np.linspace(0, float(sample_rate) * duration)
+            
+            data = ne.evaluate(formula, local_dict={"t": t})
+            
+            data = data.astype(np.uint8)
+            
+            filename = "bytebeat.wav"
+            abuffer = BytesIO()
+            wavfile.write(abuffer, sample_rate, data)
+            abuffer.seek(0)
+            
+            file = File(fp=abuffer, filename=filename)
+            
+            embed.description = "Generated!"
+            
+            if file and embed:
+                await interaction.followup.send(file=file, embed=embed)
+            else:
+                await interaction.followup.send("An error occurred while generating the audio.")
+        except Exception as e:
+            await interaction.followup.send(f"err.type=null.error. {e}")
     @cached(60)
     async def generate_funny_fade_video(self, interaction: Interaction, message: Message):
         start_time = time()

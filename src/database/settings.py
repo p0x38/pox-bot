@@ -1,8 +1,8 @@
-from discord import Interaction
 import orjson
+from discord import Interaction
 
-from src.database import PostgreSQLDatabase
 from logger import logger
+from src.database import PostgreSQLDatabase
 from src.models import SettingsData
 from src.translator import translator_instance as i18n
 from src.utils import Cache

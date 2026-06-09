@@ -1,8 +1,12 @@
 from datetime import datetime
+
+from pytz import UTC
+
+from logger import logger
 from src.database import PostgreSQLDatabase
 from src.models import EconomyData
 from src.utils import Cache
-from logger import logger
+
 
 class EconomyDatabase(PostgreSQLDatabase):
     def __init__(self, dsn: str):
@@ -95,7 +99,7 @@ class EconomyDatabase(PostgreSQLDatabase):
                 await conn.execute("""
                     INSERT INTO economy_transactions (user_id, type, amount, description, timestamp)
                     VALUES ($1, $2, $3, $4, $5)
-                """, user_id, tx_type, amount, desc, int(datetime.now().timestamp()))
+                """, user_id, tx_type, amount, desc, int(datetime.now(UTC).timestamp()))
     
     async def get_history(self, user_id: int, limit: int = 5) -> list:
         if self.pool:

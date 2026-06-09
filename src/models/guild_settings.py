@@ -4,6 +4,7 @@ from enum import StrEnum
 
 from pytz import UTC
 
+
 class ServerFeatureType(StrEnum):
     delete_swears = "delete_message_with_swears"
     level_notify = "enable_level_notify"

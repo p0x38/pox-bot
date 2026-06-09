@@ -1,12 +1,22 @@
 import random
 import time
-import aiofiles
-from discord.ext import commands, tasks
-from discord import Activity, ActivityType, CustomActivity, Status
 from os.path import exists, join
+
+import aiofiles
+from aiohttp import ClientConnectionError
+from discord import (
+    Activity,
+    ActivityType,
+    ConnectionClosed,
+    CustomActivity,
+    HTTPException,
+    Status,
+)
+from discord.ext import commands, tasks
 
 from bot import PoxBot
 from logger import logger
+
 
 class InactivityCog(commands.Cog):
     def __init__(self, bot):
@@ -39,26 +49,33 @@ class InactivityCog(commands.Cog):
     @tasks.loop(seconds=30.0)
     async def status_check_loop(self):
         await self.bot.wait_until_ready()
-        total = len(self.bot.guilds)
-        active = len([guild for guild in self.bot.guilds if not guild.unavailable])
         
-        if self.status_messages:
-            choosen = random.choice(self.status_messages)
-        else:
-            logger.warning("status_messages is empty. Skipping update")
-            choosen = "It seems there's no status messages been loaded."
-        
-        self.type = random.randint(0,10)
-        if self.type > 7:
-            await self.bot.change_presence(
-                status=Status.online,
-                activity=Activity(type=ActivityType.watching, name="You.")
-            )
-        else:
-            await self.bot.change_presence(
-                status=Status.online,
-                activity=CustomActivity(name=f"{total}/{active} servers; {choosen}")
-            )
+        try:
+            total = len(self.bot.guilds)
+            active = len([guild for guild in self.bot.guilds if not guild.unavailable])
+
+            if self.status_messages:
+                choosen = random.choice(self.status_messages)
+            else:
+                logger.warning("status_messages is empty. Skipping update")
+                choosen = "It seems there's no status messages been loaded."
+
+            self.type = random.randint(0,10)
+            if self.type > 7:
+                await self.bot.change_presence(
+                    status=Status.online,
+                    activity=Activity(type=ActivityType.watching, name="You.")
+                )
+            else:
+                await self.bot.change_presence(
+                    status=Status.online,
+                    activity=CustomActivity(name=f"{total}/{active} servers; {choosen}")
+                )
+        except (ConnectionClosed, ClientConnectionError, HTTPException) as e:
+            logger.warning(f"Connection issue in status_check_loop: {e}")
+        except Exception as e:
+            logger.error(f"Failed to update status: {e}", exc_info=True)
+            raise e from e
     #@tasks.loop(seconds=30.0)
     #async def status_check_loop(self):
     #    await self.bot.wait_until_ready()
