@@ -1,11 +1,12 @@
 import time
-from discord.ext import commands
-from discord import app_commands, Interaction, Embed
 
-from bot import PoxBot
+from discord import Embed, Interaction, app_commands
+from discord.ext import commands
 from thefuzz import process
 
+from bot import PoxBot
 from stuff import truncate
+
 
 class SearchCog(commands.Cog):
     def __init__(self, bot: PoxBot):
@@ -13,14 +14,14 @@ class SearchCog(commands.Cog):
     
     group = app_commands.Group(name="builtin_search", description="Just for no reason")
 
-    @group.command(name="add_query", description="Add query to database.")
+    @group.command(name="add_query", description=app_commands.locale_str("command.builtin_search.add_query.description"))
     async def add_query(self, interaction: Interaction, value: str):
         await interaction.response.defer()
 
         if self.bot.db_connection:
             try:
                 await self.bot.db_connection.execute("INSERT INTO custom (query,author_id,timestamp) VALUES (?,?,?)", (value, interaction.user.id, time.time()))
-                await interaction.followup.send(f"Your query has been added.", ephemeral=True, silent=True)
+                await interaction.followup.send("Your query has been added.", ephemeral=True, silent=True)
             except Exception as e:
                 await interaction.followup.send(f"Failed to process. {e}", ephemeral=True)
                 return
@@ -35,7 +36,7 @@ class SearchCog(commands.Cog):
         if self.bot.db_connection:
             try:
                 await self.bot.db_connection.execute(f"DELETE FROM custom WHERE query = \"{value}\"")
-                await interaction.followup.send(f"The query has been removed.", ephemeral=True, silent=True)
+                await interaction.followup.send("The query has been removed.", ephemeral=True, silent=True)
             except Exception as e:
                 await interaction.followup.send(f"Failed to process. {e}", ephemeral=True)
                 return
@@ -57,7 +58,7 @@ class SearchCog(commands.Cog):
                     count += 1
 
                 embed = Embed(
-                    title=f"Count of query in Database",
+                    title="Count of query in Database",
                     description=f"{count} query in database."
                 )
 
@@ -82,7 +83,7 @@ class SearchCog(commands.Cog):
                 for query in all_query:
                     lines.append(query[0])
                 embed = Embed(
-                    title=f"Count of query in Database",
+                    title="Count of query in Database",
                     description=truncate(", ".join(lines)),
                 )
 

@@ -29,7 +29,14 @@ from logger import logger
 from src.translator import translator_instance as i18n
 
 process_ps = psutil.Process(os.getpid())
-process_ps.nice(psutil.ABOVE_NORMAL_PRIORITY_CLASS)
+
+if sys.platform == "win32":
+    process_ps.nice(psutil.ABOVE_NORMAL_PRIORITY_CLASS)
+else:
+    try:
+        process_ps.nice(-5)
+    except psutil.AccessDenied:
+        logger.warning("sudo command is required to increase nice priority. continuing with default nice value...")
 
 bot_token = stuff.get_bot_token()
 

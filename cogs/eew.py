@@ -11,34 +11,15 @@
 # I do NOT take any responsibility for any damage caused by using the API.
 # https://www.p2pquake.net/secondary_use/
 
-import asyncio
-import os
-import random
-import re
-import string
-import time
-from datetime import timedelta
-from enum import Enum
-from typing import Optional
-
 import aiohttp
-import discord
 from discord import (
     Embed,
-    Forbidden,
     Interaction,
-    Member,
-    SelectOption,
-    TextChannel,
-    TextStyle,
     app_commands,
 )
 from discord.ext import commands
 
-import data
-import stuff
 from bot import PoxBot
-from logger import logger
 
 
 class EEWCog(commands.Cog):
@@ -53,31 +34,35 @@ class EEWCog(commands.Cog):
 
         embed = Embed()
 
-        cached = self.bot.cache.get('eew')
+        cached = self.bot.cache.get("eew")
 
         if not cached:
-            async with aiohttp.ClientSession() as session:
-                async with session.get("https://api.p2pquake.net/v2/history?codes=551&codes=552") as resp:
-                    if resp.status != 429:
-                        embed.description = "Rate limited!"
-                        return await interaction.followup.send(embed=embed)
-                    elif resp.status != 200:
-                        embed.description = "Failed to get data!"
-                        return await interaction.followup.send(embed=embed)
-                    
-                    data = await resp.json()
+            async with (
+                aiohttp.ClientSession() as session,
+                session.get(
+                    "https://api.p2pquake.net/v2/history?codes=551&codes=552"
+                ) as resp,
+            ):
+                if resp.status != 429:
+                    embed.description = "Rate limited!"
+                    return await interaction.followup.send(embed=embed)
+                elif resp.status != 200:
+                    embed.description = "Failed to get data!"
+                    return await interaction.followup.send(embed=embed)
 
-                    if not isinstance(data, list) or not data:
-                        embed.description = "Response retrieved, but data isn't valid!"
-                        return await interaction.followup.send(embed=embed)
+                data = await resp.json()
 
-                    cached = data
-                    self.bot.cache.set('eew', cached)
-        
+                if not isinstance(data, list) or not data:
+                    embed.description = "Response retrieved, but data isn't valid!"
+                    return await interaction.followup.send(embed=embed)
+
+                cached = data
+                self.bot.cache.set("eew", cached)
+
         if not isinstance(cached, list) or not cached:
             embed.description = "Retrieved data isn't valid!"
             return await interaction.followup.send(embed=embed)
-        
-        
+
+
 async def setup(bot):
     await bot.add_cog(EEWCog(bot))

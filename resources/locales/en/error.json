@@ -22,18 +22,15 @@
         "unsupported_channel": "I don't support this kind of channel! :3",
         "user_not_found": "Couldn't find that user... :3"
     },
+    "embed_exceptions": {},
     "embeds": {
-        "missing_permission": {
-            "description": "You don't have permission {missing} to use this command! 3:",
-            "title": "Missing permissions! 3:"
-        },
-        "feature_not_available": {
-            "description": "This feature hasn't been enabled for this server yet.",
-            "title": "Feature isn't enabled yet! 3:"
-        },
         "blacklist_not_configured": {
             "description": "The blacklist hasn't been configured for this server yet.",
             "title": "Blacklist isn't set up! 3:"
+        },
+        "channel_required": {
+            "description": "You gotta pick a channel to use this! :3",
+            "title": "Channel required! 3:"
         },
         "contributor_not_found": {
             "description": "Couldn't find the contributor {contributor}... 3:",
@@ -51,6 +48,14 @@
             "description": "This server doesn't have the package to make edge-tts speech! :/",
             "title": "Edge TTS missing! 3:"
         },
+        "feature_not_available": {
+            "description": "This feature hasn't been enabled for this server yet.",
+            "title": "Feature isn't enabled yet! 3:"
+        },
+        "global_chat_not_enabled": {
+            "description": "Global chat isn't enabled here! Make sure to set one up to use this.\nDid you used this to enable global chat? you can use `/globalchat enable` to enable it.",
+            "title": "Global chat is off! 3:"
+        },
         "guild_only": {
             "description": "This command is only for servers! :3",
             "title": "Wrong place! :3"
@@ -64,6 +69,14 @@
         },
         "minecraft_user_not_found": {
             "description": "User \"{query}\" not found."
+        },
+        "missing_permission": {
+            "description": "You don't have permission {missing} to use this command! 3:",
+            "title": "Missing permissions! 3:"
+        },
+        "missing_permission_global_chat": {
+            "description": "You don't have the right permissions to use global chat! 3:",
+            "title": "Missing permissions! 3:"
         },
         "need_hangup": {
             "description": "Please hang up the call before configuring this stuff.",
@@ -116,21 +129,8 @@
         "welcome_channel_not_enabled": {
             "description": "Welcome channels aren't enabled here! Make sure to set one up to use this.",
             "title": "Welcome channel is off! 3:"
-        },
-        "global_chat_not_enabled": {
-            "description": "Global chat isn't enabled here! Make sure to set one up to use this.\nDid you used this to enable global chat? you can use `/globalchat enable` to enable it.",
-            "title": "Global chat is off! 3:"
-        },
-        "channel_required": {
-            "description": "You gotta pick a channel to use this! :3",
-            "title": "Channel required! 3:"
-        },
-        "missing_permission_global_chat": {
-            "description": "You don't have the right permissions to use global chat! 3:",
-            "title": "Missing permissions! 3:"
         }
     },
-    "embed_exceptions": {},
     "exceptions": {
         "AppCommandError": "Some weird Command error happened! 3:",
         "BotMissingPermissions": "I don't have the right permissions to do that! 3:",

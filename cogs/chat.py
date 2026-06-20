@@ -1,10 +1,14 @@
+# the cog violates discord tos
+# do not use
+
 import discord
+from discord.ext.commands import Cog
 from prompt_toolkit import PromptSession
 from prompt_toolkit.patch_stdout import patch_stdout
-from bot import PoxBot
 
-from discord.ext.commands import Cog
+from bot import PoxBot
 from logger import logger
+
 
 def get_int(i):
     try:
@@ -36,7 +40,7 @@ class ChatCog(Cog):
                                 if temp:
                                     if isinstance(temp, discord.TextChannel):
                                         self.current_channel = temp
-                                        logger.info("Set current to {}".format(self.current_channel.name))
+                                        logger.info(f"Set current to {self.current_channel.name}")
                                     else:
                                         logger.warning("Not an text channel")
                                 else:

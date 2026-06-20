@@ -1,14 +1,13 @@
 import random
 import string
-from typing import Optional
-from discord.ext import commands
+
 from discord import Embed, Interaction, Member, app_commands
+from discord.ext import commands
 
-from bot import PoxBot
-
-from logger import logger
-from stuff import clamp
 import stuff
+from bot import PoxBot
+from stuff import clamp
+
 
 class RandomizerCog(commands.Cog):
     def __init__(self, bot):
@@ -17,7 +16,7 @@ class RandomizerCog(commands.Cog):
     group = app_commands.Group(name="random", description="An group for Random.")
 
     @group.command(name="user", description="Returns random user(s).")
-    async def random_user(self, interaction: Interaction, max_selections: Optional[int] = 1, unique: Optional[bool] = False):
+    async def random_user(self, interaction: Interaction, max_selections: int | None = 1, unique: bool | None = False):
         if interaction.guild is None: return await interaction.response.send_message("The command only can be runned when the bot is installed in server(s).")
 
         await interaction.response.defer()
@@ -60,7 +59,7 @@ class RandomizerCog(commands.Cog):
         return await interaction.response.send_message(abs(hash(member.name)) % 9999999999)
 
     @group.command(name="role", description="Returns random role(s).")
-    async def random_role(self, interaction: Interaction, max_selections: Optional[int] = 1):
+    async def random_role(self, interaction: Interaction, max_selections: int | None = 1):
         if interaction.guild is None: return await interaction.response.send_message("The command only can be runned when the bot is installed in server(s).")
 
         if max_selections is None: max_selections = 1
@@ -83,7 +82,7 @@ class RandomizerCog(commands.Cog):
     
     @group.command(name="integer", description="Generates random integer.")
     @app_commands.describe(min="Minimum integer", max="Maximum integer")
-    async def generate_integer(self, interaction: Interaction, min: Optional[int] = 0, max: Optional[int] = 10):
+    async def generate_integer(self, interaction: Interaction, min: int | None = 0, max: int | None = 10):
         if min is None:
             min = 0
         
@@ -97,7 +96,7 @@ class RandomizerCog(commands.Cog):
     
     @group.command(name="float", description="Generates random float.")
     @app_commands.describe(min="Minimum float", max="Maximum float")
-    async def generate_float(self, interaction: Interaction, min: Optional[float] = -1.0, max: Optional[float] = 1.0, ndigit: Optional[int] = 4):
+    async def generate_float(self, interaction: Interaction, min: float | None = -1.0, max: float | None = 1.0, ndigit: int | None = 4):
         if min is None:
             min = -1.0
         
@@ -114,7 +113,7 @@ class RandomizerCog(commands.Cog):
         return await interaction.response.send_message(embed=e)
     
     @group.command(name="text_emoticon", description="Attempts to generate emoticon.")
-    async def emoticon_text(self, interaction: Interaction, max_generation: Optional[int] = 1):
+    async def emoticon_text(self, interaction: Interaction, max_generation: int | None = 1):
         if max_generation is None: max_generation = 1
 
         lines = []
@@ -127,7 +126,7 @@ class RandomizerCog(commands.Cog):
         return await interaction.response.send_message(embed=embed)
     
     @group.command(name="string", description="Generate randomly generated string.")
-    async def random_string_generator(self, interaction: Interaction, max_generation: Optional[int] = 8):
+    async def random_string_generator(self, interaction: Interaction, max_generation: int | None = 8):
         if max_generation is None: max_generation = 8
 
         max_generation = stuff.clamp(max_generation, 2, 61)

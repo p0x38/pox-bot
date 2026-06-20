@@ -1,25 +1,20 @@
-from datetime import datetime
-from io import BytesIO
 import random
 import re
 import string
-from time import time
-from typing import Any, Optional
-from aiocache import cached
+from datetime import datetime
+from io import BytesIO
+
+from discord import Color, Embed, File, Interaction, app_commands
 from discord.ext.commands import Cog
-from discord import Color, app_commands, Embed, Interaction, File
 from PIL import Image, ImageDraw, ImageFont
+from pytz import UTC
 from qrcode import QRCode
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.colormasks import VerticalGradiantColorMask
 from qrcode.image.styles.moduledrawers.pil import RoundedModuleDrawer
 
-from bot import PoxBot
-from logger import logger
 import stuff
-import data
-
-from matplotlib import pyplot as plt
+from bot import PoxBot
 
 if not hasattr(Image, 'ANTIALIAS'):
     Image.ANTIALIAS = Image.Resampling.LANCZOS # type: ignore
@@ -35,21 +30,21 @@ class ImageCog(Cog):
         self.base_virtual_filename_prefix = "tonguebot_"
         self.label = "Generated with TongueBot"
     
-    def generate_random_string(self, length: Optional[int] = 8):
+    def generate_random_string(self, length: int | None = 8):
         if not length: length = 8
         length = stuff.clamp(length, 4, 10)
         result = "".join(random.choices(string.ascii_letters + string.digits, k=length))
         return result
     
-    def generate_basename(self, suffix: Optional[str] = None):
+    def generate_basename(self, suffix: str | None = None):
         prefix = self.base_virtual_filename_prefix
-        now = datetime.now()
+        now = datetime.now(UTC)
         unix = str(int(now.timestamp() * 1000))
         random_string = self.generate_random_string()
         
         return f"{prefix + unix}_{random_string}_{suffix}" if suffix else f"{prefix + unix}_{random_string}"
     
-    group = app_commands.Group(name="image", description="A cog for Image.")
+    group = app_commands.Group(name="image", description=app_commands.locale_str("command.image.description"))
     
     async def theme_autocomplete(self, interaction: Interaction, current: str) -> list[app_commands.Choice[str]]:
         choices = ["light", "dark"]
@@ -60,7 +55,7 @@ class ImageCog(Cog):
     
     @group.command(name="qrcode", description="Generate QR Code")
     @app_commands.autocomplete(theme=theme_autocomplete)
-    async def generate_qrcode(self, interaction: Interaction, input: str, theme: Optional[str] = "dark"):
+    async def generate_qrcode(self, interaction: Interaction, input: str, theme: str | None = "dark"):
         embed = Embed(color=Color.green())
         if not input.strip():
             embed.description = "The input cannot be empty!"
@@ -103,7 +98,7 @@ class ImageCog(Cog):
             
             try:
                 font = ImageFont.truetype("arial.ttf", font_size)
-            except:
+            except Exception:
                 font = ImageFont.load_default(font_size)
                 
             label_text = self.label

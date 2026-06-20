@@ -1,20 +1,20 @@
-from datetime import datetime
 import re
+from datetime import datetime
 
-from discord.ext import commands
 from discord import Color, Embed, Interaction, Member, Message, app_commands
+from discord.ext import commands
 from pytz import UTC
 
 from bot import PoxBot
 from logger import logger
 from src.models import (
-    FilterConfig,
-    WordFilter,
     AntiSpamFilter,
     BlacklistEntry,
-    BlacklistEntryMatchType
+    BlacklistEntryMatchType,
+    WordFilter,
 )
 from src.translator import translator_instance as i18n
+
 
 class ModerationCog(commands.Cog):
     def __init__(self, bot: PoxBot):

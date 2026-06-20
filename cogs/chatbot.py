@@ -1,20 +1,28 @@
 import collections
-import datetime
 import random
 import re
 import time
-from typing import Optional
-from discord.ext import commands, tasks
-from discord import Color, Embed, Interaction, Member, Message, TextChannel, app_commands
-from src.translator import translator_instance as i18n
+from datetime import datetime, timedelta
 
+import lmstudio
 import ollama
 import openai
-import lmstudio
+from discord import (
+    Color,
+    Embed,
+    Interaction,
+    Member,
+    Message,
+    TextChannel,
+    app_commands,
+)
+from discord.ext import commands, tasks
+from pytz import UTC
 
 from bot import PoxBot
 from logger import logger
-from stuff import get_openai_api_key
+from src.translator import translator_instance as i18n
+
 
 class ChatbotCog(commands.Cog):
     def __init__(self, bot):
@@ -43,7 +51,7 @@ class ChatbotCog(commands.Cog):
             "total_success": 0,
             "total_failures": 0,
             "total_aborts": 0,
-            "start_time": datetime.datetime.now()
+            "start_time": datetime.now(UTC)
         }
         
         self.trigger_list = {
@@ -81,27 +89,25 @@ class ChatbotCog(commands.Cog):
             logger.info(f"Self-cleaned history for channel {cid} due to inactivity.")
     
     def get_user_stats(self, user_id):
-        now = datetime.datetime.now()
+        now = datetime.now(UTC)
         self.user_windows[user_id] = [
             ts for ts in self.user_windows[user_id]
-            if now - ts < datetime.timedelta(seconds=self.window_seconds)
+            if now - ts < timedelta(seconds=self.window_seconds)
         ]
         
         return len(self.user_windows[user_id])
     
     def is_rate_limited(self, user_id):
-        now = datetime.datetime.now()
+        now = datetime.now(UTC)
         user_ts = self.user_windows[user_id]
         
         # Clean old timestamps
         self.user_windows[user_id] = [
             ts for ts in user_ts 
-            if now - ts < datetime.timedelta(seconds=self.window_seconds)
+            if now - ts < timedelta(seconds=self.window_seconds)
         ]
         
-        if len(self.user_windows[user_id]) >= self.max_requests:
-            return True
-        return False
+        return len(self.user_windows[user_id]) >= self.max_requests
     
     group = app_commands.Group(name="chatbot", description=app_commands.locale_str("command.chatbot.description"))
     
@@ -205,7 +211,7 @@ class ChatbotCog(commands.Cog):
                 self.stats['total_aborts'] += 1
                 return
             
-            self.user_windows[message.author.id].append(datetime.datetime.now())
+            self.user_windows[message.author.id].append(datetime.now(UTC))
             self.channel_data[channel_id]["is_locked"] = True
             self.stats["total_attempts"] += 1
             
@@ -295,12 +301,12 @@ class ChatbotCog(commands.Cog):
                         self.stats['total_failures'] += 1
             
             except ollama.RequestError:
-                logger.exception(f"You forgot to specify the model to generate.")
+                logger.exception("You forgot to specify the model to generate.")
                 if is_mentioned:
                     await message.reply(i18n.T('messages.chatbot_request_error', message.guild.preferred_locale if message.guild else "en"))
                 self.stats["total_failures"] += 1
             except ollama.ResponseError:
-                logger.exception(f"It seems ollama couldn't generate response!")
+                logger.exception("It seems ollama couldn't generate response!")
                 if is_mentioned:
                     await message.reply(i18n.T('messages.chatbot_response_error', message.guild.preferred_locale if message.guild else "en"))
                 self.stats["total_failures"] += 1
@@ -320,7 +326,7 @@ class ChatbotCog(commands.Cog):
         """Generates a simple ASCII bar: [■■■□□]"""
         bar_length = 10
         filled = int((value / max_val) * bar_length)
-        if filled > bar_length: filled = bar_length
+        filled = min(filled, bar_length)
         return "■" * filled + "□" * (bar_length - filled)
     
     @group.command(name="add_event", description=app_commands.locale_str("command.chatbot.add_event.description"))
@@ -435,7 +441,7 @@ class ChatbotCog(commands.Cog):
             if self.stats['total_attempts'] > 0:
                 success_rate = (self.stats['total_success'] / self.stats['total_attempts']) * 100
             
-            uptime = datetime.datetime.now() - self.stats['start_time']
+            uptime = datetime.now(UTC) - self.stats['start_time']
             
             embed = Embed(title="Stats", color=Color.yellow())
             
@@ -454,7 +460,7 @@ class ChatbotCog(commands.Cog):
             logger.exception(e)
     
     @group.command(name="userstats", description=app_commands.locale_str("command.chatbot.user_stats.description"))
-    async def show_userstats(self, interaction: Interaction, member: Optional[Member] = None):
+    async def show_userstats(self, interaction: Interaction, member: Member | None = None):
         try:
             await interaction.response.defer()
             
@@ -462,10 +468,9 @@ class ChatbotCog(commands.Cog):
                 if isinstance(interaction.user, Member):
                     member = interaction.user
                 else:
-                    raise Exception("Couldn't resolve user")
+                    raise RuntimeError("Couldn't resolve user")
             
             usage = self.get_user_stats(member.id)
-            remaining = self.max_requests - usage
             
             embed = Embed(title=f"Usage stats for {member.name}", color=Color.blue())
             
@@ -483,9 +488,9 @@ class ChatbotCog(commands.Cog):
     
     @group.command(name="clear_memories", description=app_commands.locale_str("command.chatbot.clear_memories.description"))
     async def clear_memory(self, interaction: Interaction):
-        channel_id = 0
-        if interaction.channel: channel_id = interaction.channel_id
-        else: interaction.user.id
+        channel_id = interaction.channel_id if interaction.channel_id else (
+            interaction.channel.id if interaction.channel else interaction.user.id
+        )
         self.history[channel_id].clear()
         await interaction.response.send_message("AHHH.... MY HEADDDD....")
 

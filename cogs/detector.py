@@ -1,11 +1,12 @@
 import random
-from typing import Optional
+
 from aiocache import cached
 from discord import Embed, Interaction, Member, User, app_commands
 from discord.ext import commands
 
 from bot import PoxBot
 from stuff import check_map
+
 
 class DetectionCog(commands.Cog):
     def __init__(self, bot):
@@ -86,7 +87,7 @@ class DetectionCog(commands.Cog):
     @cached(300)
     @detector_group.command(name="vibecheck",description=app_commands.locale_str("command.detect.vibecheck.description"))
     @app_commands.describe(member="Member to check")
-    async def vibe_check(self, interaction: Interaction, member: Optional[Member|User] = None):
+    async def vibe_check(self, interaction: Interaction, member: Member | User | None = None):
         await interaction.response.defer(thinking=True)
         if member is None:
             if not interaction.message is None:

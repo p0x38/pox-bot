@@ -7,7 +7,6 @@ import uuid
 from time import time
 
 import aiofiles
-import aiomysql
 import aiosqlite
 import discord
 import profanityfilter
@@ -27,11 +26,13 @@ from openai import OpenAI
 from pytz import UTC
 from urlextract import URLExtract
 
+from src.utils import PerformanceMonitor
 import stuff
 from classes import EmoticonGenerator
 from logger import logger
 from src.database import (
     EconomyDatabase,
+    GiveawayDatabase,
     GuildSettingsDatabaseV2,
     SettingsDatabase,
     StatsDatabase,
@@ -40,14 +41,6 @@ from src.database import (
 from src.translator import discord_translator
 from src.utils.cache import Cache
 
-DB_CONFIG = {
-    'host': 'localhost',
-    'port': 3306,
-    'user': stuff.get_mysql_credentials()[0],
-    'password': stuff.get_mysql_credentials()[1],
-    'db': 'discord-bot',
-    'autocommit': True
-}
 
 class PoxBot(commands.AutoShardedBot):
     def __init__(self, *args, **kwargs) -> None:
@@ -59,9 +52,9 @@ class PoxBot(commands.AutoShardedBot):
         self.settings_db: SettingsDatabase | None = None
         self.stats_db: StatsDatabase | None = None
         self.economy_db: EconomyDatabase | None = None
+        self.giveaway_db: GiveawayDatabase | None = None
         self.guild_db: GuildSettingsDatabaseV2 | None = None
         self.user_db: UserDatabase | None = None
-        self.mysql = None
         self.commit_hash = ""
         self.session_uuid = uuid.uuid4()
         self.name_signature = stuff.generate_namesignature()
@@ -105,6 +98,7 @@ class PoxBot(commands.AutoShardedBot):
         self.proc = psutil.Process(self.pid)
         self.openai_client = OpenAI(api_key=stuff.get_openai_api_key())
         self.url_extrator = URLExtract()
+        self.perf_monitor = PerformanceMonitor(self)
     
     def _(self, s): return s
     
@@ -113,6 +107,13 @@ class PoxBot(commands.AutoShardedBot):
             await self.tree.set_translator(discord_translator)
         except TypeError:
             logger.exception("Failed to set command translator")
+        
+        def _download_nltk_data():
+            import nltk
+            nltk.download('punkt')
+            nltk.download('stopwords')
+        
+        await self.loop.run_in_executor(None, _download_nltk_data)
         
         stuff.setup_database("./leaderboard.db")
         
@@ -124,6 +125,7 @@ class PoxBot(commands.AutoShardedBot):
         self.settings_db = SettingsDatabase(dsn)
         self.stats_db = StatsDatabase(dsn)
         self.economy_db = EconomyDatabase(dsn)
+        self.giveaway_db = GiveawayDatabase(dsn)
         self.guild_db = GuildSettingsDatabaseV2(dsn)
         self.user_db = UserDatabase(dsn)
         
@@ -131,33 +133,34 @@ class PoxBot(commands.AutoShardedBot):
         
         self.stats_db.pool = self.settings_db.pool
         self.economy_db.pool = self.settings_db.pool
+        self.giveaway_db.pool = self.settings_db.pool
         self.guild_db.pool = self.settings_db.pool
         self.user_db.pool = self.settings_db.pool
         
         await self.settings_db.setup()
         await self.stats_db.setup()
         await self.economy_db.setup()
+        await self.giveaway_db.setup()
         await self.guild_db.setup()
         await self.user_db.setup()
         
         self.db_connection = await aiosqlite.connect("./leaderboard.db")
 
-        self.mysql = await aiomysql.create_pool(**DB_CONFIG)
         logger.debug("Database initialized")
 
-        async with self.mysql.acquire() as conn:
-            async with conn.cursor() as cur:
-                await cur.execute("""
-                    CREATE TABLE IF NOT EXISTS reaction_roles (
-                        message_id BIGINT, emoji VARCHAR(255), role_id BIGINT, PRIMARY KEY (message_id, emoji)
-                    )
-                """)
-                await cur.execute("""
-                    CREATE TABLE IF NOT EXISTS globalchannels (
-                        channel BIGINT PRIMARY KEY,
-                        guild BIGINT
-                    )
-                """)
+        # async with self.mysql.acquire() as conn:
+        #     async with conn.cursor() as cur:
+        #         await cur.execute("""
+        #             CREATE TABLE IF NOT EXISTS reaction_roles (
+        #                 message_id BIGINT, emoji VARCHAR(255), role_id BIGINT, PRIMARY KEY (message_id, emoji)
+        #             )
+        #         """)
+        #         await cur.execute("""
+        #             CREATE TABLE IF NOT EXISTS globalchannels (
+        #                 channel BIGINT PRIMARY KEY,
+        #                 guild BIGINT
+        #             )
+        #         """)
 
         try:
             async with aiofiles.open('data/blacklisted_words.json', 'r+') as f:
@@ -321,10 +324,10 @@ class PoxBot(commands.AutoShardedBot):
         if self.economy_db:
             await self.economy_db.close()
 
-        if self.mysql:
-            self.mysql.close()
-            await self.mysql.wait_closed()
-            logger.debug("MySQL connection pool closed")
+        # if self.mysql:
+        #     self.mysql.close()
+        #     await self.mysql.wait_closed()
+        #     logger.debug("MySQL connection pool closed")
         
         if self.db_connection:
             await self.db_connection.commit()

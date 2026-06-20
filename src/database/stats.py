@@ -1,3 +1,5 @@
+from discord import guild
+
 from logger import logger
 from src.database.bases import PostgreSQLDatabase
 from src.models import LeaderboardData, UserStats
@@ -40,3 +42,59 @@ class StatsDatabase(PostgreSQLDatabase):
             rows = await self.pool.fetch(query, limit)
             return LeaderboardData.from_rows(rows, sort_by)
         return LeaderboardData()
+    
+    async def cache_message(self, message_id: int, channel_id: int, guild_id: int, author_id: int, content: str):
+        if not self.pool:
+            return
+        
+        async with self.pool.acquire() as conn:
+            await conn.execute("""
+                INSERT INTO m_cache (message_id, channel_id, guild_id, author_id, content)
+                VALUES ($1, $2, $3, $4, $5)
+                ON CONFLICT (message_id) DO UPDATE SET content = EXCLUDED.content
+            """, message_id, channel_id, guild_id, author_id, content)
+            
+            await conn.execute("""
+                DELETE FROM m_cache
+                WHERE channel_id = $1 AND message_id NOT IN (
+                    SELECT message_id FROM m_cache
+                    WHERE channel_id = $1
+                    ORDER BY message_id DESC LIMIT 15000
+                )
+            """, channel_id)
+    
+    async def get_cached_messages(self, channel_id: int, limit: int) -> list:
+        if not self.pool:
+            return []
+        
+        rows = await self.pool.fetch("""
+            SELECT content FROM m_cache
+            WHERE channel_id = $1
+            ORDER BY message_id DESC LIMIT $2
+        """, channel_id, limit)
+        return rows
+    
+    async def get_active_pattern(self, channel_id: int, target_user_id: int | None = None) -> list:
+        if not self.pool:
+            return []
+
+        if target_user_id:
+            query = """
+                SELECT EXTRACT(HOUR FROM created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo')::INT AS hour, COUNT(*) AS count
+                FROM m_cache
+                WHERE channel_id = $1 AND author_id = $2
+                GROUP BY hour
+                ORDER BY hour;
+            """
+            rows = await self.pool.fetch(query, channel_id, target_user_id)
+        else:
+            query = """
+                SELECT EXTRACT(HOUR FROM created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo')::INT AS hour, COUNT(*) AS count
+                FROM m_cache
+                WHERE channel_id = $1
+                GROUP BY hour
+                ORDER BY hour;
+            """
+            rows = await self.pool.fetch(query, channel_id)
+
+        return rows

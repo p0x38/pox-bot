@@ -144,25 +144,25 @@ class TimeoutModal(ui.Modal, title="User timeout"):
             td = min(td, MAX_TIMEOUT)
             
             if not interaction.guild:
-                raise Exception(i18n.T("error.custom.guild_only", loc))
+                raise RuntimeError(i18n.T("error.custom.guild_only", loc))
             
             if isinstance(interaction.user, User):
-                raise Exception()
+                raise TypeError(i18n.T("error.exceptions.Unknown", loc))
             
             if self.target == interaction.user:
-                raise Exception(i18n.T("error.custom.tried_to_timeout_himself", loc))
+                raise RuntimeError(i18n.T("error.custom.tried_to_timeout_himself", loc))
             
             if self.target == interaction.guild.owner:
-                raise Exception(i18n.T("error.custom.tried_to_timeout_owner", loc))
+                raise RuntimeError(i18n.T("error.custom.tried_to_timeout_owner", loc))
             
             if self.target.top_role >= interaction.user.top_role:
-                raise Exception(i18n.T("error.custom.tried_to_timeout_higher", loc))
+                raise RuntimeError(i18n.T("error.custom.tried_to_timeout_higher", loc))
             
             if not interaction.guild.me.guild_permissions.moderate_members:
-                raise Exception(i18n.T("error.custom.forbidden_timeout", loc))
+                raise RuntimeError(i18n.T("error.custom.forbidden_timeout", loc))
             
             if self.target.top_role >= interaction.guild.me.top_role:
-                raise Exception(i18n.T("error.custom.cannot_timeout_higher", loc))
+                raise RuntimeError(i18n.T("error.custom.cannot_timeout_higher", loc))
             
             try:
                 timeout_reason = self.reason.value or "No reason specified from executor"
@@ -269,7 +269,7 @@ class UserCog(commands.Cog):
             except Exception as e:
                 embed.description = i18n.T("error.exceptions.Unknown", loc, {"e": e})
             finally:
-                return await interaction.followup.send(embed=embed)
+                await interaction.followup.send(embed=embed)
         
         @app_commands.context_menu(name=app_commands.locale_str("context_menu.ban_member.name"))
         @app_commands.checks.has_permissions(ban_members=True)
@@ -290,7 +290,7 @@ class UserCog(commands.Cog):
             except Exception as e:
                 embed.description = i18n.T("error.exceptions.Unknown", loc, {"e": e})
             finally:
-                return await interaction.followup.send(embed=embed)
+                await interaction.followup.send(embed=embed)
         
         @app_commands.context_menu(name=app_commands.locale_str("context_menu.timeout_member.name"))
         @app_commands.checks.has_permissions(moderate_members=True)
@@ -315,7 +315,7 @@ class UserCog(commands.Cog):
         try:
             embed = Embed(title=f"How long {member.name} has been on server?")
             joined_date = member.joined_at
-            if not joined_date: raise Exception("Welp")
+            if not joined_date: raise RuntimeError("Welp")
             
             now = datetime.now(joined_date.tzinfo)
             
@@ -380,9 +380,7 @@ class UserCog(commands.Cog):
                 
                 temp1 = i18n.translate_map(temp1, loc)
                 if isinstance(user, Member):
-                    index_activity = 0
-                    for activity in user.activities:
-                        index_activity += 1
+                    for index_activity, activity in enumerate(user.activities):
                         if isinstance(activity, Activity):
                             info = ""
                             match (activity.type):
@@ -472,7 +470,7 @@ class UserCog(commands.Cog):
         except Exception as e:
             embed.description = i18n.T("error.exceptions.Unknown", loc, {"e": e})
         finally:
-            return await interaction.followup.send(embed=embed)
+            await interaction.followup.send(embed=embed)
 
     @group.command(name="ban", description="Bans member from the server")
     @app_commands.checks.has_permissions(ban_members=True)

@@ -1,14 +1,24 @@
-from collections import defaultdict
-from datetime import datetime, timedelta
 import random
-import time
+from datetime import datetime, timedelta
+
+from discord import (
+    Color,
+    Embed,
+    Forbidden,
+    Interaction,
+    Member,
+    Message,
+    TextChannel,
+    User,
+    app_commands,
+)
 from discord.abc import Messageable
 from discord.ext import commands
-from discord import Color, Embed, Forbidden, Interaction, Member, Message, TextChannel, User, app_commands
 from pytz import UTC
+
 from bot import PoxBot
 from src.translator import translator_instance as i18n
-from logger import logger
+
 
 class LevelingCog(commands.Cog):
     def __init__(self, bot: PoxBot):

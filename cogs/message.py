@@ -2,16 +2,25 @@ import asyncio
 import random
 import re
 import textwrap
-from typing import Optional
-from aiocache import cached
-from attr import has
+
 import discord
+from aiocache import cached
+from discord import (
+    Embed,
+    Forbidden,
+    Interaction,
+    Member,
+    Message,
+    TextChannel,
+    TextStyle,
+    app_commands,
+)
 from discord.ext import commands
-from discord import Embed, Forbidden, Interaction, Member, Message, MessageReference, TextChannel, TextStyle, app_commands
+
+import stuff
 from bot import PoxBot
 from logger import logger
-import stuff
-from textwrap import shorten
+
 
 class DMSendModal(discord.ui.Modal):
     def __init__(self, enable_sent_by: bool|None, member) -> None:
@@ -33,8 +42,8 @@ class DMSendModal(discord.ui.Modal):
             elif sent_by_text == True: combine.append(f"\nSent by `{interaction.user.name}`.")
             #combine.append(f"\nUID: `{''.join(random.choices(string.ascii_letters + string.digits, k=24))}`")
             await self.member.send("\n".join(combine))
-            if self.member.id == 1321324137850994758 and sent_by_text == False: await interaction.response.send_message(f"Your message sent as DM, but you cannot disable the sent_by_text for DM that directs to Creator of the bot, due to security issue.")
-            else: await interaction.response.send_message(f"Your message sent as DM.", ephemeral=True)
+            if self.member.id == 1321324137850994758 and sent_by_text == False: await interaction.response.send_message("Your message sent as DM, but you cannot disable the sent_by_text for DM that directs to Creator of the bot, due to security issue.")
+            else: await interaction.response.send_message("Your message sent as DM.", ephemeral=True)
         except Exception as e:
             await interaction.response.send_message(f"Failed to send DM. {e}", ephemeral=True)
             logger.error(f"Error. {e}")
@@ -65,14 +74,14 @@ class MessageCog(commands.Cog):
     @app_commands.describe(limit="How much range bot will delete.")
     @app_commands.checks.has_permissions(manage_channels=True, manage_messages=True)
     @app_commands.guild_only()
-    async def mass_delete_messages(self, interaction: Interaction, limit: Optional[int] = 100):
+    async def mass_delete_messages(self, interaction: Interaction, limit: int | None = 100):
         await interaction.response.defer()
         
         if limit is None:
             limit = 100
         
         def check_messages(m):
-            return not m == interaction.message
+            return m != interaction.message
         
         if isinstance(interaction.channel, discord.TextChannel):
             while True:
@@ -85,13 +94,11 @@ class MessageCog(commands.Cog):
     @group.command(name="purge", description="Purges a specific amount of messages sent earlier.")
     @app_commands.checks.has_permissions(manage_messages=True)
     @app_commands.guild_only()
-    async def purge_messages(self, interaction: Interaction, limit: Optional[int] = 100):
+    async def purge_messages(self, interaction: Interaction, limit: int | None = 100):
         await interaction.response.defer()
 
         def check_messages(m):
             return not interaction.message
-
-        deleted_count = 0
 
         if isinstance(interaction.channel, discord.TextChannel):
             deleted = await interaction.channel.purge(limit=limit if limit is not None else 100, check=check_messages)
@@ -106,12 +113,10 @@ class MessageCog(commands.Cog):
         def check_messages(m: Message):
             is_bot = m.author == self.bot.user
             is_replied = False
-            if m.reference and m.reference.resolved:
-                if isinstance(m.reference.resolved, Message):
+            if m.reference and m.reference.resolved and isinstance(m.reference.resolved, Message):
                     is_replied = m.reference.resolved.author == self.bot.user
             
-            if ctx.message:
-                if m.id == ctx.message.id:
+            if ctx.message and m.id == ctx.message.id:
                     return False
 
             return (is_bot or is_replied)
@@ -136,7 +141,7 @@ class MessageCog(commands.Cog):
     @group.command(name="direct_message",description="DMs to a member")
     @app_commands.checks.has_permissions(send_messages=True)
     @app_commands.guild_only()
-    async def send_dm_to_member(self, ctx: Interaction, member: Member, enable_sent_by: Optional[bool]):
+    async def send_dm_to_member(self, ctx: Interaction, member: Member, enable_sent_by: bool | None):
         return await ctx.response.send_modal(DMSendModal(enable_sent_by, member))
     
     @group.command(name="send2", description="...")
@@ -164,14 +169,14 @@ class MessageCog(commands.Cog):
                         send_count += 1
                         sent_channels.append(channel.name)
                         logger.info(f"Sent to {channel.name}")
-                    except Forbidden as e:
+                    except Forbidden:
                         logger.error(f"{channel.name} Forbidden")
         return interaction.followup.send(f"Sent to {send_count} of channels: "+"\n".join(sent_channels))
     
     @cached(60)
     @group.command(name="search_for", description="Searches messages in current channel.")
     @app_commands.guild_only()
-    async def search_messages_in_channel(self, interaction: Interaction, keyword: str, limit: Optional[int] = 100):
+    async def search_messages_in_channel(self, interaction: Interaction, keyword: str, limit: int | None = 100):
         await interaction.response.defer()
         found_messages = []
 

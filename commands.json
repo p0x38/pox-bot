@@ -1,0 +1,3872 @@
+[
+    {
+        "type": "slash_command",
+        "name": "reload_cogs",
+        "full_name": "reload_cogs",
+        "description": "command.admin.reload_cogs.description",
+        "arguments": [],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "user",
+        "full_name": "user",
+        "description": "command.user.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "guild_duration",
+                "full_name": "user guild_duration",
+                "description": "Checks how long user has been in the server.",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "kick",
+                "full_name": "user kick",
+                "description": "Kick a member.",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to kick.",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "reason",
+                        "display": "reason",
+                        "description": "Reason for member to give in DM.",
+                        "type": "string",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "ban",
+                "full_name": "user ban",
+                "description": "Bans member from the server",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to ban",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "reason",
+                        "display": "reason",
+                        "description": "Reason to ban",
+                        "type": "string",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "unban",
+                "full_name": "user unban",
+                "description": "Unbans member",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to unban",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "warn",
+                "full_name": "user warn",
+                "description": "Warns member",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to warn",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "reason",
+                        "display": "reason",
+                        "description": "Reason to warn",
+                        "type": "string",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "timeout",
+                "full_name": "user timeout",
+                "description": "Warns member",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to time-out",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "reason",
+                        "display": "reason",
+                        "description": "Reason to time-out",
+                        "type": "string",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "length",
+                        "display": "length",
+                        "description": "Length of time-out (minutes)",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "remove_timeout",
+                "full_name": "user remove_timeout",
+                "description": "Un-timeout member",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to remove timeout",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "total_members",
+                "full_name": "user total_members",
+                "description": "Returns total members",
+                "arguments": [],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "set_nick",
+                "full_name": "user set_nick",
+                "description": "command.user.set_nick.description",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "new_nick",
+                        "display": "new_nick",
+                        "description": "…",
+                        "type": "string",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "status",
+                "full_name": "user status",
+                "description": "command.user.status.description",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "to_reachgoal",
+                "full_name": "user to_reachgoal",
+                "description": "Returns remaining members to reach a goal value.",
+                "arguments": [
+                    {
+                        "name": "goal",
+                        "display": "goal",
+                        "description": "…",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "find_first_message_contains",
+                "full_name": "user find_first_message_contains",
+                "description": "Finds the first message sent by specified user containing the keyword in the current channel.",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to search messages for.",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "keyword",
+                        "display": "keyword",
+                        "description": "Keyword to search for in messages.",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "search_messages",
+                "full_name": "user search_messages",
+                "description": "Searches messages sent by specified user in the current channel.",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to search messages for.",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "keyword",
+                        "display": "keyword",
+                        "description": "Keyword to search for in messages.",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "first_message",
+                "full_name": "user first_message",
+                "description": "Gets the first message sent by specified user in the current channel.",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to get first message for.",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "latest_message",
+                "full_name": "user latest_message",
+                "description": "Gets the latest message sent by specified user in the current channel.",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to get latest message for.",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "random_message",
+                "full_name": "user random_message",
+                "description": "Gets a random message sent by specified user in the current channel.",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to get random message for.",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "is_pepo",
+                "full_name": "user is_pepo",
+                "description": "check if this dude is pepo",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "hash_value",
+                "full_name": "user hash_value",
+                "description": "Get user's hash code.",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "user_global",
+        "full_name": "user_global",
+        "description": "command.user.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "user_profile",
+                "full_name": "user_global user_profile",
+                "description": "command.user.info.description",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "set-profile",
+                "full_name": "user_global set-profile",
+                "description": "command.user.set_profile.description",
+                "arguments": [
+                    {
+                        "name": "nickname",
+                        "display": "nickname",
+                        "description": "…",
+                        "type": "string",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "description",
+                        "display": "description",
+                        "description": "…",
+                        "type": "string",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "avatar",
+                "full_name": "user_global avatar",
+                "description": "command.user.avatar.description",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "<AppCommandContext guild=True dm_channel=True private_channel=True>",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "detect",
+        "full_name": "detect",
+        "description": "command.detect.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "how_gay",
+                "full_name": "detect how_gay",
+                "description": "command.detect.how_gay.description",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to check",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "how_slop",
+                "full_name": "detect how_slop",
+                "description": "command.detect.how_slop.description",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to check",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "how_femboy",
+                "full_name": "detect how_femboy",
+                "description": "command.detect.how_femboy.description",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to check",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "how_freaky",
+                "full_name": "detect how_freaky",
+                "description": "command.detect.how_freaky.description",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to check",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "how_silly",
+                "full_name": "detect how_silly",
+                "description": "command.detect.how_freaky.description",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to check",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "vibecheck",
+                "full_name": "detect vibecheck",
+                "description": "command.detect.vibecheck.description",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to check",
+                        "type": "user",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "custom_member",
+                "full_name": "detect custom_member",
+                "description": "command.detect.custom_member.description",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "Member to check",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "custom",
+                        "display": "custom",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "custom2",
+                "full_name": "detect custom2",
+                "description": "command.detect.custom2.description",
+                "arguments": [
+                    {
+                        "name": "custom",
+                        "display": "custom",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "<AppCommandContext guild=True dm_channel=True private_channel=True>",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "economy",
+        "full_name": "economy",
+        "description": "command.economy.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "balance",
+                "full_name": "economy balance",
+                "description": "command.economy.balance.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "deposit",
+                "full_name": "economy deposit",
+                "description": "command.economy.deposit.description",
+                "arguments": [
+                    {
+                        "name": "amount",
+                        "display": "amount",
+                        "description": "…",
+                        "type": "integer",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "withdraw",
+                "full_name": "economy withdraw",
+                "description": "command.economy.withdraw.description",
+                "arguments": [
+                    {
+                        "name": "amount",
+                        "display": "amount",
+                        "description": "…",
+                        "type": "integer",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "work",
+                "full_name": "economy work",
+                "description": "command.economy.work.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "list",
+                "full_name": "economy list",
+                "description": "command.economy.list.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "buy",
+                "full_name": "economy buy",
+                "description": "command.economy.buy.description",
+                "arguments": [
+                    {
+                        "name": "item_id",
+                        "display": "item_id",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "sell",
+                "full_name": "economy sell",
+                "description": "command.economy.sell.description",
+                "arguments": [
+                    {
+                        "name": "item_id",
+                        "display": "item_id",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "inventory",
+                "full_name": "economy inventory",
+                "description": "command.economy.inventory.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "daily",
+                "full_name": "economy daily",
+                "description": "command.economy.daily.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "history",
+                "full_name": "economy history",
+                "description": "command.economy.history.description",
+                "arguments": [
+                    {
+                        "name": "limit",
+                        "display": "limit",
+                        "description": "…",
+                        "type": "integer",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "moderation",
+        "full_name": "moderation",
+        "description": "command.moderation.description",
+        "sub_commands": [
+            {
+                "type": "group",
+                "name": "blacklist",
+                "full_name": "moderation blacklist",
+                "description": "command.moderation.blacklist.description",
+                "sub_commands": [
+                    {
+                        "type": "slash_command",
+                        "name": "add",
+                        "full_name": "moderation blacklist add",
+                        "description": "command.moderation.blacklist.add.description",
+                        "arguments": [
+                            {
+                                "name": "trigger",
+                                "display": "trigger",
+                                "description": "…",
+                                "type": "string",
+                                "required": true,
+                                "has_autocomplete": false,
+                                "choices": []
+                            },
+                            {
+                                "name": "match_type",
+                                "display": "match_type",
+                                "description": "…",
+                                "type": "integer",
+                                "required": false,
+                                "has_autocomplete": false,
+                                "choices": [
+                                    "default",
+                                    "regex",
+                                    "exact",
+                                    "whole_word"
+                                ]
+                            },
+                            {
+                                "name": "case_insensitive",
+                                "display": "case_insensitive",
+                                "description": "…",
+                                "type": "boolean",
+                                "required": false,
+                                "has_autocomplete": false,
+                                "choices": []
+                            },
+                            {
+                                "name": "reason",
+                                "display": "reason",
+                                "description": "…",
+                                "type": "string",
+                                "required": false,
+                                "has_autocomplete": false,
+                                "choices": []
+                            }
+                        ],
+                        "allowed_contexts": "None",
+                        "allowed_installs": "None"
+                    },
+                    {
+                        "type": "slash_command",
+                        "name": "remove",
+                        "full_name": "moderation blacklist remove",
+                        "description": "command.moderation.blacklist.remove.description",
+                        "arguments": [
+                            {
+                                "name": "query",
+                                "display": "query",
+                                "description": "…",
+                                "type": "string",
+                                "required": true,
+                                "has_autocomplete": false,
+                                "choices": []
+                            }
+                        ],
+                        "allowed_contexts": "None",
+                        "allowed_installs": "None"
+                    },
+                    {
+                        "type": "slash_command",
+                        "name": "list",
+                        "full_name": "moderation blacklist list",
+                        "description": "command.moderation.blacklist.list.description",
+                        "arguments": [],
+                        "allowed_contexts": "None",
+                        "allowed_installs": "None"
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "togglefeature",
+                "full_name": "moderation togglefeature",
+                "description": "command.moderation.togglefeature.description",
+                "arguments": [
+                    {
+                        "name": "feature",
+                        "display": "feature",
+                        "description": "command.moderation.togglefeature.parameters.feature.description",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "state",
+                        "display": "state",
+                        "description": "command.moderation.togglefeature.parameters.state.description",
+                        "type": "boolean",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "leveling",
+        "full_name": "leveling",
+        "description": "command.leveling.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "configure",
+                "full_name": "leveling configure",
+                "description": "command.leveling.configure.description",
+                "arguments": [
+                    {
+                        "name": "multiplier",
+                        "display": "multiplier",
+                        "description": "…",
+                        "type": "number",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "notify",
+                        "display": "notify",
+                        "description": "…",
+                        "type": "boolean",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "channel",
+                        "display": "channel",
+                        "description": "…",
+                        "type": "channel",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "slash_command",
+        "name": "help_v2",
+        "full_name": "help_v2",
+        "description": "…",
+        "arguments": [
+            {
+                "name": "index_number",
+                "display": "index_number",
+                "description": "…",
+                "type": "integer",
+                "required": false,
+                "has_autocomplete": false,
+                "choices": []
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "userphone",
+        "full_name": "userphone",
+        "description": "command.userphone.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "call",
+                "full_name": "userphone call",
+                "description": "command.userphone.call.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "hangup",
+                "full_name": "userphone hangup",
+                "description": "command.userphone.hangup.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "userphone",
+                "full_name": "userphone userphone",
+                "description": "command.userphone.userphone.description",
+                "arguments": [
+                    {
+                        "name": "enabled",
+                        "display": "enabled",
+                        "description": "…",
+                        "type": "boolean",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "channel",
+                        "display": "channel",
+                        "description": "…",
+                        "type": "channel",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "globalchat",
+        "full_name": "globalchat",
+        "description": "command.globalchat.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "toggle",
+                "full_name": "globalchat toggle",
+                "description": "command.globalchat.toggle.description",
+                "arguments": [
+                    {
+                        "name": "enabled",
+                        "display": "enabled",
+                        "description": "command.globalchat.toggle.parameters.enabled",
+                        "type": "boolean",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "setchannel",
+                "full_name": "globalchat setchannel",
+                "description": "command.globalchat.setchannel.description",
+                "arguments": [
+                    {
+                        "name": "channel",
+                        "display": "channel",
+                        "description": "command.globalchat.setchannel.parameters.channel",
+                        "type": "channel",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "silentmode",
+                "full_name": "globalchat silentmode",
+                "description": "command.globalchat.silentmode.description",
+                "arguments": [
+                    {
+                        "name": "toggle",
+                        "display": "toggle",
+                        "description": "command.globalchat.silentmode.parameters.toggle",
+                        "type": "boolean",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "leaderboard",
+        "full_name": "leaderboard",
+        "description": "Leaderboards",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "pox",
+                "full_name": "leaderboard pox",
+                "description": "Shows leaderboard in server who said pox for many times",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "your_word_points",
+                "full_name": "leaderboard your_word_points",
+                "description": "Shows your word points for no reason",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "word_points",
+                "full_name": "leaderboard word_points",
+                "description": "Shows leaderboard who has yapping all times",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "local_word_points",
+                "full_name": "leaderboard local_word_points",
+                "description": "Shows leaderboard in server who has yapping all times",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "get_user_word_points",
+                "full_name": "leaderboard get_user_word_points",
+                "description": "Shows specified user's word points",
+                "arguments": [
+                    {
+                        "name": "user",
+                        "display": "user",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "rating",
+        "full_name": "rating",
+        "description": "Group for Rating members.",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "rate_user",
+                "full_name": "rating rate_user",
+                "description": "Rate member.",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "rate",
+                        "display": "rate",
+                        "description": "command.rating.rate_user.description",
+                        "type": "number",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "override",
+                        "display": "override",
+                        "description": "…",
+                        "type": "boolean",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "user_rating",
+                "full_name": "rating user_rating",
+                "description": "Gets member's rating info.",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "image",
+        "full_name": "image",
+        "description": "command.image.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "qrcode",
+                "full_name": "image qrcode",
+                "description": "Generate QR Code",
+                "arguments": [
+                    {
+                        "name": "input",
+                        "display": "input",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "theme",
+                        "display": "theme",
+                        "description": "…",
+                        "type": "string",
+                        "required": false,
+                        "has_autocomplete": true,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "stats",
+        "full_name": "stats",
+        "description": "command.stats.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "top",
+                "full_name": "stats top",
+                "description": "command.stats.top.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "wordcloud",
+                "full_name": "stats wordcloud",
+                "description": "command.stats.wordcloud.description",
+                "arguments": [
+                    {
+                        "name": "limit",
+                        "display": "limit",
+                        "description": "…",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "active_pattern",
+                "full_name": "stats active_pattern",
+                "description": "Generates a graph of messages per hour",
+                "arguments": [
+                    {
+                        "name": "target",
+                        "display": "target",
+                        "description": "Specify if you want to specify member (Use empty for whole channel)",
+                        "type": "user",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "contributors",
+        "full_name": "contributors",
+        "description": "command.contributors.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "list",
+                "full_name": "contributors list",
+                "description": "Lists all contributors.",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "view",
+                "full_name": "contributors view",
+                "description": "Shows contributor.",
+                "arguments": [
+                    {
+                        "name": "contributor_id",
+                        "display": "contributor_id",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": true,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "guild",
+        "full_name": "guild",
+        "description": "command.guild.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "info",
+                "full_name": "guild info",
+                "description": "command.guild.info.description",
+                "arguments": [],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "kickmembers",
+                "full_name": "guild kickmembers",
+                "description": "command.guild.kickmembers.description",
+                "arguments": [],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "listmembers",
+                "full_name": "guild listmembers",
+                "description": "command.guild.listmembers.description",
+                "arguments": [
+                    {
+                        "name": "sort_by",
+                        "display": "sort_by",
+                        "description": "…",
+                        "type": "string",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": [
+                            "ID",
+                            "Username",
+                            "Created at",
+                            "Joined at"
+                        ]
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "nsfw_level",
+                "full_name": "guild nsfw_level",
+                "description": "command.guild.nsfw_level.description",
+                "arguments": [],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "icon",
+                "full_name": "guild icon",
+                "description": "command.guild.icon.description",
+                "arguments": [],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "count",
+                "full_name": "guild count",
+                "description": "command.guild.count.description",
+                "arguments": [],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "members_list",
+                "full_name": "guild members_list",
+                "description": "command.guild.members_list.description",
+                "arguments": [
+                    {
+                        "name": "include_bot",
+                        "display": "include_bot",
+                        "description": "…",
+                        "type": "boolean",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "include_member",
+                        "display": "include_member",
+                        "description": "…",
+                        "type": "boolean",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "search_members",
+                "full_name": "guild search_members",
+                "description": "command.guild.search_members.description",
+                "arguments": [
+                    {
+                        "name": "keyword",
+                        "display": "keyword",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "<AppInstallationType guild=True user=False>"
+            },
+            {
+                "type": "slash_command",
+                "name": "role_list",
+                "full_name": "guild role_list",
+                "description": "command.guild.roles_list.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "<AppInstallationType guild=True user=False>"
+            },
+            {
+                "type": "slash_command",
+                "name": "logs",
+                "full_name": "guild logs",
+                "description": "command.guild.logs.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "slash_command",
+        "name": "settings",
+        "full_name": "settings",
+        "description": "command.settings.description",
+        "arguments": [],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "tts",
+        "full_name": "tts",
+        "description": "command.tts.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "google_tts",
+                "full_name": "tts google_tts",
+                "description": "…",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "slow",
+                        "display": "slow",
+                        "description": "…",
+                        "type": "boolean",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "lang",
+                        "display": "lang",
+                        "description": "…",
+                        "type": "string",
+                        "required": false,
+                        "has_autocomplete": true,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "pocket_tts",
+                "full_name": "tts pocket_tts",
+                "description": "…",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "voice",
+                        "display": "voice",
+                        "description": "…",
+                        "type": "string",
+                        "required": false,
+                        "has_autocomplete": true,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "piper_tts",
+                "full_name": "tts piper_tts",
+                "description": "…",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "volume",
+                        "display": "volume",
+                        "description": "…",
+                        "type": "number",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "length_scale",
+                        "display": "length_scale",
+                        "description": "…",
+                        "type": "number",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "noise_scale",
+                        "display": "noise_scale",
+                        "description": "…",
+                        "type": "number",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "noise_w_scale",
+                        "display": "noise_w_scale",
+                        "description": "…",
+                        "type": "number",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "normalize",
+                        "display": "normalize",
+                        "description": "…",
+                        "type": "boolean",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "edge",
+                "full_name": "tts edge",
+                "description": "…",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "lang",
+                        "display": "lang",
+                        "description": "…",
+                        "type": "string",
+                        "required": false,
+                        "has_autocomplete": true,
+                        "choices": []
+                    },
+                    {
+                        "name": "slow",
+                        "display": "slow",
+                        "description": "…",
+                        "type": "boolean",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "<AppCommandContext guild=True dm_channel=True private_channel=True>",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "slash_command",
+        "name": "tts_v2",
+        "full_name": "tts_v2",
+        "description": "commands.tts_v2.description",
+        "arguments": [
+            {
+                "name": "input",
+                "display": "input",
+                "description": "…",
+                "type": "string",
+                "required": true,
+                "has_autocomplete": false,
+                "choices": []
+            },
+            {
+                "name": "engine",
+                "display": "engine",
+                "description": "…",
+                "type": "string",
+                "required": true,
+                "has_autocomplete": false,
+                "choices": [
+                    "GOOGLE_TTS",
+                    "PIPER_TTS",
+                    "ESPEAK_TTS",
+                    "POCKET_TTS",
+                    "EDGE_TTS",
+                    "PYTTSX3_TTS"
+                ]
+            },
+            {
+                "name": "voice",
+                "display": "voice",
+                "description": "…",
+                "type": "string",
+                "required": false,
+                "has_autocomplete": true,
+                "choices": []
+            }
+        ],
+        "allowed_contexts": "<AppCommandContext guild=True dm_channel=True private_channel=True>",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "calc",
+        "full_name": "calc",
+        "description": "command.calculate.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "percentage",
+                "full_name": "calc percentage",
+                "description": "command.calculate.percentage.description",
+                "arguments": [
+                    {
+                        "name": "value",
+                        "display": "value",
+                        "description": "…",
+                        "type": "integer",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "max",
+                        "display": "max",
+                        "description": "…",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "slash_command",
+        "name": "8ball",
+        "full_name": "8ball",
+        "description": "command.8ball.description",
+        "arguments": [
+            {
+                "name": "question",
+                "display": "question",
+                "description": "Question to answer by 8ball.",
+                "type": "string",
+                "required": true,
+                "has_autocomplete": false,
+                "choices": []
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "slash_command",
+        "name": "yes_or_no",
+        "full_name": "yes_or_no",
+        "description": "Gives yes or no to your ask",
+        "arguments": [
+            {
+                "name": "question",
+                "display": "question",
+                "description": "Question",
+                "type": "string",
+                "required": true,
+                "has_autocomplete": false,
+                "choices": []
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "slash_command",
+        "name": "coinflip",
+        "full_name": "coinflip",
+        "description": "Flips a coin and says 'Heads' or 'Tails'.",
+        "arguments": [
+            {
+                "name": "input",
+                "display": "input",
+                "description": "Text to desire.",
+                "type": "string",
+                "required": false,
+                "has_autocomplete": false,
+                "choices": []
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "message",
+        "full_name": "message",
+        "description": "An group for messages.",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "say",
+                "full_name": "message say",
+                "description": "Makes the bot say something in current channel.",
+                "arguments": [
+                    {
+                        "name": "msg",
+                        "display": "msg",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "send",
+                "full_name": "message send",
+                "description": "Sends a message.",
+                "arguments": [
+                    {
+                        "name": "channel",
+                        "display": "channel",
+                        "description": "…",
+                        "type": "channel",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "message",
+                        "display": "message",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "mass_delete",
+                "full_name": "message mass_delete",
+                "description": "Deletes messages before specified messages.",
+                "arguments": [
+                    {
+                        "name": "limit",
+                        "display": "limit",
+                        "description": "How much range bot will delete.",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "purge",
+                "full_name": "message purge",
+                "description": "Purges a specific amount of messages sent earlier.",
+                "arguments": [
+                    {
+                        "name": "limit",
+                        "display": "limit",
+                        "description": "…",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "purge_bot_messages",
+                "full_name": "message purge_bot_messages",
+                "description": "Deletes bot's messages",
+                "arguments": [
+                    {
+                        "name": "limit",
+                        "display": "limit",
+                        "description": "How much bot deletes it",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "uwuify",
+                "full_name": "message uwuify",
+                "description": "Sends a message to everyone that you did",
+                "arguments": [
+                    {
+                        "name": "msg",
+                        "display": "msg",
+                        "description": "Message to send",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "direct_message",
+                "full_name": "message direct_message",
+                "description": "DMs to a member",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "enable_sent_by",
+                        "display": "enable_sent_by",
+                        "description": "…",
+                        "type": "boolean",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "send2",
+                "full_name": "message send2",
+                "description": "...",
+                "arguments": [
+                    {
+                        "name": "message",
+                        "display": "message",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "search_for",
+                "full_name": "message search_for",
+                "description": "Searches messages in current channel.",
+                "arguments": [
+                    {
+                        "name": "keyword",
+                        "display": "keyword",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "limit",
+                        "display": "limit",
+                        "description": "…",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "last_sent",
+                "full_name": "message last_sent",
+                "description": "Fetches the last message from the current channel.",
+                "arguments": [],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "first_sent",
+                "full_name": "message first_sent",
+                "description": "Fetches the first message from the current channel.",
+                "arguments": [],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "message_count",
+                "full_name": "message message_count",
+                "description": "Counts messages in the current channel.",
+                "arguments": [],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "get_random_message",
+                "full_name": "message get_random_message",
+                "description": "Fetches a random message from the current channel.",
+                "arguments": [],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "fun",
+        "full_name": "fun",
+        "description": "command.fun.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "guess_game",
+                "full_name": "fun guess_game",
+                "description": "command.fun.guess_game.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "guess",
+                "full_name": "fun guess",
+                "description": "command.fun.guess.description",
+                "arguments": [
+                    {
+                        "name": "number",
+                        "display": "number",
+                        "description": "…",
+                        "type": "integer",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "stopguess",
+                "full_name": "fun stopguess",
+                "description": "command.fun.stopguess.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "job_application",
+                "full_name": "fun job_application",
+                "description": "command.fun.job_application.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "boop_member",
+                "full_name": "fun boop_member",
+                "description": "command.fun.boop_member.description",
+                "arguments": [
+                    {
+                        "name": "user",
+                        "display": "user",
+                        "description": "Member to boop",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "dice",
+                "full_name": "fun dice",
+                "description": "command.fun.dice.description",
+                "arguments": [
+                    {
+                        "name": "dices",
+                        "display": "dices",
+                        "description": "…",
+                        "type": "integer",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "sides",
+                        "display": "sides",
+                        "description": "…",
+                        "type": "integer",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "slash_command",
+        "name": "ship",
+        "full_name": "ship",
+        "description": "command.fun.ship.description",
+        "arguments": [
+            {
+                "name": "user1",
+                "display": "user1",
+                "description": "…",
+                "type": "user",
+                "required": true,
+                "has_autocomplete": false,
+                "choices": []
+            },
+            {
+                "name": "user2",
+                "display": "user2",
+                "description": "…",
+                "type": "user",
+                "required": false,
+                "has_autocomplete": false,
+                "choices": []
+            }
+        ],
+        "allowed_contexts": "<AppCommandContext guild=True dm_channel=True private_channel=True>",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "roblox",
+        "full_name": "roblox",
+        "description": "command.roblox.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "user_avatar",
+                "full_name": "roblox user_avatar",
+                "description": "command.roblox.avatar.description",
+                "arguments": [
+                    {
+                        "name": "username",
+                        "display": "username",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "user",
+                "full_name": "roblox user",
+                "description": "command.roblox.user.description",
+                "arguments": [
+                    {
+                        "name": "username",
+                        "display": "username",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "info",
+        "full_name": "info",
+        "description": "command.info.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "sync",
+                "full_name": "info sync",
+                "description": "command.info.sync.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "botserver",
+                "full_name": "info botserver",
+                "description": "Join to bot's main server",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "uptime",
+                "full_name": "info uptime",
+                "description": "How long this bot is in session",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "retrieve",
+                "full_name": "info retrieve",
+                "description": "command.info.retrieve.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "commit_data",
+                "full_name": "info commit_data",
+                "description": "command.info.commit_data.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "ping",
+                "full_name": "info ping",
+                "description": "command.info.ping.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "pox",
+                "full_name": "info pox",
+                "description": "Say him 'p0x38 is retroslop >:3'",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "bot_timestamp",
+                "full_name": "info bot_timestamp",
+                "description": "Shows time in bot's time",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "timedate",
+                "full_name": "info timedate",
+                "description": "command.info.timedate.description",
+                "arguments": [
+                    {
+                        "name": "tzone",
+                        "display": "tzone",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": true,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "invite",
+                "full_name": "info invite",
+                "description": "command.info.invite.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "name_signature",
+                "full_name": "info name_signature",
+                "description": "Shows temporary signature for the bot.",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "os_info",
+                "full_name": "info os_info",
+                "description": "command.info.os_info.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "feedback",
+                "full_name": "info feedback",
+                "description": "command.info.feedback.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "memory_check",
+                "full_name": "info memory_check",
+                "description": "command.info.memory_check.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "<AppCommandContext guild=True dm_channel=True private_channel=True>",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "welcome",
+        "full_name": "welcome",
+        "description": "command.welcome.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "toggle",
+                "full_name": "welcome toggle",
+                "description": "command.welcome.toggle.description",
+                "arguments": [
+                    {
+                        "name": "enabled",
+                        "display": "enabled",
+                        "description": "command.welcome.toggle.parameters.enabled",
+                        "type": "boolean",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "joinchannel",
+                "full_name": "welcome joinchannel",
+                "description": "command.welcome.joinchannel.description",
+                "arguments": [
+                    {
+                        "name": "channel",
+                        "display": "channel",
+                        "description": "command.welcome.joinchannel.parameters.channel",
+                        "type": "channel",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "leavechannel",
+                "full_name": "welcome leavechannel",
+                "description": "command.welcome.leavechannel.description",
+                "arguments": [
+                    {
+                        "name": "channel",
+                        "display": "channel",
+                        "description": "command.welcome.leavechannel.parameters.channel",
+                        "type": "channel",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "random",
+        "full_name": "random",
+        "description": "An group for Random.",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "user",
+                "full_name": "random user",
+                "description": "Returns random user(s).",
+                "arguments": [
+                    {
+                        "name": "max_selections",
+                        "display": "max_selections",
+                        "description": "…",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "unique",
+                        "display": "unique",
+                        "description": "…",
+                        "type": "boolean",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "fixed_number",
+                "full_name": "random fixed_number",
+                "description": "Returns fixed number of user.",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "role",
+                "full_name": "random role",
+                "description": "Returns random role(s).",
+                "arguments": [
+                    {
+                        "name": "max_selections",
+                        "display": "max_selections",
+                        "description": "…",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "integer",
+                "full_name": "random integer",
+                "description": "Generates random integer.",
+                "arguments": [
+                    {
+                        "name": "min",
+                        "display": "min",
+                        "description": "Minimum integer",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "max",
+                        "display": "max",
+                        "description": "Maximum integer",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "float",
+                "full_name": "random float",
+                "description": "Generates random float.",
+                "arguments": [
+                    {
+                        "name": "min",
+                        "display": "min",
+                        "description": "Minimum float",
+                        "type": "number",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "max",
+                        "display": "max",
+                        "description": "Maximum float",
+                        "type": "number",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "ndigit",
+                        "display": "ndigit",
+                        "description": "…",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "text_emoticon",
+                "full_name": "random text_emoticon",
+                "description": "Attempts to generate emoticon.",
+                "arguments": [
+                    {
+                        "name": "max_generation",
+                        "display": "max_generation",
+                        "description": "…",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "string",
+                "full_name": "random string",
+                "description": "Generate randomly generated string.",
+                "arguments": [
+                    {
+                        "name": "max_generation",
+                        "display": "max_generation",
+                        "description": "…",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "minecraft",
+        "full_name": "minecraft",
+        "description": "Sub-group",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "server",
+                "full_name": "minecraft server",
+                "description": "command.minecraft.server.description",
+                "arguments": [
+                    {
+                        "name": "address",
+                        "display": "address",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "profile",
+                "full_name": "minecraft profile",
+                "description": "command.minecraft.profile.description",
+                "arguments": [
+                    {
+                        "name": "query",
+                        "display": "query",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "generate",
+        "full_name": "generate",
+        "description": "command.generate.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "emoticon",
+                "full_name": "generate emoticon",
+                "description": "command.generate.emoticon.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "idek",
+                "full_name": "generate idek",
+                "description": "command.generate.idek.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "nyan_cat",
+                "full_name": "generate nyan_cat",
+                "description": "command.generate.nyan_cat.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "cat_jard",
+                "full_name": "generate cat_jard",
+                "description": "command.generate.cat_jard.description",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "target_close",
+                "full_name": "generate target_close",
+                "description": "command.generate.target_close.description",
+                "arguments": [
+                    {
+                        "name": "target_value",
+                        "display": "target_value",
+                        "description": "…",
+                        "type": "number",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "concurrents",
+                        "display": "concurrents",
+                        "description": "…",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "computer_latency",
+                "full_name": "generate computer_latency",
+                "description": "Calculates hosted computer's latency",
+                "arguments": [
+                    {
+                        "name": "delay",
+                        "display": "delay",
+                        "description": "…",
+                        "type": "number",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "markov",
+                "full_name": "generate markov",
+                "description": "Generates random lines with Markov-chain",
+                "arguments": [
+                    {
+                        "name": "amount",
+                        "display": "amount",
+                        "description": "Times to generate, up to 16 iterations (lines).",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "markov2",
+                "full_name": "generate markov2",
+                "description": "Generates SCP-like anomaly with Markov-chain",
+                "arguments": [
+                    {
+                        "name": "amount",
+                        "display": "amount",
+                        "description": "Times to generate, up to 16 iterations (lines).",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "meow",
+                "full_name": "generate meow",
+                "description": "Make me say miaw :3",
+                "arguments": [
+                    {
+                        "name": "put_face",
+                        "display": "put_face",
+                        "description": "Enables extra face such as :3",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "nyan_bot",
+                "full_name": "generate nyan_bot",
+                "description": "Nyan bot.",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "collatz_graph",
+                "full_name": "generate collatz_graph",
+                "description": "Generates Collatz Conjecture graph for a given number.",
+                "arguments": [
+                    {
+                        "name": "number",
+                        "display": "number",
+                        "description": "The starting number for the Collatz sequence.",
+                        "type": "integer",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "image",
+                "full_name": "generate image",
+                "description": "Shows image by sum.",
+                "arguments": [
+                    {
+                        "name": "id",
+                        "display": "id",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": true,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "bytebeat",
+                "full_name": "generate bytebeat",
+                "description": "commands.generate.bytebeat.description",
+                "arguments": [
+                    {
+                        "name": "formula",
+                        "display": "formula",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "duration",
+                        "display": "duration",
+                        "description": "…",
+                        "type": "number",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "sample_rate",
+                        "display": "sample_rate",
+                        "description": "…",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "<AppCommandContext guild=True dm_channel=True private_channel=True>",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "giveaway",
+        "full_name": "giveaway",
+        "description": "Giveaway cog.",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "start",
+                "full_name": "giveaway start",
+                "description": "Starts a new giveaway",
+                "arguments": [
+                    {
+                        "name": "duration",
+                        "display": "duration",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "winners",
+                        "display": "winners",
+                        "description": "…",
+                        "type": "integer",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "prize",
+                        "display": "prize",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "end",
+                "full_name": "giveaway end",
+                "description": "Immediately ends an active giveaway.",
+                "arguments": [
+                    {
+                        "name": "message_id",
+                        "display": "message_id",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "convert",
+        "full_name": "convert",
+        "description": "command.convert.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "meow",
+                "full_name": "convert meow",
+                "description": "command.convert.meow.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "Text to be meowified",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "uwu",
+                "full_name": "convert uwu",
+                "description": "command.convert.uwu.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "Text to be uwuified",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "base64",
+                "full_name": "convert base64",
+                "description": "command.convert.base64.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "Text to be base64-ified",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "unbase64",
+                "full_name": "convert unbase64",
+                "description": "command.convert.unbase64.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "Base64 to be textified",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "muffle",
+                "full_name": "convert muffle",
+                "description": "command.convert.muffle.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "Message to be MMMPHHHH-ified",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "base7777",
+                "full_name": "convert base7777",
+                "description": "command.convert.base7777.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "unbase7777",
+                "full_name": "convert unbase7777",
+                "description": "command.convert.unbase7777.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "glitch",
+                "full_name": "convert glitch",
+                "description": "command.convert.glitch.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "level",
+                        "display": "level",
+                        "description": "…",
+                        "type": "integer",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "nsrc1",
+                "full_name": "convert nsrc1",
+                "description": "command.convert.nsrc1.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "unnsrc1",
+                "full_name": "convert unnsrc1",
+                "description": "command.convert.unnsrc1.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "invert_letters",
+                "full_name": "convert invert_letters",
+                "description": "command.convert.invert_letters.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "caesar",
+                "full_name": "convert caesar",
+                "description": "command.convert.caesar.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "shift",
+                        "display": "shift",
+                        "description": "…",
+                        "type": "integer",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "uncaesar",
+                "full_name": "convert uncaesar",
+                "description": "command.convert.uncaesar.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "shift",
+                        "display": "shift",
+                        "description": "…",
+                        "type": "integer",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "railfence",
+                "full_name": "convert railfence",
+                "description": "command.convert.railfence.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "key",
+                        "display": "key",
+                        "description": "…",
+                        "type": "integer",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "unrailfence",
+                "full_name": "convert unrailfence",
+                "description": "command.convert.unrailfence.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "key",
+                        "display": "key",
+                        "description": "…",
+                        "type": "integer",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "morse",
+                "full_name": "convert morse",
+                "description": "command.convert.morse.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "binary",
+                "full_name": "convert binary",
+                "description": "command.convert.binary.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "demorse",
+                "full_name": "convert demorse",
+                "description": "command.convert.demorse.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "unbinary",
+                "full_name": "convert unbinary",
+                "description": "command.convert.unmorse.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "reverse_words",
+                "full_name": "convert reverse_words",
+                "description": "command.convert.reverse_words.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "color_name",
+                "full_name": "convert color_name",
+                "description": "command.convert.color_name.description",
+                "arguments": [
+                    {
+                        "name": "hex",
+                        "display": "hex",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "psc1",
+                "full_name": "convert psc1",
+                "description": "command.convert.psc1.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "unpsc1",
+                "full_name": "convert unpsc1",
+                "description": "command.convert.unpsc1.description",
+                "arguments": [
+                    {
+                        "name": "text",
+                        "display": "text",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "<AppCommandContext guild=True dm_channel=True private_channel=True>",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "builtin_search",
+        "full_name": "builtin_search",
+        "description": "Just for no reason",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "add_query",
+                "full_name": "builtin_search add_query",
+                "description": "command.builtin_search.add_query.description",
+                "arguments": [
+                    {
+                        "name": "value",
+                        "display": "value",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "remove_query",
+                "full_name": "builtin_search remove_query",
+                "description": "Remove query from database.",
+                "arguments": [
+                    {
+                        "name": "value",
+                        "display": "value",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "count",
+                "full_name": "builtin_search count",
+                "description": "Get query count.",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "list",
+                "full_name": "builtin_search list",
+                "description": "Get list of query.",
+                "arguments": [],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "search_query",
+                "full_name": "builtin_search search_query",
+                "description": "Search query as fuzzy search",
+                "arguments": [
+                    {
+                        "name": "needle",
+                        "display": "needle",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "role",
+        "full_name": "role",
+        "description": "An group for Roles.",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "give_role",
+                "full_name": "role give_role",
+                "description": "Gives member a role.",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "role",
+                        "display": "role",
+                        "description": "…",
+                        "type": "role",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "take_role",
+                "full_name": "role take_role",
+                "description": "Takes role from member.",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "role",
+                        "display": "role",
+                        "description": "…",
+                        "type": "role",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "list",
+                "full_name": "role list",
+                "description": "Lists roles.",
+                "arguments": [],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "user_roles",
+                "full_name": "role user_roles",
+                "description": "Lists user's role.",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "…",
+                        "type": "user",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "edit_role",
+                "full_name": "role edit_role",
+                "description": "Edits role's permission.",
+                "arguments": [
+                    {
+                        "name": "role",
+                        "display": "role",
+                        "description": "…",
+                        "type": "role",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "permission",
+                        "display": "permission",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": true,
+                        "choices": []
+                    },
+                    {
+                        "name": "new_value",
+                        "display": "new_value",
+                        "description": "…",
+                        "type": "boolean",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "add_role",
+                "full_name": "role add_role",
+                "description": "Adds a role.",
+                "arguments": [
+                    {
+                        "name": "name",
+                        "display": "name",
+                        "description": "…",
+                        "type": "string",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "delete_role",
+                "full_name": "role delete_role",
+                "description": "Deletes a role.",
+                "arguments": [
+                    {
+                        "name": "role",
+                        "display": "role",
+                        "description": "…",
+                        "type": "role",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "group",
+        "name": "channel",
+        "full_name": "channel",
+        "description": "command.channel.description",
+        "sub_commands": [
+            {
+                "type": "slash_command",
+                "name": "slowmode",
+                "full_name": "channel slowmode",
+                "description": "command.channel.slowmode.description",
+                "arguments": [
+                    {
+                        "name": "seconds",
+                        "display": "seconds",
+                        "description": "…",
+                        "type": "integer",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    },
+                    {
+                        "name": "channel",
+                        "display": "channel",
+                        "description": "…",
+                        "type": "channel",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "info",
+                "full_name": "channel info",
+                "description": "command.channel.info.description",
+                "arguments": [
+                    {
+                        "name": "channel",
+                        "display": "channel",
+                        "description": "…",
+                        "type": "channel",
+                        "required": true,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_installs": "None"
+            }
+        ],
+        "allowed_contexts": "None",
+        "allowed_installs": "None"
+    },
+    {
+        "type": "context_menu",
+        "name": "context_menu.kick_member.name",
+        "full_name": "context_menu.kick_member.name"
+    },
+    {
+        "type": "context_menu",
+        "name": "context_menu.ban_member.name",
+        "full_name": "context_menu.ban_member.name"
+    },
+    {
+        "type": "context_menu",
+        "name": "context_menu.timeout_member.name",
+        "full_name": "context_menu.timeout_member.name"
+    },
+    {
+        "type": "context_menu",
+        "name": "Generate fade video",
+        "full_name": "Generate fade video"
+    },
+    {
+        "name": "help",
+        "full_name": "help",
+        "aliases": [],
+        "description": "Shows this message",
+        "arguments": [
+            {
+                "name": "command",
+                "type": "Optional",
+                "required": false,
+                "default": "None"
+            }
+        ],
+        "usage": null,
+        "type": "prefix_command"
+    }
+]

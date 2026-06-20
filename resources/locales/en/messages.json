@@ -1,10 +1,10 @@
 {
     "ban_user": "{user} has been banned! :3",
-    "kick_user": "{user} has been kicked! :3",
-    "timed_out_user": "{user} has been timed out for {length}! :3",
-    "warn_user": "{user} has been warned! :3",
-    "level_up": "{mention} has been leveled up to level {new_level}! :3",
     "chatbot_empty": "I have no words! 3:",
     "chatbot_request_error": "It seems bot owner forgot to specify the model to generate. :/",
-    "chatbot_response_error": "It seems server stopped working. :/"
+    "chatbot_response_error": "It seems server stopped working. :/",
+    "kick_user": "{user} has been kicked! :3",
+    "level_up": "{mention} has been leveled up to level {new_level}! :3",
+    "timed_out_user": "{user} has been timed out for {length}! :3",
+    "warn_user": "{user} has been warned! :3"
 }

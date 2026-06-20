@@ -1,24 +1,24 @@
-from collections import deque
-from enum import StrEnum
-from typing import Any, Optional
-import time
 import asyncio
 import json
 import os
+import time
+from collections import deque
+from enum import StrEnum
+from typing import Any, Optional
 
+import aiofiles
 from discord import (
+    AllowedMentions,
     Color,
     DMChannel,
     Embed,
     GroupChannel,
     Message,
     PartialMessageable,
-    AllowedMentions,
     StageChannel,
     TextChannel,
     Thread,
     VoiceChannel,
-    app_commands,
 )
 from discord.ext import commands
 from openrouter import OpenRouter
@@ -26,6 +26,7 @@ from openrouter import OpenRouter
 import stuff
 from bot import PoxBot
 from logger import logger
+
 
 class LLMProviderType(StrEnum):
     OPENROUTER = "openrouter"
@@ -56,7 +57,6 @@ class LLMChatCog(commands.Cog):
         formatted_message_author = message_author.display_name
         formatted_message_content = message_content if message_content else "Empty message"
         formatted_referenced_message_author = None
-        referenced_message_author = None
         data = {} # {"role": "<assistant|user>", "content": "<content>"}
         
         if message.reference and isinstance(message.reference.resolved, Message):
@@ -170,8 +170,9 @@ class LLMChatCog(commands.Cog):
         file_path = os.path.join(self.persistence_dir, f"{channel.id}.json")
         if os.path.isfile(file_path):
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
-                    loaded = json.load(f)
+                async with aiofiles.open(file_path, "r", encoding="utf-8") as f:
+                    raw = await f.read()
+                    loaded = json.loads(raw)
                     for item in loaded:
                         self.history[channel.id].append(self._sanitize_history_item(item))
             except Exception as e:
@@ -188,7 +189,7 @@ class LLMChatCog(commands.Cog):
         # persist current in-memory history (trim to limit)
         try:
             to_save = list(self.history[channel.id])[-self.history_limit:]
-            with open(file_path, "w", encoding="utf-8") as f:
+            async with aiofiles.open(file_path, "w", encoding="utf-8") as f:
                 json.dump(to_save, f, ensure_ascii=False)
         except Exception as e:
             logger.exception(f"Failed to persist history for {channel.id}: {e}")
@@ -249,7 +250,6 @@ class LLMChatCog(commands.Cog):
             self.cooldowns[message.author.id] = now
 
             async with message.channel.typing():
-                sent_message: Optional[Message] = None
                 try:
 
                     async for chunk in self.generate_response({

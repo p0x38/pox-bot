@@ -1,19 +1,15 @@
+import asyncio
+import random
 import re
-from typing import Optional, Union
 
 from aiocache import cached
+from discord import Color, Embed, Interaction, Member, User, app_commands
 from discord.ext.commands import Cog
-from discord import Color, Embed, Member, User, app_commands, Interaction
-import random
 
-from bot import PoxBot
-
-import data
-from logger import logger
-import asyncio
-
-from logger import logger
 import stuff
+from bot import PoxBot
+from logger import logger
+
 
 def ship_names(name1, name2):
     n1 = name1.lower()
@@ -34,7 +30,7 @@ class FunCog(Cog):
         self.bot: PoxBot = bot
         
         @app_commands.context_menu(name="Ship with this user")
-        async def ship_with_target(interaction: Interaction, target_user: Union[User, Member]):
+        async def ship_with_target(interaction: Interaction, target_user: User | Member):
             embed = Embed(color=Color.red(), description="Uncaught Exception")
             user = None
 
@@ -94,8 +90,8 @@ class FunCog(Cog):
         logger.debug(self.bot.active_games)
 
         return await interaction.response.send_message(
-            f"Guessing game started."
-            f"Use /guess <number> to guess."
+            "Guessing game started."
+            "Use /guess <number> to guess."
         )
     
     @group.command(name='guess', description=app_commands.locale_str("command.fun.guess.description"))
@@ -115,8 +111,6 @@ class FunCog(Cog):
             return await interaction.response.send_message("Not that so far.")
         
         game_data['recent'] = number
-
-        recent_guess = game_data['recent']
 
         if attempts < 16:
             if number < secret_number:
@@ -153,7 +147,7 @@ class FunCog(Cog):
             del self.bot.active_games[user_id]
             return await interaction.response.send_message(f"Aw... It was {secret}.")
         else:
-            return await interaction.response.send_message(f"You've not even started the guess.")
+            return await interaction.response.send_message("You've not even started the guess.")
 
     @cached(300)
     @group.command(name="job_application", description=app_commands.locale_str("command.fun.job_application.description"))
@@ -167,7 +161,7 @@ class FunCog(Cog):
     
     @group.command(name="boop_member", description=app_commands.locale_str("command.fun.boop_member.description"))
     @app_commands.describe(user="Member to boop")
-    async def boop_member(self, ctx: Interaction, user: Union[User, Member]):
+    async def boop_member(self, ctx: Interaction, user: User | Member):
         return await ctx.response.send_message(f"<@{user.id}> boop.")
     
     @group.command(name="dice", description=app_commands.locale_str("command.fun.dice.description"))
@@ -191,11 +185,8 @@ class FunCog(Cog):
     async def ship_users(self, interaction: Interaction, user1: User | Member, user2: User | Member | None = None):
         if not user2:
             if interaction.guild:
-                try:
-                    user2 = interaction.guild.get_member(interaction.user.id)
-                    if not user2: raise Exception()
-                except:
-                    return await interaction.response.send_message("Error occured.")
+                user2 = interaction.guild.get_member(interaction.user.id)
+                if not user2: raise RuntimeError("User not found")
             else: return await interaction.response.send_message("The command should've to ran with guild")
         
         rand_seed = user1.id + user2.id

@@ -1,18 +1,15 @@
 import random
-from discord import Color, Embed, Interaction, app_commands
-from discord.ext import commands
-import aiosqlite
 import time
 from datetime import datetime
 
-from os.path import join
-
+from discord import Color, Embed, Interaction, app_commands
+from discord.ext import commands
 from pytz import UTC
 
 from bot import PoxBot
 from src.database import EconomyDatabase
-
 from src.translator import translator_instance as i18n
+
 
 class EconomyCog(commands.Cog):
     def __init__(self, bot):
@@ -166,7 +163,6 @@ class EconomyCog(commands.Cog):
 
                 return await interaction.followup.send(embed=embed)
             
-            bonus = random.randint(0, 500)
             earned = random.randint(50, 300)
             user.wallet += earned
             user.last_work = now

@@ -1,13 +1,14 @@
 import json
 import os
-from typing import Optional
+
 import aiofiles
 from discord import Embed, Interaction, Member, app_commands
 from discord.ext import commands
+
+import stuff
+from bot import PoxBot
 from logger import logger
 
-from bot import PoxBot
-import stuff
 
 class RatingCog(commands.Cog):
     group = app_commands.Group(name="rating", description="Group for Rating members.")
@@ -56,8 +57,8 @@ class RatingCog(commands.Cog):
     
     @group.command(name="rate_user", description="Rate member.")
     @app_commands.guild_only()
-    @app_commands.describe(rate="A floating point number to rate member between 0 to 100.")
-    async def rate_member(self, interaction: Interaction, member: Member, rate: float, override: Optional[bool] = False):
+    @app_commands.describe(rate=app_commands.locale_str("command.rating.rate_user.description"))
+    async def rate_member(self, interaction: Interaction, member: Member, rate: float, override: bool | None = False):
         if interaction.guild is None: return await interaction.response.send_message("You cannot set welcome channel unless the bot is for guild.")
         if member == interaction.user: return await interaction.response.send_message("You can't rate yourself.")
         if override is None: override = False
@@ -66,7 +67,7 @@ class RatingCog(commands.Cog):
 
         user_data = self.data.setdefault(member.id, {})
 
-        if interaction.user.id in user_data.keys():
+        if interaction.user.id in user_data:
             if not override:
                 return await interaction.response.send_message(f"You already rated to `{member.display_name}`!")
             else:

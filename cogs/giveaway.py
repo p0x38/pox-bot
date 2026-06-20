@@ -1,19 +1,16 @@
-import json
 import random
 from datetime import datetime, timedelta
-from os.path import exists, join
 
-import aiofiles
 import discord
 from discord import Colour, Embed, TextChannel, app_commands
+from discord.abc import Messageable
 from discord.ext import commands, tasks
 from pytz import UTC
 
 from bot import PoxBot
 from logger import logger
+from src.models import GiveawayData
 
-GIVEAWAYS_FILE = 'data/giveaways.json'
-GIVEAWAYS_EMOJI = "🥳"
 
 class GiveawayCog(commands.Cog):
     giveaway = app_commands.Group(name="giveaway", description="Giveaway cog.")
@@ -21,7 +18,7 @@ class GiveawayCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         self.giveaways = {}
-        self.path = join(self.bot.root_path, GIVEAWAYS_FILE)
+        self.giveaway_emoji = "🥳"
         self.bot.loop.create_task(self._async_setup())
     
     async def _async_setup(self):
@@ -34,37 +31,58 @@ class GiveawayCog(commands.Cog):
         self.bot.loop.create_task(self._save_giveaways())
     
     async def _load_giveaways(self):
-        if exists(self.path):
-            try:
-                async with aiofiles.open(self.path, mode='r', encoding="utf-8") as f:
-                    content = await f.read()
-                
-                if content:
-                    data = json.loads(content)
-                    self.giveaways = {str(k): v for k, v in data.items()}
-                    logger.info(f"Loaded {len(self.giveaways)} active giveaways.")
-                else:
-                    self.giveaways = {}
-                    logger.warning("Giveaways file was empty.")
-            except json.JSONDecodeError:
-                logger.error("Error loading giveaways.json. Starting with empty list.")
-                self.giveaways = {}
-            except Exception as e:
-                logger.error(f"An unexcepted error occured during giveaway loading: {e}")
-                self.giveaways = {}
-        else:
-            self.giveaways = {}
-    
+        self.giveaways = {}
+        if not getattr(self.bot, "giveaway_db", None) or not self.bot.giveaway_db:
+            logger.warning("Giveaway database pool not available, skipping giveaway load.")
+            return
+
+        try:
+            rows = await self.bot.giveaway_db.get_active_giveaways()
+        except Exception as e:
+            logger.exception(f"Failed to load giveaways from database: {e}")
+            return
+
+        self.giveaways = {
+            str(g.message_id): g.to_dict()
+            for g in rows if g
+        }
+
+        logger.info(f"Loaded {len(self.giveaways)} active giveaways from PostgreSQL.")
+
+    async def _persist_giveaway(self, message_id: int, giveaway_data: dict):
+        if not getattr(self.bot, "giveaway_db", None) or not self.bot.giveaway_db:
+            return
+
+        giveaway = GiveawayData(
+            message_id=message_id,
+            channel_id=giveaway_data["channel_id"],
+            guild_id=giveaway_data["guild_id"],
+            end_time=int(giveaway_data["end_time"]),
+            winners=giveaway_data["winners"],
+            prize=giveaway_data["prize"],
+            host_id=giveaway_data["host_id"],
+        )
+
+        await self.bot.giveaway_db.save_giveaway(giveaway)
+
+    async def _delete_giveaway(self, message_id: int):
+        if not getattr(self.bot, "giveaway_db", None) or not self.bot.giveaway_db:
+            return
+
+        await self.bot.giveaway_db.delete_giveaway(message_id)
+
     async def _save_giveaways(self):
         active_giveaways = {
             mid: data for mid, data in self.giveaways.items()
-            if data['end_time'] > datetime.now(UTC).timestamp()
+            if data["end_time"] > datetime.now(UTC).timestamp()
         }
 
-        async with aiofiles.open(self.path, mode='w+') as f:
-            await f.write(json.dumps(active_giveaways, indent=4))
-        
         self.giveaways = active_giveaways
+
+        if getattr(self.bot, "giveaway_db", None) and self.bot.giveaway_db:
+            for message_id, data in active_giveaways.items():
+                await self._persist_giveaway(int(message_id), data)
+
         logger.info(f"Saved {len(self.giveaways)} active giveaways.")
     
     def _parse_duration(self, duration):
@@ -100,7 +118,7 @@ class GiveawayCog(commands.Cog):
             if not isinstance(channel, TextChannel): return
 
             message = await channel.fetch_message(message_id)
-            reaction = discord.utils.get(message.reactions, emoji=GIVEAWAYS_EMOJI)
+            reaction = discord.utils.get(message.reactions, emoji=self.giveaway_emoji)
 
             users = []
             if reaction:
@@ -112,11 +130,16 @@ class GiveawayCog(commands.Cog):
                 num_winners = min(giveaway_data['winners'], len(users))
                 winners = random.sample(users, num_winners)
                 winner_mentions = ' '.join([w.mention for w in winners])
+                
+                host_user = self.bot.get_user(giveaway_data['host_id'])
+                
+                if not host_user:
+                    return # TODO: Improve this shit
 
                 announcement = (
                     "**GIVEAWAY ENDED**\n\n"
                     f"The winner{'s' if num_winners > 1 else ''} of **{giveaway_data['prize']}** are: {winner_mentions}.\n"
-                    f"Congratulations. Contact the host ({self.bot.get_user(giveaway_data['host_id']).mention}) to claim your prize."
+                    f"Congratulations. Contact the host ({host_user.mention}) to claim your prize."
                 ) 
                 await channel.send(announcement)
 
@@ -129,7 +152,7 @@ class GiveawayCog(commands.Cog):
             logger.exception(f"An error occured while ending giveaway {message_id}: {e}")
         finally:
             self.giveaways.pop(str(message_id), None)
-            await self._save_giveaways()
+            await self._delete_giveaway(message_id)
     
     @tasks.loop(seconds=10.0)
     async def giveaway_task(self):
@@ -158,21 +181,21 @@ class GiveawayCog(commands.Cog):
         except ValueError as e:
             return await interaction.followup.send(f"Whoops. {e}", ephemeral=True)
         
-        end_time = datetime.now() + time_delta
+        end_time = datetime.now(UTC) + time_delta
         end_timestamp = end_time.timestamp()
 
         embed = Embed(
             title="Giveaway.",
-            description=f"**Prize:** {prize}\n**Winners:** {winners}\n**Ends:** <t:{int(end_timestamp)}:R>\n\nReact with {GIVEAWAYS_EMOJI} to enter.",
+            description=f"**Prize:** {prize}\n**Winners:** {winners}\n**Ends:** <t:{int(end_timestamp)}:R>\n\nReact with {self.giveaway_emoji} to enter.",
             color=Colour.gold(),
             timestamp=end_time
         )
         embed.set_footer(text=f"Hosted by: {interaction.user.display_name}")
 
-        channel = interaction.channel or self.bot.get_channel(interaction.channel_id)
-        if channel is None: return await interaction.followup.send("Whoops. An error occured.", ephemeral=True)
+        channel = interaction.channel or (self.bot.get_channel(interaction.channel_id) if interaction.channel_id else None)
+        if channel is None or not isinstance(channel, Messageable): return await interaction.followup.send("Whoops. An error occured.", ephemeral=True)
         message = await channel.send(embed=embed)
-        emjij = await message.add_reaction(GIVEAWAYS_EMOJI)
+        await message.add_reaction(self.giveaway_emoji)
 
         giveaway_data = {
             'channel_id': interaction.channel_id,
@@ -184,7 +207,7 @@ class GiveawayCog(commands.Cog):
         }
 
         self.giveaways[str(message.id)] = giveaway_data
-        await self._save_giveaways() # <-- CRITICAL: Await the async save call here
+        await self._persist_giveaway(message.id, giveaway_data)
 
         await interaction.followup.send(f"Giveaway for **{prize}** started. Find it here: ({message.jump_url})", ephemeral=True)
 

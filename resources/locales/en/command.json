@@ -35,6 +35,11 @@
             }
         }
     },
+    "builtin_search": {
+        "add_query": {
+            "description": "Add query to database."
+        }
+    },
     "calculate": {
         "description": "Math time! :3",
         "percentage": {
@@ -199,11 +204,11 @@
         }
     },
     "detect": {
-        "custom2": {
-            "description": "Let's see how high it is~ :3"
-        },
         "custom_member": {
             "description": "Checks how close a member is to something! :3"
+        },
+        "custom2": {
+            "description": "Let's see how high it is~ :3"
         },
         "description": "A group for detecting stuff! >:D",
         "how_femboy": {
@@ -383,28 +388,6 @@
     },
     "globalchat": {
         "description": "A group for global chat! :3",
-        "texts": {
-            "including_attachments": {
-                "one": "Including an attachment",
-                "many": "Including {count} attachments"
-            },
-            "including_attachments_no_text": {
-                "one": "User sent an attachment",
-                "many": "User sent {count} attachments"
-            }
-        },
-        "toggle": {
-            "description": "Toggle global chat! :3",
-            "embeds": {
-                "default": {
-                    "description": "Global chat is now {toggle}! :3",
-                    "title": "Global chat toggled! >:D"
-                }
-            },
-            "parameters": {
-                "enabled": "Enable global chat? (yes/no)"
-            }
-        },
         "setchannel": {
             "description": "Set the global chat channel! :3",
             "embeds": {
@@ -427,6 +410,28 @@
             },
             "parameters": {
                 "toggle": "Enable silent mode? (yes/no)"
+            }
+        },
+        "texts": {
+            "including_attachments": {
+                "many": "Including {count} attachments",
+                "one": "Including an attachment"
+            },
+            "including_attachments_no_text": {
+                "many": "User sent {count} attachments",
+                "one": "User sent an attachment"
+            }
+        },
+        "toggle": {
+            "description": "Toggle global chat! :3",
+            "embeds": {
+                "default": {
+                    "description": "Global chat is now {toggle}! :3",
+                    "title": "Global chat toggled! >:D"
+                }
+            },
+            "parameters": {
+                "enabled": "Enable global chat? (yes/no)"
             }
         }
     },
@@ -459,6 +464,9 @@
         "search_members": {
             "description": "Hunts for members matching your query! >:D"
         }
+    },
+    "image": {
+        "description": "A group for ImageCog"
     },
     "info": {
         "commit_data": {
@@ -626,6 +634,11 @@
             }
         }
     },
+    "rating": {
+        "rate_user": {
+            "description": "A floating point number to rate member between 0 to 100."
+        }
+    },
     "roblox": {
         "avatar": {
             "description": "Grabs a Roblox user's avatar by their username! :3",
@@ -771,18 +784,6 @@
     },
     "welcome": {
         "description": "A group for welcome messages! :3",
-        "toggle": {
-            "description": "Toggle the welcome message! :3",
-            "embeds": {
-                "default": {
-                    "description": "Welcome message is now {toggle}! :3",
-                    "title": "Welcome message toggled! >:D"
-                }
-            },
-            "parameters": {
-                "enabled": "Enable welcome message? (yes/no)"
-            }
-        },
         "joinchannel": {
             "description": "Set the welcome message channel! :3",
             "embeds": {
@@ -805,6 +806,18 @@
             },
             "parameters": {
                 "channel": "Channel to set leave message"
+            }
+        },
+        "toggle": {
+            "description": "Toggle the welcome message! :3",
+            "embeds": {
+                "default": {
+                    "description": "Welcome message is now {toggle}! :3",
+                    "title": "Welcome message toggled! >:D"
+                }
+            },
+            "parameters": {
+                "enabled": "Enable welcome message? (yes/no)"
             }
         }
     }

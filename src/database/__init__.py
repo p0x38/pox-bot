@@ -1,5 +1,6 @@
 from .bases import PostgreSQLDatabase
 from .economy import EconomyDatabase
+from .giveaway import GiveawayDatabase
 from .guild import GuildSettingsDatabase
 from .guild_v2 import GuildSettingsDatabaseV2
 from .settings import SettingsDatabase

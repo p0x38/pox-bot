@@ -1,21 +1,15 @@
-import asyncio
-import platform
-import time
-from discord import ButtonStyle, Color, Embed, Guild, Interaction, SelectOption, app_commands
-import discord
+from datetime import datetime
+
+from discord import (
+    Guild,
+)
 from discord.ext import commands, tasks
-from discord.ui import Select
-import distro
-from datetime import datetime, timezone
-import psutil
-import pytz
+from pytz import UTC
 
 from bot import PoxBot
-from cogs.chatbot import ChatbotCog
 from logger import logger
-from stuff import get_formatted_from_seconds
-import stuff
-    
+
+
 class BotInvitationLimiterCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
@@ -30,7 +24,7 @@ class BotInvitationLimiterCog(commands.Cog):
     @tasks.loop(minutes=5.0)
     async def guild_watchdog(self):
         if len(self.bot.guilds) > self.max_servers:
-            fallback_date = datetime.min.replace(tzinfo=timezone.utc)
+            fallback_date = datetime.min.replace(tzinfo=UTC)
             
             sorted_guilds = sorted(self.bot.guilds, key=lambda g: g.me.joined_at or fallback_date, reverse=True)            
             for guild in sorted_guilds:
@@ -55,7 +49,7 @@ class BotInvitationLimiterCog(commands.Cog):
                         "To maintain hardware stability and discord compliance, "
                         f"this bot is capped at {self.max_servers} servers. Leaving now..."
                     )
-            except: pass
+            except Exception: pass
             
             await guild.leave()
     

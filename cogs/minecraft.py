@@ -1,17 +1,17 @@
+import uuid
 from datetime import datetime
 from io import BytesIO
-import uuid
 
 from aiocache import cached
 from discord import Embed, File, Interaction, app_commands
 from discord.ext import commands
-
 from mcstatus import JavaServer
-import mojang
 from minepi import Player
+from pytz import UTC
 
-from src.translator import translator_instance as i18n
 from bot import PoxBot
+from src.translator import translator_instance as i18n
+
 
 def is_valid_uuid(val):
     try:
@@ -78,7 +78,7 @@ class MinecraftCog(commands.Cog):
     async def user(self, interaction: Interaction, query: str):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         
-        embed = Embed(timestamp=datetime.now())
+        embed = Embed(timestamp=datetime.now(UTC))
         
         await interaction.response.defer()
         is_uuid = is_valid_uuid(query)
@@ -114,7 +114,7 @@ class MinecraftCog(commands.Cog):
             embed.add_field(name="UUID", value=f"`{player.uuid}`", inline=False)
                 
             await interaction.followup.send(embed=embed, files=files)
-        except Exception as e:
+        except Exception:
             embed.description = i18n.T("error.embeds.minecraft_user_not_found.description", loc, {"query": query})
             await interaction.followup.send(embed=embed)
 

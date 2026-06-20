@@ -1,15 +1,19 @@
-from aiocache import cached
-from discord import Color, Interaction, Embed, app_commands
-from discord.ext import commands
-
-from roblox import UserNotFound
 import roblox
 import roblox.users
-from roblox.utilities.exceptions import Forbidden, BadRequest, TooManyRequests, InternalServerError, NotFound
-
-from src.translator import translator_instance
+from aiocache import cached
+from discord import Color, Embed, Interaction, app_commands
+from discord.ext import commands
+from roblox import UserNotFound
+from roblox.utilities.exceptions import (
+    BadRequest,
+    Forbidden,
+    InternalServerError,
+    TooManyRequests,
+)
 
 from bot import PoxBot
+from src.translator import translator_instance
+
 
 class RobloxAPICog(commands.Cog):
     def __init__(self, bot: PoxBot):
@@ -20,13 +24,10 @@ class RobloxAPICog(commands.Cog):
     # auto complete for roblox usernames
     async def roblox_username_autocomplete(self, interaction: Interaction, current: str) -> list[app_commands.Choice[str]]:
         choices = []
-        try:
-            async for user in self.bot.roblox_client.user_search(current, max_items=10):
-                choices.append(app_commands.Choice(name=f"{user.display_name} (@{user.name})", value=user.name))
-                if len(choices) >= 24:
-                    break
-        except Exception:
-            pass
+        async for user in self.bot.roblox_client.user_search(current, max_items=10):
+            choices.append(app_commands.Choice(name=f"{user.display_name} (@{user.name})", value=user.name))
+            if len(choices) >= 24:
+                break
         return choices
     
     @cached(300)

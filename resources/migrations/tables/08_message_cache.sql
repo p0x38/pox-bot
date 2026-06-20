@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS m_cache (
+    message_id BIGINT PRIMARY KEY,
+    channel_id BIGINT NOT NULL,
+    guild_id BIGINT NOT NULL,
+    author_id BIGINT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+)

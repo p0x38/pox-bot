@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_m_cache_channel ON m_cache(channel_id)

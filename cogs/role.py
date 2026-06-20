@@ -1,8 +1,16 @@
+from discord import (
+    Embed,
+    Forbidden,
+    HTTPException,
+    Interaction,
+    Member,
+    Permissions,
+    Role,
+    app_commands,
+)
 from discord.ext import commands
-from discord import Embed, Forbidden, HTTPException, Interaction, Member, Permissions, Role, app_commands
 
 from bot import PoxBot
-
 from logger import logger
 
 ALLOWED_PERMISSIONS_TO_EDIT = [
@@ -46,7 +54,7 @@ class RoleCog(commands.Cog):
             return await interaction.response.send_message(f"Gived role {role.name} to {member.name}.")
         except Forbidden:
             return await interaction.response.send_message("I do not have permission to give him role.")
-        except Exception as e:
+        except Exception:
             raise
     
     @group.command(name="take_role", description="Takes role from member.")
@@ -130,7 +138,7 @@ class RoleCog(commands.Cog):
             return await interaction.followup.send(f"Successfully {action}")
         except Forbidden:
             return await interaction.response.send_message("I don't have the necessary permissions to edit the role.")
-        except Exception as e:
+        except Exception:
             raise
     
     @group.command(name="add_role", description="Adds a role.")
@@ -140,7 +148,6 @@ class RoleCog(commands.Cog):
         await interaction.response.defer(thinking=True)
 
         try:
-            role = await interaction.guild.create_role(name=name, reason=f"Created by {interaction.user.name} via /role add")
             return await interaction.followup.send("Successfully created role :3", ephemeral=True)
         except Forbidden:
             return await interaction.followup.send("Failed to create role; I do not have permission to add role in guild.")

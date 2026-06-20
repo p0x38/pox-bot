@@ -1,39 +1,46 @@
+import ast
 import glob
-from itertools import islice
+import operator
 import os
-from pathlib import Path
-import re
-from time import time
-import uuid
-from aiocache import cached
-import aiofiles
-from discord.ext.commands import Cog
-from discord import Color, Message, app_commands, Embed, Interaction, File
-from discord.app_commands import AppInstallationType, locale_str, AppCommandContext
-import markovify
-from io import BytesIO
-from datetime import datetime
 import random
+import re
+import uuid
+import wave
+from datetime import datetime
+from io import BytesIO
+from itertools import islice
 from os.path import dirname, join
-from moviepy.editor import ImageClip, VideoFileClip, AudioFileClip, TextClip,ColorClip, CompositeVideoClip
+from pathlib import Path
+from time import time
+
+import aiofiles
+import markovify
+import numpy as np
+import PIL.Image
+from aiocache import cached
+from discord import Color, Embed, File, Interaction, Message, app_commands
+from discord.app_commands import AppCommandContext, locale_str
+from discord.ext.commands import Cog
+from matplotlib import pyplot as plt
+from moviepy.config import change_settings
+from moviepy.editor import (
+    AudioFileClip,
+    ColorClip,
+    CompositeVideoClip,
+    ImageClip,
+    TextClip,
+    VideoFileClip,
+)
 from moviepy.video.fx.fadein import fadein
 from moviepy.video.fx.loop import loop
-from moviepy.config import change_settings
-import PIL.Image
-import numpy as np
-import numexpr as ne
-from scipy.io import wavfile
+from proglog import TqdmProgressBarLogger
+from pytz import UTC
 
-from typing import Optional
-
+import data
+import stuff
 from bot import PoxBot
 from logger import logger
-import stuff
-import data
-from proglog import TqdmProgressBarLogger
 from src.translator import translator_instance as i18n
-
-from matplotlib import pyplot as plt
 
 change_settings({"IMAGEMAGICK_BINARY": r"C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\magick.exe"})
 
@@ -59,6 +66,98 @@ class DiscordProgress(TqdmProgressBarLogger):
 if not hasattr(PIL.Image, 'ANTIALIAS'):
     PIL.Image.ANTIALIAS = PIL.Image.Resampling.LANCZOS # type: ignore
 
+class SecureBytebeatEvaluator:
+
+    def __init__(self, formula: str):
+        # initialize operator mapping per-instance to avoid shared mutable state
+        self.OPERATORS = {
+            ast.Add: operator.add,
+            ast.Sub: operator.sub,
+            ast.Mult: operator.mul,
+            ast.FloorDiv: operator.floordiv,
+            ast.Mod: operator.mod,
+            ast.Pow: operator.pow,
+            ast.LShift: operator.lshift,
+            ast.RShift: operator.rshift,
+            ast.BitOr: operator.or_,
+            ast.BitXor: operator.xor,
+            ast.BitAnd: operator.and_,
+        }
+
+        self.node = ast.parse(formula, mode='eval').body
+
+    def eval(self, t_array: np.ndarray) -> np.ndarray | int | float:
+        return self._eval_node(self.node, t_array)
+
+    def _eval_node(self, node, t_array: np.ndarray) -> np.ndarray | int | float:
+        # 変数 't' の処理
+        if isinstance(node, ast.Name):
+            if node.id == 't':
+                return t_array
+            raise ValueError(f"許可されていない変数です: {node.id}")
+
+        # 数値リテラルの処理
+        elif isinstance(node, ast.Constant):
+            val = node.value
+            if isinstance(val, (int, float)):
+                return val
+            raise ValueError(f"許可されていないリテラル値です: {val!r}")
+
+        # 二項演算 (t >> 2 や t * 5 など) の処理
+        elif isinstance(node, ast.BinOp):
+            op_type = type(node.op)
+            if op_type in self.OPERATORS:
+                left = self._eval_node(node.left, t_array)
+                right = self._eval_node(node.right, t_array)
+                return self.OPERATORS[op_type](left, right)
+            raise ValueError(f"許可されていない演算子です: {op_type.__name__}")
+
+        # 単項演算 (-t や ~t など) の処理
+        elif isinstance(node, ast.UnaryOp):
+            operand = self._eval_node(node.operand, t_array)
+            if isinstance(node.op, ast.USub):
+                # use numpy negative to support arrays
+                return np.negative(operand)
+            elif isinstance(node.op, ast.Invert):
+                # use numpy bitwise_not to support arrays
+                return np.bitwise_not(operand)
+            raise ValueError(f"許可されていない単項演算子です: {type(node.op).__name__}")
+
+        raise ValueError("不正な数式構造です。")
+
+class BytebeatGenerator:
+    def __init__(self, formula: str, type: str = "classic", sr: int = 8000, duration: float = 10.0):
+        self.formula = formula
+        self.type = type
+        self.sr = sr
+        self.duration = duration
+
+    def generate_wav_bytes(self) -> BytesIO:
+        total_samples = int(self.sr * self.duration)
+        t_array = np.arange(0, total_samples, dtype=np.uint32)
+
+        evaluator = SecureBytebeatEvaluator(self.formula)
+        result = evaluator.eval(t_array)
+
+        if self.type == "floatbeat":
+            result = np.clip(result, -1.0, 1.0)
+            audio_16bit = (result * 32767).astype(np.int16)
+        else:
+            byte_data = np.mod(result, 256).astype(np.uint8)
+            audio_16bit = ((byte_data.astype(np.int16) - 128) * 256)
+
+        stereo_16bit = np.column_stack((audio_16bit, audio_16bit)).flatten()
+
+        wav_buffer = BytesIO()
+        with wave.open(wav_buffer, 'wb') as wav_file:
+            wav_file.setnchannels(2)
+            wav_file.setsampwidth(2)
+            wav_file.setframerate(self.sr)
+            wav_file.writeframes(stereo_16bit.tobytes())
+
+        wav_buffer.seek(0)
+        return wav_buffer
+
 class GenerationCog(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
@@ -69,7 +168,11 @@ class GenerationCog(Cog):
                 callback=self.generate_funny_fade_video
             )
         )
-    group = app_commands.Group(name="generate", description=locale_str("command.generate.description"))
+    group = app_commands.Group(
+        name="generate", 
+        description=locale_str("command.generate.description"),
+        allowed_contexts=AppCommandContext(guild=True, dm_channel=True, private_channel=True)
+    )
     
     @group.command(name="emoticon", description=locale_str("command.generate.emoticon.description"))
     @app_commands.checks.cooldown(2, 6, key=lambda i: i.user.id)
@@ -80,7 +183,7 @@ class GenerationCog(Cog):
     @group.command(name="idek", description=locale_str("command.generate.idek.description"))
     @app_commands.checks.cooldown(2, 6, key=lambda i: i.user.id)
     async def idek(self, ctx):
-        await ctx.response.send_message(f"idek.")
+        await ctx.response.send_message("idek.")
     
     @cached(300)
     @group.command(name="nyan_cat", description=locale_str("command.generate.nyan_cat.description"))
@@ -90,8 +193,8 @@ class GenerationCog(Cog):
             url = dirname(__file__)
             url2 = join(url,"../resources/nyancat_big.gif")
             
-            with open(url2, 'rb') as f:
-                pic = File(f)
+            async with aiofiles.open(url2, 'rb') as f:
+                pic = File(await f.read())
             
             await ctx.response.send_message(i18n.T("command.generate.nyan_cat.messages.think_fast"),file=pic)
         except Exception as e:
@@ -106,14 +209,14 @@ class GenerationCog(Cog):
         
         path = join(dirname(__file__), "../resources/cat_jard.png")
 
-        with open(path, 'rb') as f:
-            pic = File(f, filename="cat.png")
+        async with aiofiles.open(path, 'rb') as f:
+            pic = File(await f.read(), filename="cat.png")
 
         if embed:
             await interaction.response.send_message(embed=embed,file=pic)
 
     @group.command(name="target_close", description=locale_str("command.generate.target_close.description"))
-    async def algorithm_closing_to_target(self, ctx: Interaction, target_value: Optional[float], concurrents: Optional[int]):
+    async def algorithm_closing_to_target(self, ctx: Interaction, target_value: float | None, concurrents: int | None):
         await ctx.response.defer()
         conc = stuff.clamp(concurrents or 10, 1, 20)
         histories = [stuff.approach_target(target_value or 20) for _ in range(conc)]
@@ -124,7 +227,7 @@ class GenerationCog(Cog):
             plt.plot(his, label=f"Attempt {i+1}")
         
         plt.axhline(y=target_value or 20, color='r', linestyle='--', label="Target")
-        plt.title(f"Target close algorithm on {datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}, with {conc} parallels")
+        plt.title(f"Target close algorithm on {datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S.%f")}, with {conc} parallels")
         plt.xlabel("Steps")
         plt.ylabel("Value")
         plt.legend(loc='lower right')
@@ -150,7 +253,7 @@ class GenerationCog(Cog):
             await ctx.followup.send(file=file, embed=e)
     
     @group.command(name="computer_latency",description="Calculates hosted computer's latency")
-    async def check_computer_latency(self, ctx: Interaction, delay: Optional[float]):
+    async def check_computer_latency(self, ctx: Interaction, delay: float | None):
         await ctx.response.defer()
         delay = stuff.clamp_f(delay or 150, 10,1000) / 10
         delay2 = delay / 1000
@@ -164,7 +267,7 @@ class GenerationCog(Cog):
         plt.plot(results,linestyle='-', color='b', label="Estimated")
 
         plt.axhline(y=(sum(results) / len(results)), color='r', linestyle='--', label="Avg.")
-        plt.title(f"Computer Latency on {datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}")
+        plt.title(f"Computer Latency on {datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S.%f")}")
         plt.xlabel("Steps")
         plt.ylabel("Milliseconds")
         plt.legend(loc='lower right')
@@ -187,10 +290,9 @@ class GenerationCog(Cog):
         if file and e:
             await ctx.followup.send(file=file, embed=e)
 
-    
     @group.command(name="markov", description="Generates random lines with Markov-chain")
     @app_commands.describe(amount="Times to generate, up to 16 iterations (lines).")
-    async def generate_markovified_text(self, ctx: Interaction, amount: Optional[int]):
+    async def generate_markovified_text(self, ctx: Interaction, amount: int | None):
         await ctx.response.defer()
         amount = stuff.clamp(amount or 1, 1, 16)
         text2 = await stuff.get_markov_dataset("m2")
@@ -220,7 +322,7 @@ class GenerationCog(Cog):
     
     @group.command(name="markov2", description="Generates SCP-like anomaly with Markov-chain")
     @app_commands.describe(amount="Times to generate, up to 16 iterations (lines).")
-    async def generate_markovified_anomaly_text(self, ctx: Interaction, amount: Optional[int]):
+    async def generate_markovified_anomaly_text(self, ctx: Interaction, amount: int | None):
         await ctx.response.defer()
         amount = stuff.clamp(amount or 1, 1, 16)
         text2 = await stuff.get_markov_dataset("m1")
@@ -251,7 +353,7 @@ class GenerationCog(Cog):
     @group.command(name="meow",description="Make me say miaw :3")
     @app_commands.describe(put_face="Enables extra face such as :3")
     async def say_meow(self, ctx: Interaction,put_face:str):
-        add_face = True if put_face.lower() in ("yes", "true") else False
+        add_face = put_face.lower() in ("yes", "true")
         arrays = data.meows_with_extraformat
         
         for index, string in enumerate(arrays):
@@ -269,8 +371,8 @@ class GenerationCog(Cog):
             url = dirname(__file__)
             url2 = join(url,"../resources/windows_flavored_off_thing_staticc.gif")
             
-            with open(url2, 'rb') as f:
-                pic = File(f)
+            async with aiofiles.open(url2, 'rb') as f:
+                pic = File(await f.read())
                 
             await ctx.response.send_message("THINK FAST, CHUCKLE NUTS.",file=pic)
         except Exception as e:
@@ -374,45 +476,53 @@ class GenerationCog(Cog):
             else interaction.locale
         )
         await interaction.response.defer()
-        
+
         embed = Embed()
-        
+
         pattern = re.compile(r'[0-9t\s\+\-\*\/\&\ \|\>\<\%\(\)]+$')
-        
+
         if not bool(pattern.match(formula)):
             embed.color = Color.red()
             embed.description = i18n.T("error.embeds.invalid_bytebeat_formula.description", loc)
-            
+
             return await interaction.followup.send(embed=embed)
-        
+
         if duration is None:
             duration = 10
-        
+
         if sample_rate is None:
-            sample_rate = 44100
-        
+            sample_rate = 8000
+
+        if duration > 30.0 or sample_rate > 48000:
+            embed.color = Color.red()
+            embed.description = "too high"
+            return await interaction.followup.send(embed=embed)
+
         try:
-            t = np.linspace(0, float(sample_rate) * duration)
-            
-            data = ne.evaluate(formula, local_dict={"t": t})
-            
-            data = data.astype(np.uint8)
-            
+            # Instantiate the class with your default variables
+            # Defaults type to "classic" since your original code focused on np.uint8 formats
+            generator = BytebeatGenerator(
+                formula=formula,
+                type="classic",
+                sr=sample_rate,
+                duration=duration
+            )
+
+            # Generate correct structural binary stream data
+            abuffer = generator.generate_wav_bytes()
+
             filename = "bytebeat.wav"
-            abuffer = BytesIO()
-            wavfile.write(abuffer, sample_rate, data)
-            abuffer.seek(0)
-            
             file = File(fp=abuffer, filename=filename)
-            
+
             embed.description = "Generated!"
-            
+
             if file and embed:
                 await interaction.followup.send(file=file, embed=embed)
             else:
                 await interaction.followup.send("An error occurred while generating the audio.")
         except Exception as e:
             await interaction.followup.send(f"err.type=null.error. {e}")
+    
     @cached(60)
     async def generate_funny_fade_video(self, interaction: Interaction, message: Message):
         start_time = time()
@@ -483,7 +593,7 @@ class GenerationCog(Cog):
                 fps=20,
                 codec='libx264',
                 audio_codec='aac',
-                bitrate=f"450k",
+                bitrate="450k",
                 threads=(os.cpu_count() or 1) // 1.5,
                 preset="ultrafast",
                 logger=progress_logger
@@ -508,5 +618,6 @@ class GenerationCog(Cog):
                     if os.path.exists(p): os.remove(p)
             except Exception as e:
                 logger.exception(e)
+
 async def setup(bot):
     await bot.add_cog(GenerationCog(bot))

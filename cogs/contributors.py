@@ -1,25 +1,22 @@
+from os.path import dirname, join
 from pathlib import Path
 from typing import Any
 
+import aiofiles
+from discord import Color, Embed, File, Interaction, app_commands
 from discord.ext.commands import Cog
-from discord import Color, app_commands, Embed, Interaction, File
-from os.path import dirname, join
 
-from prompt_toolkit import contrib
-
+import data
+from bot import PoxBot
 from src.translator import translator_instance
 
-from bot import PoxBot
-import data
-
-from logger import logger
 
 class ContributorsCog(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         self.contributor_list: list[dict[str, Any]] = data.get_contributors_v2()
 
-    group = app_commands.Group(name="contributors", description=app_commands.locale_str("A group for contributors.", extras={"key": "command.contributors.description"}))
+    group = app_commands.Group(name="contributors", description=app_commands.locale_str("command.contributors.description"))
     
     async def safe_get_user(self, user_id: int):
         user = self.bot.get_user(user_id)
@@ -28,7 +25,7 @@ class ContributorsCog(Cog):
         try:
             user = await self.bot.fetch_user(user_id)
             return user
-        except Exception as e:
+        except Exception:
             return None
     
     @group.command(name="list", description=app_commands.locale_str("Lists all contributors.", extras={"key": "command.contributors.list.description"}))
@@ -43,11 +40,7 @@ class ContributorsCog(Cog):
         for contributor in self.contributor_list:
             user_id = contributor.get("id", None)
             if not user_id: continue
-            
-            user = await self.safe_get_user(user_id)
-            
-            display_name = user.display_name if user else translator_instance.T("text.unknown", loc)
-            
+               
             name = contributor.get("name", translator_instance.T("text.unknown", loc))
             contribution = contributor.get("description", translator_instance.T("text.unknown", loc))
 
@@ -104,34 +97,6 @@ class ContributorsCog(Cog):
         else:
             embed.title = translator_instance.T("error.embeds.contributor_not_found.title", loc)
             embed.title = translator_instance.T("error.embeds.contributor_not_found.description", loc, {"contributor": contributor_id})
-    
-    @group.command(name="spy_thesinglerunc", description="Special thanks to codigoerror10014")
-    async def spy_thesinglerunc(self, interaction: Interaction):
-        embed = Embed(title="Special thanks to Spy_TheSingleRunc", description="She gaved ideas to the bot + she play admin house wow lol funny lala kikima-", color=Color.blue())
-        embed.set_image(url="attachment://cat.png")
-        embed.set_footer(text="Image credit by `codigoerror10014`.")
-        
-        path = join(dirname(__file__), "../resources/cat_spy.png")
-
-        with open(path, 'rb') as f:
-            pic = File(f, filename="cat.png")
-
-        if embed:
-            return await interaction.response.send_message(embed=embed,file=pic)
-
-    @group.command(name="annayarik999alt", description=":3 (The image belongs to always_happy_and_smile)")
-    async def cat_annayarik13alt(self, interaction: Interaction):
-        embed = Embed(title="Special thanks to AnnaYarik999Alt", description="He helped me suggesting the commands", color=Color.yellow())
-        embed.set_image(url="attachment://cat.jpg")
-        embed.set_footer(text="Image credit by `always_happy_and_smile`. (AnnaYarik999Alt, i guess)")
-        
-        path = join(dirname(__file__), "../resources/cat_anna.jpg")
-
-        with open(path, 'rb') as f:
-            pic = File(f, filename="cat.jpg")
-
-        if embed:
-            return await interaction.response.send_message(embed=embed,file=pic)
     
 async def setup(bot):
     await bot.add_cog(ContributorsCog(bot))

@@ -3,20 +3,18 @@
 #### it come from The Broken Script's Null interactions.
 
 import asyncio
-from random import shuffle
+import os
 import random
 import re
-from aiocache import cached
-from discord.ext import commands
-from discord import app_commands, Interaction, Embed, File
-from typing import Optional
 
-import os
-
+import aiofiles
 import profanityfilter
+from aiocache import cached
+from discord import Embed, File, Interaction, app_commands
+from discord.ext import commands
 
-from bot import PoxBot
 import data
+from bot import PoxBot
 
 null_responses = {
     r"(hi|hello|ya|yo)\??": ["err.type=null.hello"],
@@ -87,8 +85,8 @@ class NullCog(commands.Cog):
         url = os.path.dirname(__file__)
         url2 = os.path.join(url,"../resources/nah.jpg")
 
-        with open(url2, 'rb') as f:
-            pic = File(f,"nah.jpg")
+        async with aiofiles.open(url2, 'rb') as f:
+            pic = File(await f.read(), "nah.jpg")
         
         e = Embed()
         e.set_image(url="attachment://nah.jpg")
@@ -96,7 +94,7 @@ class NullCog(commands.Cog):
     
     @cached(240)
     @nullgroup.command(name="generate", description="Generates random sentence.")
-    async def generator(self, interaction: Interaction, index_to_generate: Optional[int], size: Optional[int]):
+    async def generator(self, interaction: Interaction, index_to_generate: int | None, size: int | None):
         await interaction.response.defer()
 
         choosen1 = []

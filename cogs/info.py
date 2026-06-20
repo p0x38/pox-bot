@@ -1,24 +1,34 @@
 import asyncio
 import platform
 import time
-from typing import Union
-from discord import ButtonStyle, Color, Embed, Interaction, Locale, SelectOption, TextStyle, app_commands
+import tracemalloc
+from datetime import datetime
+
 import discord
-from discord import ui
+import distro
+import psutil
+from discord import (
+    ButtonStyle,
+    Color,
+    Embed,
+    Interaction,
+    Locale,
+    SelectOption,
+    TextStyle,
+    app_commands,
+    ui,
+)
 from discord.ext import commands
 from discord.ui import Select
-import distro
-from datetime import datetime, timezone
-import psutil
-import pytz
+from pytz import UTC, all_timezones, timezone
 
+import stuff
 from bot import PoxBot
 from cogs.chatbot import ChatbotCog
 from logger import logger
-from stuff import get_formatted_from_seconds
-import stuff
-
 from src.translator import translator_instance as i18n
+from stuff import get_formatted_from_seconds
+
 
 def _(s): return s
 
@@ -44,11 +54,11 @@ class FeedbackModal(ui.Modal):
             if not owner_id: return
             
             owner = self.bot.get_user(owner_id) or await self.bot.fetch_user(owner_id)
-            if not owner: raise Exception("Why's owner not found")
+            if not owner: raise RuntimeError("Why's owner not found")
             
             embed = Embed(title=f"Bot feedback received from {interaction.user.name}", color=Color.blurple())
             embed.set_author(name=interaction.user.name, icon_url=interaction.user.display_avatar.url)
-            embed.set_footer(text=f"Sent on {datetime.now().strftime("%d.%m.%Y %H:%M:%S")}")
+            embed.set_footer(text=f"Sent on {datetime.now(UTC).strftime("%d.%m.%Y %H:%M:%S")}")
             
             embed.description = self.feedback.value
             
@@ -58,7 +68,7 @@ class FeedbackModal(ui.Modal):
     
     async def on_submit(self, interaction: Interaction):
         await self.send_feedback(interaction)
-        await interaction.response.send_message(f"Thanks for your feedback!", ephemeral=True, delete_after=10)
+        await interaction.response.send_message("Thanks for your feedback!", ephemeral=True, delete_after=10)
     
     async def on_error(self, interaction: Interaction, error: Exception):
         await interaction.response.send_message("Oops! something went wrong.", ephemeral=True, delete_after=10)
@@ -66,7 +76,7 @@ class FeedbackModal(ui.Modal):
         logger.exception(f"Error raised: {error}")
 
 class DynamicInfoView(discord.ui.View):
-    def __init__(self, cog, bot, locale: Union[Locale, str]):
+    def __init__(self, cog, bot, locale: Locale | str):
         super().__init__(timeout=120)
         self.cog = cog
         self.bot: PoxBot = bot
@@ -111,7 +121,7 @@ class DynamicInfoView(discord.ui.View):
                 os_rel = platform.freedesktop_os_release()
                 if os_rel and os_rel.get("ID") == "ubuntu":
                     platform_info = f"{distro.name()} {distro.version()}"
-            except: pass
+            except Exception: pass
         elif platform.system() == "Windows":
             platform_info = "Windows" + " ".join(list(platform.win32_ver()))
         
@@ -243,15 +253,13 @@ class DynamicInfoView(discord.ui.View):
     )
     async def select_callback(self, interaction: Interaction, select: Select):
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
-        
-        choice = select.values[0]
-        
+                
         full_data = await self.get_stats_data(interaction)
         category = full_data.get(select.values[0], {})
         
         e = Embed(title=f"Bot information - {category.get('title', i18n.T("error.custom.missing_category", loc))}")
         
-        for field_id, info in category.get('fields', {}).items():
+        for info in category.get('fields', {}).values():
             is_inline = info.get('inline', True)
             e.add_field(name=info.get('display', '???'), value=info.get('value', '???'), inline=is_inline)
         
@@ -261,7 +269,13 @@ class InformationCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
     
-    group = app_commands.Group(name="info", description=app_commands.locale_str("command.info.description"))
+    group = app_commands.Group(
+        name="info",
+        description=app_commands.locale_str("command.info.description"),
+        allowed_contexts=app_commands.AppCommandContext(
+            guild=True, dm_channel=True, private_channel=True
+        )
+    )
     
     def make_bar(self, percent, length=10):
         filled_length = int(length*percent/100)
@@ -281,12 +295,12 @@ class InformationCog(commands.Cog):
     
     @group.command(name="botserver", description="Join to bot's main server")
     async def send_botserver_invite_link(self, interaction: Interaction):
-        await interaction.response.send_message(f"Here's the server:\nhttps://discord.gg/3FVGf5MBJV", ephemeral=True)
+        await interaction.response.send_message("Here's the server:\nhttps://discord.gg/3FVGf5MBJV", ephemeral=True)
     
     @group.command(name="uptime", description="How long this bot is in session")
     async def check_uptime(self,ctx: Interaction):
         global start_time
-        await ctx.response.send_message("I have been online for {}.".format(stuff.get_formatted_from_seconds(round(time.time() - self.bot.launch_time2))))
+        await ctx.response.send_message(f"I have been online for {stuff.get_formatted_from_seconds(round(time.time() - self.bot.launch_time2))}.")
     
     @group.command(name="retrieve", description=app_commands.locale_str("command.info.retrieve.description"))
     async def show_stats(self, interaction: Interaction):
@@ -376,7 +390,7 @@ class InformationCog(commands.Cog):
         
         await interaction.followup.send(embed=e)
     
-    @app_commands.command(name="ping", description=app_commands.locale_str("command.info.ping.description"))
+    @group.command(name="ping", description=app_commands.locale_str("command.info.ping.description"))
     async def ping(self, interaction: Interaction):
         await interaction.response.defer()
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
@@ -401,30 +415,30 @@ class InformationCog(commands.Cog):
     @group.command(name="bot_timestamp", description="Shows time in bot's time")
     async def get_bot_timestamp(self, ctx: discord.Interaction):
         await ctx.response.defer()
-        timec = datetime.now(pytz.timezone("Asia/Tokyo"))
+        timec = datetime.now(timezone("Asia/Tokyo"))
         
         await ctx.followup.send(f"I'm on {datetime.strftime(timec, '%Y-%m-%d %H:%M:%S%z')} :3")
     
     async def get_timezone_timestamp_autocomplete(self, interaction: discord.Interaction, current: str):
-        timezones = pytz.all_timezones
+        timezones = all_timezones
         return [
             app_commands.Choice(name=tz, value=tz)
             for tz in timezones if current.lower() in tz.lower()
         ][:25]
     
     @group.command(name="timedate", description=app_commands.locale_str("command.info.timedate.description"))
-    @app_commands.autocomplete(timezone=get_timezone_timestamp_autocomplete)
-    async def get_timezone_timestamp(self, interaction: discord.Interaction, timezone: str):
+    @app_commands.autocomplete(tzone=get_timezone_timestamp_autocomplete)
+    async def get_timezone_timestamp(self, interaction: discord.Interaction, tzone: str):
         await interaction.response.defer(ephemeral=True)
         loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
         embed = Embed()
         try:
-            tz = pytz.timezone(timezone)
+            tz = timezone(tzone)
             timec = datetime.strftime(datetime.now(tz), '%Y.%m.%d, %H:%M:%S with the UTC offset %z')
             embed.description = i18n.T("command.info.timedate.embeds.default.description", loc, {"timezone_name": timezone, "timedate": timec})
             await interaction.followup.send(embed=embed)
         except Exception as e:
-            await interaction.followup.send(f"An error occurred: {str(e)}", ephemeral=True)
+            await interaction.followup.send(f"An error occurred: {e!s}", ephemeral=True)
     
     @group.command(name="invite", description=app_commands.locale_str("command.info.invite.description"))
     async def invite(self, interaction: Interaction):
@@ -434,9 +448,7 @@ class InformationCog(commands.Cog):
             
             guild_count = len(self.bot.guilds)
             limit = self.bot.bot_servers_limit
-            
-            status_msg = i18n.T("command.info.invite.embeds.default.status", loc, {"formatted": f"{guild_count}/{limit}"}, count=limit)
-            
+                        
             scopes = "bot%20applications.commands"
             perms = 1395868252224
             
@@ -473,8 +485,6 @@ class InformationCog(commands.Cog):
         
         e = discord.Embed(title=i18n.T("command.info.os_info.embeds.default.title", loc))
 
-        system = platform.system()
-
         if platform.system() == "Linux":
             os_rel = platform.freedesktop_os_release()
             if os_rel:
@@ -494,9 +504,21 @@ class InformationCog(commands.Cog):
         
         await interaction.followup.send(embed=e)
     
-    @app_commands.command(name="feedback", description=app_commands.locale_str("command.info.feedback.description"))
-    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+    @group.command(name="feedback", description=app_commands.locale_str("command.info.feedback.description"))
     async def send_feedback(self, interaction: Interaction):
         await interaction.response.send_modal(FeedbackModal(self.bot))
+    
+    @group.command(name="memory_check", description=app_commands.locale_str("command.info.memory_check.description"))
+    async def run_memorycheck(self, interaction: Interaction):
+        await interaction.response.defer()
+        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
+        
+        e = Embed(title=i18n.T("command.info.memory_check.embeds.default.title"))
+        
+        stats = self.bot.perf_monitor.get_stats()
+        embed = self.bot.perf_monitor.create_embed(stats)
+        
+        await interaction.followup.send(embed=embed)
+
 async def setup(bot):
     await bot.add_cog(InformationCog(bot))

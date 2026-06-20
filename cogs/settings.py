@@ -1,17 +1,12 @@
-from dataclasses import asdict, dataclass
-import json
-from typing import Optional
-
-import asyncpg
-import discord
-from discord import Color, app_commands
+from discord import Color, Embed, Interaction, app_commands, ui
 from discord.ext import commands
-from discord import Embed, Interaction, ui
+
 from bot import PoxBot
-from src.translator import translator_instance as i18n
-from src.translator import translation_manager
 from src.database import SettingsDatabase
 from src.models import SettingsData
+from src.translator import translation_manager
+from src.translator import translator_instance as i18n
+
 
 class LocalizedSettingsView(ui.View):
     def __init__(self, user_id: int, initial_data: SettingsData, db_manager: SettingsDatabase):

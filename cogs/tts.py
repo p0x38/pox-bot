@@ -1,12 +1,16 @@
+import asyncio
+import os
 import sys
+import tempfile
 import wave
 from datetime import datetime, timedelta
 from enum import StrEnum
 from io import BytesIO
 from time import time
-from typing import Any
+from typing import Any, cast
 
 import discord
+import pyttsx3
 from aiocache import cached
 from discord import (
     Color,
@@ -28,7 +32,7 @@ from scipy.io.wavfile import write
 
 from bot import PoxBot
 from logger import logger
-from src.translator import translator_instance
+from src.translator import translator_instance as i18n
 from stuff import clamp_f
 
 
@@ -38,6 +42,7 @@ class TTSEngineType(StrEnum):
     ESPEAK_TTS = "espeak-tts"
     POCKET_TTS = "pocket-tts"
     EDGE_TTS = "edge-tts"
+    PYTTSX3_TTS = "pyttsx3-tts"
 
 class SpeechGenerationError(Exception):
     pass
@@ -387,7 +392,7 @@ class TextToSpeechCog(commands.Cog):
                 break
 
         return suggestions
-    
+
     async def tts_voice_autocomplete(
         self, interaction: Interaction, current: str
     ) -> list[app_commands.Choice[str]]:
@@ -441,15 +446,22 @@ class TextToSpeechCog(commands.Cog):
             
             duration = result.get("duration")
             
-            embed.add_field(name="Input Text", value=input)
-            embed.add_field(name="TTS Engine", value=str(engine))
-            embed.add_field(name="Voice", value=voice)
+            temp_tts = {
+                'tts_input': input,
+                'tts_engine': str(engine),
+                'tts_voice': voice if voice else "None",
+            }
             
             if isinstance(duration, timedelta):
-                embed.add_field(name="Took generation", value=f"{duration.total_seconds():.3f}")
+                temp_tts['tts_generation_took'] = f"{duration.total_seconds():.3f}"
             
             if result.get("chunk_count"):
-                embed.add_field(name="Chunk count", value=result["chunk_count"])
+                temp_tts['tts_chunk'] = str(result["chunk_count"])
+                
+            temp_tts = i18n.translate_map(temp_tts, str(loc))
+            
+            for name, value in temp_tts.items():
+                embed.add_field(name=name, value=value, inline=True)
                 
             await interaction.followup.send(embed=embed, file=file)
         except Exception as e:
@@ -480,8 +492,8 @@ class TextToSpeechCog(commands.Cog):
         embed = Embed(color=Color.red())
 
         if not text.strip():
-            embed.title = translator_instance.T("error.embeds.tts_no_text.title", loc)
-            embed.description = translator_instance.T(
+            embed.title = i18n.T("error.embeds.tts_no_text.title", loc)
+            embed.description = i18n.T(
                 "error.embeds.tts_no_text.description", loc
             )
             return await interaction.followup.send(embed=embed)
@@ -499,10 +511,10 @@ class TextToSpeechCog(commands.Cog):
             abuffer.seek(0)
         except Exception as e:
             logger.exception(f"{e}")
-            embed.title = translator_instance.T(
+            embed.title = i18n.T(
                 "error.embeds.tts_generation_error.title", loc
             )
-            embed.description = translator_instance.T(
+            embed.description = i18n.T(
                 "error.embeds.tts_generation_error.description", loc, {"e": e}
             )
             return await interaction.followup.send(
@@ -511,12 +523,12 @@ class TextToSpeechCog(commands.Cog):
 
         dfile = discord.File(abuffer, filename=f"GoogleTTS_{lang}_{int(time())!s}.mp3")
         embed.color = Color.green()
-        embed.title = translator_instance.T("command.tts.embeds.default.title", loc)
-        embed.description = translator_instance.T(
+        embed.title = i18n.T("command.tts.embeds.default.title", loc)
+        embed.description = i18n.T(
             "command.tts.embeds.default.description", loc
         )
         embed.set_footer(
-            text=translator_instance.T(
+            text=i18n.T(
                 "command.tts.embeds.default.footer",
                 loc,
                 {"tts_type": "Google Translate TTS", "input": text},
@@ -528,8 +540,8 @@ class TextToSpeechCog(commands.Cog):
         except Exception as e:
             logger.exception(f"{e}")
             embed.color = Color.red()
-            embed.title = translator_instance.T("error.embeds.send_error.title", loc)
-            embed.description = translator_instance.T(
+            embed.title = i18n.T("error.embeds.send_error.title", loc)
+            embed.description = i18n.T(
                 "error.embeds.send_error.description", loc, {"e": e}
             )
             await interaction.followup.send(embed=embed)
@@ -559,15 +571,15 @@ class TextToSpeechCog(commands.Cog):
         embed = Embed(color=Color.red())
 
         if not text.strip():
-            embed.title = translator_instance.T("error.embeds.tts_no_text.title", loc)
-            embed.description = translator_instance.T(
+            embed.title = i18n.T("error.embeds.tts_no_text.title", loc)
+            embed.description = i18n.T(
                 "error.embeds.tts_no_text.description", loc
             )
             return await interaction.followup.send(embed=embed)
         
         if not self.pocket_tts_model:
-            embed.title = translator_instance.T("error.embeds.tts_no_model.title", loc)
-            embed.description = translator_instance.T(
+            embed.title = i18n.T("error.embeds.tts_no_model.title", loc)
+            embed.description = i18n.T(
                 "error.embeds.tts_no_model.description", loc
             )
             return await interaction.followup.send(embed=embed)
@@ -585,22 +597,22 @@ class TextToSpeechCog(commands.Cog):
             abuffer.seek(0)
         except Exception as e:
             logger.exception(f"{e}")
-            embed.title = translator_instance.T(
+            embed.title = i18n.T(
                 "error.embeds.tts_generation_error.title", loc
             )
-            embed.description = translator_instance.T(
+            embed.description = i18n.T(
                 "error.embeds.tts_generation_error.description", loc, {"e": e}
             )
             return await interaction.followup.send(embed=embed)
 
         dfile = discord.File(abuffer, filename=f"PocketTTS_{int(time())!s}.wav")
         embed.color = Color.green()
-        embed.title = translator_instance.T("command.tts.embeds.default.title", loc)
-        embed.description = translator_instance.T(
+        embed.title = i18n.T("command.tts.embeds.default.title", loc)
+        embed.description = i18n.T(
             "command.tts.embeds.default.description", loc
         )
         embed.set_footer(
-            text=translator_instance.T(
+            text=i18n.T(
                 "command.tts.embeds.default.footer",
                 loc,
                 {"tts_type": "Pocket TTS", "input": text, "voice": voice},
@@ -612,8 +624,8 @@ class TextToSpeechCog(commands.Cog):
         except (HTTPException, NotFound, Forbidden, TypeError, ValueError) as e:
             logger.exception(f"{e}")
             embed.color = Color.red()
-            embed.title = translator_instance.T("error.embeds.send_error.title", loc)
-            embed.description = translator_instance.T(
+            embed.title = i18n.T("error.embeds.send_error.title", loc)
+            embed.description = i18n.T(
                 "error.embeds.send_error.description", loc, {"e": e}
             )
             await interaction.followup.send(embed=embed)
@@ -640,15 +652,15 @@ class TextToSpeechCog(commands.Cog):
         embed = Embed(color=Color.red())
 
         if not text.strip():
-            embed.title = translator_instance.T("error.embeds.tts_no_text.title", loc)
-            embed.description = translator_instance.T(
+            embed.title = i18n.T("error.embeds.tts_no_text.title", loc)
+            embed.description = i18n.T(
                 "error.embeds.tts_no_text.description", loc
             )
             return await interaction.followup.send(embed=embed)
         
         if not self.piper_voice or not isinstance(self.piper_voice, PiperVoice):
-            embed.title = translator_instance.T("error.embeds.tts_no_model.title", loc)
-            embed.description = translator_instance.T(
+            embed.title = i18n.T("error.embeds.tts_no_model.title", loc)
+            embed.description = i18n.T(
                 "error.embeds.tts_no_model.description", loc
             )
             return await interaction.followup.send(embed=embed)
@@ -675,22 +687,22 @@ class TextToSpeechCog(commands.Cog):
             abuffer.seek(0)
         except Exception as e:
             logger.exception(f"{e}")
-            embed.title = translator_instance.T(
+            embed.title = i18n.T(
                 "error.embeds.tts_generation_error.title", loc
             )
-            embed.description = translator_instance.T(
+            embed.description = i18n.T(
                 "error.embeds.tts_generation_error.description", loc, {"e": e}
             )
             return await interaction.followup.send(embed=embed)
 
         dfile = discord.File(abuffer, filename=f"PiperTTS_{int(time())!s}.wav")
 
-        embed.title = translator_instance.T("command.tts.embeds.default.title", loc)
-        embed.description = translator_instance.T(
+        embed.title = i18n.T("command.tts.embeds.default.title", loc)
+        embed.description = i18n.T(
             "command.tts.embeds.default.description", loc
         )
         embed.set_footer(
-            text=translator_instance.T(
+            text=i18n.T(
                 "command.tts.embeds.default.footer",
                 loc,
                 {"tts_type": "Piper TTS", "input": text},
@@ -702,8 +714,8 @@ class TextToSpeechCog(commands.Cog):
         except (HTTPException, NotFound, Forbidden, TypeError, ValueError) as e:
             logger.exception(f"{e}")
             embed.color = Color.red()
-            embed.title = translator_instance.T("error.embeds.send_error.title", loc)
-            embed.description = translator_instance.T(
+            embed.title = i18n.T("error.embeds.send_error.title", loc)
+            embed.description = i18n.T(
                 "error.embeds.send_error.description", loc, {"e": e}
             )
             await interaction.followup.send(embed=embed)
@@ -731,17 +743,17 @@ class TextToSpeechCog(commands.Cog):
             logger.error(
                 "edge_tts package is not installed in this project. ignoring..."
             )
-            embed.title = translator_instance.T(
+            embed.title = i18n.T(
                 "error.embeds.edge_tts_not_installed.title", loc
             )
-            embed.description = translator_instance.T(
+            embed.description = i18n.T(
                 "error.embeds.tts_not_installed.description", loc
             )
             return await interaction.followup.send(embed=embed)
 
         if not text.strip():
-            embed.title = translator_instance.T("error.embeds.tts_no_text.title", loc)
-            embed.description = translator_instance.T(
+            embed.title = i18n.T("error.embeds.tts_no_text.title", loc)
+            embed.description = i18n.T(
                 "error.embeds.tts_no_text.description", loc
             )
             return await interaction.followup.send(embed=embed)
@@ -764,22 +776,22 @@ class TextToSpeechCog(commands.Cog):
             abuffer.seek(0)
         except (BlockingIOError, TypeError, ValueError, exceptions.NoAudioReceived, exceptions.UnexpectedResponse, exceptions.UnknownResponse, exceptions.WebSocketError) as e:
             logger.exception(f"{e}")
-            embed.title = translator_instance.T(
+            embed.title = i18n.T(
                 "error.embeds.tts_generation_error.title", loc
             )
-            embed.description = translator_instance.T(
+            embed.description = i18n.T(
                 "error.embeds.tts_generation_error.description", loc, {"e": e}
             )
             return await interaction.followup.send(embed=embed)
 
         dfile = discord.File(abuffer, filename=f"EdgeTTS_{lang}_{int(time())!s}.mp3")
 
-        embed.title = translator_instance.T("command.tts.embeds.default.title", loc)
-        embed.description = translator_instance.T(
+        embed.title = i18n.T("command.tts.embeds.default.title", loc)
+        embed.description = i18n.T(
             "command.tts.embeds.default.description", loc
         )
         embed.set_footer(
-            text=translator_instance.T(
+            text=i18n.T(
                 "command.tts.embeds.default.footer",
                 loc,
                 {"tts_type": "Edge TTS", "input": text},
@@ -791,8 +803,8 @@ class TextToSpeechCog(commands.Cog):
         except (HTTPException, NotFound, Forbidden, TypeError, ValueError) as e:
             logger.exception(f"{e}")
             embed.color = Color.red()
-            embed.title = translator_instance.T("error.embeds.send_error.title", loc)
-            embed.description = translator_instance.T(
+            embed.title = i18n.T("error.embeds.send_error.title", loc)
+            embed.description = i18n.T(
                 "error.embeds.send_error.description", loc, {"e": e}
             )
             await interaction.followup.send(embed=embed)
