@@ -7,12 +7,28 @@
 
 source for my bot called stupid bot
 
-## Requirements to run
+## System Requirements
+
+### All platforms
 
 - `Python 3.12`
 - `uv`.
 - [`dependencies.`](pyproject.toml)
 - `PostgreSQL` (You can change it by manually modifying)
+- `ffmpeg`
+
+### ffmpeg
+
+- Debian/Ubuntu/Linux Mint: use `sudo apt install ffmpeg`
+- AlmaLinux/Rocky Linux: `sudo dnf install epel-release && sudo dnf install ffmpeg`
+- Fedora: `sudo dnf install ffmpeg`
+- Arch Linux: `sudo pacman -S ffmpeg`
+- Windows: Download ffmpeg from [https://www.gyan.dev/ffmpeg/builds/](https://www.gyan.dev/ffmpeg/builds/) and add it to PATH
+- Source code: Download source code from [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html) and compile it
+
+### Linux
+
+- `build-essential`, `python3-dev`, `pkg-config` and `libicu-dev` (tested on Ubuntu 22.04 LTS)
 
 ## Usage
 

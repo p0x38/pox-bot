@@ -51,6 +51,14 @@ dependencies = [
     "tldextract>=5.3.1",
     "urlextract>=1.9.0",
     "websockets>=15.0.1",
+    "pyicu; sys_platform == 'win32'",
+    "pyicu>=2.16.2; sys_platform == 'linux'",
+    "pyttsx3>=2.99",
+    "mecab-python3>=1.0.12",
+    "ipadic>=1.0.0",
+    "wordcloud>=1.9.6",
+    "janome>=0.5.0",
+    "nltk>=3.9.4",
 ]
 
 [dependency-groups]
@@ -63,4 +71,4 @@ dev = [
 ]
 
 [tool.uv.sources]
-pyicu = { url = "https://github.com/cgohlke/pyicu-build/releases/download/v2.16.2/pyicu-2.16.2-cp312-cp312-win_amd64.whl" }
+pyicu = { url = "https://github.com/cgohlke/pyicu-build/releases/download/v2.16.2/pyicu-2.16.2-cp312-cp312-win_amd64.whl", marker = "sys_platform == 'win32'" }

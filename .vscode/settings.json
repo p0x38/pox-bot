@@ -1,5 +1,5 @@
 {
-    "python-envs.defaultEnvManager": "ms-python.python:venv",
+    "python-envs.defaultEnvManager": "ms-python.python:system",
     "todo-tree.tree.scanMode": "workspace",
     "python.REPL.enableREPLSmartSend": false,
     "i18n-ally.localesPaths": ["resources/locales"],
@@ -70,5 +70,35 @@
     "i18n-ally.extract.keyMaxLength": 0,
     "i18n-ally.translate.saveAsCandidates": true,
     "i18n-ally.review.user.name": "p0x38",
-    "python.analysis.autoImportCompletions": true
+    "python.analysis.autoImportCompletions": true,
+
+    "python.analysis.exclude": [
+        "**/node_modules",
+        "**/.venv",
+        "**/venv",
+        "**/__pycache__",
+        "**/logs",
+        "**/tmp", "**/.*"
+    ],
+    "python.analysis.ignore": [
+        "**/.venv",
+        "**/venv"
+    ],
+    "git.autorefresh": false,
+    "git.autoRepositoryDetection": "subFolders",
+    "python.analysis.userFileIndexingLimit": 900,
+    "ruff.nativeServer": "on",
+    "python.languageServer": "None",
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.defaultColorDecorators": "never",
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnType": true,
+        "editor.wordBasedSuggestions": "offWithInlineSuggestions",
+
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": "explicit",
+            "source.organizeImports.ruff": "explicit"
+        }
+    }
 }

@@ -1,0 +1,11 @@
+1. /stats wordcloud
+2. /stats active_pattern
+3. /stats top_activedays
+4. /economy coinflip?
+5. /economy rob <user>
+6. /economy invest?
+7. /tts voice_preset
+8. /tts dictionary add <word> <pronounce>
+9. /detect compatibility <user1> <user2>
+10. /detect brainrot?
+11. /moderation slowmode
