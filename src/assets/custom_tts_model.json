@@ -1,0 +1,258 @@
+{
+    "pocket-tts": {
+        "builtin": [
+            {
+                "name": "alba",
+                "friendly_name": "Alba",
+                "model": "alba"
+            },
+            {
+                "name": "giovanni",
+                "friendly_name": "Giovanni",
+                "model": "giovanni"
+            },
+            {
+                "name": "lola",
+                "friendly_name": "Lola",
+                "model": "lola"
+            },
+            {
+                "name": "juergen",
+                "friendly_name": "Juergen",
+                "model": "juergen"
+            },
+            {
+                "name": "rafael",
+                "friendly_name": "Rafael",
+                "model": "rafael"
+            },
+            {
+                "name": "estelle",
+                "friendly_name": "Estelle",
+                "model": "estelle"
+            },
+            {
+                "name": "anna",
+                "friendly_name": "Anna",
+                "model": "anna"
+            },
+            {
+                "name": "azelma",
+                "friendly_name": "Azelma",
+                "model": "azelma"
+            },
+            {
+                "name": "bill_boerst",
+                "friendly_name": "Bill Boerst",
+                "model": "bill_boerst"
+            },
+            {
+                "name": "caro_davy",
+                "friendly_name": "Caro Davy",
+                "model": "caro_davy"
+            },
+            {
+                "name": "charles",
+                "friendly_name": "Charles",
+                "model": "charles"
+            },
+            {
+                "name": "cosette",
+                "friendly_name": "Cosette",
+                "model": "cosette"
+            },
+            {
+                "name": "eponine",
+                "friendly_name": "Eponine",
+                "model": "eponine"
+            },
+            {
+                "name": "eve",
+                "friendly_name": "Eve",
+                "model": "eve"
+            },
+            {
+                "name": "fantine",
+                "friendly_name": "Fantine",
+                "model": "fantine"
+            },
+            {
+                "name": "george",
+                "friendly_name": "George",
+                "model": "george"
+            },
+            {
+                "name": "jane",
+                "friendly_name": "Jane",
+                "model": "jane"
+            },
+            {
+                "name": "jean",
+                "friendly_name": "Jean",
+                "model": "jean"
+            },
+            {
+                "name": "javert",
+                "friendly_name": "Javert",
+                "model": "javert"
+            },
+            {
+                "name": "marius",
+                "friendly_name": "Marius",
+                "model": "marius"
+            },
+            {
+                "name": "mary",
+                "friendly_name": "Mary",
+                "model": "mary"
+            },
+            {
+                "name": "michael",
+                "friendly_name": "Michael",
+                "model": "michael"
+            },
+            {
+                "name": "paul",
+                "friendly_name": "Paul",
+                "model": "paul"
+            },
+            {
+                "name": "peter_yearsley",
+                "friendly_name": "Peter Yearsley",
+                "model": "peter_yearsley"
+            },
+            {
+                "name": "stuart_bell",
+                "friendly_name": "Stuart Bell",
+                "model": "stuart_bell"
+            },
+            {
+                "name": "vera",
+                "friendly_name": "Vera",
+                "model": "vera"
+            }
+        ],
+        "custom": [
+            {
+                "name": "carl",
+                "friendly_name": "High toned TruVoice Adult Male 1",
+                "model": "/src/assets/voices/pocket-tts/carl.safetensors"
+            },
+            {
+                "name": "mary",
+                "friendly_name": "Microsoft Mary",
+                "model": "/src/assets/voices/pocket-tts/mary.safetensors"
+            },
+            {
+                "name": "mike",
+                "friendly_name": "Microsoft Mike",
+                "model": "/src/assets/voices/pocket-tts/mike.safetensors"
+            },
+            {
+                "name": "truvoice-af1",
+                "friendly_name": "TruVoice Adult Female 1",
+                "model": "/src/assets/voices/pocket-tts/truvoice-af1.safetensors"
+            },
+            {
+                "name": "truvoice-am1",
+                "friendly_name": "TruVoice Adult Male 1",
+                "model": "/src/assets/voices/pocket-tts/truvoice-am1.safetensors"
+            },
+            {
+                "name": "missile",
+                "friendly_name": "Missile knows where it is",
+                "model": "/src/assets/voices/pocket-tts/missile.safetensors"
+            },
+            {
+                "name": "sweep",
+                "friendly_name": "Sine Sweep",
+                "model": "/src/assets/voices/pocket-tts/sweep.safetensors"
+            },
+            {
+                "name": "triangle-sweep",
+                "friendly_name": "Triangle Sweep",
+                "model": "/src/assets/voices/pocket-tts/triangle-sweep.safetensors"
+            },
+            {
+                "name": "me",
+                "friendly_name": "Me",
+                "model": "/src/assets/voices/pocket-tts/me.safetensors"
+            },
+            {
+                "name": "triangle",
+                "friendly_name": "Triangle Wave",
+                "model": "/src/assets/voices/pocket-tts/triangle.safetensors"
+            },
+            {
+                "name": "sine",
+                "friendly_name": "Sine Wave",
+                "model": "/src/assets/voices/pocket-tts/sine.safetensors"
+            },
+            {
+                "name": "dtmf",
+                "friendly_name": "DTMF Tone",
+                "model": "/src/assets/voices/pocket-tts/dtmf.safetensors"
+            },
+            {
+                "name": "vc1",
+                "friendly_name": "Voice 1",
+                "model": "/src/assets/voices/pocket-tts/vc1.safetensors"
+            },
+            {
+                "name": "vc2",
+                "friendly_name": "Voice 2",
+                "model": "/src/assets/voices/pocket-tts/vc2.safetensors"
+            },
+            {
+                "name": "vc3",
+                "friendly_name": "Voice 3",
+                "model": "/src/assets/voices/pocket-tts/vc3.safetensors"
+            },
+            {
+                "name": "vc4",
+                "friendly_name": "Voice 4",
+                "model": "/src/assets/voices/pocket-tts/vc4.safetensors"
+            },
+            {
+                "name": "vc5",
+                "friendly_name": "Voice 5",
+                "model": "/src/assets/voices/pocket-tts/vc5.safetensors"
+            },
+            {
+                "name": "vc5-lq",
+                "friendly_name": "Voice 5 Low Quality",
+                "model": "/src/assets/voices/pocket-tts/vc5-lq.safetensors"
+            },
+            {
+                "name": "vc6",
+                "friendly_name": "Voice 6",
+                "model": "/src/assets/voices/pocket-tts/vc6.safetensors"
+            },
+            {
+                "name": "gtts",
+                "friendly_name": "gTTS",
+                "model": "/src/assets/voices/pocket-tts/gtts.safetensors"
+            },
+            {
+                "name": "sam",
+                "friendly_name": "Microsoft Sam",
+                "model": "/src/assets/voices/pocket-tts/sam.safetensors"
+            },
+            {
+                "name": "sam-v2",
+                "friendly_name": "Microsoft Sam V2",
+                "model": "/src/assets/voices/pocket-tts/sam-v2.safetensors"
+            },
+            {
+                "name": "zira",
+                "friendly_name": "Microsoft Zira",
+                "model": "/src/assets/voices/pocket-tts/zira.safetensors"
+            },
+            {
+                "name": "zira-v2",
+                "friendly_name": "Microsoft Zira V2",
+                "model": "/src/assets/voices/pocket-tts/zira-v2.safetensors"
+            }
+        ]
+    }
+}

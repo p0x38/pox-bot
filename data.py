@@ -2,20 +2,23 @@ import json
 import re
 from enum import IntEnum, IntFlag, auto
 
-with open("emoticons.txt", 'r', encoding="utf-8") as f:
+with open("src/assets/emoticons.txt", encoding="utf-8") as f:
     emoticons = f.read().split("\n")
 
+
 def get_contributors():
-    with open('resources/contributors.json', 'r', encoding="utf-8") as f:
+    with open('src/assets/contributors.json', encoding="utf-8") as f:
         contributors_data = json.load(f)
-    
+
     return contributors_data
 
+
 def get_contributors_v2():
-    with open('resources/contributors.v2.json', 'r', encoding="utf-8") as f:
+    with open('src/assets/contributors.v2.json', encoding="utf-8") as f:
         contributors_data = json.load(f)
-    
+
     return contributors_data
+
 
 class MemberFetchStatus(IntEnum):
     CACHED = auto()
@@ -23,6 +26,7 @@ class MemberFetchStatus(IntEnum):
     NOT_IN_GUILD = auto()
     BOT_PERMISSION_MISSING = auto()
     ERROR = auto()
+
 
 possible_map = {
     1: "Nuh uh.",
@@ -317,65 +321,65 @@ null_interactions = {
     r'hello\??': {
         "index": 0,
         "type": "single",
-	},
+    },
     r'hi\??': {
         "index": 0,
         "type": "single",
-	},
+    },
     r'(are\s?(you|u|yu)\s?)?void': {
         "index": 1,
         "type": "single",
-	},
+    },
     r"who\s?(are|r|are|aer)\s?(you|u|yu)?": {
         "index": 2,
         "type": "single",
-	},
+    },
     r"(what|wat)\s?do\s?(you|u|yu)\s?(wants?|wunts?)\?": {
         "index": 3,
         "type": "single",
-	},
+    },
     r"circuit": {
         "index": 4,
         "type": "single",
-	},
+    },
     r"integrity": {
         "index": 5,
         "type": "single",
-	},
+    },
     r"revuxor": {
         "index": 6,
         "type": "single",
-	},
+    },
     r"clan_build": {
         "index": 7,
         "type": "single",
-	},
+    },
     r"nothing\s?is\s?(watching|watchin|waching|wacthing|wathcing)": {
         "index": 8,
         "type": "single",
-	},
+    },
     r"entity\s?303": {
         "index": 9,
         "type": "single",
-	},
+    },
     r"steve": {
         "index": 10,
         "type": "single",
-	},
+    },
     r"herobrine": {
         "index": 11,
         "type": "single",
-	},
+    },
     r"can\s?you\s?see\s?me\??": {
-        "index": [12,13],
+        "index": [12, 13],
         "type": "multi",
     },
     r"follow": {
         "index": 14,
         "type": "single",
-	},
+    },
     r"null": {
-        "index": [15,16],
+        "index": [15, 16],
         "type": "multi",
     },
     r"where\s?it\s?c(o|a)me\s?from\??": {
@@ -384,7 +388,7 @@ null_interactions = {
     }
 }
 
-nullchill = ["Chill.","Please chill.","Why don't you listen to me?","I said, chill.","CHILL BRO I SWEAR.","..."]
+nullchill = ["Chill.", "Please chill.", "Why don't you listen to me?", "I said, chill.", "CHILL BRO I SWEAR.", "..."]
 
 bad_words = [
     "abuse children",
@@ -507,13 +511,15 @@ morse_code_table = {
     '<SOS>': '...---...',
 }
 
+
 class ResponseType(IntFlag):
     Image = auto()
     Text = auto()
 
+
 responses = {
     r"(yo)?u cool (t(h|o)o)?": {
         "response": "You're cool tho :D",
-        "image_path": "resources/cool.png"
+        "image_path": "src/assets/cool.png"
     }
 }

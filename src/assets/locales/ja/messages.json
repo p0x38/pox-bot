@@ -1,0 +1,10 @@
+{
+    "ban_user": "{user} は禁止されました! \n:3",
+    "chatbot_empty": "言葉がありません！ \n3:",
+    "chatbot_request_error": "ボット所有者が生成するモデルを指定するのを忘れたようです。 \n:/",
+    "chatbot_response_error": "サーバーが停止したようです。 \n:/",
+    "kick_user": "{user} はキックされました! \n:3",
+    "level_up": "{mention} がレベル {new_level} にレベルアップされました。 \n:3",
+    "timed_out_user": "{user} は {length} の間タイムアウトになりました。 \n:3",
+    "warn_user": "{user} は警告されました! \n:3"
+}

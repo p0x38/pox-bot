@@ -1,0 +1,107 @@
+{
+    "DynamicInfoView": {
+        "buttons": {
+            "suggest_button": {
+                "label": "提案を送信する"
+            },
+            "url_button": {
+                "label": "GitHub リポジトリにアクセスする"
+            }
+        },
+        "data": {
+            "context": {
+                "memory": {
+                    "display": "コンテキストの使用法"
+                },
+                "mode": {
+                    "display": "現在の気分"
+                },
+                "muted": {
+                    "display": "ジムはミュートされていますか?"
+                },
+                "title": "ローカル脳データ"
+            },
+            "hardware": {
+                "cpu": {
+                    "display": "CPU 使用率 (合計)"
+                },
+                "cpu_own": {
+                    "display": "CPU使用率(プログラム)"
+                },
+                "disk": {
+                    "display": "ディスク使用量"
+                },
+                "platform": {
+                    "display": "プラットフォーム"
+                },
+                "ram": {
+                    "display": "メモリ使用量 (合計)"
+                },
+                "ram_details": {
+                    "display": "メモリの詳細"
+                },
+                "ram_own": {
+                    "display": "メモリ使用量（プログラム）"
+                },
+                "title": "技術的な詳細"
+            },
+            "identity": {
+                "latency": {
+                    "display": "ネットワーク遅延"
+                },
+                "owner": {
+                    "display": "ボット開発者"
+                },
+                "signature": {
+                    "display": "サイン"
+                },
+                "title": "身元",
+                "uptime": {
+                    "display": "ボットの稼働時間"
+                },
+                "uuid": {
+                    "display": "セッションUUID"
+                },
+                "version": {
+                    "display": "ボットのバージョン"
+                }
+            },
+            "stats": {
+                "cached_values": {
+                    "display": "キャッシュ"
+                },
+                "channels": {
+                    "display": "チャンネル"
+                },
+                "guilds": {
+                    "display": "サーバー"
+                },
+                "interactions": {
+                    "display": "インタラクション"
+                },
+                "msgs": {
+                    "display": "見たメッセージ"
+                },
+                "title": "ボットの統計",
+                "users": {
+                    "display": "ユーザー"
+                }
+            }
+        },
+        "options": {
+            "context": {
+                "label": "ローカル脳データ"
+            },
+            "hardware": {
+                "label": "ハードウェア情報"
+            },
+            "identity": {
+                "label": "一般情報"
+            },
+            "placeholder": "カテゴリを選択してください...",
+            "stats": {
+                "label": "統計"
+            }
+        }
+    }
+}

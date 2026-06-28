@@ -1,8 +1,6 @@
-from .bases import PostgreSQLDatabase
-from .economy import EconomyDatabase
-from .giveaway import GiveawayDatabase
-from .guild import GuildSettingsDatabase
-from .guild_v2 import GuildSettingsDatabaseV2
-from .settings import SettingsDatabase
-from .stats import StatsDatabase
-from .user import UserDatabase
+from .economy import EconomyDatabase as EconomyDatabase
+from .giveaway import GiveawayDatabase as GiveawayDatabase
+from .guild_v2 import GuildSettingsDatabase as GuildSettingsDatabase
+from .settings import SettingsDatabase as SettingsDatabase
+from .stats import StatisticsDatabase as StatisticsDatabase
+from .user import UserDatabase as UserDatabase

@@ -1,36 +1,32 @@
-from src.database import PostgreSQLDatabase
-from src.models import TicketData
+from sqlalchemy import and_, select
+
+from src.bases import BaseDatabase
+from src.models.guild_settings_v2_orm import ActiveTicket
 
 
-class TicketDatabase(PostgreSQLDatabase):
-    async def get_ticket(self, channel_id: int) -> TicketData | None:
-        if not self.pool:
-            return None
-        
-        async with self.pool.acquire() as conn:
-            row = await conn.fetchrow(
-                "SELECT * FROM active_tickets WHERE channel_id = $1",
-                channel_id
+class TicketDatabase(BaseDatabase):
+    def __init__(self, dsn: str):
+        super().__init__(dsn)
+
+    async def get_ticket(self, channel_id: int) -> ActiveTicket | None:
+        async with self.async_session() as session:
+            return await session.get(ActiveTicket, channel_id)
+
+    async def get_user_tickets(self, user_id: int, guild_id: int) -> list[ActiveTicket]:
+        async with self.async_session() as session:
+            stmt = select(ActiveTicket).where(
+                and_(
+                    ActiveTicket.user_id == user_id,
+                    ActiveTicket.guild_id == guild_id
+                )
             )
-            return TicketData.from_row(row) if row else None
-    
-    async def get_user_tickets(self, user_id: int, guild_id: int) -> list[TicketData]:
-        if not self.pool:
-            return []
-        
-        async with self.pool.acquire() as conn:
-            rows = await conn.fetch(
-                "SELECT * FROM active_tickets WHERE user_id = $1 AND guild_id = $2 AND status = 'open'",
-                user_id, guild_id
-            )
-            return [ticket for row in rows if (ticket := TicketData.from_row(row)) is not None]
-    
+            result = await session.execute(stmt)
+            return list(result.scalars().all())
+
     async def create_ticket_with_log(self, channel_id: int, user_id: int, guild_id: int):
-        if not self.pool:
-            return
-        
-        async with self.pool.acquire() as conn, conn.transaction():
-            await conn.execute("""
-                    INSERT INTO active_tickets (channel_id, user_id, guild_id)
-                    VALUES ($1, $2, $3)
-                """, channel_id, user_id, guild_id)
+        async with self.async_session() as session, session.begin():
+            session.add(ActiveTicket(
+                channel_id=channel_id,
+                user_id=user_id,
+                guild_id=guild_id
+            ))

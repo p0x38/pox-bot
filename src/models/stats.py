@@ -9,7 +9,7 @@ class UserStats:
     xp: int = 0
     level: int = 1
     total_messages: int = 0
-    
+
     @classmethod
     def from_row(cls, row):
         if not row:
@@ -21,12 +21,14 @@ class UserStats:
             total_messages=row['total_messages']
         )
 
+
 @dataclass
 class LeaderboardItem:
     user_id: int
     xp: int
     level: int
     rank: int | None = None
+
 
 @dataclass
 class LeaderboardData:

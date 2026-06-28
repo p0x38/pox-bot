@@ -1,0 +1,27 @@
+{
+    "bot": {
+        "sync_success": "コマンドは正常に同期されました。"
+    },
+    "common": {
+        "cancel": "キャンセル",
+        "comfirm": "確認する",
+        "loading": "お待ちください...",
+        "status": {
+            "dnd": "邪魔しないでください",
+            "idle": "アイドリング",
+            "online": "オンライン"
+        }
+    },
+    "errors": {
+        "bot_missing_permissions": "私にはそんなことをする許可がありません。",
+        "cooldown": "再度使用する前に {remains} 秒待ってください。",
+        "generic": "何か問題が発生しました。\n後でもう一度試してください。",
+        "not_owner": "このコマンドはボット開発者のみが使用できます。",
+        "title": "おっと！",
+        "user_missing_permissions": "あなたにはそれを行う許可がありません。",
+        "user_not_found": "そのユーザーが見つかりませんでした。"
+    },
+    "units": {
+        "seconds": "{カウント、複数、=1 {秒}、その他の {秒}}"
+    }
+}

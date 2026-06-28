@@ -1,115 +1,78 @@
-from datetime import datetime
+from sqlalchemy import select
 
-from pytz import UTC
-
-from logger import logger
-from src.database import PostgreSQLDatabase
-from src.models import EconomyData
+from src.bases import BaseDatabase
+from src.models.economy_orm import EconomyInventory, EconomyItem, EconomyTransaction, EconomyUser
 from src.utils import Cache
 
 
-class EconomyDatabase(PostgreSQLDatabase):
+class EconomyDatabase(BaseDatabase):
     def __init__(self, dsn: str):
         super().__init__(dsn)
         self._cache = Cache(ttl=300)
-    
-    async def on_load(self):
-        await self.run_migrations("resources/migrations")
-        logger.info("[EconomyDatabase] Migration suite completed.")
-    
-    async def post_close(self):
-        logger.info("[EconomyDatabase] Cleanup complete.")
-    
-    async def pre_close(self):
-        logger.info("[EconomyDatabase] Clearing caches...")
-        self._cache.clear()
-    
-    async def get_user(self, user_id: int) -> EconomyData:
+
+    async def get_user(self, user_id: int) -> EconomyUser:
         cached = self._cache.get(user_id)
         if cached:
             return cached
 
-        async def fetch_user(conn):
-            row = await conn.fetchrow(
-                "SELECT * FROM economy_users WHERE user_id = $1",
-                user_id
-            )
-            user_obj = EconomyData.from_row(row) if row else EconomyData(user_id=user_id)
-            self._cache.set(user_id, user_obj)
-            return user_obj
-        
-        result = await self.with_connection(fetch_user)
-        return result or EconomyData(user_id=user_id)
-    
-    async def save_user(self, user: EconomyData):
-        self._cache.set(user.user_id, user)
-        if self.pool:
-            async with self.pool.acquire() as conn:
-                await conn.execute("""
-                    INSERT INTO economy_users (user_id, wallet, bank, last_daily, last_work)
-                    VALUES ($1, $2, $3, $4, $5)
-                    ON CONFLICT (user_id) DO UPDATE SET
-                        wallet = EXCLUDED.wallet,
-                        bank = EXCLUDED.bank,
-                        last_daily = EXCLUDED.last_daily,
-                        last_work = EXCLUDED.last_work
-                """, user.user_id, user.wallet, user.bank, user.last_daily, user.last_work)
-    
-    async def get_shop_items(self) -> list[dict]:
-        if self.pool:
-            async with self.pool.acquire() as conn:
-                rows = await conn.fetch("SELECT * FROM economy_items WHERE buy_price IS NOT NULL")
-                return [dict(r) for r in rows]
-        return []
-    
-    async def get_item(self, item_id: str) -> dict | None:
-        if self.pool:
-            async with self.pool.acquire() as conn:
-                row = await conn.fetchrow("SELECT * FROM economy_items WHERE id = $1", item_id)
-                return dict(row) if row else None
-        return None
-    
-    async def modify_inventory(self, user_id: int, item_id: str, amount: int):
-        if self.pool:
-            async with self.pool.acquire() as conn:
-                await conn.execute("""
-                    INSERT INTO economy_inventory (user_id, item_id, quantity)
-                    VALUES ($1, $2, $3)
-                    ON CONFLICT (user_id, item_id) DO UPDATE
-                    SET quantity = economy_inventory.quantity + EXCLUDED.quantity
-                """, user_id, item_id, amount)
+        async with self.async_session() as session:
+            user = await session.get(EconomyUser, user_id)
+            if not user:
+                user = EconomyUser(user_id=user_id)
+                session.add(user)
+                await session.commit()
+            self._cache.set(user_id, user)
+            return user
 
-                await conn.execute("DELETE FROM economy_inventory WHERE quantity <= 0")
-    
-    async def get_inventory(self, user_id: int) -> list[dict]:
-        if self.pool:
-            async with self.pool.acquire() as conn:
-                rows = await conn.fetch("""
-                    SELECT i.name, inv.quantity, i.description 
-                    FROM economy_inventory inv
-                    JOIN economy_items i ON inv.item_id = i.id
-                    WHERE inv.user_id = $1
-                """, user_id)
-                return [dict(r) for r in rows]
-        return []
-    
+    async def save_user(self, user: EconomyUser):
+        self._cache.set(user.user_id, user)
+        async with self.async_session() as session, session.begin():
+            await session.merge(user)
+
+    async def get_shop_items(self) -> list[EconomyItem]:
+        async with self.async_session() as session:
+            result = await session.execute(select(EconomyItem).where(EconomyItem.price != None))  # noqa: E711
+            return list(result.scalars().all())
+
+    async def get_item(self, item_id: str) -> EconomyItem | None:
+        async with self.async_session() as session:
+            return await session.get(EconomyItem, item_id)
+
+    async def modify_inventory(self, user_id: int, item_id: str, amount: int):
+        async with self.async_session() as session, session.begin():
+            stmt = select(EconomyInventory).where(EconomyInventory.user_id == user_id, EconomyInventory.item_id == item_id)
+            res = await session.execute(stmt)
+            inv = res.scalar_one_or_none()
+
+            if inv:
+                inv.quantity += amount
+                if inv.quantity <= 0:
+                    await session.delete(inv)
+            elif amount > 0:
+                session.add(EconomyInventory(user_id=user_id, item_id=item_id, quantity=amount))
+
+    async def get_inventory(self, user_id: int) -> list[EconomyInventory]:
+        async with self.async_session() as session:
+            result = await session.execute(select(EconomyInventory).where(EconomyInventory.user_id == user_id))
+            return list(result.scalars().all())
+
     async def log_tx(self, user_id: int, tx_type: str, amount: int, desc: str):
-        if self.pool:
-            async with self.pool.acquire() as conn:
-                await conn.execute("""
-                    INSERT INTO economy_transactions (user_id, type, amount, description, timestamp)
-                    VALUES ($1, $2, $3, $4, $5)
-                """, user_id, tx_type, amount, desc, int(datetime.now(UTC).timestamp()))
-    
-    async def get_history(self, user_id: int, limit: int = 5) -> list:
-        if self.pool:
-            async with self.pool.acquire() as conn:
-                limit = max(1, min(12, limit))
-                rows = await conn.fetch("""
-                    SELECT type, amount, timestamp, description
-                    FROM economy_transactions
-                    WHERE user_id = $1
-                    ORDER BY id DESC LIMIT $2
-                """, user_id, limit)
-                return [dict(r) for r in rows]
-        return []
+        async with self.async_session() as session, session.begin():
+            tx = EconomyTransaction(
+                user_id=user_id,
+                tx_type=tx_type,
+                amount=amount,
+                description=desc,
+            )
+            session.add(tx)
+
+    async def get_history(self, user_id: int, limit: int = 5) -> list[EconomyTransaction]:
+        async with self.async_session() as session:
+            stmt = (
+                select(EconomyTransaction)
+                .where(EconomyTransaction.user_id == user_id)
+                .order_by(EconomyTransaction.id.desc())
+                .limit(min(max(1, limit), 12))
+            )
+            result = await session.execute(stmt)
+            return list(result.scalars().all())

@@ -1299,9 +1299,28 @@
                 ],
                 "allowed_contexts": "None",
                 "allowed_installs": "None"
+            },
+            {
+                "type": "slash_command",
+                "name": "petpet",
+                "full_name": "image petpet",
+                "description": "command.image.petpet.description",
+                "arguments": [
+                    {
+                        "name": "member",
+                        "display": "member",
+                        "description": "command.image.petpet.parameters.member",
+                        "type": "user",
+                        "required": false,
+                        "has_autocomplete": false,
+                        "choices": []
+                    }
+                ],
+                "allowed_contexts": "None",
+                "allowed_installs": "None"
             }
         ],
-        "allowed_contexts": "None",
+        "allowed_contexts": "<AppCommandContext guild=True dm_channel=True private_channel=True>",
         "allowed_installs": "None"
     },
     {
@@ -3807,7 +3826,7 @@
                         "choices": []
                     }
                 ],
-                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_contexts": "None",
                 "allowed_installs": "None"
             },
             {
@@ -3826,7 +3845,7 @@
                         "choices": []
                     }
                 ],
-                "allowed_contexts": "<AppCommandContext guild=True dm_channel=False private_channel=False>",
+                "allowed_contexts": "None",
                 "allowed_installs": "None"
             }
         ],

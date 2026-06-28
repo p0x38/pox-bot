@@ -1,0 +1,839 @@
+{
+    "8ball": {
+        "description": "完全にランダムな魔法の 8 ボールの答えが表示されます。 \n:3",
+        "embeds": {
+            "default": {
+                "title": "魔法の8ボールはこう言っています...\n\n{質問}!"
+            }
+        }
+    },
+    "admin": {
+        "reload_cogs": {
+            "description": "すべての拡張機能をリロードし、スラッシュ コマンドを同期します。 \n>:D",
+            "embeds": {
+                "error": {
+                    "description": "拡張機能をリロードしましたが、スラッシュ コマンドを同期しようとしているときに問題が発生しました... 3:",
+                    "title": "ああ、同期に失敗しました。 \n3:"
+                },
+                "loading": {
+                    "description": "ちょっと待ってください。すべてをリロードしようとしています。 \n:3",
+                    "progress": "ちょっと待ってください、リロード中です！ \n\n現在ロード中: `{current_cog}`\n\n進捗状況: **{現在}/{合計}**\n\n成功: **{読み込み済み}** |\n失敗: **{失敗}**",
+                    "title": "リロード処理中... :3"
+                },
+                "success": {
+                    "description": "**{loaded}** 拡張機能が正常に更新されました。 \n>:D\n\n**{synced}** のスラッシュ コマンドをどこにでも同期しました。",
+                    "title": "リロードが正常に完了しました。 \n:D"
+                }
+            },
+            "errors": {
+                "forbidden": "このサーバーには「application.commands」権限がありません... 3:",
+                "generic": "コマンドの同期中に何か奇妙な問題が発生しました。 \n3:",
+                "http_error": "Discord API が動作していません。\nゲートウェイに到達できませんでした。 \n3:",
+                "missing_id": "重大なエラーです!\nアプリケーション ID がなぜか見つかりません... 3:",
+                "sync_failure": "同期に失敗しました!\n一部のコマンドには不安定なデータがあります。 \n3:",
+                "translation_error": "同期が中止されました!\nコマンドトランスレータで何かが壊れました。 \n3:"
+            }
+        }
+    },
+    "builtin_search": {
+        "add_query": {
+            "description": "検索データベースに合計クエリを追加します。 \n:3"
+        }
+    },
+    "calculate": {
+        "description": "数学の時間です！ \n:3",
+        "percentage": {
+            "description": "パーセンテージを計算します。 \n:3"
+        }
+    },
+    "channel": {
+        "description": "楽しいチャンネル運営グループです！ \n:3",
+        "info": {
+            "description": "チャンネルに関する素敵な情報を表示します。",
+            "embeds": {
+                "default": {
+                    "title": "{名前} の情報:3"
+                }
+            }
+        },
+        "slowmode": {
+            "description": "スローモードの遅延を設定します。",
+            "embeds": {
+                "successful": {
+                    "description": "ブーム！ \n{mention} のスローモードを **{秒}** に設定してください! \n>:D",
+                    "title": "スローモードが更新されました！ \n:3"
+                }
+            }
+        }
+    },
+    "chatbot": {
+        "add_event": {
+            "description": "私の歴史に世界的な出来事が加わりました! \n:3"
+        },
+        "clear_memories": {
+            "description": "チャットの記憶を完全に消去します。 \n3:"
+        },
+        "description": "私の AI チャットボット関連のグループです。 \n:3",
+        "mem": {
+            "description": "ジムの脳内空間を覗いてみましょう~ :3",
+            "embeds": {
+                "default": {
+                    "title": "コンテキストメモリステータス:3"
+                }
+            },
+            "messages": {
+                "empty": "今私の頭は完全に空っぽです。 \n3:"
+            }
+        },
+        "perf": {
+            "description": "私のハードウェアがどれだけ一生懸命働いているかを示しています。 \n:3",
+            "embeds": {
+                "default": {
+                    "description": "過去の {世代} 世代に基づく統計は次のとおりです~",
+                    "title": "ハードウェア効率のメトリクス >:D"
+                }
+            },
+            "messages": {
+                "empty_logs": "現在パフォーマンス データがありません... 3:"
+            }
+        },
+        "stats": {
+            "description": "私のグローバルボット統計を表示します! \n:3"
+        },
+        "unlock": {
+            "description": "行き詰まったら強制的にチャンネルのロックを解除します！ \n>:D",
+            "messages": {
+                "already": "今は考えてもいませんが、確かに！ \n:3",
+                "unlock": "ああ、わかった、戻ってきた >:D"
+            }
+        },
+        "user_stats": {
+            "description": "ボットの統計を表示します。 \n:3"
+        }
+    },
+    "contributors": {
+        "description": "素晴らしい貢献者全員のグループです。 \n:3",
+        "list": {
+            "description": "協力してくれた人全員をリストします~",
+            "embeds": {
+                "default": {
+                    "description": "ここに私を助けてくれたクールな人たちのリストがあります! \n:3",
+                    "title": "素晴らしい貢献者 >:D"
+                }
+            }
+        },
+        "view": {
+            "description": "特定の投稿者に関する情報を表示します。 \n:3",
+            "embeds": {
+                "default": {
+                    "title": "寄稿者 {contributor} の情報~"
+                }
+            }
+        }
+    },
+    "convert": {
+        "base64": {
+            "description": "テキストを Base64 に変換します。 \n:3"
+        },
+        "base7777": {
+            "description": "テキストを Base7777 に暗号化します。 \n(galaxy_fl3x からのリクエスト) :3"
+        },
+        "binary": {
+            "description": "それをビープ音のバイナリに変えます! \n(AnnaYarik999Alt からのリクエスト) :3"
+        },
+        "caesar": {
+            "description": "シーザー暗号を使用してテキストをスクランブルします。 \n>:D"
+        },
+        "color_name": {
+            "description": "colornames.org から色の名前を取得します。 \n:3"
+        },
+        "demorse": {
+            "description": "ドットとダッシュを解読します。 \n(AnnaYarik999Alt からのリクエスト) :3"
+        },
+        "description": "コンバーターがいっぱいのグループです！ \n:3",
+        "glitch": {
+            "description": "M-y-あなたの t-text l-look g-glitch... >:D"
+        },
+        "invert_letters": {
+            "description": "文字を逆さまに反転させます！ \n:3"
+        },
+        "meow": {
+            "description": "全てをニャーニャーに変える :3"
+        },
+        "morse": {
+            "description": "それを点と線に変えます！ \n(AnnaYarik999Alt からのリクエスト) :3"
+        },
+        "muffle": {
+            "description": "枕に向かって話しているように聞こえます... :3"
+        },
+        "nsrc1": {
+            "description": "テキストを NSRC-1 に暗号化します。 \n(ファー) :3"
+        },
+        "psc1": {
+            "description": "PSC-1に暗号化します！ \n:3"
+        },
+        "railfence": {
+            "description": "柵の暗号を使ってテキストをスクランブルします! \n>:D"
+        },
+        "reverse_words": {
+            "description": "言葉をひっくり返す！ \n:3"
+        },
+        "unbase64": {
+            "description": "Base64 からテキストをデコードします。 \n:3"
+        },
+        "unbase7777": {
+            "description": "Base7777 からのテキストを復号化します。 \n(galaxy_fl3x からのリクエスト) :3"
+        },
+        "unbinary": {
+            "description": "ビープ音をテキストに変換します。 \n(AnnaYarik999Alt からのリクエスト) :3"
+        },
+        "uncaesar": {
+            "description": "シーザー暗号を解読！ \n:3"
+        },
+        "unnsrc1": {
+            "description": "NSRC-1 からのテキストを復号化します。 \n(ファー) :3"
+        },
+        "unpsc1": {
+            "description": "PSC-1を解読！ \n:3"
+        },
+        "unrailfence": {
+            "description": "柵の暗号を解読せよ！ \n:3"
+        },
+        "uwu": {
+            "description": "うわ、テキストを削除しましたが、誰かについて言及しています。 \n:3"
+        }
+    },
+    "detect": {
+        "custom2": {
+            "description": "どれくらい高いか見てみましょう~:3"
+        },
+        "custom_member": {
+            "description": "メンバーが何かにどれだけ近づいているかをチェックします! \n:3"
+        },
+        "description": "物を発見する集団です！ \n>:D",
+        "how_femboy": {
+            "description": "彼らがどれほどのフェムボーイであるかを見てみましょう! \n:3"
+        },
+        "how_freaky": {
+            "description": "彼らがどれだけ変人なのか見てみましょう！ \n>:D"
+        },
+        "how_gay": {
+            "description": "彼らがどれほどゲイなのか見てみましょう！ \n:3"
+        },
+        "how_slop": {
+            "description": "どれくらいの傾斜があるか見てみましょう！ \n:3"
+        },
+        "vibecheck": {
+            "description": "雰囲気チェックの時間です！ \n>:D"
+        }
+    },
+    "economy": {
+        "balance": {
+            "description": "あなたがどれだけの輝くお金を持っているかチェックしてください！ \n:3",
+            "embeds": {
+                "default": {
+                    "footer": "光沢のある資産の合計: {coins} コイン~",
+                    "title": "{user} の残高 :3"
+                }
+            },
+            "fields": {
+                "bank": "銀行",
+                "wallet": "財布"
+            }
+        },
+        "buy": {
+            "description": "ショップで素敵なアイテムを購入しましょう！ \n:3",
+            "embeds": {
+                "item_unavailable": {
+                    "description": "そのアイテムは売り物でもありません！ \n3:<",
+                    "title": "アイテムが利用できません 3:"
+                },
+                "not_afford": {
+                    "description": "あなたはそれを買うには破産しすぎています! \n3:<",
+                    "title": "コインが足りない！ \n3:"
+                },
+                "purchased": {
+                    "description": "わーい！ \n**{item_name}** を購入しました!\n在庫を確認してください~ :3",
+                    "title": "購入成功しました！ \n>:D"
+                }
+            }
+        },
+        "daily": {
+            "description": "毎日の景品を手に入れましょう！ \n:3",
+            "embeds": {
+                "default": {
+                    "description": "毎日の報酬から {amount} コインを獲得しました! \n:D",
+                    "title": "毎日の報酬を受け取りましょう！ \n:3"
+                }
+            }
+        },
+        "deposit": {
+            "description": "お金は銀行に安全に保管してください~",
+            "embeds": {
+                "default": {
+                    "description": "{amount} 個のコインが安全に入金されました。 \n:3",
+                    "title": "入金成功しました~"
+                }
+            }
+        },
+        "description": "あらゆるお金に関するグループです。 \n:3",
+        "history": {
+            "description": "最近の取引を覗いてみてください~"
+        },
+        "inventory": {
+            "description": "トランクの中のジャンクを全部見てみましょう！ \n:3",
+            "embeds": {
+                "default": {
+                    "title": "{user} の在庫~"
+                },
+                "empty": {
+                    "description": "バックパックは完全に空です...これを変えるために何かを購入してください! \n:3",
+                    "title": "空のバックパック 3:"
+                }
+            }
+        },
+        "list": {
+            "description": "お店を覗いてみてください！ \n:3",
+            "embeds": {
+                "closed": {
+                    "description": "後で戻ってきてください、閉店しています！ \n3:",
+                    "title": "ただいまお店は閉まっております！ \n3:"
+                }
+            },
+            "fields": {
+                "buy_price": "価格: {price} コイン",
+                "not_sale": "非売品です!! \n3:<"
+            }
+        },
+        "sell": {
+            "description": "ジャンク品はお店に売りましょう！ \n>:D",
+            "embeds": {
+                "sold": {
+                    "description": "**{item_name}** が売れました! \n:D",
+                    "title": "販売完了！ \n:3"
+                },
+                "unable_to_sell": {
+                    "description": "お店はそんなこと望んでいないよ！ \n3:",
+                    "title": "それは売れないよ！ \n3:"
+                }
+            }
+        },
+        "withdraw": {
+            "description": "銀行からお金を引き出してください！ \n:3",
+            "embeds": {
+                "default": {
+                    "description": "{金額} コインを引き出しました! \n>:D",
+                    "title": "出金成功しました~"
+                }
+            }
+        },
+        "work": {
+            "description": "コインのために家事をしましょう！ \n:3",
+            "embeds": {
+                "default": {
+                    "description": "頑張って {amount} コインを獲得しました! \n:3",
+                    "title": "給料もらったんですね！ \n>:D"
+                },
+                "tired": {
+                    "description": "眠すぎるよ！\nあと{rem}分間休んでください。 \n3:",
+                    "title": "今は仕事ができない！ \n3:"
+                }
+            }
+        }
+    },
+    "fun": {
+        "boop_member": {
+            "description": "誰かの鼻をブーブー！ \n:3"
+        },
+        "description": "くだらない楽しみのためのグループです！ \n:3",
+        "dice": {
+            "description": "サイコロを振ってください！ \n>:D"
+        },
+        "guess": {
+            "description": "数字を当ててみてください！ \n:3"
+        },
+        "guess_game": {
+            "description": "新しい数字当てゲームが始まります！ \n(1～100) :3"
+        },
+        "job_application": {
+            "description": "就職してください！ \n>:D"
+        },
+        "ship": {
+            "description": "二人の真実の愛情度を計算！ \n:3"
+        },
+        "stopguess": {
+            "description": "推理ゲームを強制的に崩壊させる！ \n>:D"
+        }
+    },
+    "generate": {
+        "cat_jard": {
+            "description": "猫を避けてください！ \n>:D"
+        },
+        "description": "くだらないものを生み出す集団です！ \n:3",
+        "emoticon": {
+            "description": "完全にランダムなテキスト絵文字を送信します。 \n:3"
+        },
+        "idek": {
+            "description": "正直言って私も知りません。 \n:3"
+        },
+        "nyan_cat": {
+            "description": "にゃん猫タイム!! \n:D",
+            "messages": {
+                "think_fast": "早く考えろ、くすくす笑い！ \n>:D"
+            }
+        },
+        "target_close": {
+            "description": "ターゲット終了アルゴリズム... >:D"
+        }
+    },
+    "globalchat": {
+        "description": "グローバルチャットのためのグループです！ \n:3",
+        "setchannel": {
+            "description": "グローバルチャットチャンネルを設定しましょう！ \n:3",
+            "embeds": {
+                "default": {
+                    "description": "グローバル チャット チャネルが {channel} に設定されました。 \n:3",
+                    "title": "グローバルチャットチャンネルが設定されました! \n>:D"
+                }
+            },
+            "parameters": {
+                "channel": "グローバルチャットを設定するチャンネル"
+            }
+        },
+        "silentmode": {
+            "description": "サイレントモードを切り替えてください！ \n:3",
+            "embeds": {
+                "default": {
+                    "description": "サイレント モードが {toggle} に設定されました。 \n:3",
+                    "title": "サイレントモードが切り替わりました！ \n>:D"
+                }
+            },
+            "parameters": {
+                "toggle": "サイレントモードを有効にしますか? \n(はい/いいえ)"
+            }
+        },
+        "texts": {
+            "including_attachments": "{数、複数、=1 {含む",
+            "including_attachments_no_text": "{count, plural, =1 {ユーザーが送信しました"
+        },
+        "toggle": {
+            "description": "グローバルチャットを切り替えてください！ \n:3",
+            "embeds": {
+                "default": {
+                    "description": "グローバル チャットが {toggle} になりました! \n:3",
+                    "title": "グローバルチャットが切り替わりました！ \n>:D"
+                }
+            },
+            "parameters": {
+                "enabled": "グローバルチャットを有効にしますか? \n(はい/いいえ)"
+            }
+        }
+    },
+    "guild": {
+        "count": {
+            "description": "ここに何人いるかを数えてください！ \n:3"
+        },
+        "description": "サーバー関係のグループです！ \n:3",
+        "icon": {
+            "description": "サーバーアイコンを誇示します! \n:3"
+        },
+        "info": {
+            "description": "サーバー情報をすべてチェックしてください！ \n:3"
+        },
+        "kickmembers": {
+            "description": "本物のメンバー全員をキックします！ \n>:D"
+        },
+        "logs": {
+            "description": "キック、バン、タイムアウトの履歴を表示します。 \n3:"
+        },
+        "members_list": {
+            "description": "ここにクールな人々をすべてリストします! \n:3"
+        },
+        "nsfw_level": {
+            "description": "サーバーの辛さレベルをチェック！ \n:3"
+        },
+        "role_list": {
+            "description": "サーバー内のすべてのロールをリストします。 \n:3"
+        },
+        "search_members": {
+            "description": "あなたのクエリに一致するメンバーを探します! \n>:D"
+        }
+    },
+    "image": {
+        "description": "ImageCog のグループ",
+        "petpet": {
+            "description": {
+                "casual": "誰かを撫でてください！",
+                "casual-silly": "誰かを撫でてください！ \n:3",
+                "formal": "誰かをなでます。"
+            },
+            "embeds": {
+                "default": {
+                    "description": {
+                        "casual-silly": "{実行者} が {ターゲット} をなでます！ \n:3"
+                    },
+                    "title": {
+                        "casual-silly": "{執行者} が {ターゲット} を撫でました! \n:3"
+                    }
+                }
+            },
+            "parameters": {
+                "member": {
+                    "casual": "撫でてくれる誰か！",
+                    "casual-silly": "撫でてくれる誰か！ \n:3",
+                    "formal": "撫でるユーザー/メンバー。"
+                }
+            }
+        }
+    },
+    "info": {
+        "commit_data": {
+            "description": "最新の git コミットを表示します。 \n:3"
+        },
+        "description": "情報などを扱うグループです！ \n:3",
+        "invite": {
+            "description": "私の招待リンクを取得して、私を追加してください。 \n(サーバー数は 90 に制限されていますが、3:)",
+            "embeds": {
+                "default": {
+                    "description": "{プレフィックス}\n\n\n[このリンク!]({invite_url}) を使用して私をサーバーに追加できます :D",
+                    "footer": "注: 正しく動作するには高度な権限が必要ですが、Discord のせいでサーバーの数が 90 に制限されています。 \n3:",
+                    "status": "{count, plural, =1 {容量: **{フォーマット済み}** サーバー} その他の {容量: **{フォーマット済み}** サーバー}}",
+                    "title": "TongueBotを招待してください！ \n:3"
+                }
+            },
+            "error": {
+                "hardlimited": "ああ、今は招待できません。サーバーの制限に達しました... 3:"
+            }
+        },
+        "os_info": {
+            "description": "実行している OS が表示されます。 \n:3",
+            "embeds": {
+                "default": {
+                    "title": "オペレーティング システム情報:3"
+                }
+            }
+        },
+        "ping": {
+            "description": "ポン！ \n:D",
+            "embeds": {
+                "default": {
+                    "title": "ポン！ \n({レイテンシ} ミリ秒) :D"
+                }
+            }
+        },
+        "retrieve": {
+            "description": "私のボット情報をすべて取得します! \n:3",
+            "embeds": {
+                "default": {
+                    "description": "詳細を確認するには、以下のカテゴリを選択してください。 \n>:D",
+                    "footer": "実行中: {プラットフォーム} :3",
+                    "title": "ボット情報~"
+                }
+            },
+            "error": {
+                "forbidden": "これを行うには **チャンネルの管理** 権限が必要です。 \n3:"
+            }
+        },
+        "sync": {
+            "description": "コマンドを同期します! \n:3"
+        },
+        "timedate": {
+            "description": "特定のタイムゾーンの時刻を表示します。 \n:3",
+            "embeds": {
+                "default": {
+                    "description": "{timezone_name} の現在は **{timedate}** です。 \n:3"
+                }
+            }
+        }
+    },
+    "leveling": {
+        "configure": {
+            "description": "レベリングシステムを微調整！ \n:3",
+            "embeds": {
+                "default": {
+                    "description": "システムがアップデートされました！ \n>:D",
+                    "title": "レベリングシステムが調整されました！ \n:3"
+                }
+            }
+        },
+        "description": "レベリングネタ！ \n:3",
+        "rank": {
+            "description": "自分のランクをチェックしてみよう！ \n:3",
+            "embeds": {
+                "default": {
+                    "fields": {
+                        "level": {
+                            "name": "レベル"
+                        },
+                        "progress": {
+                            "name": "進捗"
+                        },
+                        "total": {
+                            "name": "合計XP"
+                        }
+                    },
+                    "title": "{user} のランク! \n:3"
+                }
+            }
+        }
+    },
+    "minecraft": {
+        "profile": {
+            "description": "Minecraft のユーザー プロファイルを取得します。",
+            "embeds": {
+                "default": {
+                    "title": "{名前}のプロフィール"
+                }
+            }
+        },
+        "server": {
+            "description": "Minecraft サーバーを検索します。"
+        },
+        "uuid": {
+            "description": "ユーザー名から Minecraft UUID を取得します。"
+        }
+    },
+    "moderation": {
+        "blacklist": {
+            "add": {
+                "description": "悪い言葉をブラックリストに追加します。 \n>:D",
+                "embeds": {
+                    "default": {
+                        "description": "「{entry}」をタイプ「{type}」としてブラックリストに追加しました。ID「{id}」で検索可能です。 \n:3",
+                        "title": "単語がブラックリストに登録されました! \n>:D"
+                    }
+                }
+            },
+            "description": "ブラックリストのやつ！ \n:3",
+            "list": {
+                "description": "このサーバーでブロックされているすべての単語をリストします。 \n:3",
+                "embeds": {
+                    "default": {
+                        "footer": "さらに {remaining} 個のトリガーがここに隠れています! \n:3",
+                        "title": "このサーバーのブラックリストトリガー~"
+                    },
+                    "no_blacklist": {
+                        "description": "ここではブラックリストのトリガーが見つかりませんでした。 \n:3"
+                    }
+                }
+            },
+            "remove": {
+                "description": "ブラックリストから単語を削除します。 \n:3",
+                "embeds": {
+                    "default": {
+                        "description": "ブラックリストから「{query}」に一致するものをすべて削除しました。 \n:3",
+                        "title": "クエリを削除しました。 \n:D"
+                    },
+                    "not_found": {
+                        "description": "ブラックリストに「{query}」に一致するものが見つかりませんでした... 3:",
+                        "title": "トリガーが見つかりません! \n3:"
+                    }
+                }
+            }
+        },
+        "description": "モデレーションツール！ \n>:D",
+        "togglefeature": {
+            "description": "サーバー機能をオンまたはオフにします。 \n:3",
+            "embeds": {
+                "default": {
+                    "description": "{feature_name} を {state} に切り替えました! \n:3"
+                }
+            },
+            "parameters": {
+                "feature": {
+                    "description": "切り替えたい機能~"
+                },
+                "state": {
+                    "description": "オンでもオフでも！ \n:3"
+                }
+            }
+        }
+    },
+    "rating": {
+        "rate_user": {
+            "description": "メンバーを 0 ～ 100 で評価する浮動小数点数。"
+        }
+    },
+    "roblox": {
+        "avatar": {
+            "description": "Roblox ユーザーのアバターをユーザー名で取得します。 \n:3",
+            "embeds": {
+                "default": {
+                    "title": "{username} の Roblox アバター! \n:3"
+                }
+            }
+        },
+        "description": "すべての Roblox API のグループです。 \n:3",
+        "user": {
+            "description": "ユーザー名から Roblox ユーザー情報を取得します。 \n:3",
+            "embeds": {
+                "default": {
+                    "title": "{ユーザー名} さんの情報です！ \n:3"
+                }
+            }
+        }
+    },
+    "stats": {
+        "description": "リーダーボードと統計！ \n:3",
+        "top": {
+            "description": "上位ユーザーを表示します! \n>:D",
+            "embeds": {
+                "default": {
+                    "title": "グローバルリーダーボード!! \n>:D"
+                }
+            }
+        }
+    },
+    "ticket": {
+        "description": "チケットシステムV2！ \n:3",
+        "setup": {
+            "description": "このサーバーのチケット システムをセットアップします。 \n:3"
+        }
+    },
+    "tts": {
+        "description": "TTSの中心です！ \n:3",
+        "embeds": {
+            "default": {
+                "description": "生成されました！ \n>:D",
+                "footer": "タイプ: {tts_type};\n入力: {入力}",
+                "title": "TTS変換:3"
+            }
+        },
+        "google_translate": {
+            "description": "Google翻訳からTTSを作ります！ \n:3"
+        }
+    },
+    "user": {
+        "avatar": {
+            "description": "誰かの Discord アバターを表示します! \n:3",
+            "embeds": {
+                "default": {
+                    "footer": "{author} によってリクエストされ、1 分間キャッシュされました。 \n:3",
+                    "title": "{user} のアバター! \n:3"
+                }
+            }
+        },
+        "description": "ユーザー関連のグループです。 \n:3",
+        "info": {
+            "description": "ユーザーに関する重要な情報をすべて取得します。 \n:3",
+            "embeds": {
+                "default": {
+                    "title": "{ユーザー} の情報~"
+                }
+            },
+            "fields": {
+                "stats": "レベル {level} ({xp} XP) / {messages} メッセージ :3",
+                "wallet": "{コイン} コイン！"
+            }
+        },
+        "set_nick": {
+            "description": "誰かのニックネームを変更します！ \n>:D",
+            "embeds": {
+                "changed": {
+                    "description": "{author} が {user} のニックネームを **{new_nickname}** に変更しました。 \n:3"
+                },
+                "reset": {
+                    "description": "{author} が {user} のニックネームをリセットしました! \n:D"
+                }
+            },
+            "reasons": {
+                "changed": "ニックネームは /user Nick 経由で {user} によって変更されました。 \n:3",
+                "reset": "ニックネームは /user Nick 経由で {user} によってリセットされました。 \n:3"
+            }
+        },
+        "set_profile": {
+            "description": "クールなコミュニティプロフィールを設定しましょう！ \n:3",
+            "embeds": {
+                "default": {
+                    "description": "プロフィールを「{description}」に、ニックネームを「{nickname}」に設定してください。 \n:3",
+                    "title": "プロフィールが正常に更新されました。 \n:D"
+                }
+            }
+        },
+        "status": {
+            "description": "ユーザーのDiscordステータスをチェック！ \n:3",
+            "embeds": {
+                "default": {
+                    "title": "{user} のステータス! \n:3"
+                }
+            }
+        }
+    },
+    "userphone": {
+        "call": {
+            "description": "完全にランダムなサーバーを呼び出します。 \n:3",
+            "embeds": {
+                "paired": {
+                    "description": "別のサーバーとペアリングしました! \n>:D",
+                    "title": "ペアリングしました！ \n:D"
+                },
+                "searching": {
+                    "description": "皆さんにとって楽しいサーバーを探しています... :3",
+                    "title": "通話できる楽しいサーバーを探しています..!"
+                },
+                "status": {
+                    "description": "通話できる楽しいサーバーを探しています... :3",
+                    "title": "状態"
+                }
+            }
+        },
+        "description": "ユーザーフォン用のグループです！ \n:3",
+        "hangup": {
+            "description": "現在の通話を終了します。 \n3:",
+            "embeds": {
+                "default": {
+                    "description": "電話を切りました！ \n3:",
+                    "title": "通話が終了しました！ \n3:"
+                }
+            }
+        },
+        "userphone": {
+            "description": "ユーザーフォンの設定を微調整します! \n:3",
+            "embeds": {
+                "default": {
+                    "description": "設定はすべて完了しました！ \n:3",
+                    "title": "正常に設定されました! \n:D"
+                }
+            }
+        }
+    },
+    "welcome": {
+        "description": "ウェルカムメッセージのグループです。 \n:3",
+        "joinchannel": {
+            "description": "ウェルカムメッセージチャンネルを設定してください！ \n:3",
+            "embeds": {
+                "default": {
+                    "description": "ウェルカム メッセージ チャネルが {channel} に設定されました。 \n:3",
+                    "title": "ウェルカムメッセージチャンネルセット！ \n>:D"
+                }
+            },
+            "parameters": {
+                "channel": "ウェルカムメッセージを設定するチャンネル"
+            }
+        },
+        "leavechannel": {
+            "description": "残メッセージチャンネルを設定してください！ \n:3",
+            "embeds": {
+                "default": {
+                    "description": "メッセージ チャネルは {channel} に設定したままにしてください。 \n:3",
+                    "title": "メッセージチャンネルを設定したままにしてください。 \n>:D"
+                }
+            },
+            "parameters": {
+                "channel": "メッセージを残すチャンネルを設定する"
+            }
+        },
+        "toggle": {
+            "description": "ウェルカムメッセージを切り替えてください。 \n:3",
+            "embeds": {
+                "default": {
+                    "description": "ウェルカム メッセージが {toggle} になりました。 \n:3",
+                    "title": "ウェルカムメッセージが切り替わりました！ \n>:D"
+                }
+            },
+            "parameters": {
+                "enabled": "ウェルカムメッセージを有効にしますか? \n(はい/いいえ)"
+            }
+        }
+    }
+}

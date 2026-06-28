@@ -2,7 +2,7 @@
     "python-envs.defaultEnvManager": "ms-python.python:system",
     "todo-tree.tree.scanMode": "workspace",
     "python.REPL.enableREPLSmartSend": false,
-    "i18n-ally.localesPaths": ["resources/locales"],
+    "i18n-ally.localesPaths": ["src/assets/locales"],
     "i18n-ally.pathMatcher": "{locale}/{namespace}.{ext}",
     "i18n-ally.namespace": true,
     "i18n-ally.keystyle": "nested",
@@ -40,9 +40,9 @@
         "*/.git/objects/**": true,
         "*/.git/subtree-cache/**": true,
         "*/.hg/store/**": true,
-        "resources/voices/**": true,
-        "resources/imgs/**": true,
-        "resources/fonts/**": true,
+        "src/assets/voices/**": true,
+        "src/assets/imgs/**": true,
+        "src/assets/fonts/**": true,
         "logs/**": true,
         "data/**": true
     },
@@ -95,11 +95,12 @@
         "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.formatOnType": true,
         "editor.wordBasedSuggestions": "offWithInlineSuggestions",
-
         "editor.codeActionsOnSave": {
             "source.fixAll.ruff": "explicit",
-            "source.organizeImports.ruff": "explicit"
-        }
+            "source.organizeImports.ruff": "explicit",
+        },
+        "files.insertFinalNewline": true,
+        "editor.tabSize": 4
     },
     "conventionalCommits.scopes": [
         "Environments"

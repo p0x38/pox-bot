@@ -1,0 +1,160 @@
+{
+    "custom": {
+        "cannot_timeout_higher": "私の役割は、このユーザーをタイムアウトにするほど高くありません... 3:",
+        "channel_has_no_slowmode_property": "このチャンネルにはスローモード設定さえありません。 \nD:<",
+        "description_not_found": "まだ説明がありません... 3:",
+        "forbidden_timeout": "メンバーをタイムアウトにする権限がありません。 \nD:",
+        "guild_only": "このコマンドはサーバー内でのみ使用できます。 \n:3",
+        "insufficient_permission_ban": "{user} を禁止する権限がありません。 \n3:<",
+        "insufficient_permission_kick": "{user} をキックする権限がありません。 \nD:<",
+        "invalidated_cache": "キャッシュに問題があるため、このコマンドはサーバーでのみ機能します。 \n:3",
+        "missing_category": "カテゴリがありません! \n3:",
+        "no_git_commithash": "コミットハッシュが見つかりませんでした。 \n3:",
+        "no_git_lastcommit": "コミットメッセージが見つかりませんでした。 \n3:",
+        "roblox_failed_retrieve_avatar": "Roblox ユーザー {username} のアバターを取得しようとして失敗しました。 \n3:",
+        "roblox_forbidden": "Roblox API からデータを取得できませんでした...データがないか、CSRF トークンが壊れています。 \n:3",
+        "roblox_user_not_found": "「{username}」という名前の Roblox ユーザーはまったく存在しません。 \n:3",
+        "timeout_duration_lessflow": "期間は 0 より大きくなければなりません。 \n3:",
+        "tried_to_timeout_higher": "あなたの役割は、そのユーザーをタイムアウトさせるほど高くありません。 \n:3",
+        "tried_to_timeout_himself": "タイムアウトなんてできないよ、バカ！ \n3:",
+        "tried_to_timeout_owner": "サーバー所有者をタイムアウトさせることは絶対にできません。 \n3:<",
+        "unknown_signature": "不明なサイン！ \n3:",
+        "unsupported_channel": "この種のチャンネルはサポートしません! \n:3",
+        "user_not_found": "そのユーザーが見つかりませんでした... :3"
+    },
+    "embeds": {
+        "blacklist_not_configured": {
+            "description": "このサーバーにはブラックリストがまだ設定されていません。",
+            "title": "ブラックリストが設定されていません! \n3:"
+        },
+        "channel_required": {
+            "description": "これを使用するにはチャンネルを選択する必要があります。 \n:3",
+            "title": "チャンネルが必要です! \n3:"
+        },
+        "contributor_not_found": {
+            "description": "投稿者 {contributor} が見つかりませんでした... 3:",
+            "title": "投稿者が見つかりません! \n3:"
+        },
+        "daily_cooldown": {
+            "description": "デイリーを再び受け取るには、{h} 時間と {m} 分待つ必要があります。 \n3:<",
+            "title": "毎日の報酬はまだありません!"
+        },
+        "database_not_available": {
+            "description": "データベース プールは現在昼寝中です。 \n:3",
+            "title": "データベースが使用できません! \n3:"
+        },
+        "edge_tts_not_installed": {
+            "description": "このサーバーには、edge-tts 音声を作成するためのパッケージがありません。 \n:/",
+            "title": "エッジ TTS がありません! \n3:"
+        },
+        "feature_not_available": {
+            "description": "この機能はこのサーバーではまだ有効になっていません。",
+            "title": "機能はまだ有効になっていません。 \n3:"
+        },
+        "global_chat_not_enabled": {
+            "description": "ここではグローバル チャットが有効になっていません。\nこれを使用するには必ずセットアップを行ってください。\n\nこれを使用してグローバル チャットを有効にしましたか? \n`/globalchat enable` を使用して有効にできます。",
+            "title": "グローバルチャットはオフです！ \n3:"
+        },
+        "guild_only": {
+            "description": "このコマンドはサーバー専用です。 \n:3",
+            "title": "場所が間違っています！ \n:3"
+        },
+        "minecraft_lookup_failed": {
+            "description": "\"{address}\" の Minecraft サーバーの検索に失敗しました: {e}",
+            "title": "Minecraft サーバーを検索中にエラーが発生しました。"
+        },
+        "minecraft_profile_failed": {
+            "description": "プロフィールの取得に失敗しました。"
+        },
+        "minecraft_user_not_found": {
+            "description": "ユーザー「{query}」が見つかりません。"
+        },
+        "missing_permission": {
+            "description": "このコマンドを使用するための権限 {missing} がありません。 \n3:",
+            "title": "権限がありません! \n3:"
+        },
+        "missing_permission_global_chat": {
+            "description": "グローバル チャットを使用するための適切な権限がありません。 \n3:",
+            "title": "権限がありません! \n3:"
+        },
+        "need_hangup": {
+            "description": "この設定を行う前に電話を切ってください。",
+            "title": "まずは電話を切ってください！ \n3:"
+        },
+        "not_in_call": {
+            "description": "サーバーは現在通話中でもありません。",
+            "title": "通話中ではありません! \n3:"
+        },
+        "only_positive_value": {
+            "description": "ここでは負の値を使用できません。 \n3:<",
+            "title": "負の数はありません! \n3:<"
+        },
+        "phone_in_call": {
+            "description": "サーバーはすでに通話中です。",
+            "title": "すでに電話中です！ \n:3"
+        },
+        "send_error": {
+            "description": "送信しようとしてエラーが発生しました: {e}",
+            "title": "おっと、送信エラーです。 \n3:"
+        },
+        "slowmode_out_of_range": {
+            "description": "スローモードの遅延は 0 ～ 21600 秒の範囲にする必要があります。 \n:3",
+            "title": "範囲外です！ \n3:"
+        },
+        "too_high_value": {
+            "description": "その値は {max} を超えることはできません。 \n:3",
+            "title": "高すぎる！ \n3:"
+        },
+        "tts_generation_error": {
+            "description": "スピーチ中に何かが壊れました: {e}",
+            "title": "TTS 生成エラー! \n3:"
+        },
+        "tts_no_text": {
+            "description": "何かを入力しなければなりません!\n入力してもう一度お試しください。 \n:3",
+            "title": "入力を空にすることはできません。 \n3:"
+        },
+        "unsupported_channel_slowmode": {
+            "description": "チャンネル {channel} はスローモードを実行しません。",
+            "title": "サポートされていないチャンネルです! \n3:"
+        },
+        "unsupported_channel_type": {
+            "description": "私がサポートしていないチャンネル タイプを選択しました。",
+            "title": "サポートされていないチャネル タイプです。 \n3:"
+        },
+        "user_data_not_found": {
+            "description": "{user} のデータが見つかりませんでした。",
+            "title": "データが見つかりません! \n3:"
+        },
+        "welcome_channel_not_enabled": {
+            "description": "ここではウェルカム チャンネルが有効になっていません。\nこれを使用するには必ずセットアップを行ってください。",
+            "title": "ウェルカムチャンネルはオフです！ \n3:"
+        }
+    },
+    "exceptions": {
+        "AppCommandError": "奇妙なコマンド エラーが発生しました。 \n3:",
+        "BotMissingPermissions": "それを行うための適切な権限がありません。 \n3:",
+        "CheckFailure": "このコマンドを使用する権限がありません。 \n3:<",
+        "CommandAlreadyRegistered": "このコマンドはすでに登録されています。 \n:3",
+        "CommandInvokeError": "コマンドの実行中にエラーが発生しました。 \n3:",
+        "CommandLimitReached": "このコマンドで限界に達してください!\nゆっくりしなきゃ！ \n3:",
+        "CommandNotFound": "そのコマンドが見つかりませんでした。 \n:3",
+        "CommandOnCooldown": "ああ、クールダウンだ！ \n{残り} 秒後にもう一度お試しください。 \n:3",
+        "CommandSignatureMismatch": "コマンドが最新バージョンと同期していません。 \n3:",
+        "CommandSyncFailure": "コマンドを同期できませんでした。 \n3:",
+        "HTTPException": "おっと、HTTP エラーによりすべてが台無しになってしまいました。 \n3:",
+        "MissingAnyRole": "これを使用するために必要な役割がありません。 \n3:",
+        "MissingPermissions": "これを使用する権限がありません。 \n3:<",
+        "MissingRole": "これに必要な役割がありません。 \n3:<",
+        "NoPrivateMessage": "このコマンドは DM では使用できません。 \n:3",
+        "TransformerError": "コマンド引数の処理中に問題が発生しました。 \n3:",
+        "TranslationError": "コマンドの変換中にエラーが発生しました。 \n3:",
+        "Unknown": "ああ、捕捉されないエラーが発生しました。 \n{e} 3:"
+    },
+    "http": {
+        "400": "エラー 400: リクエストが間違っています!\n入力が少し不安定になっているようです。 \n3:",
+        "403": "エラー 403: 禁止されています!\nこれを見ることは絶対に禁止されています。 \n>:D",
+        "404": "エラー 404: 見つかりません!\nそのファイルは風のように消えてしまいました。 \n3:",
+        "429": "エラー 429: リクエストが多すぎます! \nAPI によってレート制限が行われています。少し待ってください。 \n:3",
+        "500": "エラー 500: 内部サーバー エラー!\n処理中にサーバーがトリップして落ちました。 \n3:"
+    }
+}

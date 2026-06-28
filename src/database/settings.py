@@ -1,77 +1,50 @@
-import orjson
 from discord import Interaction
 
-from logger import logger
-from src.database import PostgreSQLDatabase
-from src.models import SettingsData
-from src.translator import translator_instance as i18n
+from src.bases import BaseDatabase
+from src.managers.i18n import I18nManager
+from src.models.user_settings import SettingsData
+from src.models.user_settings_orm import UserPreference
 from src.utils import Cache
 
 
-class SettingsDatabase(PostgreSQLDatabase):
-    def __init__(self, dsn: str):
+class SettingsDatabase(BaseDatabase):
+    def __init__(self, dsn: str, manager: I18nManager):
         super().__init__(dsn)
         self.settings_cache = Cache(ttl=600)
-    
-    async def on_load(self):
-        await self.run_migrations("resources/migrations")
-        logger.info("[SettingsDatabase] Migration suite completed.")
-    
-    async def pre_close(self):
-        logger.debug("[SettingsDatabase] Clearing cache before shutdown...")
-        self.settings_cache.clear()
-    
+        self.manager = manager
+
     async def get_locale(self, interaction: Interaction) -> str:
         user_id = interaction.user.id
+        internal = self.manager.internal
 
-        cached_settings = self.settings_cache.get(user_id)
-        if cached_settings and cached_settings.locale:
-            return i18n._normalize_locale(cached_settings.locale)
-        
+        cached = self.settings_cache.get(user_id)
+        if cached and cached.locale:
+            return internal._normalize_locale(cached.locale)
+
         settings = await self.get_settings(user_id)
         if settings.locale:
-            self.settings_cache.set(user_id, settings)
-            return i18n._normalize_locale(settings.locale)
-        
-        return i18n._normalize_locale(interaction.locale)
-    
+            return internal._normalize_locale(settings.locale)
+
+        return internal._normalize_locale(interaction.locale)
+
     async def get_settings(self, user_id: int, use_cache: bool = True) -> SettingsData:
         if use_cache:
-            cached_val = self.settings_cache.get(user_id)
-            if cached_val:
-                return cached_val
-        
-        if self.pool:
-            async with self.pool.acquire() as conn:
-                row = await conn.fetchrow("SELECT data FROM user_preferences WHERE user_id = $1", user_id)
-                if row:
-                    raw_data = row['data']
-                    parsed_data = orjson.loads(raw_data) if isinstance(raw_data, (str, bytes)) else raw_data
+            cached = self.settings_cache.get(user_id)
+            if cached:
+                return cached
 
-                    settings = SettingsData.from_dict(parsed_data)
-                else:
-                    settings = SettingsData()
-                
-                self.settings_cache.set(user_id, settings)
+        async with self.async_session() as session:
+            pref = await session.get(UserPreference, user_id)
+            settings = pref.data if pref else SettingsData()
 
-                print("AFTER LOAD:", settings.locale, type(settings.locale))
-                return settings
-        else:
-            return SettingsData()
-    
+            self.settings_cache.set(user_id, settings)
+            return settings
+
     async def set_settings(self, user_id: int, settings: SettingsData):
-        print("BEFORE SAVE", settings.locale, type(settings.locale))
-        
         if isinstance(settings.locale, list):
             settings.locale = settings.locale[0] if settings.locale else 'en'
-        
+
         self.settings_cache.set(user_id, settings)
-        
-        if self.pool:
-            data_json = orjson.dumps(settings.to_dict()).decode('utf-8')
-            async with self.pool.acquire() as conn:
-                await conn.execute("""
-                    INSERT INTO user_preferences (user_id, data)
-                    VALUES ($1, $2::jsonb)
-                    ON CONFLICT (user_id) DO UPDATE SET data = EXCLUDED.data
-                """, user_id, data_json)
+
+        async with self.async_session() as session, session.begin():
+            await session.merge(UserPreference(user_id=user_id, data=settings))

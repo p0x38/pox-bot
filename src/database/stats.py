@@ -1,100 +1,69 @@
-from discord import guild
+from sqlalchemy import delete, desc, extract, func, select
 
-from logger import logger
-from src.database.bases import PostgreSQLDatabase
-from src.models import LeaderboardData, UserStats
+from src.bases import BaseDatabase
+from src.models.stats_orm import MessageCache, UserStatistics
 
 
-class StatsDatabase(PostgreSQLDatabase):
-    async def on_load(self):
-        await self.run_migrations("resources/migrations")
-        logger.info("[StatsDatabase] Migration suite completed.")
-    
+class StatisticsDatabase(BaseDatabase):
+    def __init__(self, dsn: str):
+        super().__init__(dsn)
+
     async def add_xp(self, user_id: int, count: int):
-        if self.pool:
-            query = """
-            INSERT INTO user_stats (user_id, xp, total_messages, level)
-            VALUES ($1, $2, 1, 1)
-            ON CONFLICT (user_id) DO UPDATE SET
-                xp = user_stats.xp + $2,
-                total_messages = user_stats.total_messages + 1,
-                level = CASE
-                    WHEN floor(pow(user_stats.xp + $2, 0.25)) > user_stats.level
-                    THEN floor(pow(user_stats.xp + $2, 0.25))
-                    ELSE user_stats.level
-                END
-            RETURNING
-                (floor(pow(user_stats.xp + $2, 0.25)) > (SELECT level FROM user_stats WHERE user_id = $1)) AS leveled_up,
-                CAST(level AS INTEGER) AS new_level;
-            """
-            return await self.pool.fetchrow(query, user_id, count)
-        return False
-    
-    async def get_user_stats(self, user_id: int) -> UserStats | None:
-        if not self.pool:
-            return None
-        row = await self.pool.fetchrow("SELECT * FROM user_stats WHERE user_id = $1", user_id)
-        return UserStats.from_row(row)
-    
+        async with self.async_session() as session, session.begin():
+            user = await session.get(UserStatistics, user_id) or UserStatistics(user_id=user_id)
+
+            old_level = user.level
+            user.xp += count
+            user.total_messages += 1
+            user.level = int(user.xp ** 0.25)
+
+            session.add(user)
+            return {"leveled_up": user.level > old_level, "new_level": user.level}
+
+    async def get_user_statistics(self, user_id: int) -> UserStatistics | None:
+        async with self.async_session() as session:
+            return await session.get(UserStatistics, user_id)
+
     async def get_leaderboard(self, sort_by: str = "xp", limit: int = 10):
-        if self.pool:
-            query = f"SELECT user_id, xp, level FROM user_stats ORDER BY {sort_by} DESC LIMIT $1"
-            rows = await self.pool.fetch(query, limit)
-            return LeaderboardData.from_rows(rows, sort_by)
-        return LeaderboardData()
-    
-    async def cache_message(self, message_id: int, channel_id: int, guild_id: int, author_id: int, content: str):
-        if not self.pool:
-            return
-        
-        async with self.pool.acquire() as conn:
-            await conn.execute("""
-                INSERT INTO m_cache (message_id, channel_id, guild_id, author_id, content)
-                VALUES ($1, $2, $3, $4, $5)
-                ON CONFLICT (message_id) DO UPDATE SET content = EXCLUDED.content
-            """, message_id, channel_id, guild_id, author_id, content)
-            
-            await conn.execute("""
-                DELETE FROM m_cache
-                WHERE channel_id = $1 AND message_id NOT IN (
-                    SELECT message_id FROM m_cache
-                    WHERE channel_id = $1
-                    ORDER BY message_id DESC LIMIT 15000
+        async with self.async_session() as session:
+            col = getattr(UserStatistics, sort_by, UserStatistics.xp)
+            stmt = select(UserStatistics).order_by(desc(col)).limit(limit)
+            result = await session.execute(stmt)
+            return list(result.scalars().all())
+
+    async def cache_message(self, **kwargs):
+        async with self.async_session() as session, session.begin():
+            await session.merge(MessageCache(**kwargs))
+
+            subquery = select(MessageCache.message_id).where(
+                MessageCache.channel_id == kwargs['channel_id']
+            ).order_by(MessageCache.message_id.desc()).limit(15000).scalar_subquery()
+
+            await session.execute(
+                delete(MessageCache).where(
+                    MessageCache.channel_id == kwargs['channel_id'],
+                    MessageCache.message_id.notin_(subquery)
                 )
-            """, channel_id)
-    
-    async def get_cached_messages(self, channel_id: int, limit: int) -> list:
-        if not self.pool:
-            return []
-        
-        rows = await self.pool.fetch("""
-            SELECT content FROM m_cache
-            WHERE channel_id = $1
-            ORDER BY message_id DESC LIMIT $2
-        """, channel_id, limit)
-        return rows
-    
-    async def get_active_pattern(self, channel_id: int, target_user_id: int | None = None) -> list:
-        if not self.pool:
-            return []
+            )
 
-        if target_user_id:
-            query = """
-                SELECT EXTRACT(HOUR FROM created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo')::INT AS hour, COUNT(*) AS count
-                FROM m_cache
-                WHERE channel_id = $1 AND author_id = $2
-                GROUP BY hour
-                ORDER BY hour;
-            """
-            rows = await self.pool.fetch(query, channel_id, target_user_id)
-        else:
-            query = """
-                SELECT EXTRACT(HOUR FROM created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo')::INT AS hour, COUNT(*) AS count
-                FROM m_cache
-                WHERE channel_id = $1
-                GROUP BY hour
-                ORDER BY hour;
-            """
-            rows = await self.pool.fetch(query, channel_id)
+    async def get_cached_messages(self, channel_id: int, limit: int) -> list[str]:
+        async with self.async_session() as session:
+            result = await session.execute(
+                select(MessageCache.content).where(MessageCache.channel_id == channel_id)
+                .order_by(MessageCache.message_id.desc()).limit(limit)
+            )
+            return list(result.scalars().all())
 
-        return rows
+    async def get_active_pattern(self, channel_id: int, target_user_id: int | None = None):
+        async with self.async_session() as session:
+            stmt = select(
+                extract('hour', MessageCache.created_at).label('hour'),
+                func.count().label('count')
+            ).where(MessageCache.channel_id == channel_id)
+
+            if target_user_id:
+                stmt = stmt.where(MessageCache.author_id == target_user_id)
+
+            stmt = stmt.group_by('hour').order_by('hour')
+            result = await session.execute(stmt)
+            return result.mappings().all()

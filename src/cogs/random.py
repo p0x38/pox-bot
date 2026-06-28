@@ -1,0 +1,153 @@
+import random
+import string
+
+from discord import Embed, Interaction, Member, app_commands
+from discord.ext import commands
+
+import stuff
+from src.bot import PoxBot
+from stuff import clamp
+
+
+class RandomizerCog(commands.Cog):
+    def __init__(self, bot):
+        self.bot: PoxBot = bot
+
+    group = app_commands.Group(name="random", description="An group for Random.")
+
+    @group.command(name="user", description="Returns random user(s).")
+    async def random_user(self, interaction: Interaction, max_selections: int | None = 1, unique: bool | None = False):
+        if interaction.guild is None:
+            return await interaction.response.send_message(
+                "The command only can be runned when the bot is installed in server(s).")
+
+        await interaction.response.defer()
+
+        if max_selections is None:
+            max_selections = 1
+        if unique is None:
+            unique = False
+
+        real_members = [member for member in interaction.guild.members if not member.bot]
+
+        lines = ["Selected members are:"]
+
+        if unique:
+            lines.append("Unique mode")
+            random.shuffle(real_members)
+
+            max_selections = clamp(max_selections, 1, len(real_members))
+
+            for i, member in enumerate(real_members[:max_selections]):
+                lines.append(f"{i}. <@{member.id}>")
+        else:
+            lines.append("Normal mode")
+            max_selections = clamp(max_selections, 1, 100)
+
+            selected_users = []
+
+            for _ in range(max_selections):
+                selected_users.append(random.choice(real_members))
+
+            for i, user in enumerate(selected_users):
+                lines.append(f"{i}. <@{user.id}>")
+
+        embed = Embed(title="Choosen members :3", description="\n".join(lines))
+
+        return await interaction.followup.send(embed=embed)
+
+    @group.command(name="fixed_number", description="Returns fixed number of user.")
+    async def get_user_fixed_number(self, interaction: Interaction, member: Member):
+        if interaction.guild is None:
+            return await interaction.response.send_message(
+                "The command only can be runned when the bot is installed in server(s).")
+
+        return await interaction.response.send_message(abs(hash(member.name)) % 9999999999)
+
+    @group.command(name="role", description="Returns random role(s).")
+    async def random_role(self, interaction: Interaction, max_selections: int | None = 1):
+        if interaction.guild is None:
+            return await interaction.response.send_message(
+                "The command only can be runned when the bot is installed in server(s).")
+
+        if max_selections is None:
+            max_selections = 1
+
+        max_selections = clamp(max_selections, 1, len(interaction.guild.roles))
+
+        selected_roles = []
+
+        for _i in range(max_selections):
+            selected_roles.append(random.choice(interaction.guild.roles))
+
+        lines = ["Selected roles are:"]
+
+        for role in selected_roles:
+            lines.append(f"<@&{role.id}>")
+
+        embed = Embed(title=":3", description="\n".join(lines))
+
+        return await interaction.response.send_message(embed=embed)
+
+    @group.command(name="integer", description="Generates random integer.")
+    @app_commands.describe(min="Minimum integer", max="Maximum integer")
+    async def generate_integer(self, interaction: Interaction, min: int | None = 0, max: int | None = 10):
+        if min is None:
+            min = 0
+
+        if max is None:
+            max = 10
+
+        e = Embed(title="Random number generator", description=f"Result is **{random.randint(min, max)}**.")
+
+        return await interaction.response.send_message(embed=e)
+
+    @group.command(name="float", description="Generates random float.")
+    @app_commands.describe(min="Minimum float", max="Maximum float")
+    async def generate_float(self, interaction: Interaction,
+                             min: float | None = -1.0, max: float | None = 1.0, ndigit: int | None = 4):
+        if min is None:
+            min = -1.0
+
+        if max is None:
+            max = 1.0
+
+        if ndigit is None:
+            ndigit = 4
+
+        result = round(random.uniform(min, max), ndigits=ndigit)
+
+        e = Embed(title="Random number generator", description=f"Result is **{result}**.")
+
+        return await interaction.response.send_message(embed=e)
+
+    @group.command(name="text_emoticon", description="Attempts to generate emoticon.")
+    async def emoticon_text(self, interaction: Interaction, max_generation: int | None = 1):
+        if max_generation is None:
+            max_generation = 1
+
+        lines = []
+
+        for _i in range(max_generation):
+            lines.append(self.bot.emoticon_generator.generate(max_length=5).ljust(5))
+
+        embed = Embed(title="Emoticons generated by markov chain", description="\n".join(lines))
+
+        return await interaction.response.send_message(embed=embed)
+
+    @group.command(name="string", description="Generate randomly generated string.")
+    async def random_string_generator(self, interaction: Interaction, max_generation: int | None = 8):
+        if max_generation is None:
+            max_generation = 8
+
+        max_generation = stuff.clamp(max_generation, 2, 61)
+
+        result = "".join(random.choices(string.ascii_letters + string.digits, k=max_generation))
+
+        embed = Embed(title="Result", description=result)
+
+        return await interaction.response.send_message(embed=embed)
+
+
+async def setup(bot):
+    await bot.add_cog(RandomizerCog(bot))
