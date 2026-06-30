@@ -386,7 +386,7 @@
             "description": "ターゲット終了アルゴリズム... >:D"
         }
     },
-    "globalchat": {
+    "global_chat": {
         "description": "グローバルチャットのためのグループです！ \n:3",
         "setchannel": {
             "description": "グローバルチャットチャンネルを設定しましょう！ \n:3",

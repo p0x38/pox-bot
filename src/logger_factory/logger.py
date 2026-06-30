@@ -43,7 +43,8 @@ def setup_logger(name: str = "pox-bot", prefix: str | None = None) -> LoggerAdap
     config = load_log_config()
 
     logger = getLogger(name)
-    level = getattr(logging, config.level, logging.INFO)
+    level = getattr(logging, config.level, logging.DEBUG)
+    console_level = getattr(logging, config.console_logging.level, logging.INFO)
     logger.setLevel(level)
 
     if logger.handlers:
@@ -54,6 +55,7 @@ def setup_logger(name: str = "pox-bot", prefix: str | None = None) -> LoggerAdap
         markup=config.console_logging.markup,
         console=console,
         show_time=True,
+        level=console_level or level,
     )
     logger.addHandler(rich_handler)
 
@@ -67,7 +69,7 @@ def setup_logger(name: str = "pox-bot", prefix: str | None = None) -> LoggerAdap
             str(file_path),
             encoding=config.file_logging.encoding,
             when="d",
-            backupCount=365
+            backupCount=365,
         )
 
         file_handler.setFormatter(

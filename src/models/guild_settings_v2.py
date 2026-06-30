@@ -159,7 +159,7 @@ class GuildConfigV2:
 
     @property
     def userphone(self) -> UserphoneConfig:
-        feat = self.features.get("global_chat")
+        feat = self.features.get("userphone")
         if not isinstance(feat, UserphoneConfig):
             return UserphoneConfig()
         return feat

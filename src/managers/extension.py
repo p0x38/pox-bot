@@ -1,4 +1,5 @@
 import asyncio
+import fnmatch
 from collections.abc import AsyncIterator, Awaitable, Callable, Iterable
 from dataclasses import dataclass, field
 from enum import Enum, auto
@@ -13,6 +14,7 @@ extension_logger = setup_logger(__name__)
 
 BotLike = commands.Bot | commands.AutoShardedBot
 
+_ignore_words = frozenset({"ignore", "exclude"})
 
 _wildcards = frozenset({"*", "all"})
 
@@ -129,6 +131,32 @@ class ExtensionManager:
         self.states: dict[str, ExtensionState] = {}
         self._paths: dict[str, str] = {}
 
+        self._load_ext_ignore_file()
+
+    def _load_ext_ignore_file(self) -> None:
+        ignore_file_path = Path("src/assets/.ext-ignore")
+
+        if not ignore_file_path.is_file():
+            return
+
+        try:
+            with ignore_file_path.open("r", encoding="utf-8") as f:
+                for line in f:
+                    clean_line = line.strip()
+
+                    if not clean_line or clean_line.startswith("#"):
+                        continue
+
+                    self.excluded_extensions.add(clean_line)
+        except Exception as e:
+            extension_logger.error(f"Failed to read .ext-ignore: {e}")
+
+    def should_ignore(self, extension_name: str) -> bool:
+        return any(
+            fnmatch.fnmatch(extension_name, pattern)
+            for pattern in self.excluded_extensions
+        )
+
     def is_wildcard(
         self,
         extension_name: str,
@@ -161,12 +189,21 @@ class ExtensionManager:
     ) -> list[str]:
         if self.is_wildcard(target):
             if operation is ExtensionOperation.LOAD:
-                return [
-                    f.stem
-                    for f in self.cogs_path.glob("*.py")
-                    if f.stem != "__init__"
-                    and f.stem not in self.excluded_extensions
-                ]
+                resolved = []
+                for f in self.cogs_path.glob("*.py"):
+                    if f.stem == "__init__":
+                        continue
+                    
+                    if ".ignore" in f.name:
+                        continue
+
+                    ext_name = f.stem
+
+                    if self.should_ignore(ext_name):
+                        continue
+
+                    resolved.append(ext_name)
+                return resolved
             return list(bot.extensions.keys())
         return [target]
 

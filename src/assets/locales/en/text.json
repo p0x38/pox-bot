@@ -163,6 +163,11 @@
         "10": "yuh",
         "11": "yuh uh"
     },
+    "run_status": {
+        "running": "Running",
+        "stopped": "Not running"
+    },
+    "unset": "Un-set",
     "standalone": "Standalone",
     "status": {
         "dnd": "Do Not Disturb",

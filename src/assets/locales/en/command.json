@@ -386,7 +386,7 @@
             "description": "Target closing algorithm... >:D"
         }
     },
-    "globalchat": {
+    "global_chat": {
         "description": "A group for global chat! :3",
         "setchannel": {
             "description": "Set the global chat channel! :3",
@@ -398,6 +398,28 @@
             },
             "parameters": {
                 "channel": "Channel to set global chat"
+            }
+        },
+        "setup": {
+            "description": "Sets global chat channel up!",
+            "parameters": {
+                "channel": "Channel to set global chat"
+            },
+            "embeds": {
+                "default": {
+                    "description": "Global chat channel set to {channel}! :3"
+                }
+            }
+        },
+        "status": {
+            "description": "Shows the status for global chat!",
+            "embeds": {
+                "default": {
+                    "title": "Global chat information for {guild_name}!"
+                }
+            },
+            "labels": {
+                "anti_spam": "Anti-spam enabled (You can send messages up to {count} per {per})"
             }
         },
         "silentmode": {
@@ -801,6 +823,11 @@
                     "title": "Configured successfully! :D"
                 }
             }
+        }
+    },
+    "utility": {
+        "listapps": {
+            "description": "Shows a list all of applications opened currently in Bot host PC. (Requested by mharyt_w)"
         }
     },
     "welcome": {

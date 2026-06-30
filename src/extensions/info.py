@@ -47,10 +47,20 @@ class FeedbackModal(ui.Modal):
     async def send_feedback(self, interaction: Interaction):
         try:
             app = self.bot.application or await self.bot.application_info()
-            if not app or not app.owner:
+            if not app:
                 return
 
-            owner = app.owner
+            target_user = None
+
+            if app.team and app.team.owner_id:
+                target_user = await self.bot.fetch_user(app.team.owner_id)
+            elif app.owner:
+                target_user = app.owner
+
+            if not target_user:
+                self.bot.logger.error("Couldn't find owner")
+                return
+
             feedback_content = textwrap.fill(textwrap.dedent(self.feedback.value.strip()), width=50)
             if not feedback_content:
                 feedback_content = "No feedback text"
@@ -64,7 +74,7 @@ class FeedbackModal(ui.Modal):
                 self.paginator.add_line(textwrap.indent(line, prefix=" " * 4))
 
             for page in self.paginator.pages:
-                await owner.send(page)
+                await target_user.send(page)
 
             self.paginator.clear()
         except Exception:

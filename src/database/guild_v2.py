@@ -1,4 +1,5 @@
 from sqlalchemy import select
+from sqlalchemy.orm.attributes import flag_modified
 
 from src.bases import BaseDatabase
 from src.models.guild_settings_v2 import GuildConfigV2
@@ -18,7 +19,16 @@ class GuildSettingsDatabase(BaseDatabase):
 
     async def update_config(self, guild_id: int, config: GuildConfigV2):
         async with self.async_session() as session, session.begin():
-            await session.merge(GuildSettings(guild_id=guild_id, config=config))
+            db_record = await session.get(GuildSettings, guild_id)
+
+            if db_record:
+                db_record.config = config
+
+                flag_modified(db_record, "config")
+            else:
+                db_record = GuildSettings(guild_id=guild_id, config=config)
+                session.add(db_record)
+
         self._cache.set(guild_id, config)
 
     async def create_ticket_record(self, channel_id: int, user_id: int, guild_id: int):

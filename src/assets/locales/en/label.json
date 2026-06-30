@@ -54,5 +54,8 @@
     "user_roles": "Roles",
     "user_stats": "User stats",
     "user_status": "Status",
-    "user_wallet": "Wallet"
+    "user_wallet": "Wallet",
+    "global_chat_status": "Global chat Status",
+    "global_chat_channel": "Global chat Channel",
+    "global_chat_antispam": "Anti-spam"
 }
