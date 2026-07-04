@@ -1,0 +1,8 @@
+[
+    {
+        "label": "Run PyTest Suite",
+        "command": ".venv/bin/pytest",
+        "args": ["-v"],
+        "reveal": "always",
+    },
+]

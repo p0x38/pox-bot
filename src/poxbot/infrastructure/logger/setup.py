@@ -1,0 +1,37 @@
+import logging
+from logging import getLogger
+
+from .adapters import PrefixAdapter
+from .handlers import setup_console_handler, setup_file_handler, setup_loki_handler
+
+_configured = False
+
+
+def configure_logging(settings):
+    global _configured  # noqa: PLW0603
+    
+    logging.getLogger("urllib3").setLevel(logging.INFO)
+    logging.getLogger("requests").setLevel(logging.INFO)
+    logging.getLogger("logging_loki").setLevel(logging.INFO)
+    logging.getLogger('discord').setLevel(logging.INFO)
+
+    if _configured:
+        return
+
+    config = settings.logger
+    level = getattr(logging, config.level.upper(), logging.INFO)
+
+    root = getLogger()
+    root.setLevel(level)
+    root.handlers.clear()
+
+    setup_console_handler(root, config, level)
+    setup_file_handler(root, config, level, settings)
+    setup_loki_handler(root, config, level, settings)
+
+    _configured = True
+
+
+def get_logger(name: str, *, prefix: str | None = None, extension: str | None = None):
+    extra = {"prefix": prefix, "extension": extension}
+    return PrefixAdapter(getLogger(name), extra)

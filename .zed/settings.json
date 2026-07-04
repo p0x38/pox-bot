@@ -1,0 +1,65 @@
+{
+    "languages": {
+        "Python": {
+            "language_servers": ["ruff", "basedpyright"],
+            "format_on_save": "on",
+            "code_actions_on_format": {
+                "source.organizeImports.ruff": true,
+                "source.fixAll.ruff": true,
+            },
+            "preferred_line_length": 127,
+            "formatter": {
+                "language_server": {
+                    "name": "ruff",
+                },
+            },
+        },
+    },
+    "prettier": {
+        "allowed": true,
+    },
+    "semantic_tokens": "combined",
+    "lsp": {
+        "ruff": {
+            "binary": {
+                "arguments": ["server", "--preview"],
+            },
+        },
+        "basedpyright": {
+            "initialization_options": {
+                "settings": {
+                    "python": {
+                        "pythonPath": ".venv/bin/python",
+                    },
+                    "basedpyright": {
+                        "analysis": {
+                            "diagnosticMode": "openFilesOnly",
+                        },
+                    },
+                },
+            },
+        },
+    },
+    "file_scan_exclusions": [
+        "**/.git",
+        "**/.svn",
+        "**/.hg",
+        "**/CVS",
+        "**/.DS_Store",
+        "**/Thumbs.db",
+        "**/.venv",
+        "**/__pycache__",
+        "**/.pytest_cache",
+        "**/.ruff_cache",
+    ],
+    "tab_size": 4,
+    "hard_tabs": false,
+    "soft_wrap": "editor_width",
+    "remove_trailing_whitespace_on_save": true,
+    "ensure_final_newline_on_save": true,
+    "indent_guides": {
+        "enabled": true,
+        "coloring": "indent_aware",
+    },
+    "wrap_guides": [88, 127],
+}

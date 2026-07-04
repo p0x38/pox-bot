@@ -20,3 +20,7 @@
 |pyproject.toml|a project file to make it work atleast.|
 |requirements.txt|unused file to store required packages to install.|
 |stuff.py|a script to store custom methods.|
+
+## Other related links
+
+- [User Data Structure](/user_directory_structure.md)

@@ -1,0 +1,8 @@
+allowBuilds:
+  '@tensorflow/tfjs-node': true
+  canvas: true
+  core-js: true
+  esbuild: true
+  msgpackr-extract: true
+  protobufjs: true
+  sqlite3: true

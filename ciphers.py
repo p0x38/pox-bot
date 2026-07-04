@@ -7,7 +7,11 @@ import data
 def letter_reverser(input: str, decode: bool) -> str:
     alphabet = string.ascii_letters + string.digits
     reversed = alphabet[::-1]
-    trans = str.maketrans(alphabet, reversed) if not decode else str.maketrans(reversed, alphabet)
+    trans = (
+        str.maketrans(alphabet, reversed)
+        if not decode
+        else str.maketrans(reversed, alphabet)
+    )
 
     return input.translate(trans)
 
@@ -40,10 +44,10 @@ def rail_fence(input: str, key):
 
         rail_index += direction
 
-    ciphered = ""
+    ciphered = ''
 
     for rail in rails:
-        ciphered += "".join(rail)
+        ciphered += ''.join(rail)
 
     return ciphered
 
@@ -51,7 +55,7 @@ def rail_fence(input: str, key):
 def decrypt_rail_fence(input, key):
     length = len(input)
 
-    rail_map = [["\n"] * length for _ in range(key)]
+    rail_map = [['\n'] * length for _ in range(key)]
 
     rail_index = 0
     direction = 1
@@ -70,7 +74,7 @@ def decrypt_rail_fence(input, key):
                 rail_map[r][c] = input[index]
                 index += 1
 
-    plain = ""
+    plain = ''
     rail_index = 0
     direction = 1
 
@@ -98,43 +102,41 @@ def morse_code(input: str, decode: bool = False):
         for char in list(input):
             if char in table:
                 result.append(table[char])
-            elif char == " ":
-                result.append("/")
+            elif char == ' ':
+                result.append('/')
             else:
                 continue
-        return " ".join(result)
-    else:
-        for code in input.split(" "):
-            if code in table:
-                result.append(table[code])
-            elif code == "/":
-                result.append(" ")
-            else:
-                continue
-        return "".join(result)
+        return ' '.join(result)
+    for code in input.split(' '):
+        if code in table:
+            result.append(table[code])
+        elif code == '/':
+            result.append(' ')
+        else:
+            continue
+    return ''.join(result)
 
 
 def binary(input: str, decode: bool = False):
     if decode:
-        clean = "".join(input.split())
+        clean = ''.join(input.split())
 
         if len(input) % 8 != 0:
-            clean = clean[:len(clean) - (len(clean) % 8)]
+            clean = clean[: len(clean) - (len(clean) % 8)]
             if not clean:
-                return ""
+                return ''
 
         chunks = textwrap.wrap(clean, 8)
 
         original = ''.join(chr(int(chunk, 2)) for chunk in chunks)
         return original
-    else:
-        chunks = [format(ord(char), '08b') for char in input]
+    chunks = [format(ord(char), '08b') for char in input]
 
-        return ' '.join(chunks)
+    return ' '.join(chunks)
 
 
 def psc1(input: str, decode: bool = False) -> str:
-    output = ""
+    output = ''
 
     if not decode:
         for char in input:
@@ -149,27 +151,26 @@ def psc1(input: str, decode: bool = False) -> str:
         chunk_size = 5
         reversed_chunks = []
         for i in range(0, len(output), chunk_size):
-            chunk = output[i:i + chunk_size]
+            chunk = output[i : i + chunk_size]
             reversed_chunks.append(chunk[::-1])
 
         final_output = ''.join(reversed_chunks)
         return final_output
-    else:
-        # reverse each chunks of 5 characters and loop back by -1 characters
-        chunk_size = 5
-        reversed_chunks = []
-        for i in range(0, len(input), chunk_size):
-            chunk = input[i:i + chunk_size]
-            reversed_chunks.append(chunk[::-1])
+    # reverse each chunks of 5 characters and loop back by -1 characters
+    chunk_size = 5
+    reversed_chunks = []
+    for i in range(0, len(input), chunk_size):
+        chunk = input[i : i + chunk_size]
+        reversed_chunks.append(chunk[::-1])
 
-        reversed_input = ''.join(reversed_chunks)
+    reversed_input = ''.join(reversed_chunks)
 
-        for char in reversed_input:
-            if char.isupper():
-                output += chr((ord(char) - 65 - 13) % 26 + 65)
-            elif char.islower():
-                output += chr((ord(char) - 97 - 13) % 26 + 97)
-            else:
-                output += char
+    for char in reversed_input:
+        if char.isupper():
+            output += chr((ord(char) - 65 - 13) % 26 + 65)
+        elif char.islower():
+            output += chr((ord(char) - 97 - 13) % 26 + 97)
+        else:
+            output += char
 
-        return output
+    return output

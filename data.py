@@ -52,7 +52,7 @@ yesno_words = [
     "No",
     "Nope",
     "Nuh uh",
-    "Nuh"
+    "Nuh",
 ]
 
 possible_map_keys = [f"text.possible_map.{i}" for i in range(1, 11)]
@@ -186,7 +186,7 @@ tyc = [
     "not maybe",
     "nah",
     "nope",
-    "nuh uh"
+    "nuh uh",
 ]
 
 meows_with_extraformat = [
@@ -212,7 +212,7 @@ faces = [
     "(being rate-limited)",
     "3:",
     ":<",
-    ":("
+    ":(",
 ]
 
 AI_RESPONSE_UNABLE = [
@@ -222,7 +222,7 @@ AI_RESPONSE_UNABLE = [
     "my purpose is to be helpful",
     "cannot assist with that",
     "cannot answer that",
-    "not able to do that"
+    "not able to do that",
 ]
 
 msg_ssoa = [
@@ -314,7 +314,7 @@ null_messages = [
     "The end is nigh.",
     "The end is null.",
     "Rot in hell.",
-    "err.type=null.thebrokenscript"
+    "err.type=null.thebrokenscript",
 ]
 
 null_interactions = {
@@ -385,7 +385,7 @@ null_interactions = {
     r"where\s?it\s?c(o|a)me\s?from\??": {
         "index": 18,
         "type": "single",
-    }
+    },
 }
 
 nullchill = ["Chill.", "Please chill.", "Why don't you listen to me?", "I said, chill.", "CHILL BRO I SWEAR.", "..."]
@@ -520,6 +520,6 @@ class ResponseType(IntFlag):
 responses = {
     r"(yo)?u cool (t(h|o)o)?": {
         "response": "You're cool tho :D",
-        "image_path": "src/assets/cool.png"
-    }
+        "image_path": "src/assets/cool.png",
+    },
 }

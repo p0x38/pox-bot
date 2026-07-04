@@ -13,7 +13,7 @@ class MyTranslator(app_commands.Translator):
             'You do not have permission to use commands.': {
                 'es-ES': 'No tienes permiso para usar comandos.',
 
-            }
+            },
         }
         return translations.get(string.message, {}).get(locale.value, string.message)
 

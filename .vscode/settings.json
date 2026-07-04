@@ -1,108 +1,161 @@
 {
-    "python-envs.defaultEnvManager": "ms-python.python:venv",
-    "todo-tree.tree.scanMode": "workspace",
-    "python.REPL.enableREPLSmartSend": false,
-    "i18n-ally.localesPaths": ["src/assets/locales"],
-    "i18n-ally.pathMatcher": "{locale}/{namespace}.{ext}",
-    "i18n-ally.namespace": true,
-    "i18n-ally.keystyle": "nested",
-    "i18n-ally.sourceLanguage": "en",
-    "i18n-ally.displayLanguage": "en",
-    "i18n-ally.extract.keygenStrategy": "slug",
-    "i18n-ally.enabledFrameworks": ["custom"],
-    "i18n-ally.annotationInPlace": true,
-    "i18n-ally.annotations": true,
-    "i18n-ally.indent": 4,
-    "i18n-ally.tabStyle": "space",
-    "i18n-ally.encoding": "utf-8",
-    "i18n-ally.extract.targetPickingStrategy": "most-similar-by-key",
-    "i18n-ally.regex.usageMatch": [
-        "T\\(['\"](.*?)['\"]",
-        "(?:T|translate_string|locale_str)\\(\\s*['\\\"]([a-zA-Z0-9_]+\\.[^'\\\"]+)['\\\"]",
-        "(?:T|translate_string)\\(\\s*['\\\"]([^'\\\"]+)['\\\"]|locale_str\\([^\\)]*?key\\s*=\\s*['\\\"]([^'\\\"]+)['\\\"]"
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": "explicit",
+            "source.organizeImports": "explicit",
+            "source.organizeLinkDefinitions": "explicit"
+        },
+        "editor.defaultColorDecorators": "never",
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnType": true,
+        "editor.tabSize": 4,
+        "editor.wordBasedSuggestions": "offWithInlineSuggestions",
+        "files.insertFinalNewline": true
+    },
+    "conventionalCommits.scopes": [
+        "Environments"
     ],
-    "i18n-ally.sortKeys": true,
-    "i18n-ally.keepFulfilled": true,
     "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
+        "**/__pycache__": true,
         "**/.DS_Store": true,
-        "**/Thumbs.db": true,
+        "**/.git": true,
+        "**/.hg": true,
         "**/.history": true,
+        "**/.svn": true,
         "**/.venv": true,
-        "**/__pycache__": true
+        "**/Thumbs.db": true
     },
     "files.watcherExclude": {
         ".git/objects/**": true,
         ".git/subtree-cache/**": true,
         ".hg/store/**": true,
+        "**/__pycache/**": true,
+        "**/.mypy_cache/**": true,
+        "**/.pyright/**": true,
+        "**/.ruff_cache/**": true,
+        "**/.tox/**": true,
+        "**/.venv/**": true,
         "*/.git/objects/**": true,
         "*/.git/subtree-cache/**": true,
         "*/.hg/store/**": true,
-        "src/assets/voices/**": true,
-        "src/assets/imgs/**": true,
-        "src/assets/fonts/**": true,
+        "data/**": true,
         "logs/**": true,
-        "data/**": true
+        "src/assets/fonts/**": true,
+        "src/assets/imgs/**": true,
+        "src/assets/voices/**": true
     },
-    "python.analysis.completeFunctionParens": true,
-    "python.analysis.diagnosticMode": "workspace",
-    "python.analysis.displayEnglishDiagnostics": false,
-    "python.analysis.enableParallelIndexing": true,
-    "python.analysis.enableTroubleshootMissingImports": true,
-    "python.analysis.generateWithTypeAnnotation": false,
-    "python.analysis.inlayHints.callArgumentNames": "off",
-    "python.analysis.languageServerMode": "full",
-    "python.analysis.typeCheckingMode": "standard",
-    "python.analysis.typeEvaluation.deprecateTypingAliases": true,
-    "python.analysis.typeEvaluation.enableReachabilityAnalysis": true,
-    "python.analysis.enablePerfTelemetry": true,
-    "python.analysis.referencesCodeLens": true,
-    "json.trace.server": "messages",
     "git.autofetch": "all",
-    "python.analysis.typeEvaluation.analyzeUnannotatedFunctions": true,
+    "git.autorefresh": false,
+    "git.autoRepositoryDetection": "subFolders",
+    "i18n-ally.annotationInPlace": true,
+    "i18n-ally.annotations": true,
     "i18n-ally.dirStructure": "auto",
+    "i18n-ally.displayLanguage": "en",
+    "i18n-ally.enabledFrameworks": [
+        "custom"
+    ],
     "i18n-ally.enabledParsers": [
         "json"
     ],
-    "i18n-ally.extract.autoDetect": true,
+    "i18n-ally.encoding": "utf-8",
+    "i18n-ally.extract.autoDetect": false,
+    "i18n-ally.extract.keygenStrategy": "slug",
     "i18n-ally.extract.keyMaxLength": 0,
-    "i18n-ally.translate.saveAsCandidates": true,
+    "i18n-ally.extract.targetPickingStrategy": "most-similar-by-key",
+    "i18n-ally.indent": 4,
+    "i18n-ally.keepFulfilled": true,
+    "i18n-ally.keystyle": "nested",
+    "i18n-ally.localesPaths": [
+        "src/poxbot/assets/locales"
+    ],
+    "i18n-ally.namespace": true,
+    "i18n-ally.pathMatcher": "{locale}/{namespace}.{ext}",
+    "i18n-ally.regex.usageMatch": [
+        "T\\(['\"](.*?)['\"]",
+        "(?:T|translate_string|locale_str)\\(\\s*['\\\"]([a-zA-Z0-9_]+\\.[^'\\\"]+)['\\\"]",
+        "(?:T|translate_string)\\(\\s*['\\\"]([^'\\\"]+)['\\\"]|locale_str\\([^\\)]*?key\\s*=\\s*['\\\"]([^'\\\"]+)['\\\"]"
+    ],
     "i18n-ally.review.user.name": "p0x38",
-    "python.analysis.autoImportCompletions": true,
-
+    "i18n-ally.sortKeys": true,
+    "i18n-ally.sourceLanguage": "en",
+    "i18n-ally.tabStyle": "space",
+    "i18n-ally.translate.saveAsCandidates": true,
+    "json.trace.server": "messages",
+    "python-envs.defaultEnvManager": "ms-python.python:venv",
+    "python.analysis.autoSearchPaths": false,
+    "python.analysis.completeFunctionParens": true,
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportDuplicateImport": "error",
+        "reportPrivateUsage": "none",
+        "reportUnknownMemberType": "none",
+        "reportUntypedFunctionDecorator": "none"
+    },
+    "python.analysis.displayEnglishDiagnostics": false,
+    "python.analysis.enableParallelIndexing": true,
+    "python.analysis.enablePerfTelemetry": true,
+    "python.analysis.enableSnippetExtraTelemetry": false,
+    "python.analysis.enableTroubleshootMissingImports": true,
     "python.analysis.exclude": [
         "**/node_modules",
         "**/.venv",
+        "**/.git",
+        "**/.ruff_cache",
+        "**/.zed",
+        "**/.idea",
+        "**/cache",
+        "**/data",
+        "**/docs",
+        "**/scripts",
+        "**/cogs-legacy",
         "**/venv",
         "**/__pycache__",
+        "**/.pytest_cache",
         "**/logs",
-        "**/tmp", "**/.*"
+        "**/tmp",
+        "**/.*",
+        "**/assets",
     ],
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/src"
+    ],
+    "python.analysis.generateWithTypeAnnotation": false,
     "python.analysis.ignore": [
-        "**/.venv",
-        "**/venv"
+        "**/test/**"
     ],
-    "git.autorefresh": false,
-    "git.autoRepositoryDetection": "subFolders",
-    "python.analysis.userFileIndexingLimit": 900,
-    "ruff.nativeServer": "on",
-    "python.languageServer": "None",
-    "[python]": {
-        "diffEditor.ignoreTrimWhitespace": false,
-        "editor.defaultColorDecorators": "never",
-        "editor.defaultFormatter": "charliermarsh.ruff",
-        "editor.formatOnType": true,
-        "editor.wordBasedSuggestions": "offWithInlineSuggestions",
-        "editor.codeActionsOnSave": {
-            "source.fixAll.ruff": "explicit",
-            "source.organizeImports.ruff": "explicit",
+    "python.analysis.include": [
+        "src/poxbot"
+    ],
+    "python.analysis.indexing": true,
+    "python.analysis.inlayHints.callArgumentNames": "off",
+    "python.analysis.languageServerMode": "default",
+    "python.analysis.packageIndexDepths": [
+        {
+            "depth": 1,
+            "name": "matplotlib"
         },
-        "files.insertFinalNewline": true,
-        "editor.tabSize": 4
-    },
-    "conventionalCommits.scopes": [
-        "Environments"
-    ]
+        {
+            "depth": 1,
+            "name": "scipy"
+        },
+    ],
+    "python.analysis.referencesCodeLens": true,
+    "python.analysis.reportExtraTelemetry": false,
+    "python.analysis.stubPath": "typings",
+    "python.analysis.typeCheckingMode": "standard",
+    "python.analysis.typeEvaluation.analyzeUnannotatedFunctions": true,
+    "python.analysis.useLibraryCodeForTypes": true,
+    "python.analysis.userFileIndexingLimit": -1,
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+    "python.languageServer": "Default",
+    "python.REPL.enableREPLSmartSend": false,
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "ruff.configurationPreference": "filesystemFirst",
+    "ruff.nativeServer": "auto",
+    "ruff.trace.server": "verbose"
 }

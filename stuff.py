@@ -91,9 +91,9 @@ def set_if_not_exists(config: dict, key, value):
         for k in config:
             logger.debug(f"ArrayKey: {k}")
             if k == key:
-                return
+                return None
         config[key] = value
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         logger.error(f"Exception occured; {e} 3:")
         return False
     return True
@@ -102,7 +102,7 @@ def set_if_not_exists(config: dict, key, value):
 def cset(config: dict, key, value):
     try:
         config[key] = value
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         logger.error(f"Exception occured while trying to set config {key} to {value}: {e} 3:")
         return False
     return True
@@ -342,7 +342,7 @@ def to_meow_weighted(word):
 
     if length == 3:
         return apply_case_pattern("maw", case_pattern)
-    elif length < 4:
+    if length < 4:
         return apply_case_pattern(meows[ran], case_pattern)
 
     """
@@ -361,7 +361,7 @@ def to_meow_weighted(word):
         'i': 3,
         'o': 3,
         'a': 3,
-        'w': 3
+        'w': 3,
     }
     total_weight = sum(weights.values())
 
@@ -511,7 +511,7 @@ def to_uwu(text: str) -> str:
             words[index] = word
 
         return " ".join(words)
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         print(e)
         return text
 
@@ -543,7 +543,7 @@ def get_latest_commit_message():
             cwd='.',
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
@@ -576,19 +576,17 @@ def approach_target(target: float, max_iterations: int = 125, x: float = 1.75, c
 def clamp(n: int, min: int, max: int):
     if n < min:
         return min
-    elif n > max:
+    if n > max:
         return max
-    else:
-        return n
+    return n
 
 
 def clamp_f(n: float, min: float, max: float):
     if n < min:
         return min
-    elif n > max:
+    if n > max:
         return max
-    else:
-        return n
+    return n
 
 
 async def get_markov_dataset(name: str = "2"):
@@ -630,14 +628,13 @@ def expand_hex_old(s):
     if check_string_for_hex(s):
         if len(s) == 4 and s.startswith('#'):
             return ''.join(c * 2 for c in s[1:])
-        elif len(s) == 3:
+        if len(s) == 3:
             return ''.join(c * 2 for c in s)
-        elif len(s) == 9 and s.startswith('#'):
+        if len(s) == 9 and s.startswith('#'):
             return s[1:]
-        elif len(s) == 8:
+        if len(s) == 8:
             return s
-        else:
-            return None
+        return None
 
 
 def truncate(text, length=4000):
@@ -682,7 +679,7 @@ def get_int(i):
         return int(i)
     except ValueError:
         return 0
-    except Exception:  # noqa: BLE001
+    except Exception:
         return -1
 
 
