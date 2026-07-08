@@ -69,11 +69,13 @@ class ConsoleLoggingConfig(BaseModel):
     """Define configuration metrics for terminal-based log presentation.
 
     Attributes:
+        enabled (bool): The toggle for visibility to show/hide logs in console.
         rich_tracebacks (bool): Toggle status to enable advanced terminal tracebacks.
         level (str): The threshold logging level enforced for standard output.
         markup (bool): Toggle status to support inline console formatting tags.
     """
 
+    enabled: bool = True
     rich_tracebacks: bool = True
     level: Literal['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] = 'INFO'
     markup: bool = True
@@ -83,12 +85,14 @@ class LoggerConfig(BaseModel):
     """Manage systemic logging behavior across console and file channels.
 
     Attributes:
+        enabled (bool): The toggle for visibility to enable logging.
         level (str): The root logging severity threshold for the application.
         file_logging (FileLoggingConfig): Dedicated settings for file log output.
         console_logging (ConsoleLoggingConfig): Dedicated settings for console log
             output.
     """
-
+    
+    enabled: bool = True
     level: Literal['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] = 'DEBUG'
     file_logging: FileLoggingConfig = Field(default_factory=FileLoggingConfig)
     console_logging: ConsoleLoggingConfig = Field(default_factory=ConsoleLoggingConfig)
@@ -111,7 +115,7 @@ class TokenConfig(BaseModel):
 
 
 class TraceConfig(BaseModel):
-    """Govern OpenTelemetry tracing, metric collection, and observability infrastructure.
+    """Govern OpenTelemetry tracing, metric collection, and observability.
 
     Attributes:
         enabled (bool): Toggle status to activate or disable system telemetry tracking.
@@ -136,7 +140,7 @@ class TraceConfig(BaseModel):
     otlp_traces_endpoint: str | None = None
     otlp_metrics_endpoint: str | None = None
     loki_url: str = 'http://127.0.0.1:3100/loki/api/v1/push'
-    prometheus_host: str = '0.0.0.0'
+    prometheus_host: str = '0.0.0.0'  # noqa: S104
     prometheus_server_port: int = 8001
     insecure: bool = True
     sampling_ratio: float = Field(default=1.0, ge=0.0, le=1.0)
@@ -189,7 +193,7 @@ class BotSettings(BaseSettings):
     @computed_field
     @property
     def db_url(self) -> str:
-        """Provide a computed property that extracts the complete database engine URL."""
+        """Provide a property that extracts the complete database engine URL."""
         return self.database_config.build_url()
 
     model_config = SettingsConfigDict(

@@ -57,5 +57,6 @@
     "user_wallet": "Wallet",
     "global_chat_status": "Global chat Status",
     "global_chat_channel": "Global chat Channel",
-    "global_chat_antispam": "Anti-spam"
+    "global_chat_antispam": "Anti-spam",
+    "original_error": "**Original Error**\n{text}"
 }

@@ -76,6 +76,8 @@ dependencies = [
     "numpy>=2.5.0",
     "pydantic==2.13.4",
     "google-re2>=1.1.20251105",
+    "alembic>=1.18.5",
+    "pg8000>=1.31.5",
 ]
 
 [project.optional-dependencies]

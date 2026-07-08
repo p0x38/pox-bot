@@ -84,7 +84,7 @@
     "json.trace.server": "messages",
     "python-envs.defaultEnvManager": "ms-python.python:venv",
     "python.analysis.autoSearchPaths": false,
-    "python.analysis.completeFunctionParens": true,
+    "python.analysis.completeFunctionParens": false,
     "python.analysis.diagnosticMode": "workspace",
     "python.analysis.diagnosticSeverityOverrides": {
         "reportDuplicateImport": "error",
@@ -120,7 +120,7 @@
     "python.analysis.extraPaths": [
         "${workspaceFolder}/src"
     ],
-    "python.analysis.generateWithTypeAnnotation": false,
+    "python.analysis.generateWithTypeAnnotation": true,
     "python.analysis.ignore": [
         "**/test/**"
     ],
@@ -146,7 +146,7 @@
     "python.analysis.typeCheckingMode": "standard",
     "python.analysis.typeEvaluation.analyzeUnannotatedFunctions": true,
     "python.analysis.useLibraryCodeForTypes": true,
-    "python.analysis.userFileIndexingLimit": -1,
+    "python.analysis.userFileIndexingLimit": 2000,
     "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
     "python.languageServer": "Default",
     "python.REPL.enableREPLSmartSend": false,
@@ -157,5 +157,10 @@
     "python.testing.unittestEnabled": false,
     "ruff.configurationPreference": "filesystemFirst",
     "ruff.nativeServer": "auto",
-    "ruff.trace.server": "verbose"
+    "ruff.trace.server": "verbose",
+    "editor.rulers": [
+        88
+    ],
+    "python.analysis.typeEvaluation.deprecateTypingAliases": true,
+    "python.analysis.typeEvaluation.enableReachabilityAnalysis": true
 }

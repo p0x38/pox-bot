@@ -1,5 +1,4 @@
 import asyncio
-from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from enum import StrEnum
 from typing import TYPE_CHECKING
@@ -62,6 +61,8 @@ class LLMManager:
         self.api_key = api_key
         self.preferred = LLMProviderType.OPEN_ROUTER
 
+        self._strategy_cache: dict[str, BaseLLMProvider] = {}
+
     def set_preferred(self, provider: LLMProviderType):
         """Set preferred provider to the supplied type."""
         self.preferred = provider
@@ -91,6 +92,9 @@ class LLMManager:
                 )
 
     def _get_provider_strategy(self, provider_type: str) -> BaseLLMProvider:
+        if provider_type in self._strategy_cache:
+            return self._strategy_cache[provider_type]
+
         match provider_type:
             case LLMProviderType.OPEN_ROUTER.value:
                 current_api_key = self.api_key or getattr(
@@ -98,7 +102,9 @@ class LLMManager:
                     'openrouter_api_key',
                     None,
                 )
-                return OpenRouterStreamer(self, current_api_key)
+                strategy = OpenRouterStreamer(self, current_api_key)
+                self._strategy_cache[provider_type] = strategy
+                return strategy
             case _:
                 if hasattr(LLMProviderType, str(provider_type).upper()):
                     raise NotImplementedProvider(provider_type)
@@ -113,7 +119,7 @@ class LLMManager:
 
         async with metrics.span_async(name, **attrs) as span:
             yield span
-    
+
     @asynccontextmanager
     async def generate_response(self, input_data: dict):
         if not input_data:

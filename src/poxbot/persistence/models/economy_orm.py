@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from pytz import UTC
-from sqlalchemy import BigInteger
+from sqlalchemy import BigInteger, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from ...shared.bases import Base
@@ -20,7 +20,7 @@ class EconomyUser(Base):
 class EconomyItem(Base):
     __tablename__ = 'economy_items'
 
-    id: Mapped[str] = mapped_column(BigInteger, primary_key=True)
+    id: Mapped[str] = mapped_column(String, primary_key=True)
     name: Mapped[str] = mapped_column()
     description: Mapped[str] = mapped_column()
     price: Mapped[int] = mapped_column(nullable=True)

@@ -1,19 +1,27 @@
-import asyncio
-from pathlib import Path
-from typing import Any
+from __future__ import annotations
 
-import aiofiles
-import orjson
+import asyncio
+from typing import TYPE_CHECKING, Any
+
 from discord import DMChannel, GroupChannel, Guild
 from discord.abc import GuildChannel
+from discord.ext import tasks
+
+from ..infrastructure.logger.setup import get_logger
+
+if TYPE_CHECKING:
+    from ..application.bot import PoxBot
 
 
 class CounterManager:
-    def __init__(self, file_path: Path):
-        self.file_path = file_path
+    def __init__(self, bot: 'PoxBot'):  # noqa: UP037
+        self.logger = get_logger(__name__, prefix='CounterManager')
+        self.bot = bot
 
         self._counters: dict[str, int] = {}
         self._lock = asyncio.Lock()
+
+        self.db_sync_loop.start()
 
     def increment(self, name: str, amount: int = 1) -> None:
         if name not in self._counters:
@@ -23,10 +31,8 @@ class CounterManager:
     def increment_interaction(self, target: Any, amount: int = 1) -> None:
         if isinstance(target, Guild):
             key = f'interactions:guild:{target.id}'
-        elif (
-            isinstance(target, GuildChannel)
-            or (hasattr(target, 'guild')
-            and target.guild)
+        elif isinstance(target, GuildChannel) or (
+            hasattr(target, 'guild') and target.guild
         ):
             key = f'interactions:guild:{target.guild.id}'
         elif isinstance(target, DMChannel):
@@ -61,33 +67,54 @@ class CounterManager:
     def get_count(self, name: str) -> int:
         return self._counters.get(name, 0)
 
-    async def load_async(self) -> None:
-        if not self.file_path.exists():
+    @tasks.loop(seconds=15.0)
+    async def db_sync_loop(self) -> None:
+        await self.sync_to_database()
+
+    @db_sync_loop.before_loop
+    async def before_db_sync_loop(self) -> None:
+        await self.bot.wait_until_ready()
+
+    async def sync_to_database(self) -> None:
+        if not self.bot.database.metrics:
             return
 
-        async with self._lock:
-            try:
-                async with aiofiles.open(self.file_path, 'rb') as f:
-                    content = await f.read()
-                    if not content:
-                        return
+        metrics_db = self.bot.database.metrics
 
-                    loaded_data = orjson.loads(content)
-                    if isinstance(loaded_data, dict):
-                        self._counters = {
-                            str(k): int(v) for k, v in loaded_data.items()
-                        }
-            except (orjson.JSONDecodeError, OSError, ValueError):
-                pass
+        async with self._lock:
+            if not self._counters:
+                return
+            snapshot = self._counters.copy()
+            self._counters.clear()
+
+        for key, amount in snapshot.items():
+            if amount <= 0:
+                continue
+
+            try:
+                if key.startswith('interactions:'):
+                    parts = key.split(':')
+                    if len(parts) >= 3:
+                        target_id = parts[2]
+                        await metrics_db.increment_interaction(
+                            target=target_id, amount=amount,
+                        )
+                elif key.startswith('messages:'):
+                    parts = key.split(':')
+                    if len(parts) >= 2:
+                        guild_id = parts[1]
+                        await metrics_db.increment_message_by_id(
+                            guild_id=guild_id, amount=amount,
+                        )
+            except Exception:
+                self.logger.exception(
+                    'Exception raised while syncing counters to database',
+                )
+
+    async def load_async(self) -> None:
+        pass
 
     async def save_async(self) -> None:
-        async with self._lock:
-            try:
-                self.file_path.parent.mkdir(parents=True, exist_ok=True)
+        self.db_sync_loop.cancel()
 
-                binary_data = orjson.dumps(self._counters)
-
-                async with aiofiles.open(self.file_path, 'wb') as f:
-                    await f.write(binary_data)
-            except OSError:
-                pass
+        await self.sync_to_database()

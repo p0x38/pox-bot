@@ -8,6 +8,9 @@
         }
     },
     "admin": {
+        "reboot": {
+            "description": "Reboot the bot to enforce cache clean."
+        },
         "reload_cogs": {
             "description": "Reloads all my extensions and synchronizes the slash commands! >:D",
             "embeds": {
@@ -496,14 +499,9 @@
                     "casual-silly": "Someone to pat! :3"
                 }
             },
-            "embeds": {
-                "default": {
-                    "description": {
-                        "casual-silly": "{executor} pats {target}! :3"
-                    },
-                    "title": {
-                        "casual-silly": "{executor} petted {target}! :3"
-                    }
+            "texts": {
+                "success": {
+                    "casual-silly": "{executor} petted {target}! :3"
                 }
             }
         }

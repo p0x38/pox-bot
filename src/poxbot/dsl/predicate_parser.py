@@ -2,23 +2,30 @@ from __future__ import annotations
 
 import ast
 import operator
+from collections.abc import Callable
 from random import Random
-from typing import Any
+from time import perf_counter
+from typing import Any, ClassVar
 
 import re2 as re
+from opentelemetry import trace
+
+from ..infrastructure.logger import get_logger
+
+_tracer = trace.get_tracer('pox-discord-bot-tracer.dsl_evaluator')
 
 
 class SafeStringPredicateEvaluator:
-    _OPERATORS = {  # noqa: RUF012
+    _OPERATORS: ClassVar[dict[type[ast.AST], Callable]] = {
         ast.Eq: operator.eq,
         ast.NotEq: operator.ne,
         ast.Lt: operator.lt,
         ast.LtE: operator.le,
         ast.Gt: operator.gt,
         ast.GtE: operator.ge,
-        ast.In: lambda l, r: l in r,
+        ast.In: lambda l, r: l in r,  # noqa: E741
     }
-    _BINOPS = {  # noqa: RUF012
+    _BINOPS: ClassVar[dict[type[ast.AST], Callable]] = {
         ast.Add: operator.add,
         ast.Sub: operator.sub,
         ast.Mult: operator.mul,
@@ -27,40 +34,29 @@ class SafeStringPredicateEvaluator:
         ast.Mod: operator.mod,
         ast.Pow: operator.pow,
     }
-    _LOGICAL_OPS = {  # noqa: RUF012
+    _LOGICAL_OP: ClassVar[dict[type[ast.AST], Callable]] = {
         ast.And: all,
         ast.Or: any,
     }
-    CTX_NODES = {  # noqa: RUF012
-        ast.Load,
-        ast.Store,
-        ast.Del,
-    }
-    SAFE_BASE_NODES = {  # noqa: RUF012
-        ast.Expression,
-        ast.Module,
-        
-        ast.BoolOp,
-        ast.BinOp,
-        ast.UnaryOp,
-        ast.Compare,
-        ast.IfExp,
-        
+    _NODE_CONTAINERS: ClassVar[set[type[ast.AST]]] = {ast.Expression, ast.Module}
+    _NODE_VALUES: ClassVar[set[type[ast.AST]]] = {
         ast.Constant,
         ast.Name,
-        
         ast.List,
         ast.Tuple,
         ast.Dict,
         ast.Subscript,
         ast.Slice,
-        
+    }
+    _NODE_CONTROLS: ClassVar[set[type[ast.AST]]] = {
         ast.Call,
         ast.keyword,
-        
         ast.arguments,
         ast.arg,
-        
+        ast.IfExp,
+    }
+    _NODE_OPERATORS: ClassVar[set[type[ast.AST]]] = {
+        ast.Compare,
         ast.Eq,
         ast.NotEq,
         ast.Lt,
@@ -70,21 +66,30 @@ class SafeStringPredicateEvaluator:
         ast.In,
         ast.Is,
         ast.IsNot,
-        
+        ast.BoolOp,
+        ast.UnaryOp,
         ast.Not,
         ast.UAdd,
         ast.USub,
         ast.Invert,
-        
+        ast.BinOp,
         ast.Add,
         ast.Mult,
         ast.Div,
         ast.FloorDiv,
         ast.Mod,
-        ast.Pow,
+        ast.Div,
     }
-    ALLOWED_NODES = SAFE_BASE_NODES | CTX_NODES
-    ALLOWED_STRING_METHODS = {  # noqa: RUF012
+    SAFE_BASE_NODES: ClassVar[set[type[ast.AST]]] = (
+        _NODE_CONTAINERS | _NODE_VALUES | _NODE_CONTROLS | _NODE_OPERATORS
+    )
+    CTX_NODES: ClassVar[set[type[ast.AST]]] = {
+        ast.Load,
+        ast.Store,
+        ast.Del,
+    }
+    ALLOWED_NODES: ClassVar[set[type[ast.AST]]] = SAFE_BASE_NODES | CTX_NODES
+    ALLOWED_STRING_METHODS: ClassVar[set[str]] = {
         'upper',
         'lower',
         'swapcase',
@@ -92,7 +97,7 @@ class SafeStringPredicateEvaluator:
         'startswith',
         'endswith',
     }
-    ALLOWED_FUNCTIONS = {  # noqa: RUF012
+    ALLOWED_FUNCTIONS: ClassVar[set[str]] = {
         'range',
         'rmatch',
         'leet',
@@ -100,75 +105,133 @@ class SafeStringPredicateEvaluator:
         'swap',
         'find_char',
     }
+    _SYNTAX_KEYWORDS: ClassVar[dict[str, str]] = {
+        '&&': 'and',
+        '||': 'or',
+        'is': '==',
+        'eq': '==',
+        'neq': '!=',
+    }
+    _KEYWORD_PATTERN = re.compile(
+        r'\b('
+        + '|'.join(re.escape(k) for k in _SYNTAX_KEYWORDS if k.isalnum())
+        + r')\b|'
+        + '|'.join(re.escape(k) for k in _SYNTAX_KEYWORDS if not k.isalnum()),
+    )
     MAX_RANGE = 1000
     MAX_RECURSION_DEPTH = 50
 
     def __init__(self, expression: str, rng: Random | None = None):
+        self.logger = get_logger(__name__, prefix='PredicateDSLParser')
+        self.expression = expression
         self.rng = rng or Random()  # noqa: S311
         self.error_message: str | None = None
 
-        clean_expr = expression.replace('&&', 'and').replace('||', 'or')
-        try:
-            self.node = ast.parse(clean_expr, mode='eval').body
-        except Exception as e:
-            self.node = None
-            self.error_message = f'Syntax Error: {e}'
+        def _replace_match(match: re._Match) -> str:
+            word = match.group(0)
+            if not isinstance(word, str):
+                return ''
+
+            return self._SYNTAX_KEYWORDS.get(word, word)
+
+        clean_expr = self._KEYWORD_PATTERN.sub(_replace_match, expression)
+
+        with _tracer.start_as_current_span('dsl.compile') as span:
+            try:
+                self.node = ast.parse(clean_expr, mode='eval').body
+                self._validate_ast(self.node)
+                span.set_attribute('dsl.valid', True)
+            except Exception as e:
+                self.node = None
+                self.error_message = f'Syntax Error: {e}'
+
+                span.set_attribute('dsl.valid', False)
+                span.record_exception(e)
+                span.set_status(trace.Status(trace.StatusCode.ERROR, str(e)))
+
+                self.logger.exception('Failed to parse and validate DSL expression')
 
     def evaluate(self, char: str, index: int, text: str) -> str:
         if self.node is None:
             return 'keep'
 
-        current_word_idx = 0
-        if not char.isspace():
-            last_space = text[:index].rfind(' ')
-            current_word_idx = index - (last_space + 1)
+        with _tracer.start_as_current_span('dsl.evaluate') as span:
+            span.set_attribute('dsl.char', char)
+            span.set_attribute('dsl.index', index)
+            span.set_attribute('dsl.text_length', len(text))
 
-        context = {
-            'char': char,
-            'index': index,
-            'idx': index,
-            'prev_char': text[index - 1] if index > 0 else '',
-            'next_char': text[index + 1] if index < len(text) - 1 else '',
-            'text_before': text[:index],
-            'text_after': text[index + 1 :],
-            'rmatch': lambda pattern: bool(re.match(pattern, char)),
-            'leet': lambda c: {'a': '4', 'e': '3', 'i': '1', 'o': '0', 's': '5'}.get(
-                c.lower(),
-                c,
-            ),
-            'chance': lambda p: self.rng.random() < p,
-            'rev_idx': len(text) - 1 - index,
-            'swap': lambda c: c.swapcase(),
-            'code': ord(char),
-            'total_len': len(text),
-            'find_char': text.find,
-            'word_idx': current_word_idx,
-            'range': lambda *args: list(range(*args))[: self.MAX_RANGE],
-            'is_alpha': char.isalpha(),
-            'is_digit': char.isdigit(),
-            'is_vowel': char.lower() in 'aeiou',
-            'is_space': char.isspace(),
-            'upper': 'upper',
-            'lower': 'lower',
-            'delete': 'delete',
-            'reverse': 'reverse',
-            'keep': 'keep',
-        }
-        
-        try:
-            self._validate_ast(self.node)
-            res = self._eval_node(self.node, context, depth=0)
-            
-            if isinstance(res, bool):
-                return 'keep' if res else 'delete'
-            
-            return str(res) if res is not None else 'keep'
-        except ValueError as ve:
-            self.error_message = str(ve)
-            return 'keep'
-        except Exception as e:
-            self.error_message = f'Runtime Error: {e}'
-            return 'keep'
+            current_word_idx = 0
+            if not char.isspace():
+                last_space = text[:index].rfind(' ')
+                current_word_idx = index - (last_space + 1)
+
+            context = {
+                'char': char,
+                'index': index,
+                'idx': index,
+                'prev_char': text[index - 1] if index > 0 else '',
+                'next_char': text[index + 1] if index < len(text) - 1 else '',
+                'text_before': text[:index],
+                'text_after': text[index + 1 :],
+                'rmatch': lambda pattern: bool(re.match(pattern, char)),
+                'leet': lambda c: {
+                    'a': '4',
+                    'e': '3',
+                    'i': '1',
+                    'o': '0',
+                    's': '5',
+                }.get(
+                    c.lower(),
+                    c,
+                ),
+                'chance': lambda p: self.rng.random() < p,
+                'rev_idx': len(text) - 1 - index,
+                'swap': lambda c: c.swapcase(),
+                'code': ord(char),
+                'total_len': len(text),
+                'find_char': text.find,
+                'word_idx': current_word_idx,
+                'range': lambda *args: list(range(*args))[: self.MAX_RANGE],
+                'is_alpha': char.isalpha(),
+                'is_digit': char.isdigit(),
+                'is_vowel': char.lower() in 'aeiou',
+                'is_space': char.isspace(),
+                'upper': 'upper',
+                'lower': 'lower',
+                'delete': 'delete',
+                'reverse': 'reverse',
+                'keep': 'keep',
+            }
+
+            start_time = perf_counter()
+            try:  # noqa: PLW0717
+                res = self._eval_node(self.node, context, depth=0)
+
+                if isinstance(res, bool):
+                    action = 'keep' if res else 'delete'
+                else:
+                    action = str(res) if res is not None else 'keep'
+
+                duration = perf_counter() - start_time
+                span.set_attribute('dsl.result_action', action)
+                span.set_attribute('dsl.duration_seconds', duration)
+            except ValueError as ve:
+                self.error_message = str(ve)
+                span.record_exception(ve)
+                span.set_status(trace.Status(trace.StatusCode.ERROR, str(ve)))
+                self.logger.warning(
+                    'DSL evaluation security block or value error',
+                    exc_info=True,
+                )
+                return 'keep'
+            except Exception as e:
+                self.error_message = f'Runtime Error: {e}'
+                span.record_exception(e)
+                span.set_status(trace.Status(trace.StatusCode.ERROR, str(e)))
+                self.logger.exception('DSL evaluation runtime crash')
+                return 'keep'
+            else:
+                return action
 
     def _eval_node(
         self,
@@ -177,10 +240,18 @@ class SafeStringPredicateEvaluator:
         depth: int,
     ) -> Any:
         if depth > self.MAX_RECURSION_DEPTH:
-            raise ValueError('Max recursion dept exceeded')  # noqa: TRY003
-
+            raise ValueError('Max recursion depth exceeded')  # noqa: TRY003
         if node is None:
             return None
+
+        # node_name = type(node).__name__
+        # indent = '  ' * depth
+        # self.logger.debug(
+        #     '%s➔ Evaluating AST Node: %s (depth=%s)',
+        #     indent,
+        #     node_name,
+        #     depth,
+        # )
 
         if isinstance(node, ast.Constant):
             return node.value
@@ -188,9 +259,8 @@ class SafeStringPredicateEvaluator:
         if isinstance(node, ast.Name):
             name_id = node.id
             if name_id in context:
-                val = context[name_id]
-                return val() if callable(val) else val
-            return name_id
+                return context[name_id]
+            raise ValueError(f'Undefined variable or identifier: {name_id}')  # noqa: TRY003
 
         if isinstance(node, ast.IfExp):
             cond = self._eval_node(node.test, context, depth + 1)
@@ -200,8 +270,6 @@ class SafeStringPredicateEvaluator:
 
         if isinstance(node, ast.Compare):
             left = self._eval_node(node.left, context, depth + 1)
-
-            result = True
             current_left = left
 
             for op, comparator in zip(node.ops, node.comparators):  # noqa: B905
@@ -213,7 +281,7 @@ class SafeStringPredicateEvaluator:
                 if not self._OPERATORS[op_type](current_left, right):
                     return False
                 current_left = right
-            return result
+            return True
 
         if isinstance(node, (ast.List, ast.Tuple)):
             return [self._eval_node(el, context, depth + 1) for el in node.elts]
@@ -233,7 +301,7 @@ class SafeStringPredicateEvaluator:
                     ]
                     return method(*args)
             elif isinstance(node.func, ast.Name):
-                func_obj = context.get(node.func.id)
+                func_obj = self._eval_node(node.func, context, depth + 1)
                 func_name = node.func.id
                 if func_name in self.ALLOWED_FUNCTIONS and callable(
                     func_obj,
@@ -245,9 +313,20 @@ class SafeStringPredicateEvaluator:
             raise ValueError(f'Unsupported function or method call: {node.func}')  # noqa: TRY003
 
         if isinstance(node, ast.BoolOp):
-            values = [self._eval_node(v, context, depth + 1) for v in node.values]
+            if isinstance(node.op, ast.And):
+                val = True
+                for v in node.values:
+                    val = self._eval_node(v, context, depth + 1)
+                    if not val:
+                        return val
+                return val
 
-            return all(values) if isinstance(node.op, ast.And) else any(values)
+            val = False
+            for v in node.values:
+                val = self._eval_node(v, context, depth + 1)
+                if val:
+                    return val
+            return val
 
         if isinstance(node, ast.Subscript):
             value = self._eval_node(node.value, context, depth + 1)
@@ -273,11 +352,11 @@ class SafeStringPredicateEvaluator:
             left = self._eval_node(node.left, context, depth + 1)
             right = self._eval_node(node.right, context, depth + 1)
             op_type = type(node.op)
-            
+
             fn = self._BINOPS.get(op_type)
             if fn is None:
                 raise ValueError('Unsupported binary operation')  # noqa: TRY003
-            
+
             return fn(left, right)
 
         if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Not):
@@ -289,8 +368,8 @@ class SafeStringPredicateEvaluator:
         for child in ast.walk(node):
             if isinstance(child, tuple(self.ALLOWED_NODES)):
                 continue
-            
+
             if isinstance(child, (ast.cmpop, ast.boolop, ast.operator)):
                 continue
-            
+
             raise ValueError(f'Disallowed AST node: {type(child).__name__}')  # noqa: TRY003

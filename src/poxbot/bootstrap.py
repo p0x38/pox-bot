@@ -28,7 +28,6 @@ class Bootstrap:
         configure_logging(settings)
         
         system_logger = get_logger(__name__, prefix="System")
-        bot_logger = get_logger(__name__, prefix="Bot")
         
         i18n = I18nManager(locales_path="src/poxbot/assets/locales")
         await i18n.initialize()
@@ -40,7 +39,6 @@ class Bootstrap:
         self._context = ApplicationContext(
             settings=settings,
             logger=system_logger,
-            bot_logger=bot_logger,
             root_path=root.parent.parent,
             i18n=i18n,
             fastapi_class=fastapi_class,

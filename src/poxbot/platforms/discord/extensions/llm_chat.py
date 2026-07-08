@@ -34,7 +34,9 @@ class LLMChatCog(commands.Cog):
             api_key_str = token_cfg.openrouter_api_key.get_secret_value()
 
         self.llm_manager = LLMManager(
-            bot, bot.settings.token_config,api_key=api_key_str,
+            bot,
+            bot.settings.token_config,
+            api_key=api_key_str,
         )
         self.history: dict[int, deque[dict[str, Any]]] = {}
         self.history_limit = 25
@@ -182,7 +184,7 @@ class LLMChatCog(commands.Cog):
         include_history: bool = False,
     ):
         if not self.bot.user:
-            raise RuntimeError('Bot user is not set')
+            raise RuntimeError('Bot user is not set')  # noqa: TRY003
 
         now = datetime.now(UTC)
         user_cd = self.cooldowns.get(message.author.id)
@@ -204,42 +206,49 @@ class LLMChatCog(commands.Cog):
                 if now - v < self.cooldown_seconds
             }
 
-        if message.channel.id not in self.history:
-            await self.populate_channel_cache(message.channel)
-
-        messages = [{'role': 'system', 'content': 'You are a helpful assistant.'}]
-        current_msg_data = self._sanitize_history_item(
-            await self.format_discord_message(message),
-        )
-
-        if (
-            not self.history[message.channel.id]
-            or self.history[message.channel.id][-1] != current_msg_data
-        ):
-            self.history[message.channel.id].append(current_msg_data)
-            await self._save_history(message.channel.id)
-
-        if include_history:
-            messages.extend(
-                self._sanitize_history_item(data)
-                for data in self.history[message.channel.id]
-            )
-        else:
-            messages.append(current_msg_data)
-
         lock = self.locks.setdefault(message.channel.id, asyncio.Lock())
 
         async with lock:
-            self.cooldowns[message.author.id] = datetime.now(UTC)
+            if message.channel.id not in self.history:
+                await self.populate_channel_cache(message.channel)
+
+            messages = [{'role': 'system', 'content': 'You are a helpful assistant.'}]
+            current_msg_data = self._sanitize_history_item(
+                await self.format_discord_message(message),
+            )
+
+            is_duplicate = any(
+                h['content'] == current_msg_data['content']
+                and h['role'] == current_msg_data['role']
+                for h in self.history[message.channel.id]
+            )
+
+            if not is_duplicate:
+                self.history[message.channel.id].append(current_msg_data)
+                await self._save_history(message.channel.id)
+
+            if include_history:
+                messages.extend(
+                    self._sanitize_history_item(data)
+                    for data in self.history[message.channel.id]
+                )
+            else:
+                messages.append(current_msg_data)
+
+            self.cooldowns[message.author.id] = now
             output = ''
 
             async with message.channel.typing():
                 try:
-                    async with self.llm_manager.generate_response({
+                    input_payload = {
                         'provider': provider,
                         'model': model,
                         'query': messages,
-                    }) as chunk:
+                    }
+
+                    async with self.llm_manager.generate_response(
+                        input_payload,
+                    ) as chunk:
                         output += chunk
                 except Exception as e:
                     embed = Embed(
@@ -255,7 +264,7 @@ class LLMChatCog(commands.Cog):
 
                 output = output.strip()
                 if not output:
-                    return None
+                    raise RuntimeError('AI returned an empty response.')  # noqa: TRY003
 
                 output = output.replace(
                     '{author_name}',

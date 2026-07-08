@@ -53,7 +53,7 @@ class I18nTranslator:
     @overload
     def T(
         self,
-        text: str,
+        key: str,
         locale: None = None,
         placeholders: dict[str, Any] | None = None,
         **kwargs,
@@ -62,7 +62,7 @@ class I18nTranslator:
     @overload
     def T(
         self,
-        text: str,
+        key: str,
         locale: str | Locale,
         placeholders: dict[str, Any] | None = None,
         **kwargs,
@@ -70,21 +70,24 @@ class I18nTranslator:
 
     def T(
         self,
-        text: str,
+        key: str,
         locale: str | Locale | None = None,
         placeholders: dict[str, Any] | None = None,
         **kwargs,
     ) -> str | app_commands.locale_str:
         if locale is None:
-            return text
+            return key
 
         merged_kwargs = {}
         if placeholders:
             merged_kwargs.update(placeholders)
         if kwargs:
             merged_kwargs.update(kwargs)
+        
+        merged_kwargs.pop('text', None)
+        merged_kwargs.pop('locale_str', None)
 
-        return self.translate_string(text, locale, **merged_kwargs)
+        return self.translate_string(key, locale, **merged_kwargs)
 
     def translate_map(
         self,

@@ -17,7 +17,9 @@ class UtilityCog(commands.Cog):
         description=app_commands.locale_str('command.utility.listapps.description'),
     )
     @app_commands.checks.cooldown(
-        1, 10.0, key=lambda i: i.guild.id if i.guild else i.user.id,
+        1,
+        10.0,
+        key=lambda i: i.guild.id if i.guild else i.user.id,
     )
     async def list_all_opened_applications(self, interaction: Interaction):
         if not interaction.guild:
@@ -49,7 +51,8 @@ class UtilityCog(commands.Cog):
         return None
 
     @app_commands.command(
-        name='8ball', description=app_commands.locale_str('command.8ball.description'),
+        name='8ball',
+        description=app_commands.locale_str('command.8ball.description'),
     )
     @app_commands.describe(question='Question to answer by 8ball.')
     async def eight_ball(self, interaction: Interaction, question: str):
@@ -81,7 +84,9 @@ class UtilityCog(commands.Cog):
 
         embed = Embed(color=Color.random())
         embed.title = self.bot.internal_translator.T(
-            'command.8ball.embeds.default.title', loc, {'question': question},
+            'command.8ball.embeds.default.title',
+            loc,
+            {'question': question},
         )
         embed.add_field(
             name=self.bot.internal_translator.T('label.answer', loc),
@@ -105,28 +110,31 @@ class UtilityCog(commands.Cog):
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(
-        name='coinflip', description="Flips a coin and says 'Heads' or 'Tails'.",
+        name='coinflip',
+        description="Flips a coin and says 'Heads' or 'Tails'.",
     )
-    @app_commands.describe(input='Optional label for the flip')
-    async def coin_flip(self, interaction: Interaction, input: str | None = None):
+    @app_commands.describe(text='Optional label for the flip')
+    async def coin_flip(self, interaction: Interaction, text: str | None = None):
         await interaction.response.defer()
         result = self.rng.choice(np.array(['Heads', 'Tails'], dtype=object))
-        text = self.bot.internal_translator.T(
+        txt = self.bot.internal_translator.T(
             'text.coinflip.true' if result == 'Heads' else 'text.coinflip.false',
         )
 
         embed = Embed(color=Color.random())
         if input:
-            embed.title = f'`{input}`'
-        embed.description = f'Result: {text}'
+            embed.title = f'`{text}`'
+        embed.description = f'Result: {txt}'
 
         await interaction.followup.send(embed=embed)
 
     @app_commands.command(
-        name='roll', description='Roll one or more dice and show the result.',
+        name='roll',
+        description='Roll one or more dice and show the result.',
     )
     @app_commands.describe(
-        sides='Number of sides on each die', rolls='How many dice to roll',
+        sides='Number of sides on each die',
+        rolls='How many dice to roll',
     )
     async def roll(self, interaction: Interaction, sides: int = 6, rolls: int = 1):
         if sides < 2 or rolls < 1:

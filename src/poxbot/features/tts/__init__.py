@@ -1,3 +1,3 @@
-from .manager import SpeechGenerationError, TTSEngineType, TTSManager
+from .manager import TTSEngineType, TTSManager
 
-__all__ = ['SpeechGenerationError', 'TTSEngineType', 'TTSManager']
+__all__ = ['TTSEngineType', 'TTSManager']

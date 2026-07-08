@@ -1,4 +1,5 @@
 import asyncio
+import gc
 from datetime import datetime
 from pathlib import Path
 
@@ -26,6 +27,7 @@ from pytz import UTC
 
 from ..features.statistics import BotConstants, BotStatistics, GitInfo
 from ..features.text_transform.manager import TextTransformManager
+from ..infrastructure.logger import get_logger
 from ..infrastructure.logger.context import get_request_id, start_request
 from ..infrastructure.logger.tracing import start_span
 from ..services import (
@@ -36,7 +38,6 @@ from ..services import (
     RuntimeState,
 )
 from ..services.counter import CounterManager
-from ..shared.utils import app_path
 from ..shared.utils.cache import Cache
 from ..shared.utils.metrics import Metrics
 from ..shared.utils.perf_monitor import PerformanceMonitor
@@ -102,14 +103,7 @@ class PoxBot(commands.AutoShardedBot):
         """Initialize the PoxBot instance and its dependent subsystems.
 
         Args:
-            config (BotSettings): The bot configuration model.
-            logger (Logger | LoggerAdapter): The system logger or adapter.
-            translation_manager (I18nManager): Manager overseeing all basic
-                internationalization tasks.
-            discord_translator (DiscordI18nTranslator): The translation interface
-                registered to the Discord Application Command tree.
-            internal_translator (I18nTranslator): The system-wide translator used
-                primarily for manual message formatting.
+            context (ApplicationContext): The application context for applications.
             *args: Variable length argument list forwarded to the parent
                 commands.AutoShardedBot class.
             **kwargs: Arbitrary keyword arguments forwarded to the parent class.
@@ -118,11 +112,15 @@ class PoxBot(commands.AutoShardedBot):
         super().__init__(*args, **kwargs)
         self.should_restart = False
         self.context = context
+
         self.settings = context.settings
-        self.logger = context.logger
+
+        self.logger = get_logger(__name__, prefix='PoxBot')
+
         self.i18n_manager = context.i18n
         self.discord_translator = self.i18n_manager.discord
         self.internal_translator = self.i18n_manager.internal
+
         self.base_path = kwargs.get('root_path')
 
         if self.settings.trace_config.enabled:
@@ -149,42 +147,43 @@ class PoxBot(commands.AutoShardedBot):
         actual_package = 'poxbot.platforms.discord.extensions'
 
         cogs_absolute_path = project_root / actual_cogs_dir
-        context.logger.debug('ExtensionManager: %s', cogs_absolute_path)
-        if cogs_absolute_path.exists():
-            context.logger.debug(
-                'Extension files: %s',
-                [f.name for f in cogs_absolute_path.glob('*')],
-            )
         self.extension_manager = ExtensionManager(
             cogs_path=str(cogs_absolute_path),
             package=actual_package,
             excluded_extensions=self.constants.exclude_extensions,
         )
+
         self.shared_cache = Cache(ttl=120)
         self.perf_monitor = PerformanceMonitor(self)
         self.text_converter = TextTransformManager(self.metrics)
-        self.counter_manager = CounterManager(
-            app_path.app_dir.user_data_path / 'statistics.json',
-        )
+        self.counter_manager = CounterManager(self)
         self.tasks: set[asyncio.Task] = set()
 
         self.tree.on_error = self._on_tree_error
 
     async def try_return_error(self, interaction: Interaction, **kwargs):
+        """Send a message with detection of response if already respond."""
         if interaction.response.is_done():
             return await interaction.followup.send(**kwargs)
         return await interaction.response.send_message(**kwargs)
 
     async def load_extensions(self):
+        """Loads all extensions using ExtensionManager."""
         result = await self.extension_manager.load_extensions(self)
 
         self.logger.info(
             'Loaded %d extensions (%d failed)',
             result.affected,
             result.failed,
+            extra={
+                'loaded_extensions': result.affected,
+                'failed_extensions': result.failed,
+                'duration_ms': result.operation_time_ms,
+            },
         )
 
     async def sync_commands(self):
+        """Custom method to sync application commands to Discord."""
         try:
             synced = await self.tree.sync()
             self.logger.info('Synchronized %d commands.', len(synced))
@@ -197,15 +196,22 @@ class PoxBot(commands.AutoShardedBot):
         ) as e:
             if isinstance(e, app_commands.TranslationError):
                 self.logger.exception(
-                    'Error thrown while translating key %s in %s (%s)',
+                    'Failed to translate some strings for %s in %s (%s)',
                     e.string,
                     e.locale,
                     e.context.location.name,
+                    extra={
+                        'target': e.string,
+                        'locale': e.locale,
+                        'location': e.context.location.name,
+                    },
                 )
             else:
-                self.logger.exception('Error thrown while trying to sync commands')
+                self.logger.exception(
+                    'An unexpected error was occurred while syncing commands',
+                )
 
-    async def setup_hook(self) -> None:
+    async def setup_hook(self) -> None:  # noqa: D102
         def _download_nltk_data():
             try:
                 nltk.data.find('tokenizers/punkt')
@@ -232,20 +238,23 @@ class PoxBot(commands.AutoShardedBot):
 
         if self.metrics:
             self.metrics.start_server()
-        self.logger.info('OpenTelemetry OTLP metrics pipeline initialized.')
+        self.logger.info('OpenTelemetry OTLP metrics pipeline has been initialized.')
 
-    async def on_ready(self):
+    async def on_ready(self):  # noqa: D102
         with start_span('bot.ready'):
             self.logger.info(
-                'Discord bot is ready to process! (%s)',
-                [g.name for g in self.guilds],
+                'Discord bot is ready to process!\nGuilds: (%s)',
+                ', '.join([g.name for g in self.guilds]),
                 extra={
                     'guilds': len(self.guilds),
                     'users': sum(g.member_count or 0 for g in self.guilds),
                 },
             )
+        
+        gc.collect()
+        self.logger.debug('Successfully ran garbage collection')
 
-    async def on_message(self, message: Message):
+    async def on_message(self, message: Message):  # noqa: D102
         if message.author == self.user or message.mention_everyone:
             return
 
@@ -253,12 +262,9 @@ class PoxBot(commands.AutoShardedBot):
 
         with start_span('discord.message'):
             self.logger.info(
-                'message.message.received (rid=%s, user=%s, guild=%s, channel=%s)',
-                request_id,
-                message.author.id,
-                message.guild.id if message.guild else '0',
-                message.channel.id,
+                '',
                 extra={
+                    'no_console': True,
                     'request_id': request_id,
                     'author_id': message.author.id,
                     'guild_id': message.guild.id if message.guild else None,
@@ -267,19 +273,19 @@ class PoxBot(commands.AutoShardedBot):
             )
 
             if message.content.startswith(self.settings.bot_prefix):
-                self.statistics.count_prefix_command()
+                self.counter_manager.increment('total_prefix_commands_ran')
                 await self.process_commands(message)
 
-    async def on_command_completion(self, ctx: commands.Context):
+    async def on_command_completion(self, ctx: commands.Context):  # noqa: D102
         self.logger.info(
-            'bot.command.completed',
+            '',
             extra={
                 'command': str(ctx.command),
                 'request_id': get_request_id(),
             },
         )
 
-    async def on_command_error(self, ctx: commands.Context, e: commands.CommandError):
+    async def on_command_error(self, ctx: commands.Context, e: commands.CommandError):  # noqa: D102
         try:
             self.logger.error(
                 'Exception thrown while trying to process command: %s',
@@ -296,7 +302,7 @@ class PoxBot(commands.AutoShardedBot):
         except (HTTPException, Forbidden, TypeError, ValueError):
             self.logger.exception('Could not send error embed: %s')
 
-    def format_channel_info(self, channel: Messageable | None):
+    def format_channel_info(self, channel: Messageable | None):  # noqa: D102
         formatted_channel_identity = ''
 
         if not channel:
@@ -333,7 +339,7 @@ class PoxBot(commands.AutoShardedBot):
 
         return formatted_channel_identity
 
-    async def on_interaction(self, interaction: Interaction):
+    async def on_interaction(self, interaction: Interaction):  # noqa: D102
         if (
             interaction.type == InteractionType.application_command
             and isinstance(interaction.command, app_commands.Command)
@@ -345,7 +351,7 @@ class PoxBot(commands.AutoShardedBot):
             options = vars(interaction.namespace)
 
             self.logger.info(
-                'User %s executed /%s in %s',
+                'User "%s" executed "/%s" in "%s"',
                 f'{interaction.user.display_name} ({interaction.user.id})',
                 interaction.command.qualified_name,
                 self.format_channel_info(interaction.channel),
@@ -359,7 +365,7 @@ class PoxBot(commands.AutoShardedBot):
             )
             self.statistics.interaction_statistics.count(interaction.command_failed)
 
-    async def close(self) -> None:
+    async def close(self) -> None:  # noqa: D102
         if hasattr(self, 'counter_manager'):
             await self.counter_manager.save_async()
 
@@ -368,15 +374,15 @@ class PoxBot(commands.AutoShardedBot):
 
         return await super().close()
 
-    async def reload_all_cogs(self):
+    async def reload_all_cogs(self):  # noqa: D102
         return await self.extension_manager.reload(self, '*')
 
-    def get_uptime_seconds(self, start_timestamp: float) -> float:
+    def get_uptime_seconds(self, start_timestamp: float) -> float:  # noqa: D102
         return (
             datetime.now(UTC) - datetime.fromtimestamp(start_timestamp, tz=UTC)
         ).total_seconds()
 
-    async def get_locale(self, interaction: Interaction):
+    async def get_locale(self, interaction: Interaction):  # noqa: D102
         return (
             await self.database.settings.get_locale(interaction)
             if (hasattr(self, 'database') and self.database and self.database.settings)
@@ -413,7 +419,7 @@ class PoxBot(commands.AutoShardedBot):
             (app_commands.CommandInvokeError, app_commands.TransformerError),
         ):
             self.logger.error(
-                'Exception thrown!',
+                'An uncaught error was thrown while processing a application command!',
                 exc_info=error,
                 extra={
                     'command': cmd_name,
@@ -455,10 +461,14 @@ class PoxBot(commands.AutoShardedBot):
                 original_description = translator.T(
                     'error.exceptions.Unknown',
                     str(loc),
-                    e=original_error_name,
+                    {"e": original_error_name},
                 )
 
-            description += f'\n\n**Original Error:** {original_description}'
+            description += '\n\n' + translator.T(
+                'label.original_error',
+                str(loc),
+                **{"text": original_description},
+            )
 
         if interaction.type == InteractionType.application_command:
             embed = Embed(
@@ -471,6 +481,11 @@ class PoxBot(commands.AutoShardedBot):
             await self.try_return_error(interaction, embed=embed)
         elif interaction.type == InteractionType.autocomplete:
             self.logger.error(
-                'Error thrown while trying to resolve autocompletion stuff %s',
+                'Error thrown while trying to resolve autocompletion %s',
+                description,
+            )
+        else:
+            self.logger.error(
+                'An unexpected error was occurred: %s',
                 description,
             )

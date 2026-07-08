@@ -9,37 +9,40 @@ from rich.console import Console
 from rich.logging import RichHandler
 
 from ...config.schema import BotSettings
+from .filters import ExcludeConsoleFilter, SkipEmptyMessageFilter
 from .formatters import JSONFormatter
 
 console = Console()
 
 
-def setup_console_handler(root: logging.Logger, config, level: int) -> None:
+def setup_console_handler(root: logging.Logger, level: int, settings: BotSettings) -> None:
     handler = RichHandler(
         console=console,
         show_time=True,
-        rich_tracebacks=config.console_logging.rich_tracebacks,
-        markup=config.console_logging.markup,
+        rich_tracebacks=settings.logger.console_logging.rich_tracebacks,
+        markup=settings.logger.console_logging.markup,
         level=level,
     )
+    handler.addFilter(ExcludeConsoleFilter())
+    handler.addFilter(SkipEmptyMessageFilter())
 
     root.addHandler(handler)
 
 
 def setup_file_handler(
-    root: logging.Logger, config, level: int, settings: BotSettings,
+    root: logging.Logger, level: int, settings: BotSettings,
 ) -> None:
-    if not config.file_logging.enabled:
+    if not settings.logger.file_logging.enabled:
         return
 
-    log_dir = Path(config.file_logging.directory)
+    log_dir = Path(settings.logger.file_logging.directory)
     log_dir.mkdir(exist_ok=True)
 
     handler = TimedRotatingFileHandler(
         str(log_dir / "main.log"),
         when='d',
         backupCount=365,
-        encoding=config.file_logging.encoding,
+        encoding=settings.logger.file_logging.encoding,
     )
 
     handler.setLevel(level)
@@ -49,7 +52,7 @@ def setup_file_handler(
 
 
 def setup_loki_handler(
-    root: logging.Logger, config, level: int, settings: BotSettings,
+    root: logging.Logger, level: int, settings: BotSettings,
 ) -> None:
     trace_cfg = getattr(settings, 'trace_config', None)
 

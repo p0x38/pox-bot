@@ -25,7 +25,7 @@ class TranslatorOptions:
         self,
         base_path: str | os.PathLike = 'src/poxbot/assets/locales',
         fallback_language: str = 'en',
-        fallback_tone: str = 'formal',
+        fallback_tone: str = 'casual-silly',
         directory_format: str = '{base_path}/{language}/{namespace}.json',
     ):
         self.base_path = StdPath(base_path).resolve()
@@ -221,11 +221,10 @@ class I18nProcessor:
         self,
         text: str,
         locale_str: str,
-        tone: str | None = None,
         **kwargs,
     ) -> str:
         lang = self._normalize_locale(locale_str)
-        target_tone = tone or self.options.fallback_tone
+        target_tone = kwargs.get("tone") or self.options.fallback_tone
 
         if '.' in text:
             namespace, key_path = text.split('.', 1)

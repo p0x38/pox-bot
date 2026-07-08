@@ -6,6 +6,7 @@ from ..infrastructure.logger.tracing import traced
 from ..persistence.database.economy import EconomyDatabase
 from ..persistence.database.giveaway import GiveawayDatabase
 from ..persistence.database.guild_v2 import GuildSettingsDatabase
+from ..persistence.database.metrics import MetricsDatabase
 from ..persistence.database.settings import SettingsDatabase
 from ..persistence.database.stats import StatisticsDatabase
 from ..persistence.database.user import UserDatabase
@@ -27,6 +28,7 @@ class DatabaseManager:
         self.giveaway: GiveawayDatabase | None = None
         self.guild: GuildSettingsDatabase | None = None
         self.user: UserDatabase | None = None
+        self.metrics: MetricsDatabase | None = None
 
         self.loaded: bool = False
 
@@ -41,6 +43,7 @@ class DatabaseManager:
                 self.giveaway,
                 self.guild,
                 self.user,
+                self.metrics,
             )
             if db is not None
         ]
@@ -76,8 +79,10 @@ class DatabaseManager:
             self.giveaway = GiveawayDatabase(self.bot, self.dsn)
             self.guild = GuildSettingsDatabase(self.bot, self.dsn)
             self.user = UserDatabase(self.bot, self.dsn)
+            self.metrics = MetricsDatabase(self.bot, self.dsn)
 
-            await self.settings.connect()
+            await self._batch_call('connect')
+            
             await self._batch_call('setup')
 
         if self.bot.metrics:
@@ -112,5 +117,4 @@ class DatabaseManager:
         await self._batch_call('close')
 
         self.loaded = False
-
         await self._set_status_gauge(0.0)

@@ -2,6 +2,8 @@ from typing import TYPE_CHECKING
 
 from discord import Interaction
 
+from ...shared.bases.base_orm_model import Base
+
 from ...shared.bases import BaseDatabase
 from ...shared.utils import Cache
 from ..models.user_settings import SettingsData
@@ -17,6 +19,12 @@ class SettingsDatabase(BaseDatabase):
         super().__init__(bot, dsn)
         self.settings_cache = Cache(ttl=600)
         self.manager = manager
+    
+    async def on_load(self):
+        async with self.engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        self.logger.debug("Initialized tables")
+    
 
     async def get_locale(self, interaction: Interaction) -> str:
         user_id = interaction.user.id
@@ -38,18 +46,22 @@ class SettingsDatabase(BaseDatabase):
             if cached:
                 return cached
 
-        async with self.async_session() as session:
+        async with self.async_session() as session, session.begin():
             pref = await session.get(UserPreference, user_id)
             settings = pref.data if pref else SettingsData()
 
-            self.settings_cache.set(user_id, settings)
-            return settings
+        self.settings_cache.set(user_id, settings)
+        return settings
 
     async def set_settings(self, user_id: int, settings: SettingsData):
         if isinstance(settings.locale, list):
             settings.locale = settings.locale[0] if settings.locale else 'en'
 
-        self.settings_cache.set(user_id, settings)
-
         async with self.async_session() as session, session.begin():
-            await session.merge(UserPreference(user_id=user_id, data=settings))
+            pref = await session.get(UserPreference, user_id) or UserPreference(
+                user_id=user_id,
+            )
+            pref.data = settings
+            await session.merge(pref)
+
+        self.settings_cache.set(user_id, settings)

@@ -12,11 +12,10 @@ from ..services.i18n import I18nManager
 
 
 @dataclass(slots=True, frozen=True)
-class ApplicationContext:
+class ApplicationContext:  # noqa: D101
     settings: BotSettings
     
     logger: LoggerAdapter | Logger
-    bot_logger: LoggerAdapter | Logger
     
     root_path: StdPath | AsyncPath
     

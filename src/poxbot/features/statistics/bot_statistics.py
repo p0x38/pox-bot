@@ -1,14 +1,11 @@
 import string
 from datetime import datetime
-from random import choices, randint
 from time import time
 from uuid import UUID, uuid4
 
 import numpy as np
 from pytz import UTC
 
-from ...services.counter import CounterManager
-from ...shared.utils.app_path import app_dir
 from .interaction import InteractionStatistics
 
 
@@ -30,11 +27,6 @@ class BotStatistics:
 
         self.interaction_statistics: InteractionStatistics = InteractionStatistics()
 
-        self.counter_manager = CounterManager(app_dir.user_data_path / 'countdata')
-
-    def count_message(self):
-        self.counter_manager.increment('total_messages')
-
     def regenerate_signature(self):
         self.session_signature = ''.join(
             np.random.choice(
@@ -43,10 +35,3 @@ class BotStatistics:
             ),
         )
         return self.session_signature
-
-    def count_prefix_command(self):
-        self.counter_manager.increment('handled_prefix_commands')
-
-    @property
-    def total_messages(self) -> int:
-        return self.counter_manager.get_count('total_messages')

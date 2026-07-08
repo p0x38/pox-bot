@@ -1,10 +1,11 @@
+import contextlib
 import re
 from abc import ABC
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from pathlib import Path as StdPath
 from time import perf_counter
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, ClassVar
 
 from anyio import Path as AsyncPath
 from sqlalchemy import text
@@ -37,7 +38,7 @@ class BaseDatabase(ABC):
             instances.
     """
 
-    _engine = None
+    _engines: ClassVar[dict[str, Any]] = {}
 
     def __init__(self, bot: 'PoxBot', dsn: str):
         """Initialize database settings and creates the async engine.
@@ -63,10 +64,10 @@ class BaseDatabase(ABC):
             engine_kwargs['pool_size'] = 12
             engine_kwargs['max_overflow'] = 16
 
-        if BaseDatabase._engine is None:
-            BaseDatabase._engine = create_async_engine(validated_dsn, **engine_kwargs)
+        if validated_dsn not in BaseDatabase._engines:
+            BaseDatabase._engines[validated_dsn] = create_async_engine(validated_dsn, **engine_kwargs)
 
-        self.engine = BaseDatabase._engine
+        self.engine = BaseDatabase._engines[validated_dsn]
         self.async_session = async_sessionmaker(
             self.engine,
             expire_on_commit=False,
@@ -189,7 +190,7 @@ class BaseDatabase(ABC):
             start_time = perf_counter()
             status = 'success'
             try:
-                async with self.async_session() as session:
+                async with self.async_session() as session, session.begin():
                     result = await session.execute(text(query), params or {})
                     return result.mappings().all()
             except Exception:
@@ -275,5 +276,11 @@ class BaseDatabase(ABC):
 
     async def close(self):
         """Dispose of the database engine and release all connections."""
-        await self.engine.dispose()
-        self.logger.info('Database engine disposed.')
+        if not BaseDatabase._engines:
+            return
+        
+        for dsn, engine in list(BaseDatabase._engines.items()):
+            with contextlib.suppress(Exception):
+                await engine.dispose()
+                self.logger.info('Database engine disposed for DSN endpoint: "%s"', dsn)
+        BaseDatabase._engines.clear()

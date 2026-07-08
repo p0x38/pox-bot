@@ -28,6 +28,7 @@ class OpenRouterStreamer(BaseLLMProvider):
         """
         self.mgr = manager
         self.api_key = api_key
+        self.client = OpenRouter(api_key=self.api_key)
 
     async def stream_response(
         self,
@@ -50,47 +51,39 @@ class OpenRouterStreamer(BaseLLMProvider):
         if not isinstance(query, list):
             raise InvalidQueryData()
         
-        client = OpenRouter(api_key=self.api_key)
-
         thinking_logged = False
         generating_logged = False
         ttft_recorded = False
-        try:
-            self.mgr.logger.info(
-                'Requesting response to OpenRouter at %s...',
-                ctx.start_time.isoformat(),
-            )
-            response = await client.chat.send_async(
-                model=llm_model,
-                messages=query,
-                stream=True,
-            )
+        self.mgr.logger.info(
+            'Requesting response to OpenRouter at %s...',
+            ctx.start_time.isoformat(),
+        )
+        response = await self.client.chat.send_async(
+            model=llm_model,
+            messages=query,
+            stream=True,
+        )
 
-            async for chunk in response:
-                if not thinking_logged:
-                    thinking_logged = True
-                    self.mgr.logger.info('LLM is thinking...')
-                choice = chunk.choices[0] if chunk.choices else None
-                content = getattr(choice.delta, "content", None) if choice else None
-                if content:
-                    if not ttft_recorded:
-                        await self.mgr._record_metric(
-                            name='bot_ai_ttft_seconds',
-                            m_type='histogram',
-                            value_or_amount=ctx.elapsed_seconds,
-                            labels=base_labels,
-                            description=(
-                                'Time to first token (TTFT) '
-                                'for LLM responses in seconds'
-                            ),
-                        )
-                        ttft_recorded = True
-                    if not generating_logged:
-                        generating_logged = True
-                        self.mgr.logger.info('LLM is generating response...')
-                    yield content
-        finally:
-            if hasattr(client, "close"):
-                await client.close()
-            
-            self.mgr.logger.debug('OpenRouter client successfully closed')
+        async for chunk in response:
+            if not thinking_logged:
+                thinking_logged = True
+                self.mgr.logger.info('LLM is thinking...')
+            choice = chunk.choices[0] if chunk.choices else None
+            content = getattr(choice.delta, "content", None) if choice else None
+            if content:
+                if not ttft_recorded:
+                    await self.mgr._record_metric(
+                        name='bot_ai_ttft_seconds',
+                        m_type='histogram',
+                        value_or_amount=ctx.elapsed_seconds,
+                        labels=base_labels,
+                        description=(
+                            'Time to first token (TTFT) '
+                            'for LLM responses in seconds'
+                        ),
+                    )
+                    ttft_recorded = True
+                if not generating_logged:
+                    generating_logged = True
+                    self.mgr.logger.info('LLM is generating response...')
+                yield content

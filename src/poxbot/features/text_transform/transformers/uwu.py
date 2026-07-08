@@ -1,3 +1,4 @@
+import re
 import unicodedata
 from types import MappingProxyType
 

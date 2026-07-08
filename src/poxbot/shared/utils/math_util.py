@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 
 
@@ -33,3 +35,12 @@ def approach_target(
 
 def clamp[T: (int, float)](value: T, lo: T, hi: T) -> T:
     return max(lo, min(value, hi))
+
+
+def get_next_power_of_two(n: int) -> int:
+    if n <= 0:
+        return 1
+    
+    exponent = math.ceil(math.log2(n + 1))
+    
+    return 2 ** exponent

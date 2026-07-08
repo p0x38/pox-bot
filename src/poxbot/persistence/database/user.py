@@ -12,7 +12,7 @@ class UserDatabase(BaseDatabase):
         super().__init__(bot, dsn)
 
     async def get_full_profile(self, user_id: int) -> UserProfile | None:
-        async with self.async_session() as session:
+        async with self.async_session() as session, session.begin():
             return await session.get(UserProfile, user_id)
 
     async def update_profile(
@@ -35,7 +35,7 @@ class UserDatabase(BaseDatabase):
             await session.merge(profile)
 
     async def get_activity_stats(self, user_id: int) -> UserActivity | None:
-        async with self.async_session() as session:
+        async with self.async_session() as session, session.begin():
             return await session.get(UserActivity, user_id)
 
     async def increment_activity(self, user_id: int, activity_type: str):

@@ -1,13 +1,14 @@
 import logging
 from logging import getLogger
 
+from ...config.schema import BotSettings
 from .adapters import PrefixAdapter
 from .handlers import setup_console_handler, setup_file_handler, setup_loki_handler
 
 _configured = False
 
 
-def configure_logging(settings):
+def configure_logging(settings: BotSettings):
     global _configured  # noqa: PLW0603
     
     logging.getLogger("urllib3").setLevel(logging.INFO)
@@ -24,10 +25,14 @@ def configure_logging(settings):
     root = getLogger()
     root.setLevel(level)
     root.handlers.clear()
-
-    setup_console_handler(root, config, level)
-    setup_file_handler(root, config, level, settings)
-    setup_loki_handler(root, config, level, settings)
+    
+    if settings.logger.enabled:
+        if settings.logger.console_logging.enabled:
+            setup_console_handler(root, level, settings)
+        if settings.logger.file_logging.enabled:
+            setup_file_handler(root, level, settings)
+    if settings.trace_config.enabled:
+        setup_loki_handler(root, level, settings)
 
     _configured = True
 

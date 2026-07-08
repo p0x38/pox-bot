@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import select
 
 from ...shared.bases import BaseDatabase
+from ...shared.bases.base_orm_model import Base
 from ...shared.utils import Cache
 from ..models.economy_orm import (
     EconomyInventory,
@@ -19,18 +20,23 @@ class EconomyDatabase(BaseDatabase):
     def __init__(self, bot: 'PoxBot', dsn: str):
         super().__init__(bot, dsn)
         self._cache = Cache(ttl=300)
+    
+    async def on_load(self):
+        async with self.engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        self.logger.debug("Initialized tables")
 
     async def get_user(self, user_id: int) -> EconomyUser:
         cached = self._cache.get(user_id)
         if cached:
             return cached
 
-        async with self.async_session() as session:
+        async with self.async_session() as session, session.begin():
             user = await session.get(EconomyUser, user_id)
             if not user:
                 user = EconomyUser(user_id=user_id)
                 session.add(user)
-                await session.commit()
+
             self._cache.set(user_id, user)
             return user
 

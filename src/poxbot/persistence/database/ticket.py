@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import and_, select
+from sqlalchemy import select
 
 from ...shared.bases import BaseDatabase
 from ..models.guild_settings_v2_orm import ActiveTicket
@@ -14,13 +14,14 @@ class TicketDatabase(BaseDatabase):
         super().__init__(bot, dsn)
 
     async def get_ticket(self, channel_id: int) -> ActiveTicket | None:
-        async with self.async_session() as session:
+        async with self.async_session() as session, session.begin():
             return await session.get(ActiveTicket, channel_id)
 
     async def get_user_tickets(self, user_id: int, guild_id: int) -> list[ActiveTicket]:
-        async with self.async_session() as session:
+        async with self.async_session() as session, session.begin():
             stmt = select(ActiveTicket).where(
-                and_(ActiveTicket.user_id == user_id, ActiveTicket.guild_id == guild_id),
+                ActiveTicket.user_id == user_id,
+                ActiveTicket.guild_id == guild_id,
             )
             result = await session.execute(stmt)
             return list(result.scalars().all())
