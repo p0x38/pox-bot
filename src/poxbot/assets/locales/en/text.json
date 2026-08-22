@@ -270,6 +270,25 @@
             }
         }
     },
+    "user_flags": {
+        "active_developer": "Active Developer",
+        "bug_hunter": "Bug Hunter",
+        "bug_hunter_level_2": "Level 2 Bug Hunter",
+        "discord_certified_moderator": "Discord Certified Moderator",
+        "early_supporter": "Early Supporter",
+        "early_verified_bot_developer": "Early Verified Bot Developer",
+        "hypesquad": "Hypesquad",
+        "hypesquad_balance": "Hypesquad Balance Member",
+        "hypesquad_bravery": "Hypesquad Bravery Member",
+        "hypesquad_brilliance": "Hypesquad Brilliance Member",
+        "partner": "Partner",
+        "spammer": "Likely Spammer",
+        "staff": "Discord Staff",
+        "system": "Discord System",
+        "team_user": "Team User",
+        "verified_bot": "Bot (Verified)",
+        "verified_bot_developer": "Verified Bot Developer"
+    },
     "unknown": "Unknown",
     "unknown_join": "Cannot find the date when this bro joined."
 }
