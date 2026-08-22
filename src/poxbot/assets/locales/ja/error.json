@@ -22,6 +22,20 @@
         "unsupported_channel": "この種のチャンネルはサポートしません! \n:3",
         "user_not_found": "そのユーザーが見つかりませんでした... :3"
     },
+    "embed_exceptions": {
+        "MissingPermissions": {
+            "title": "権利が足りないよ！",
+            "description": "{mention}、ちょっと待って！\n必要な権限が足りないよ‼\n{permission}"
+        },
+        "BotMissingPermissions": {
+            "title": "僕に必要な権限が足りないよ！",
+            "description": "僕が必要な権限が足りないよ‼\n必要な権限: {permission}"
+        },
+        "CommandOnCooldown": {
+            "title": "いったん待って‼",
+            "description": "コマンドを実行する前に{remaining}秒ぐらいは待って！"
+        }
+    },
     "embeds": {
         "blacklist_not_configured": {
             "description": "このサーバーにはブラックリストがまだ設定されていません。",
