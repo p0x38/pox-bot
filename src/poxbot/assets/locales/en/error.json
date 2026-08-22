@@ -22,7 +22,20 @@
         "unsupported_channel": "I don't support this kind of channel! :3",
         "user_not_found": "Couldn't find that user... :3"
     },
-    "embed_exceptions": {},
+    "embed_exceptions": {
+        "MissingPermissions": {
+            "title": "Insuffient permissions",
+            "description": "Hold up {mention}!\nYou need these required permissions to run!\n{permission}"
+        },
+        "BotMissingPermissions": {
+            "title": "Bot has insuffient permissions",
+            "description": "Wait, I don't have these required permissions to do it!\nRequired permission(s): {permission}"
+        },
+        "CommandOnCooldown": {
+            "title": "You're on cooldown",
+            "description": "You have to wait {remaining, plural, =0 {less than a second} =1 {a second} other {# seconds}} before using the command."
+        }
+    },
     "embeds": {
         "blacklist_not_configured": {
             "description": "The blacklist hasn't been configured for this server yet.",
