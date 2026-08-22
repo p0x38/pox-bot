@@ -87,3 +87,4 @@ venv/
 voices/
 wheels/
 *.sql
+*.dump
