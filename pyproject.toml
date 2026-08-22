@@ -78,6 +78,7 @@ dependencies = [
     "google-re2>=1.1.20251105",
     "alembic>=1.18.5",
     "pg8000>=1.31.5",
+    "textual>=8.2.8",
 ]
 
 [project.optional-dependencies]
