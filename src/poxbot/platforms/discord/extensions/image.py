@@ -1,9 +1,12 @@
+import pathlib
 import random
 import re
 import string
 from datetime import datetime
 from io import BytesIO
+from itertools import islice
 
+import aiofiles
 from discord import (
     Color,
     Embed,
@@ -110,7 +113,9 @@ class ImageCog(Cog):
         name='image',
         description=app_commands.locale_str('command.image.description'),
         allowed_contexts=app_commands.AppCommandContext(
-            guild=True, dm_channel=True, private_channel=True,
+            guild=True,
+            dm_channel=True,
+            private_channel=True,
         ),
     )
 
@@ -129,7 +134,10 @@ class ImageCog(Cog):
     @group.command(name='qrcode', description='Generate QR Code')
     @app_commands.autocomplete(theme=theme_autocomplete)
     async def generate_qrcode(
-        self, interaction: Interaction, text: str, theme: str | None = 'dark',
+        self,
+        interaction: Interaction,
+        text: str,
+        theme: str | None = 'dark',
     ):
         embed = Embed(color=Color.green())
         if not text.strip():
@@ -236,6 +244,59 @@ class ImageCog(Cog):
                 text,
                 file=File(gif, filename='pat.gif'),
             )
+
+    async def image_autocomplete(
+        self,
+        _interaction: Interaction,
+        current: str,
+    ) -> list[app_commands.Choice[str]]:
+        choices: list[app_commands.Choice[str]] = []
+
+        base_path = self.bot.resources.assets_path / 'images'
+
+        files = [
+            f
+            for f in base_path.glob('*')
+            if f.suffix.lower() in {'.jpg', '.jpeg', '.png'}
+        ]
+
+        for path in files:
+            choices.append(app_commands.Choice(name=path.stem, value=str(path)))
+            choices.append(
+                app_commands.Choice(name=path.stem.replace('_', ' '), value=str(path)),
+            )
+        
+        return list(
+            islice(
+                (
+                    v for v in choices
+                    if (current or "").lower() in (getattr(v, "name", "") or "")
+                    .lower()
+                ),
+                25,
+            ),
+        )
+    
+    @group.command(
+        name='asset',
+        description=app_commands.locale_str("command.image.asset.description"),
+    )
+    @app_commands.autocomplete(image=image_autocomplete)
+    @app_commands.checks.cooldown(2, 6, key=lambda i: i.user.id)
+    async def generate_image(self, interaction: Interaction, image: str):
+        await interaction.response.defer()
+        
+        path = pathlib.Path(image)
+        
+        if path.exists():  # noqa: ASYNC240
+            async with aiofiles.open(image, 'rb') as f:
+                content = await f.read()
+            
+            pic = File(BytesIO(content), filename=path.name)
+            
+            return await interaction.followup.send(file=pic)
+
+        await interaction.followup.send("Could not find the image with that")
 
 
 async def setup(bot):

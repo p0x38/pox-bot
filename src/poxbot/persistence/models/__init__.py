@@ -22,6 +22,9 @@ from .guild_settings_v2 import (
     GlobalChatConfig as GlobalChatConfig,
 )
 from .guild_settings_v2 import (
+    GlobalChatDeliveryType as GlobalChatDeliveryType,
+)
+from .guild_settings_v2 import (
     GuildConfigV2 as GuildConfigV2,
 )
 from .guild_settings_v2 import (

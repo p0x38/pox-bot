@@ -8,10 +8,10 @@ from ...shared.bases import Base
 
 class UserStatistics(Base):
     __tablename__ = 'user_statistics'
-    user_id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
-    xp: Mapped[int] = mapped_column(BigInteger, default=0)
-    total_messages: Mapped[int] = mapped_column(BigInteger, default=0)
-    level: Mapped[int] = mapped_column(BigInteger, default=1)
+    user_id: Mapped[int] = mapped_column(BigInteger, primary_key=True, nullable=False)
+    xp: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
+    total_messages: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
+    level: Mapped[int] = mapped_column(BigInteger, default=1, nullable=False)
 
 
 class MessageCache(Base):

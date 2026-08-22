@@ -104,11 +104,17 @@ class TicketConfig(BaseConfigData):
     staff_role: int | None = None
 
 
+class GlobalChatDeliveryType(IntEnum):
+    bot = 0
+    webhook = 1
+
+
 @dataclass
 class GlobalChatConfig(BaseConfigData):
     channel_id: int | None = None
     webhook_url: str | None = None
     silent: bool = False
+    message_delivery_type: GlobalChatDeliveryType = GlobalChatDeliveryType.bot
 
 
 @dataclass
@@ -254,12 +260,27 @@ class GuildConfigV2:
         )
 
         gc = f.get('global_chat', {})
+        delivery_type_raw = gc.get('message_delivery_type', gc.get('delivery_type', 0))
+        try:
+            delivery_type = GlobalChatDeliveryType(delivery_type_raw)
+        except ValueError:
+            if isinstance(delivery_type_raw, str):
+                candidate = delivery_type_raw.lower()
+                if candidate == 'webhook':
+                    delivery_type = GlobalChatDeliveryType.webhook
+                else:
+                    delivery_type = GlobalChatDeliveryType.bot
+            else:
+                delivery_type = GlobalChatDeliveryType.bot
+
         parsed['global_chat'] = GlobalChatConfig(
             enabled=gc.get('enabled', False),
             last_execution=gc.get('last_execution', datetime.now(UTC).timestamp()),
             last_executor=gc.get('last_executor'),
             channel_id=gc.get('channel_id'),
             webhook_url=gc.get('webhook_url'),
+            silent=gc.get('silent', False),
+            message_delivery_type=delivery_type,
         )
 
         return cls(version=data.get('version', 2), features=parsed)

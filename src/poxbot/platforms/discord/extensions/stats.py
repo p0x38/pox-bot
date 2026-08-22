@@ -46,16 +46,75 @@ class StatsCog(commands.Cog):
                 content=message.content,
             )
 
+            text_length = len(message.clean_content)
+
+            xp_process_result = await self.bot.database.stats.add_xp(
+                user_id=message.author.id,
+                count=text_length,
+            )
+
+            if xp_process_result.get('leveled_up') and message.guild:
+                new_level = xp_process_result.get('new_level')
+
+                self.bot.logger.debug(
+                    '%s reached to %d!', message.author.name, new_level,
+                )
+
     group = app_commands.Group(
         name='stats',
         description=app_commands.locale_str('command.stats.description'),
     )
 
     @group.command(
+        name='globaltop',
+        description=app_commands.locale_str('command.stats.globaltop.description'),
+    )
+    async def global_leaderboard(self, interaction: Interaction):
+        loc = await self.bot.get_locale(interaction)
+        embed = Embed()
+
+        await interaction.response.defer()
+
+        if self.db:
+            rows = await self.db.get_leaderboard(sort_by='xp', limit=25)
+
+            embed = Embed(
+                title=self.bot.internal_translator.T(
+                    'command.stats.top.embeds.default.title',
+                    loc,
+                ),
+                color=Color.gold(),
+            )
+            description = ''
+
+            if rows:
+                for i, row in enumerate(rows, 1):
+                    user = self.bot.get_user(row.user_id) or f'User({row.user_id})'
+                    description += f'**{i}.** {user} • Lvl {row.level} ({row.xp} XP)\n'
+            else:
+                description = "Wow, there's no one inside here."
+
+            embed.description = description
+            await interaction.followup.send(embed=embed)
+        else:
+            embed.title = self.bot.internal_translator.T(
+                'error.embeds.database_not_available.title',
+                loc,
+            )
+            embed.description = self.bot.internal_translator.T(
+                'error.embeds.database_not_available.description',
+                loc,
+            )
+            embed.timestamp = datetime.now(UTC)
+            embed.color = Color.red()
+
+            return interaction.followup.send(embed=embed)
+    
+    @group.command(
         name='top',
         description=app_commands.locale_str('command.stats.top.description'),
     )
-    async def leaderboard(self, interaction: Interaction):
+    async def local_leaderboard(self, interaction: Interaction):
         loc = await self.bot.get_locale(interaction)
         embed = Embed()
 
@@ -380,11 +439,13 @@ class StatsCog(commands.Cog):
                 title_name = target.display_name
             else:
                 chan = interaction.channel
-                if hasattr(chan, 'name') and chan.name:
-                    title_name = f'#{chan.name}'
+                if hasattr(chan, 'name') and chan.name:  # pyright: ignore[reportAttributeAccessIssue]
+                    title_name = f'#{chan.name}'  # pyright: ignore[reportAttributeAccessIssue]
                 else:
                     recipient = getattr(chan, 'recipient', None) or getattr(
-                        chan, 'recipients', None,
+                        chan,
+                        'recipients',
+                        None,
                     )
                     if recipient:
                         if isinstance(recipient, (list, tuple)):
@@ -393,7 +454,9 @@ class StatsCog(commands.Cog):
                             )
                         else:
                             title_name = getattr(
-                                recipient, 'display_name', str(recipient),
+                                recipient,
+                                'display_name',
+                                str(recipient),
                             )
                     else:
                         title_name = 'Direct Message'

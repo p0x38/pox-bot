@@ -1,4 +1,5 @@
 from discord import (
+    AllowedMentions,
     Embed,
     Forbidden,
     HTTPException,
@@ -118,9 +119,27 @@ class RoleCog(commands.Cog):
             return await interaction.response.send_message("You're using User-mode.")
         lines = [f'<@&{role.id}>' for role in member.roles]
 
-        embed = Embed(title=f"{member.name}'s role list", description='\n'.join(lines))
-
-        return await interaction.response.send_message(embed=embed)
+        return await interaction.response.send_message(
+            '\n'.join(lines),
+            allowed_mentions=AllowedMentions.none(),
+        )
+    
+    @group.command(
+        name='list_users_in_role',
+        description=app_commands.locale_str(
+            "command.role.list_users_in_role.description",
+        ),
+    )
+    async def list_users_in_role(self, interaction: Interaction, role: Role):
+        if interaction.guild is None:
+            return await interaction.response.send_message("You're using User-mode.")
+        
+        lines = [f'<@{user.id}>' for user in role.members]
+        
+        return await interaction.response.send_message(
+            '\n'.join(lines),
+            allowed_mentions=AllowedMentions.none(),
+        )
 
     async def permission_autocomplete(
         self,

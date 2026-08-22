@@ -153,10 +153,12 @@ class Metrics:
         self._dynamic_histograms: dict[str, Any] = {}
 
     def start_server(self):
-        start_http_server(
-            addr=self.config.prometheus_host,
-            port=self.config.prometheus_server_port,
-        )
+        if not self.config.otlp_traces_endpoint:
+            start_http_server(
+                addr=self.config.prometheus_host,
+                port=self.config.prometheus_server_port,
+            )
+
         self.logger.info(
             f'Prometheus metrics endpoint listening on http://{self.config.prometheus_host}:{self.config.prometheus_server_port}',
         )

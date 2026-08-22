@@ -44,7 +44,9 @@ class I18nTranslator:
 
         return self._normalize_locale(interaction.locale)
 
-    def translate_string(self, text: str, locale: str | Locale, **kwargs) -> str:
+    def translate_string(
+        self, text: str | list[str], locale: str | Locale, **kwargs
+    ) -> str:
         return self.processor.translate_string(text, str(locale), **kwargs)
 
     def translate_plural(self, key: str, count: int, locale: str, **kwargs) -> str:
@@ -70,20 +72,20 @@ class I18nTranslator:
 
     def T(
         self,
-        key: str,
+        key: str | list[str],
         locale: str | Locale | None = None,
         placeholders: dict[str, Any] | None = None,
         **kwargs,
     ) -> str | app_commands.locale_str:
         if locale is None:
-            return key
+            return key[0]
 
         merged_kwargs = {}
         if placeholders:
             merged_kwargs.update(placeholders)
         if kwargs:
             merged_kwargs.update(kwargs)
-        
+
         merged_kwargs.pop('text', None)
         merged_kwargs.pop('locale_str', None)
 

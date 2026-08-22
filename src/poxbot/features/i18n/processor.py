@@ -219,34 +219,62 @@ class I18nProcessor:
 
     def translate_string(
         self,
-        text: str,
+        key: str | list[str],
         locale_str: str,
         **kwargs,
     ) -> str:
+        """Translate a string key to a localized string with fallback support.
+        
+        Args:
+            key: Translation key as string or list of strings for fallback chain.
+            locale_str: Locale string to translate to.
+            **kwargs: Format arguments for ICU or string formatting.
+            
+        Returns:
+            Translated and formatted string.
+        """
         lang = self._normalize_locale(locale_str)
         target_tone = kwargs.get("tone") or self.options.fallback_tone
 
-        if '.' in text:
-            namespace, key_path = text.split('.', 1)
-        else:
-            namespace, key_path = 'main', text
+        keys_to_try = key if isinstance(key, list) else [key]
+        primary_key = keys_to_try[0]
+        
+        translated = None
+        namespace = 'main'
+        key_path = ''
+        
+        for current_key in keys_to_try:
+            if '.' in current_key:
+                namespace, key_path = current_key.split('.', 1)
+            else:
+                namespace, key_path = 'main', current_key
 
-        data = self._get_cached_translation(lang, namespace)
-        translated = self._resolve_key_with_tone(data, key_path, target_tone)
+            data = self._get_cached_translation(lang, namespace)
+            translated = self._resolve_key_with_tone(data, key_path, target_tone)
 
-        if (
-            translated is None
-            or (isinstance(translated, str) and not translated.strip())
-        ) and lang != self.options.fallback_language:
-            en_data = self._get_cached_translation(
-                self.options.fallback_language,
-                namespace,
-            )
-            translated = self._resolve_key_with_tone(
-                en_data,
-                key_path,
-                self.options.fallback_tone,
-            )
+            if translated is not None and (
+                not isinstance(translated, str) or translated.strip()
+            ):
+                break
+
+            # Try fallback language if current language failed
+            if (
+                translated is None
+                or (isinstance(translated, str) and not translated.strip())
+            ) and lang != self.options.fallback_language:
+                en_data = self._get_cached_translation(
+                    self.options.fallback_language,
+                    namespace,
+                )
+                translated = self._resolve_key_with_tone(
+                    en_data,
+                    key_path,
+                    self.options.fallback_tone,
+                )
+                if translated is not None and (
+                    not isinstance(translated, str) or translated.strip()
+                ):
+                    break
 
         is_missing = (translated is None) or (
             isinstance(translated, str) and not translated.strip()
@@ -267,18 +295,18 @@ class I18nProcessor:
                 is_same_as_en = True
 
         if is_missing or is_same_as_en:
-            if text not in self.missing_keys_buffer:
-                self.missing_keys_buffer[text] = set()
+            if primary_key not in self.missing_keys_buffer:
+                self.missing_keys_buffer[primary_key] = set()
 
             report_tag = f'{lang} (untranslated)' if is_same_as_en else lang
-            self.missing_keys_buffer[text].add(report_tag)
+            self.missing_keys_buffer[primary_key].add(report_tag)
 
             if self.batch_task is None:
                 try:
                     loop = asyncio.get_running_loop()
                     self.batch_task = loop.create_task(self._flush_missing_keys())
                     self.batch_task.add_done_callback(
-                        lambda _t: setattr(self, 'batch_task', None),
+                        lambda _: setattr(self, 'batch_task', None),
                     )
                 except RuntimeError:
                     pass
@@ -295,7 +323,7 @@ class I18nProcessor:
                 )
 
         if translated is None:
-            return text
+            return primary_key
 
         if isinstance(translated, str):
             if not kwargs:
@@ -313,8 +341,8 @@ class I18nProcessor:
                     return self._format_icu(translated, lang, kwargs)
                 except Exception:
                     logger.exception(
-                        "ICU format failed for '%s' (locale={lang}, kwargs=%s)",
-                        text, kwargs,
+                        "ICU format failed for '%s' (locale=%s, kwargs=%s)",
+                        primary_key, lang, kwargs,
                     )
                     for k, v in kwargs.items():
                         translated = translated.replace(f'{{{k}}}', str(v))

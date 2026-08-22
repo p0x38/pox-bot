@@ -66,7 +66,7 @@ class ActivityCog(commands.Cog):
         return {
             'status': Status.online,
             'activity': CustomActivity(
-                name=f'{total_guilds} {chosen}',
+                name=chosen,
             ),
         }
 

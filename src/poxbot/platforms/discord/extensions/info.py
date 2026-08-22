@@ -84,7 +84,7 @@ class FeedbackModal(ui.Modal):
         await interaction.followup.send('Thank you for your feedback!', ephemeral=True)
 
     async def on_error(self, interaction: Interaction, error: Exception) -> None:  # noqa: ARG002
-        self.bot.logger.exception(
+        self.bot.logger.error(
             'Exception thrown while trying to process the submission',
         )
         if not interaction.response.is_done():
@@ -346,7 +346,7 @@ class DynamicInfoView(ui.View):
                         ),
                         'value': (
                             f'{memory_info.used // (1024**2)}MB /'
-                            '{memory_info.total // (1024**2)}MB'
+                            f'{memory_info.total // (1024**2)}MB'
                         ),
                     },
                 },
@@ -371,7 +371,7 @@ class InfoCog(commands.Cog):
     def make_bar(self, percent, length=10):
         filled_length = int(length * percent / 100)
         bar = '#' * filled_length + '_' * (length - filled_length)
-        return f'[`{bar}`] {percent}%'
+        return f'[`{bar}`] {round(percent, 2)}%'
 
     @group.command(
         name='retrieve',

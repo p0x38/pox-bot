@@ -34,19 +34,22 @@ class RobloxAPICog(commands.Cog):
         _interaction: Interaction,
         current: str,
     ) -> list[app_commands.Choice[str]]:
+        if not current:
+            return []
+        
         choices = []
-        async for user in self._client.user_search(
-            current,
-            max_items=10,
-        ):
+        
+        async for user in self._client.user_search(current).items(25):
             choices.append(
                 app_commands.Choice(
                     name=f'{user.display_name} (@{user.name})',
                     value=user.name,
                 ),
             )
-            if len(choices) >= 24:
+            
+            if len(choices) >= 25:
                 break
+        
         return choices
 
     @cached(300)
@@ -67,6 +70,7 @@ class RobloxAPICog(commands.Cog):
             ),
         ],
     )
+    @app_commands.autocomplete(username=roblox_username_autocomplete)
     async def get_user_avatar(
         self,
         interaction: Interaction,
@@ -76,7 +80,7 @@ class RobloxAPICog(commands.Cog):
         await interaction.response.defer()
         loc = await self.bot.get_locale(interaction)
 
-        cache_id = (':'.join(['rbx', 'users', 'thumbnail', render_type, username]),)
+        cache_id = ':'.join(['rbx', 'users', 'thumbnail', render_type, username])
 
         avatar_cache = self.bot.resources.cache.get(cache_id)
 
@@ -178,6 +182,7 @@ class RobloxAPICog(commands.Cog):
         name='user',
         description=app_commands.locale_str('command.roblox.user.description'),
     )
+    @app_commands.autocomplete(username=roblox_username_autocomplete)
     async def roblox_get_user(self, interaction: Interaction, username: str):
         loc = (
             await self.bot.database.settings.get_locale(interaction)

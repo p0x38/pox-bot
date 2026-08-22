@@ -37,6 +37,7 @@ from ....shared.utils import (
     get_next_power_of_two,
     parse_duration,
 )
+from ....shared.utils.formats.user import format_userflags
 
 MAX_TIMEOUT = timedelta(days=28)
 SUFFIX = 'Action taken by {} via ContextMenu'
@@ -432,9 +433,35 @@ class UserCog(commands.Cog):
                         'text.boolean.true' if user.bot else 'text.boolean.false',
                         loc,
                     ),
+                    'user_type': self.bot.internal_translator.T(
+                        'text.user_type.user',
+                        loc,
+                    ),
                     'user_creation': user.created_at.strftime('%Y-%m-%d %H:%M:%S')
                     + f' (<t:{int(user.created_at.timestamp())}:R>)',
                 }
+                
+                translated_strings = []
+                
+                for key in format_userflags(user.public_flags):
+                    result = self.bot.internal_translator.T(key, loc)
+                    if result == key:
+                        continue
+                    
+                    translated_strings.append(result)
+                    
+                temp1['user_additional'] = ', '.join(translated_strings)
+                
+                if user.system:
+                    temp1['user_type'] = self.bot.internal_translator.T(
+                        'text.user_type.system',
+                        loc,
+                    )
+                elif user.bot:
+                    temp1['user_type'] = self.bot.internal_translator.T(
+                        'text.user_type.bot',
+                        loc,
+                    )
 
                 if isinstance(user, Member):
                     roles = [role for role in user.roles if role.name != '@everyone']
@@ -445,7 +472,9 @@ class UserCog(commands.Cog):
                         if user.joined_at
                         else (self.bot.internal_translator.T('text.unknown_join', loc))
                     )
-                    temp1['user_roles'] = ', '.join([f'<@&{role.id}' for role in roles])
+                    temp1['user_roles'] = ', '.join(
+                        [f'<@&{role.id}>' for role in roles],
+                    )
                     temp1['user_status'] = format_status(
                         self.bot,
                         user.client_status,

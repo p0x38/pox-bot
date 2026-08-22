@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING
 
+from discord import Guild, Message
 from sqlalchemy import delete, desc, extract, func, select
 
-from ...shared.bases.base_orm_model import Base
-
 from ...shared.bases import BaseDatabase
+from ...shared.bases.base_orm_model import Base
 from ..models.stats_orm import MessageCache, UserStatistics
 
 if TYPE_CHECKING:
@@ -14,17 +14,30 @@ if TYPE_CHECKING:
 class StatisticsDatabase(BaseDatabase):
     def __init__(self, bot: 'PoxBot', dsn: str):
         super().__init__(bot, dsn)
-    
+
     async def on_load(self):
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
-        self.logger.debug("Initialized tables")
+        self.logger.debug('Initialized tables')
 
     async def add_xp(self, user_id: int, count: int):
         async with self.async_session() as session, session.begin():
-            user = await session.get(UserStatistics, user_id) or UserStatistics(
-                user_id=user_id,
-            )
+            user = await session.get(UserStatistics, user_id)
+
+            if not user:
+                user = UserStatistics(
+                    user_id=user_id,
+                    xp=0,
+                    level=0,
+                    total_messages=0,
+                )
+
+            if user.xp is None:
+                user.xp = 0
+            if user.level is None:
+                user.level = 0
+            if user.total_messages is None:
+                user.total_messages = 0
 
             old_level = user.level
             user.xp += count
@@ -39,6 +52,15 @@ class StatisticsDatabase(BaseDatabase):
             return await session.get(UserStatistics, user_id)
 
     async def get_leaderboard(self, sort_by: str = 'xp', limit: int = 10):
+        async with self.async_session() as session, session.begin():
+            col = getattr(UserStatistics, sort_by, UserStatistics.xp)
+            stmt = select(UserStatistics).order_by(desc(col)).limit(limit)
+            result = await session.execute(stmt)
+            return list(result.scalars().all())
+
+    async def get_guild_leaderboard(
+        self, guild: Guild, sort_by: str = 'xp', limit: int = 10,
+    ):
         async with self.async_session() as session, session.begin():
             col = getattr(UserStatistics, sort_by, UserStatistics.xp)
             stmt = select(UserStatistics).order_by(desc(col)).limit(limit)
@@ -75,14 +97,16 @@ class StatisticsDatabase(BaseDatabase):
             return list(result.scalars().all())
 
     async def get_active_pattern(
-        self, channel_id: int, target_user_id: int | None = None,
+        self,
+        channel_id: int,
+        target_user_id: int | None = None,
     ):
         async with self.async_session() as session, session.begin():
-            if "sqlite" in self.engine.url.drivername:
+            if 'sqlite' in self.engine.url.drivername:
                 hour_expr = func.strftime('%H', MessageCache.created_at)
             else:
                 hour_expr = extract('hour', MessageCache.created_at)
-                
+
             stmt = select(
                 hour_expr.label('hour'),
                 func.count().label('count'),

@@ -1,9 +1,11 @@
 import re
 import unicodedata
 from time import perf_counter
+from typing import Literal
 
 import tldextract
 from discord import (
+    AllowedMentions,
     Color,
     Embed,
     Forbidden,
@@ -12,12 +14,16 @@ from discord import (
     Message,
     NotFound,
     TextChannel,
+    Webhook,
     app_commands,
 )
 from discord.ext import commands
 
 from ....application import PoxBot
-from ....persistence.models.guild_settings_v2 import AntiSpamFilter
+from ....persistence.models.guild_settings_v2 import (
+    AntiSpamFilter,
+    GlobalChatDeliveryType,
+)
 from ....services.spam import AntiSpamManager
 
 
@@ -27,12 +33,35 @@ class GlobalChatCog(commands.Cog):
         self.antispam_managers: dict[int, AntiSpamManager] = {}
         self.censored_words = [r'(?:https?://)?discord\.gg\/[a-zA-Z0-9]+']
         self.whitelisted_urls = []
+        
+        self.webhook_cache: dict[int, Webhook] = {}
 
     def _record_counter(self, name: str, description: str, labels: dict[str, str]):
         if self.bot.metrics:
             self.bot.metrics.increment_counter(
                 name=name, description=description, amount=1, labels=labels,
             )
+    
+    async def _get_or_create_webhook(self, channel: TextChannel) -> Webhook | None:
+        if channel.id in self.webhook_cache:
+            return self.webhook_cache[channel.id]
+        
+        try:
+            webhooks = await channel.webhooks()
+            for wh in webhooks:
+                if wh.user == self.bot.user:
+                    self.webhook_cache[channel.id] = wh
+                    return wh
+            
+            new_wh = await channel.create_webhook(
+                name="p0x38bot_globalchat_webhook",
+                reason="Create a webhook for sending global chat messages",
+            )
+            self.webhook_cache[channel.id] = new_wh
+        except (Forbidden, HTTPException):
+            return None
+        else:
+            return new_wh
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
@@ -112,7 +141,7 @@ class GlobalChatCog(commands.Cog):
             check_dns=False,
             get_indices=True,
             with_schema_only=True,
-        )
+        ) or []
 
         for item in reversed(found):
             if isinstance(item, str):
@@ -155,10 +184,9 @@ class GlobalChatCog(commands.Cog):
                 {'list': ', '.join(descriptions[:-1]), 'last': descriptions[-1]},
             )
 
-        prefix = self.bot.internal_translator.T(
+        return self.bot.internal_translator.T(
             'text.moderation.flagged_message', locale, {'categories': combined},
         )
-        return prefix
 
     async def is_text_sendable(self, message: Message):
         if message.guild and self.bot.resources.profanity_filter.is_profane(
@@ -195,6 +223,8 @@ class GlobalChatCog(commands.Cog):
         description_text = original.content.replace(
             '@everyone', '@\u200beveryone',
         ).replace('@here', '@\u200bhere')
+        
+        content_text = await self.censor_urls(description_text)
 
         if not description_text:
             if original.attachments:
@@ -205,7 +235,7 @@ class GlobalChatCog(commands.Cog):
                 return
 
         embed = Embed(
-            description=await self.censor_urls(description_text),
+            description=content_text,
             color=Color.green(),
             timestamp=original.created_at,
         )
@@ -265,56 +295,104 @@ class GlobalChatCog(commands.Cog):
 
                 if global_feat.enabled and global_feat.channel_id:
                     channel = guild.get_channel(global_feat.channel_id)
-                    if channel and isinstance(channel, TextChannel):
-                        has_permission = channel.permissions_for(guild.me).send_messages
-                        if not has_permission:
+                    if not channel or not isinstance(channel, TextChannel):
+                        continue
+
+                    files = []
+                    for attachment in original.attachments:
+                        if not attachment.content_type:
+                            continue
+                        if not attachment.content_type.startswith((
+                            'image',
+                            'video',
+                        )):
                             continue
 
-                        files = []
-                        for attachment in original.attachments:
-                            if not attachment.content_type:
-                                continue
-                            if not attachment.content_type.startswith((
-                                'image',
-                                'video',
-                            )):
-                                continue
-
-                            try:
-                                files.append(
-                                    await attachment.to_file(
-                                        spoiler=attachment.is_spoiler(),
-                                    ),
-                                )
-                            except (HTTPException, Forbidden, NotFound):
-                                continue
-
                         try:
-                            await channel.send(embed=embed, files=files)
-                        except Forbidden:
-                            self._record_counter(
-                                name='bot_global_chat_broadcast_errors_total',
-                                description=(
-                                    'Total number of API errors encountered'
-                                    'while relaying messages'
+                            files.append(
+                                await attachment.to_file(
+                                    spoiler=attachment.is_spoiler(),
                                 ),
-                                labels={
-                                    'error_type': 'forbidden',
-                                    'target_guild': str(guild.id),
-                                },
                             )
-                        except HTTPException as e:
-                            self._record_counter(
-                                name='bot_global_chat_broadcast_errors_total',
-                                description=(
-                                    'Total number of API errors encountered'
-                                    'while relaying messages'
+                        except (HTTPException, Forbidden, NotFound):
+                            continue
+
+                    try:
+                        if (
+                            global_feat.message_delivery_type
+                            == GlobalChatDeliveryType.webhook
+                        ):
+                            permissions = channel.permissions_for(guild.me)
+                            if not (
+                                permissions.send_messages
+                                and permissions.manage_webhooks
+                            ):
+                                continue
+
+                            webhook = await self._get_or_create_webhook(channel)
+                            if not webhook:
+                                continue
+
+                            webhook_kwargs = {
+                                'username': f"{display_name} ({original_guild.name})",
+                                'avatar_url': original.author.display_avatar.url,
+                                'wait': True,
+                                'content': content_text,
+                                'silent': global_feat.silent,
+                                'allowed_mentions': (
+                                    AllowedMentions.none()
+                                    if global_feat.silent
+                                    else None
                                 ),
-                                labels={
-                                    'error_type': f'http_{e.status}',
-                                    'target_guild': str(guild.id),
-                                },
-                            )
+                            }
+                            if files:
+                                webhook_kwargs['files'] = files
+
+                            await webhook.send(**webhook_kwargs)
+                        else:
+                            permissions = channel.permissions_for(guild.me)
+                            if not permissions.send_messages:
+                                continue
+
+                            bot_kwargs = {
+                                'embed': embed,
+                                'silent': global_feat.silent,
+                                'allowed_mentions': (
+                                    AllowedMentions.none()
+                                    if global_feat.silent
+                                    else None
+                                ),
+                            }
+                            if files:
+                                bot_kwargs['files'] = files
+
+                            await channel.send(**bot_kwargs)
+                    except NotFound:
+                        self.webhook_cache.pop(channel.id, None)
+                    except Forbidden:
+                        self._record_counter(
+                            name='bot_global_chat_broadcast_errors_total',
+                            description=(
+                                'Total number of API errors encountered'
+                                'while relaying messages'
+                            ),
+                            labels={
+                                'error_type': 'forbidden',
+                                'target_guild': str(guild.id),
+                            },
+                        )
+                    except HTTPException as e:
+                        self._record_counter(
+                            name='bot_global_chat_broadcast_errors_total',
+                            description=(
+                                'Total number of API errors encountered'
+                                'while relaying messages'
+                            ),
+                            labels={
+                                'error_type': f'http_{e.status}',
+                                'target_guild': str(guild.id),
+                            },
+                        )
 
         if self.bot.metrics:
             async with self.bot.metrics.span_async(
@@ -376,6 +454,93 @@ class GlobalChatCog(commands.Cog):
                 'command.global_chat.setup.embeds.default.description',
                 loc,
                 channel=channel.mention,
+            ),
+        )
+        return None
+
+    @group.command(
+        name='delivery',
+        description='Set how global chat messages are delivered.',
+    )
+    @app_commands.describe(mode='Delivery mode for global chat messages.')
+    @app_commands.checks.has_permissions(manage_guild=True)
+    async def globalchat_delivery(
+        self,
+        interaction: Interaction,
+        mode: Literal['bot', 'webhook'],
+    ):
+        loc = await self.bot.get_locale(interaction)
+        await interaction.response.defer(ephemeral=True)
+
+        if not interaction.guild or not self.bot.database.guild:
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'error.embeds.database_not_available.description', loc,
+                ),
+            )
+
+        guild_id = interaction.guild.id
+        config = await self.bot.database.guild.get_config(guild_id)
+
+        if not config.global_chat.channel_id:
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'error.embeds.feature_not_available.description', loc,
+                ),
+            )
+
+        delivery_type = (
+            GlobalChatDeliveryType.webhook
+            if mode.lower() == 'webhook'
+            else GlobalChatDeliveryType.bot
+        )
+        config.global_chat.message_delivery_type = delivery_type
+
+        await self.bot.database.guild.update_config(guild_id, config)
+
+        await interaction.followup.send(
+            f'Global chat delivery mode set to {mode}.',
+        )
+        return None
+    
+    @group.command(
+        name='silent',
+        description=app_commands.locale_str('command.global_chat.silent.description'),
+    )
+    @app_commands.checks.has_permissions(manage_guild=True)
+    async def globalchat_set_silent(self, interaction: Interaction, value: bool):
+        loc = await self.bot.get_locale(interaction)
+        await interaction.response.defer(ephemeral=True)
+        if not interaction.guild or not self.bot.database.guild:
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'error.embeds.database_not_available.description', loc,
+                ),
+            )
+
+        guild_id = interaction.guild.id
+        config = await self.bot.database.guild.get_config(guild_id)
+
+        if not config.global_chat.channel_id:
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'error.embeds.feature_not_available.description', loc,
+                ),
+            )
+
+        config.global_chat.silent = value
+
+        await self.bot.database.guild.update_config(guild_id, config)
+
+        status_text = self.bot.internal_translator.T(
+            'text.boolean.true' if config.global_chat.silent else 'text.boolean.false',
+            loc,
+        )
+        await interaction.followup.send(
+            self.bot.internal_translator.T(
+                'command.global_chat.silent.embeds.default.description',
+                loc,
+                status_text=status_text,
             ),
         )
         return None
@@ -467,6 +632,20 @@ class GlobalChatCog(commands.Cog):
         embed.add_field(
             name=self.bot.internal_translator.T('label.global_chat_channel', loc),
             value=channel_mention,
+            inline=False,
+        )
+        embed.add_field(
+            name='Delivery mode',
+            value=(
+                'Webhook'
+                if gc.message_delivery_type == GlobalChatDeliveryType.webhook
+                else 'Bot'
+            ),
+            inline=False,
+        )
+        embed.add_field(
+            name='Silent mode',
+            value='Enabled' if gc.silent else 'Disabled',
             inline=False,
         )
 

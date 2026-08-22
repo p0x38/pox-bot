@@ -116,9 +116,11 @@ class UtilityCog(commands.Cog):
     @app_commands.describe(text='Optional label for the flip')
     async def coin_flip(self, interaction: Interaction, text: str | None = None):
         await interaction.response.defer()
-        result = self.rng.choice(np.array(['Heads', 'Tails'], dtype=object))
+        locale = self.bot.get_locale(interaction)
+        
+        result = np.random.randint(0, 1)
         txt = self.bot.internal_translator.T(
-            'text.coinflip.true' if result == 'Heads' else 'text.coinflip.false',
+            'text.coinflip.true' if result == 1 else 'text.coinflip.false', str(locale),
         )
 
         embed = Embed(color=Color.random())
