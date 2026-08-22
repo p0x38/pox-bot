@@ -250,7 +250,7 @@ class PoxBot(commands.AutoShardedBot):
                     'users': sum(g.member_count or 0 for g in self.guilds),
                 },
             )
-        
+
         gc.collect()
         self.logger.debug('Successfully ran garbage collection')
 
@@ -403,11 +403,18 @@ class PoxBot(commands.AutoShardedBot):
 
         # key_templates = ["error.embeds_exceptions.{}", "error.exceptions.{}"]
         # TODO: use this for more fallbacks
-        key = 'error.exceptions.{}'
-        kwargs = {'e': str(error)}
+        kwargs = {'e': str(error), 'mention': interaction.user.mention}
 
         if isinstance(error, app_commands.CommandOnCooldown):
             kwargs['remaining'] = str(round(error.retry_after, 2))
+        if isinstance(
+            error,
+            (
+                app_commands.MissingPermissions,
+                app_commands.BotMissingPermissions,
+            ),
+        ):
+            kwargs['permission'] = ', '.join(error.missing_permissions)
 
         cmd_name = (
             interaction.command.qualified_name
@@ -441,51 +448,58 @@ class PoxBot(commands.AutoShardedBot):
 
         translator = getattr(self, 'internal_translator', None)
 
+        target_error_name = (
+            error.original.__class__.__name__
+            if isinstance(error, app_commands.CommandInvokeError)
+            else error_name
+        )
+
+        embed = None
+        content = None
+
         if translator:
-            description = translator.T(key.format(error_name), str(loc), kwargs)
-            if description == key:
-                description = translator.T(
-                    'error.exceptions.AppCommandError',
-                    str(loc),
-                    kwargs,
+            embed_title_key = f'error.embed_exceptions.{target_error_name}.title'
+            embed_desc_key = f'error.embed_exceptions.{target_error_name}.description'
+
+            title_res = translator.T(embed_title_key, str(loc), kwargs)
+            desc_res = translator.T(embed_desc_key, str(loc), kwargs)
+
+            if title_res != embed_title_key or desc_res != embed_desc_key:
+                embed = Embed(
+                    title=(
+                        title_res
+                        if title_res != embed_title_key
+                        else f'Error: {target_error_name}'
+                    ),
+                    description=(desc_res if desc_res != embed_desc_key else ''),
+                    color=Color.red(),
+                    timestamp=datetime.now(UTC),
                 )
+            else:
+                text_key = f'error.exceptions.{target_error_name}'
+                text_res = translator.T(text_key, str(loc), kwargs)
+
+                if text_res == text_key:
+                    text_res = translator.T(
+                        'error.exceptions.AppCommandError', str(loc), kwargs,
+                    )
+
+                content = text_res
         else:
-            description = f'An error occurred while executing the command: `{error}`'
-
-        if isinstance(error, app_commands.CommandInvokeError) and translator:
-            original_error_name = error.original.__class__.__name__
-            original_key = key.format(original_error_name)
-            original_description = translator.T(original_key, str(loc), kwargs)
-
-            if original_description == original_key:
-                original_description = translator.T(
-                    'error.exceptions.Unknown',
-                    str(loc),
-                    {"e": original_error_name},
-                )
-
-            description += '\n\n' + translator.T(
-                'label.original_error',
-                str(loc),
-                **{"text": original_description},
-            )
+            description = f'An error occurred while executing the command: `{error}`'  # noqa: F841
 
         if interaction.type == InteractionType.application_command:
-            embed = Embed(
-                title=f'Error: {error_name}',
-                description=description,
-                color=Color.red(),
-                timestamp=datetime.now(UTC),
-            )
-
-            await self.try_return_error(interaction, embed=embed)
+            if embed:
+                await self.try_return_error(interaction, embed=embed)
+            else:
+                await self.try_return_error(interaction, content=content)
         elif interaction.type == InteractionType.autocomplete:
             self.logger.error(
-                'Error thrown while trying to resolve autocompletion %s',
-                description,
+                'Error thrown while trying to resolve autocompletion: %s',
+                content or (embed.description if embed else 'Unknown error'),
             )
         else:
             self.logger.error(
                 'An unexpected error was occurred: %s',
-                description,
+                content or (embed.description if embed else 'Unknown error'),
             )
