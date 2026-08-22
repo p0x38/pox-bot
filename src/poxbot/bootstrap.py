@@ -10,13 +10,15 @@ from .application import PoxBot
 from .application.context import ApplicationContext
 from .config.manager import ConfigManager
 from .infrastructure.logger import configure_logging, get_logger
+from .infrastructure.textual_dashboard import TextualDashboard
 from .infrastructure.web.api_manager import FastAPIManager
 from .services.i18n import I18nManager
 
 
 class Bootstrap:
-    def __init__(self):
+    def __init__(self, *, show_textual: bool = False):
         load_dotenv()
+        self.show_textual = show_textual
         self._context: ApplicationContext | None = None
 
     async def create_context(self) -> ApplicationContext:
@@ -24,8 +26,9 @@ class Bootstrap:
             return self._context
 
         settings = await ConfigManager.get_settings()
-        
-        configure_logging(settings)
+        dashboard = TextualDashboard() if self.show_textual else None
+
+        configure_logging(settings, log_widget=dashboard.log_widget if dashboard is not None else None)
         
         system_logger = get_logger(__name__, prefix="System")
         
@@ -42,6 +45,7 @@ class Bootstrap:
             root_path=root.parent.parent,
             i18n=i18n,
             fastapi_class=fastapi_class,
+            dashboard=dashboard,
         )
         return self._context
     

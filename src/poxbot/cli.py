@@ -21,6 +21,11 @@ def build_parser() -> argparse.ArgumentParser:
         "run",
         help="Start the bot.",
     )
+    run_parser.add_argument(
+        "--textual",
+        action="store_true",
+        help="Render a minimal Textual runtime dashboard for log output.",
+    )
     run_parser.set_defaults(func=run)
     
     doctor_parser = subparsers.add_parser(
@@ -56,6 +61,6 @@ def main():
     namespace = parser.parse_args()
     
     if hasattr(namespace, "func"):
-        namespace.func()
+        namespace.func(namespace)
     else:
         parser.print_help()
