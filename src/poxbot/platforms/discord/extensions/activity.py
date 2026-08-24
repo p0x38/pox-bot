@@ -84,9 +84,11 @@ class ActivityCog(commands.Cog):
                 )
             else:
                 self.bot.logger.warning('Failed to verify the generated presence_data')
-        except (ConnectionClosed, ClientConnectionError, HTTPException):
+        except (ConnectionClosed, ClientConnectionError, HTTPException) as e:
             self.bot.logger.warning(
-                'Connection has been closed unexpectedly', exc_info=True,
+                'Connection has been closed unexpectedly, with exception %s',
+                e,
+                exc_info=False,
             )
         except Exception as e:
             self.bot.logger.exception(
