@@ -69,7 +69,6 @@ __all__ = (
     'NotImplementedProvider',
     'SQLFileError',
     'SpeechGenerationError',
-    'TTSEngineType',
     'TTSError',
     'TextDecodeError',
     'TextTransformError',
