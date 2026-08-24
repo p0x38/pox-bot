@@ -18,10 +18,11 @@ class MemoryManagerCog(commands.Cog):
     @tasks.loop(minutes=30)
     async def cleanup_loop(self):
         collected = gc.collect()
-
-        self.logger.debug(
-            'Periodic sweep completed. Cleared %d unreachable objects', collected,
-        )
+        
+        if collected > 0:
+            self.logger.debug(
+                'Cleared %d unreachable objects', collected,
+            )
 
 
 async def setup(bot: PoxBot):
