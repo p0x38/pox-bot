@@ -20,11 +20,12 @@ from discord.ext import commands
 from pytz import UTC
 
 from ....application import PoxBot
+from ....persistence.models.guild_settings_v2 import ChatbotMethodType
 from ....services.ai import LLMManager, LLMProviderType
 from ....shared.utils.app_path import app_dir
 
 
-class LLMChatCog(commands.Cog):
+class ChatbotCog(commands.Cog):
     def __init__(self, bot: PoxBot):
         self.bot = bot
 
@@ -52,6 +53,8 @@ class LLMChatCog(commands.Cog):
         self.locks: dict[int, asyncio.Lock] = {}
 
         self.trigger_patterns = [re.compile(r"\b(pox|p0x38)('s)?(\s+bot|bot)?\b")]
+        
+        self.database = bot.database.guild
 
     def _get_file_path(self, channel_id: int) -> Path:
         return self.persistence_dir / f'{channel_id}.json'
@@ -318,43 +321,57 @@ class LLMChatCog(commands.Cog):
     async def on_message(self, message: Message):
         if message.author.bot or not message.guild or not self.bot.user:
             return
+        
+        if not self.database:
+            return
 
         if message.content.startswith(self.bot.settings.bot_prefix):
             return
-
-        is_triggered = False
-
-        if self.bot.user in message.mentions and not message.mention_everyone:
-            is_triggered = True
-
-        if (
-            not is_triggered
-            and hasattr(self, 'is_matching')
-            and self.is_matching(message.content)
-        ):
-            is_triggered = True
-
-        if not is_triggered:
+        
+        guild_settings = await self.database.get_config(message.guild.id)
+        
+        if not guild_settings.chatbot.enabled:
             return
+        
+        match (guild_settings.chatbot.type):
+            case ChatbotMethodType.ai:
+                is_triggered = False
 
-        read_history = True
-        if message.guild:
-            member = message.guild.me or message.guild.get_member(self.bot.user.id)
-            if not member:
-                return
+                if self.bot.user in message.mentions and not message.mention_everyone:
+                    is_triggered = True
 
-            permissions = message.channel.permissions_for(member)
-            if not permissions.send_messages:
-                return
-            read_history = permissions.read_message_history
+                if (
+                    not is_triggered
+                    and hasattr(self, 'is_matching')
+                    and self.is_matching(message.content)
+                ):
+                    is_triggered = True
 
-        await self.respond(
-            message=message,
-            provider=LLMProviderType.OPEN_ROUTER.value,
-            model=self.bot.settings.llm_config.model_id,
-            include_history=read_history,
-        )
+                if not is_triggered:
+                    return
+
+                read_history = True
+                if message.guild:
+                    member = message.guild.me or message.guild.get_member(
+                        self.bot.user.id,
+                    )
+                    if not member:
+                        return
+
+                    permissions = message.channel.permissions_for(member)
+                    if not permissions.send_messages:
+                        return
+                    read_history = permissions.read_message_history
+
+                await self.respond(
+                    message=message,
+                    provider=LLMProviderType.OPEN_ROUTER.value,
+                    model=self.bot.settings.llm_config.model_id,
+                    include_history=read_history,
+                )
+            case _:
+                pass
 
 
 async def setup(bot: PoxBot):
-    await bot.add_cog(LLMChatCog(bot))
+    await bot.add_cog(ChatbotCog(bot))
