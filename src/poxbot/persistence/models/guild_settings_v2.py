@@ -124,9 +124,20 @@ class UserphoneConfig(BaseConfigData):
     current_partner_id: int | None = None
 
 
+class ChatbotMethodType(IntEnum):
+    ai = 0
+    markov_chain = 1
+
+
+@dataclass
+class ChatbotConfig(BaseConfigData):
+    enabled: bool = False
+    type: ChatbotMethodType = ChatbotMethodType.ai
+
+
 @dataclass
 class GuildConfigV2:
-    version: int = 2
+    version: int = 3
     reaction_roles: list[ReactionRoleEntry] = field(default_factory=list)
     features: dict[str, BaseConfigData] = field(default_factory=dict)
 
@@ -170,6 +181,13 @@ class GuildConfigV2:
         feat = self.features.get('userphone')
         if not isinstance(feat, UserphoneConfig):
             return UserphoneConfig()
+        return feat
+    
+    @property
+    def chatbot(self) -> ChatbotConfig:
+        feat = self.features.get('chatbot')
+        if not isinstance(feat, ChatbotConfig):
+            return ChatbotConfig()
         return feat
 
     @classmethod
@@ -283,7 +301,17 @@ class GuildConfigV2:
             message_delivery_type=delivery_type,
         )
 
-        return cls(version=data.get('version', 2), features=parsed)
+        chatbot_raw = f.get('chatbot', {})
+        parsed['chatbot'] = ChatbotConfig(
+            enabled=chatbot_raw.get('enabled', False),
+            last_execution=chatbot_raw.get(
+                'last_execution', datetime.now(UTC).timestamp(),
+            ),
+            last_executor=chatbot_raw.get('last_executor'),
+            type=chatbot_raw.get('type', ChatbotMethodType.ai),
+        )
+
+        return cls(version=data.get('version', 3), features=parsed)
 
     def to_dict(self) -> dict:
         return asdict(self)
