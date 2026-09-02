@@ -1449,9 +1449,23 @@ class ChatbotCog(commands.Cog):
 
         chatbot.markov_scope = new_scope
 
+        self.bot.logger.debug(
+            'Updating chatbot scope: %s',
+            chatbot.markov_scope.value,
+        )
+
         await self.database.update_config(
             interaction.guild.id,
             config,
+        )
+
+        updated_config = await self.database.get_config(
+            interaction.guild.id,
+        )
+        
+        self.bot.logger.debug(
+            'Reloaded chatbot scope: %s',
+            updated_config.chatbot.markov_scope.value,
         )
 
         await interaction.response.send_message(

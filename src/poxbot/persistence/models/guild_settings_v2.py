@@ -146,7 +146,7 @@ class ChatbotConfig(BaseConfigData):
 
 @dataclass
 class GuildConfigV2:
-    version: int = 3
+    version: int = 4
     reaction_roles: list[ReactionRoleEntry] = field(default_factory=list)
     features: dict[str, BaseConfigData] = field(default_factory=dict)
 
@@ -332,6 +332,16 @@ class GuildConfigV2:
             else:
                 chatbot_type = ChatbotMethodType.ai
 
+        markov_scope_raw = chatbot_raw.get(
+            'markov_scope',
+            MarkovModelScope.SERVER.value,
+        )
+
+        try:
+            markov_scope = MarkovModelScope(markov_scope_raw)
+        except (ValueError, TypeError):
+            markov_scope = MarkovModelScope.SERVER
+
         parsed['chatbot'] = ChatbotConfig(
             enabled=chatbot_raw.get('enabled', False),
             last_execution=chatbot_raw.get(
@@ -340,9 +350,12 @@ class GuildConfigV2:
             ),
             last_executor=chatbot_raw.get('last_executor'),
             type=chatbot_type,
+            markov_scope=markov_scope,
+            markov_order=chatbot_raw.get('markov_order', 2),
+            markov_max_tokens=chatbot_raw.get('markov_max_tokens', 50),
         )
 
-        return cls(version=data.get('version', 3), features=parsed)
+        return cls(version=data.get('version', 4), features=parsed)
 
     def to_dict(self) -> dict:
         return asdict(self)
