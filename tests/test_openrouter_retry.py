@@ -7,10 +7,12 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+
+from ..src.poxbot.features.ai.manager import LLMManager
 
 # Add src to path to allow imports
 sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
@@ -18,10 +20,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
 from poxbot.features.ai.providers.openrouter import OpenRouterStreamer
 from poxbot.features.ai.request_context import LLMRequestContext
 from poxbot.shared.exceptions.ai_error import InvalidQueryData
-
-
-class FakeException(Exception):
-    """Fake exception that mimics OpenRouter's API exceptions."""
 
 
 class FakeResponse:
@@ -33,6 +31,20 @@ class FakeResponse:
         headers: dict[str, str] | None = None,
     ) -> None:
         self.status_code = status_code
+        self.headers = headers or {}
+
+
+class FakeException(Exception):  # ruff: ignore[error-suffix-on-exception-name]
+    """Fake exception that mimics OpenRouter's API exceptions."""
+
+    def __init__(
+        self,
+        message: str,
+        response: FakeResponse | None = None,
+        headers: dict[str, str] | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.response = response
         self.headers = headers or {}
 
 
@@ -72,7 +84,7 @@ def _make_streamer(
     """Build an OpenRouterStreamer without triggering the real client."""
     manager = manager or DummyManager()
     streamer = OpenRouterStreamer.__new__(OpenRouterStreamer)
-    streamer.mgr = manager
+    streamer.mgr = cast(LLMManager, manager)
     streamer.api_key = api_key
     streamer.client = MagicMock()
     return streamer
@@ -129,18 +141,16 @@ async def test_successful_response_does_not_retry():
 
     sleep_calls: list[float] = []
 
-    async def mock_sleep(delay: float):
+    async def mock_sleep(delay: float):  # ruff: ignore[unused-async]
         sleep_calls.append(delay)
     
     with patch('poxbot.features.ai.providers.openrouter.asyncio.sleep', new=mock_sleep):
-        result: list[str] = []
-        async for piece in streamer.stream_response(
+        result: list[str] = [piece async for piece in streamer.stream_response(
             llm_model='gpt-4o',
             query=[],
             ctx=LLMRequestContext(),
             base_labels={'provider': 'openrouter', 'model': 'gpt-4o'},
-        ):
-            result.append(piece)
+        )]
 
     assert result == ['Hello', ' world']
     assert streamer.client.chat.send_async.call_count == 1
@@ -164,14 +174,12 @@ async def test_rate_limit_triggers_retry_then_succeeds():
 
     sleep_mock = AsyncMock()
     with patch('poxbot.features.ai.providers.openrouter.asyncio.sleep', new=sleep_mock):
-        result: list[str] = []
-        async for piece in streamer.stream_response(
+        result: list[str] = [piece async for piece in streamer.stream_response(
             llm_model='gpt-4o',
             query=[],
             ctx=LLMRequestContext(),
             base_labels={'provider': 'openrouter', 'model': 'gpt-4o'},
-        ):
-            result.append(piece)
+        )]
 
     assert result == ['ok']
     assert streamer.client.chat.send_async.call_count == 2
@@ -221,7 +229,7 @@ async def test_non_rate_limit_error_does_not_retry():
     with patch(
         'src.poxbot.features.ai.providers.openrouter.asyncio.sleep',
         new=AsyncMock(),
-    ) as sleep_mock, pytest.raises(ValueError):
+    ) as sleep_mock, pytest.raises(ValueError):  # ruff: ignore[pytest-raises-too-broad]
         async for _ in streamer.stream_response(
             llm_model='gpt-4o',
             query=[],
@@ -306,7 +314,7 @@ def test_extract_retry_after_returns_none_when_missing() -> None:
     assert streamer._extract_retry_after(err) is None
 
 
-async def _async_iter(items: list[Any]):
+async def _async_iter(items: list[Any]):  # ruff: ignore[unused-async]
     """Tiny helper to build an async iterator from a list."""
     for item in items:
         yield item

@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, MagicMock, PropertyMock, patch
 import pytest
 from discord import Intents, Interaction, Message, TextChannel
 
-from src.core.bot import PoxBot
+from poxbot.application import ApplicationContext, PoxBot
 
 
 @pytest.fixture
@@ -34,24 +34,26 @@ def mock_managers():
 
 
 @pytest.fixture
-async def bot(mock_config, mock_logger, mock_managers):
+async def bot(mock_config, mock_logger, mock_managers):  # ruff: ignore[unused-async]
     """Provide a pre-instantiated PoxBot instance for test cases."""
+
+    context = MagicMock(spec=ApplicationContext)
+    context.settings = mock_config
+    context.logger = mock_logger
+    context.i18n = mock_managers
+
     return PoxBot(
+        context=context,
         command_prefix=mock_config.bot_prefix,
-        config=mock_config,
-        logger=mock_logger,
-        translation_manager=mock_managers,
-        discord_translator=mock_managers.discord,
-        internal_translator=mock_managers.internal,
         intents=Intents.default(),
     )
 
 
 @pytest.mark.asyncio
-async def test_bot_initialization(bot):
+async def test_bot_initialization(bot):  # ruff: ignore[unused-async]
     """Verify default tracking properties and configurations setup accurately."""
     assert bot.should_restart is False
-    assert bot.config.bot_prefix == '!'
+    assert bot.settings.bot_prefix == '!'
     assert bot.metrics is None
 
 
@@ -124,7 +126,7 @@ def test_format_channel_info_null_channel(bot):
 
 
 @pytest.mark.asyncio
-async def test_format_channel_info_with_guild_text_channel(bot):
+async def test_format_channel_info_with_guild_text_channel(bot):  # ruff: ignore[unused-async]
     """Verify formatting structures safely merge guild text identities."""
 
     class DummyTextChannel(TextChannel):
@@ -139,7 +141,6 @@ async def test_format_channel_info_with_guild_text_channel(bot):
     channel.id = 9999
     channel.guild.name = 'My Guild'
 
-    with patch('src.core.bot.isinstance', create=True, return_value=True):
-        result = bot.format_channel_info(channel)
+    result = bot.format_channel_info(channel)
 
     assert 'My Guild - general (9999)' in result

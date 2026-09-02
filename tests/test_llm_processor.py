@@ -1,9 +1,11 @@
+from typing import cast
 
 import pytest
 
-from src.exceptions.ai_error import MissingInput
-from src.llm_processor import LLMManager, LLMProviderType
-from src.llm_processor.providers.openrouter import OpenRouterStreamer
+from poxbot.application.bot import PoxBot
+from poxbot.features.ai.manager import LLMManager, LLMProviderType
+from poxbot.features.ai.providers.openrouter import OpenRouterStreamer
+from poxbot.shared.exceptions.ai_error import MissingInput
 
 
 class DummyBot:
@@ -12,7 +14,7 @@ class DummyBot:
 
 
 def test_manager_is_exposed_from_llm_processor_package():
-    manager = LLMManager(DummyBot())
+    manager = LLMManager(cast(PoxBot, DummyBot()))
 
     assert manager.preferred == LLMProviderType.OPEN_ROUTER
     assert isinstance(
@@ -23,8 +25,8 @@ def test_manager_is_exposed_from_llm_processor_package():
 
 @pytest.mark.asyncio
 async def test_generate_response_requires_complete_input():
-    manager = LLMManager(DummyBot())
+    manager = LLMManager(cast(PoxBot, DummyBot()))
 
     with pytest.raises(MissingInput):
-        async for _ in manager.generate_response({'provider': 'openrouter'}):
+        async with manager.generate_response({'provider': 'openrouter'}):
             pass

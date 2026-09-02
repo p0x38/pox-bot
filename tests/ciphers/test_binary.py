@@ -1,20 +1,40 @@
-from src.utils._ciphers.binary import binary
+from poxbot.features.text_transform.models import TransformerRequest
+from poxbot.features.text_transform.transformers.binary import BinaryTransformer
 
 
-def test_binary_encode_and_decode():
+def test_binary_encode_and_decode() -> None:
     """Verify that text cleanly converts to bit strings and back."""
+    transformer = BinaryTransformer()
     secret = 'Hello'
-    encoded = binary(secret)
 
-    assert '01001000' in encoded
+    encoded = transformer.transform(
+        TransformerRequest(text=secret),
+    )
 
-    decoded = binary(encoded, decode=True)
-    assert decoded == secret
+    assert '01001000' in encoded.output
+
+    decoded = transformer.transform(
+        TransformerRequest(text=encoded.output, decode=True),
+    )
+
+    assert decoded.output == secret
 
 
-def test_binary_empty_or_malformed():
+def test_binary_empty_or_malformed() -> None:
     """Verify handling of empty or padding-corrupted inputs."""
-    assert binary('') == ''
-    assert binary('', decode=True) == ''
+    transformer = BinaryTransformer()
 
-    assert binary('01001000   01101001', decode=True) == 'Hi'
+    assert transformer.transform(
+        TransformerRequest(text=''),
+    ).output == ''  # ruff: ignore[compare-to-empty-string]
+
+    assert transformer.transform(
+        TransformerRequest(text='', decode=True),
+    ).output == ''  # ruff: ignore[compare-to-empty-string]
+
+    assert transformer.transform(
+        TransformerRequest(
+            text='01001000   01101001',
+            decode=True,
+        ),
+    ).output == 'Hi'
