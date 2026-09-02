@@ -26,10 +26,40 @@ def test_dialogue_find_is_case_insensitive() -> None:
     assert memory.find('what is this?') == 'idk lol'
 
 
+def test_dialogue_tfidf_retrieval() -> None:
+    memory = MarkovDialogueMemory(MarkovTokenizer())
+    memory.learn('how do I install python', 'use the Python installer')
+    memory.learn('how do I cook rice', 'use a rice cooker')
+
+    match = memory.find_match('how can I install python')
+
+    assert match is not None
+    assert match.response == 'use the Python installer'
+    assert match.score > 0.5
+
+
+def test_dialogue_exact_match_has_perfect_score() -> None:
+    memory = MarkovDialogueMemory(MarkovTokenizer())
+    memory.learn('hello there', 'hello!')
+
+    match = memory.find_match('hello there')
+
+    assert match is not None
+    assert match.score == 1.0
+    assert match.response == 'hello!'
+
+
 def test_dialogue_find_returns_none_when_empty() -> None:
     memory = MarkovDialogueMemory(MarkovTokenizer())
 
     assert memory.find('hello') is None
+
+
+def test_dialogue_threshold_can_reject_unrelated_queries() -> None:
+    memory = MarkovDialogueMemory(MarkovTokenizer())
+    memory.learn('how do I install python', 'use the Python installer')
+
+    assert memory.find('completely unrelated topic', threshold=0.55) is None
 
 
 def test_dialogue_clear() -> None:
