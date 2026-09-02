@@ -1,114 +1,88 @@
 [project]
 name = "pox-bot"
 version = "0.1.0"
-description = "Add your description here"
+description = "A stupid-rich bot written in Python"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
-authors = [
-    { name = "p0x38" }
-]
-urls = { Repository = "https://github.com/p0x38/p0x-bot" }
+license = "MIT"
+authors = [{ name = "p0x38" }]
+urls = { Repository = "https://github.com/p0x38/pox-bot" }
 dependencies = [
     "aiocache>=0.12.3",
     "aiofiles>=25.1.0",
-    "aiohttp>=3.13.2",
+    "aiohttp>=3.14.3",
     "aiomysql>=0.3.2",
-    "aiosqlite>=0.21.0",
+    "aiosqlite>=0.22.1",
     "asyncpg>=0.31.0",
     "attr>=0.3.2",
-    "discord-py[voice]>=2.6.4",
+    "discord-py[voice]>=2.7.1",
     "distro>=1.9.0",
-    "edge-tts>=7.2.3",
+    "edge-tts>=7.2.8",
     "fluent-runtime>=0.4.0",
     "gtts>=2.5.4",
     "i18nice>=0.16.0",
-    "lmstudio>=1.5.0",
     "markovify>=0.9.4",
-    "matplotlib>=3.10.7",
-    "mcstatus>=12.0.6",
-    "minepi>=0.5.0",
-    "moviepy>=1.0.3",
-    "numexpr>=2.14.1",
-    "ollama>=0.6.1",
-    "openai>=2.33.0",
-    "openrouter>=0.9.1",
-    "orjson>=3.11.8",
-    "pillow>=12.0.0",
-    "piper-tts>=1.3.0",
-    "pocket-tts>=2.1.0",
+    "matplotlib>=3.11.1",
+    "moviepy>=2.2.1",
+    "numexpr>=2.14.2",
+    "orjson>=3.12.0",
+    "pillow>=12.3.0",
+    "pocket-tts>=3.0.2",
     "profanityfilter>=2.1.0",
     "proglog>=0.1.12",
-    "prompt-toolkit>=3.0.52",
+    "prompt-toolkit>=3.0.53",
     "psutil>=7.2.2",
-    "pymojang>=2.0.6",
-    "pyqt6>=6.10.2",
-    "pyqtgraph>=0.14.0",
-    "python-dotenv>=1.2.1",
-    "pytz>=2025.2",
+    "python-dotenv>=1.2.3",
+    "pytz>=2026.3.post1",
     "pyyaml>=6.0.3",
     "qrcode[pil]>=8.2",
-    "rich>=14.2.0",
+    "rich>=15.0.0",
     "roblox>=2.0.0",
-    "soundfile>=0.13.1",
     "thefuzz>=0.22.1",
-    "tldextract>=5.3.1",
+    "tldextract>=5.3.2",
     "urlextract>=1.9.0",
-    "websockets>=15.0.1",
+    "websockets>=17.1",
     "pyicu>=2.16.2",
     "pyttsx3>=2.99",
     "mecab-python3>=1.0.12",
     "ipadic>=1.0.0",
     "wordcloud>=1.9.6",
     "janome>=0.5.0",
-    "nltk>=3.9.4",
+    "nltk>=3.10.3",
     "pet-pet-gif-fork",
-    "pydantic-settings>=2.14.2",
-    "sqlalchemy>=2.0.51",
-    "ffmpeg-python>=0.2.0",
-    "prometheus-client>=0.25.0",
+    "pydantic-settings>=2.15.0",
+    "sqlalchemy>=2.0.52",
+    "prometheus-client>=0.26.0",
     "opentelemetry-api",
     "opentelemetry-sdk",
     "opentelemetry-exporter-otlp-proto-grpc",
     "opentelemetry-instrumentation-asyncpg",
-    "opentelemetry-exporter-prometheus>=0.64b0",
-    "msgpack>=1.2.1",
+    "opentelemetry-exporter-prometheus>=0.65b0",
+    "msgpack>=1.2.2",
     "python-logging-loki>=0.3.1",
-    "numpy>=2.5.0",
-    "pydantic==2.13.4",
+    "numpy>=2.5.2",
+    "pydantic==2.13.5",
     "google-re2>=1.1.20251105",
-    "alembic>=1.18.5",
+    "alembic>=1.19.1",
     "pg8000>=1.31.5",
     "textual>=8.2.8",
 ]
 
 [project.optional-dependencies]
-cpu = [
-    "torch",
-]
-gpu = [
-    "torch",
-]
+cpu = ["torch"]
+gpu = ["torch"]
+piper = ["piper-tts>=1.7.0"]
+gui = ["pyqt6>=6.11.0", "pyqtgraph>=0.14.0"]
+ai = ["openai>=3.7.0", "openrouter>=1.1.113", "ollama>=0.6.2", "lmstudio>=1.5.0"]
+minecraft = ["mcstatus>=14.1.0", "pymojang>=2.0.6", "minepi>=0.5.0"]
+audio = ["soundfile>=0.14.0", "ffmpeg-python>=0.2.0"]
 
 [dependency-groups]
-dev = [
-    { include-group = "vcs" },
-    "pyright>=1.1.411",
-]
-ci = [
-    { include-group = "lint" },
-    { include-group = "test" },
-]
-lint = [
-    "ruff>=0.15.12",
-]
-vcs = [
-    "git-cliff>=2.13.1",
-]
-test = [
-    "dpytest>=0.7.0",
-    "pytest>=9.0.3",
-    "pytest-asyncio>=1.3.0",
-]
+dev = [{ include-group = "vcs" }, "pyright>=1.1.411"]
+ci = [{ include-group = "lint" }, { include-group = "test" }]
+lint = ["ruff>=0.16.5"]
+vcs = ["git-cliff>=2.13.1"]
+test = ["dpytest>=0.7.0", "pytest>=9.1.1", "pytest-asyncio>=1.4.0"]
 
 [project.scripts]
 poxbot = "poxbot.__main__:main"
@@ -121,10 +95,7 @@ build-backend = "hatchling.build"
 packages = ["src/poxbot"]
 
 [tool.hatch.envs.default]
-dependencies = [
-    "pytest",
-    "pytest-asyncio",
-]
+dependencies = ["pytest", "pytest-asyncio"]
 
 [tool.uv]
 managed = true
@@ -133,12 +104,12 @@ conflicts = [[{ extra = "cpu" }, { extra = "gpu" }]]
 
 [tool.uv.sources]
 pyicu = [
-  { url = "https://github.com/cgohlke/pyicu-build/releases/download/v2.16.2/pyicu-2.16.2-cp312-cp312-win_amd64.whl", marker = "sys_platform == 'win32' and python_version == '3.12'" },
-  { url = "https://github.com/cgohlke/pyicu-build/releases/download/v2.16.2/pyicu-2.16.2-cp313-cp313-win_amd64.whl", marker = "sys_platform == 'win32' and python_version == '3.13'" },
+    { url = "https://github.com/cgohlke/pyicu-build/releases/download/v2.16.2/pyicu-2.16.2-cp312-cp312-win_amd64.whl", marker = "sys_platform == 'win32' and python_version == '3.12'" },
+    { url = "https://github.com/cgohlke/pyicu-build/releases/download/v2.16.2/pyicu-2.16.2-cp313-cp313-win_amd64.whl", marker = "sys_platform == 'win32' and python_version == '3.13'" },
 ]
 torch = [
-  { index = "torch-cpu", extra = "cpu" },
-  { index = "torch-gpu", extra = "gpu" },
+    { index = "torch-cpu", extra = "cpu" },
+    { index = "torch-gpu", extra = "gpu" },
 ]
 pet-pet-gif-fork = { git = "https://github.com/p0x38/pet-pet-gif-fork.git" }
 
