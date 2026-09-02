@@ -47,15 +47,23 @@ class MarkovDialogueMemory:
         }
 
     def learn(self, prompt: str, response: str) -> None:
+        """Learn a dialogue pair."""
         prompt = prompt.strip()
         response = response.strip()
 
         if not prompt or not response:
             return
 
-        pair = DialoguePair(prompt=prompt, response=response)
+        for entry in self.entries:
+            if entry.prompt == prompt and entry.response == response:
+                return
 
-        self.entries.append(pair)
+        self.entries.append(
+            DialoguePair(
+                prompt=prompt,
+                response=response,
+            ),
+        )
 
         if len(self.entries) > self.max_entries:
             del self.entries[: len(self.entries) - self.max_entries]
@@ -79,20 +87,35 @@ class MarkovDialogueMemory:
 
         return overlap * 0.7 + fuzzy * 0.3
 
-    def find(self, query: str, *, threshold: float = 0.45) -> str | None:
-        if not query.strip() or not self.entries:
+    def find(
+        self,
+        query: str,
+        *,
+        threshold: float = 0.55,
+    ) -> str | None:
+        """Find the best learned response for a query."""
+        query = query.strip()
+    
+        if not query or not self.entries:
             return None
-
+    
+        normalized_query = self._normalize(query)
+    
+        # Prefer exact matches.
+        for entry in reversed(self.entries):
+            if self._normalize(entry.prompt) == normalized_query:
+                return entry.response
+    
         best_score = threshold
         best_response: str | None = None
-
+    
         for entry in self.entries:
             score = self._score(query, entry.prompt)
-
+    
             if score > best_score:
                 best_score = score
                 best_response = entry.response
-
+    
         return best_response
 
     def clear(self) -> None:

@@ -26,10 +26,14 @@ from pytz import UTC
 from ....application import PoxBot
 from ....features.markov.dialogue import MarkovDialogueMemory
 from ....features.markov.generator import MarkovGenerator
-from ....features.markov.model import MarkovModel
+from ....features.markov.model import (
+    MarkovGenerationResult,
+    MarkovModel,
+    MarkovModelKey,
+)
 from ....features.markov.storage import MarkovDatabase
 from ....features.markov.tokenizer import MarkovTokenizer
-from ....persistence.models.guild_settings_v2 import ChatbotMethodType
+from ....persistence.models.guild_settings_v2 import ChatbotMethodType, MarkovModelScope
 from ....services.ai import LLMManager, LLMProviderType
 from ....shared.utils.app_path import app_dir
 
@@ -76,8 +80,8 @@ class ChatbotCog(commands.Cog):
         # ------------------------------------------------------------------
 
         self.markov_tokenizer = MarkovTokenizer()
-        self.markov_models: dict[int, MarkovModel] = {}
-        self.markov_dialogues: dict[int, MarkovDialogueMemory] = {}
+        self.markov_models: dict[MarkovModelKey, MarkovModel] = {}
+        self.markov_dialogues: dict[MarkovModelKey, MarkovDialogueMemory] = {}
         self.markov_dialogue_dir = app_dir.user_data_path / 'markov'
         self.markov_dialogue_dir.mkdir(
             parents=True,
@@ -142,14 +146,19 @@ class ChatbotCog(commands.Cog):
     # Markov persistence
     # ======================================================================
 
-    def _get_markov_dialogue_path(self, guild_id: int) -> Path:
-        return self.markov_dialogue_dir / f'{guild_id}-dialogue.json'
+    def _get_markov_dialogue_path(
+        self,
+        key: MarkovModelKey,
+    ) -> Path:
+        return self.markov_dialogue_dir / (
+            f'{key.scope.value}-{key.scope_id}-dialogue.json'
+        )
 
     async def _get_markov_dialogue(
         self,
-        guild_id: int,
+        key: MarkovModelKey,
     ) -> MarkovDialogueMemory:
-        dialogue = self.markov_dialogues.get(guild_id)
+        dialogue = self.markov_dialogues.get(key)
 
         if dialogue is not None:
             return dialogue
@@ -157,7 +166,8 @@ class ChatbotCog(commands.Cog):
         dialogue = MarkovDialogueMemory(
             self.markov_tokenizer,
         )
-        file_path = self._get_markov_dialogue_path(guild_id)
+
+        file_path = self._get_markov_dialogue_path(key)
 
         if file_path.is_file():
             try:
@@ -179,23 +189,26 @@ class ChatbotCog(commands.Cog):
 
             except Exception:
                 self.bot.logger.exception(
-                    'Failed to load Markov dialogue memory for guild %s',
-                    guild_id,
+                    'Failed to load Markov dialogue memory for %s/%s',
+                    key.scope.value,
+                    key.scope_id,
                 )
 
-        self.markov_dialogues[guild_id] = dialogue
+        self.markov_dialogues[key] = dialogue
+
         return dialogue
 
     async def _save_markov_dialogue(
         self,
-        guild_id: int,
+        key: MarkovModelKey,
     ) -> None:
-        dialogue = self.markov_dialogues.get(guild_id)
+        dialogue = self.markov_dialogues.get(key)
 
         if dialogue is None:
             return
 
-        file_path = self._get_markov_dialogue_path(guild_id)
+        file_path = self._get_markov_dialogue_path(key)
+
         payload = [
             {
                 'prompt': entry.prompt,
@@ -207,69 +220,135 @@ class ChatbotCog(commands.Cog):
         try:
             async with aiofiles.open(file_path, 'wb') as file:
                 await file.write(orjson.dumps(payload))
+
         except Exception:
             self.bot.logger.exception(
-                'Failed to save Markov dialogue memory for guild %s',
-                guild_id,
+                'Failed to save Markov dialogue memory for %s/%s',
+                key.scope.value,
+                key.scope_id,
             )
+
+    def _get_markov_fallback_keys(
+        self,
+        scope: MarkovModelScope,
+        *,
+        guild_id: int,
+        user_id: int,
+    ) -> list[MarkovModelKey]:
+        match scope:
+            case MarkovModelScope.GLOBAL:
+                return [
+                    MarkovModelKey.global_model(),
+                ]
+
+            case MarkovModelScope.SERVER:
+                return [
+                    MarkovModelKey.server(guild_id),
+                    MarkovModelKey.global_model(),
+                ]
+
+            case MarkovModelScope.USER:
+                return [
+                    MarkovModelKey.user(user_id),
+                    MarkovModelKey.server(guild_id),
+                    MarkovModelKey.global_model(),
+                ]
+
+            case _:
+                raise ValueError(
+                    f'Unsupported Markov model scope: {scope!r}',
+                )
+
+    def _make_markov_key(
+        self,
+        scope: MarkovModelScope,
+        *,
+        guild_id: int | None = None,
+        user_id: int | None = None,
+    ) -> MarkovModelKey:
+        match scope:
+            case MarkovModelScope.GLOBAL:
+                return MarkovModelKey.global_model()
+
+            case MarkovModelScope.SERVER:
+                if guild_id is None:
+                    raise ValueError(
+                        'Server Markov scope requires a guild ID.',
+                    )
+
+                return MarkovModelKey.server(guild_id)
+
+            case MarkovModelScope.USER:
+                if user_id is None:
+                    raise ValueError(
+                        'User Markov scope requires a user ID.',
+                    )
+
+                return MarkovModelKey.user(user_id)
+
+            case _:
+                raise ValueError(
+                    f'Unsupported Markov model scope: {scope!r}',
+                )
 
     async def _get_markov_model(
         self,
-        guild_id: int,
+        key: MarkovModelKey,
         *,
         order: int = 2,
     ) -> MarkovModel:
-        model = self.markov_models.get(guild_id)
+        model = self.markov_models.get(key)
 
         if model is not None:
             if model.order == order:
                 return model
 
-            self.markov_models.pop(guild_id, None)
+            self.markov_models.pop(key, None)
 
         model = MarkovModel(order=order)
 
         await self.markov_storage.load(
-            guild_id,
+            key,
             model,
         )
 
-        self.markov_models[guild_id] = model
+        self.markov_models[key] = model
 
         return model
 
     async def _save_markov_model(
         self,
-        guild_id: int,
+        key: MarkovModelKey,
     ) -> None:
-        model = self.markov_models.get(guild_id)
+        model = self.markov_models.get(key)
 
         if model is None:
             return
 
         await self.markov_storage.save(
-            guild_id,
+            key,
             model,
         )
 
     async def _clear_markov_model(
         self,
-        guild_id: int,
+        key: MarkovModelKey,
     ) -> None:
         self.markov_models.pop(
-            guild_id,
+            key,
             None,
         )
         self.markov_dialogues.pop(
-            guild_id,
+            key,
             None,
         )
 
         await self.markov_storage.clear(
-            guild_id,
+            key,
         )
 
-        file_path = self._get_markov_dialogue_path(guild_id)
+        file_path = self._get_markov_dialogue_path(key)
+
         with contextlib.suppress(FileNotFoundError):
             file_path.unlink()
 
@@ -295,6 +374,7 @@ class ChatbotCog(commands.Cog):
         self,
         message: Message,
         *,
+        scope: MarkovModelScope,
         order: int = 2,
     ) -> None:
         if not message.guild or message.author.bot:
@@ -313,36 +393,31 @@ class ChatbotCog(commands.Cog):
         if not tokens:
             return
 
+        key = self._make_markov_key(
+            scope,
+            guild_id=message.guild.id,
+            user_id=message.author.id,
+        )
+
         model = await self._get_markov_model(
-            message.guild.id,
+            key,
             order=order,
         )
 
         model.train(tokens)
 
-        await self._save_markov_model(
-            message.guild.id,
-        )
+        await self._save_markov_model(key)
 
-    async def generate_markov_response(
+    async def _generate_markov_from_key(
         self,
-        message: Message,
+        key: MarkovModelKey,
         *,
+        prompt: str = '',
         max_tokens: int = 50,
         order: int = 2,
-    ) -> str | None:
-        if not message.guild:
-            return None
-
-        dialogue = await self._get_markov_dialogue(message.guild.id)
-        prompt = self._clean_markov_prompt(message)
-
-        learned_response = dialogue.find(prompt)
-        if learned_response:
-            return learned_response
-
+    ) -> MarkovGenerationResult | None:
         model = await self._get_markov_model(
-            message.guild.id,
+            key,
             order=order,
         )
 
@@ -364,7 +439,70 @@ class ChatbotCog(commands.Cog):
                 max_tokens=max_tokens,
             )
 
-        return response.strip() if response else None
+        if not response:
+            return None
+
+        return MarkovGenerationResult(
+            response=response.strip(),
+            key=key,
+        )
+
+    async def _find_markov_dialogue_response(
+        self,
+        key: MarkovModelKey,
+        prompt: str,
+    ) -> str | None:
+        dialogue = await self._get_markov_dialogue(key)
+        return dialogue.find(prompt)
+
+    async def generate_markov_response(
+        self,
+        message: Message,
+        *,
+        scope: MarkovModelScope,
+        max_tokens: int = 50,
+        order: int = 2,
+    ) -> MarkovGenerationResult | None:
+        if not message.guild:
+            return None
+
+        primary_key = self._make_markov_key(
+            scope,
+            guild_id=message.guild.id,
+            user_id=message.author.id,
+        )
+
+        prompt = self._clean_markov_prompt(message)
+
+        learned_response = await self._find_markov_dialogue_response(
+            primary_key,
+            prompt,
+        )
+
+        if learned_response:
+            return MarkovGenerationResult(
+                response=learned_response,
+                key=primary_key,
+            )
+
+        fallback_keys = self._get_markov_fallback_keys(
+            scope,
+            guild_id=message.guild.id,
+            user_id=message.author.id,
+        )
+
+        for key in fallback_keys:
+            result = await self._generate_markov_from_key(
+                key,
+                prompt=prompt,
+                max_tokens=max_tokens,
+                order=order,
+            )
+
+            if result is not None:
+                return result
+
+        return None
 
     # ======================================================================
     # AI message formatting / history
@@ -786,6 +924,7 @@ class ChatbotCog(commands.Cog):
             case ChatbotMethodType.markov_chain:
                 await self.learn_markov_message(
                     message,
+                    scope=chatbot.markov_scope,
                     order=chatbot.markov_order,
                 )
 
@@ -806,26 +945,41 @@ class ChatbotCog(commands.Cog):
                 if not permissions.send_messages:
                     return
 
-                response = await self.generate_markov_response(
+                result = await self.generate_markov_response(
                     message,
+                    scope=chatbot.markov_scope,
                     max_tokens=chatbot.markov_max_tokens,
                     order=chatbot.markov_order,
                 )
 
-                if not response:
+                if result is None:
                     return
+
+                response = result.response
+
+                self.bot.logger.debug(
+                    'Generated Markov response using %s/%s',
+                    result.key.scope.value,
+                    result.key.scope_id,
+                )
 
                 await message.reply(
                     response[:2000],
                     allowed_mentions=AllowedMentions.none(),
                 )
 
-                dialogue = await self._get_markov_dialogue(message.guild.id)
+                key = self._make_markov_key(
+                    chatbot.markov_scope,
+                    guild_id=message.guild.id,
+                    user_id=message.author.id,
+                )
+
+                dialogue = await self._get_markov_dialogue(key)
                 dialogue.learn(
                     self._clean_markov_prompt(message),
                     response,
                 )
-                await self._save_markov_dialogue(message.guild.id)
+                await self._save_markov_dialogue(key)
 
             case _:
                 return
@@ -861,6 +1015,7 @@ class ChatbotCog(commands.Cog):
                 '**Chatbot**\n'
                 f'Enabled: `{chatbot.enabled}`\n'
                 f'Mode: `{chatbot.type.name}`\n'
+                f'Markov scope: `{chatbot.markov_scope.value}`\n'
                 f'Markov order: `{chatbot.markov_order}`\n'
                 f'Max tokens: `{chatbot.markov_max_tokens}`'
             ),
@@ -906,8 +1061,14 @@ class ChatbotCog(commands.Cog):
 
         await interaction.response.defer()
 
+        key = self._make_markov_key(
+            chatbot.markov_scope,
+            guild_id=interaction.guild.id,
+            user_id=interaction.user.id,
+        )
+
         model = await self._get_markov_model(
-            interaction.guild.id,
+            key,
             order=chatbot.markov_order,
         )
 
@@ -918,24 +1079,39 @@ class ChatbotCog(commands.Cog):
             )
             return
 
-        generator = MarkovGenerator(
-            model,
-            self.markov_tokenizer,
+        result = None
+
+        fallback_keys = self._get_markov_fallback_keys(
+            chatbot.markov_scope,
+            guild_id=interaction.guild.id,
+            user_id=interaction.user.id,
         )
 
-        response = generator.generate(
-            max_tokens=max_tokens,
-        )
+        for key in fallback_keys:
+            result = await self._generate_markov_from_key(
+                key,
+                max_tokens=max_tokens,
+                order=chatbot.markov_order,
+            )
 
-        if not response:
+            if result is not None:
+                break
+
+        if result is None:
             await interaction.followup.send(
-                'I could not generate a response from the model.',
+                'No Markov model in the fallback chain has learned any messages yet.',
                 ephemeral=True,
             )
             return
 
+        self.bot.logger.debug(
+            'Generated Markov command response using %s/%s',
+            result.key.scope.value,
+            result.key.scope_id,
+        )
+
         await interaction.followup.send(
-            response[:2000],
+            result.response[:2000],
             allowed_mentions=AllowedMentions.none(),
         )
 
@@ -945,11 +1121,51 @@ class ChatbotCog(commands.Cog):
 
     @chatbot_group.command(
         name='clear',
-        description='Clear the Markov model for this server',
+        description='Clear the Markov model',
+    )
+    @app_commands.guild_only()
+    @commands.is_owner()
+    async def chatbot_clear(
+        self,
+        interaction: Interaction,
+    ) -> None:
+        if not self.database or not interaction.guild:
+            await interaction.response.send_message(
+                'This command can only be used in a server.',
+                ephemeral=True,
+            )
+            return
+
+        config = await self.database.get_config(
+            interaction.guild.id,
+        )
+
+        chatbot = config.chatbot
+
+        key = self._make_markov_key(
+            chatbot.markov_scope,
+            guild_id=interaction.guild.id,
+            user_id=interaction.user.id,
+        )
+
+        await self._clear_markov_model(key)
+
+        await interaction.response.send_message(
+            'The Markov model has been cleared.',
+            ephemeral=True,
+        )
+
+    # ======================================================================
+    # /chatbot clear_server
+    # ======================================================================
+
+    @chatbot_group.command(
+        name='clear_server',
+        description="Clear this server's Markov model and dialogue history",
     )
     @app_commands.guild_only()
     @app_commands.checks.has_permissions(manage_guild=True)
-    async def chatbot_clear(
+    async def chatbot_clear_server(
         self,
         interaction: Interaction,
     ) -> None:
@@ -960,12 +1176,112 @@ class ChatbotCog(commands.Cog):
             )
             return
 
-        await self._clear_markov_model(
+        key = MarkovModelKey.server(
             interaction.guild.id,
         )
 
+        await self._clear_markov_model(key)
+
         await interaction.response.send_message(
-            'The Markov model has been cleared.',
+            "This server's Markov model and dialogue history have been cleared.",
+            ephemeral=True,
+        )
+
+    # ======================================================================
+    # /chatbot clear_history
+    # ======================================================================
+
+    @chatbot_group.command(
+        name='clear_history',
+        description="Clear this server's AI conversation history",
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_permissions(manage_guild=True)
+    async def chatbot_clear_history(
+        self,
+        interaction: Interaction,
+    ) -> None:
+        if not interaction.guild:
+            await interaction.response.send_message(
+                'This command can only be used in a server.',
+                ephemeral=True,
+            )
+            return
+
+        channel_ids = {channel.id for channel in interaction.guild.channels}
+
+        # Remove cached history for this server.
+        for channel_id in channel_ids:
+            self.history.pop(channel_id, None)
+
+        # Remove persisted history files.
+        cleared_files = 0
+
+        for channel_id in channel_ids:
+            file_path = self._get_file_path(channel_id)
+
+            if not file_path.is_file():
+                continue
+
+            with contextlib.suppress(OSError):
+                file_path.unlink()
+                cleared_files += 1
+
+        await interaction.response.send_message(
+            (f'Cleared AI conversation history for {cleared_files} channel(s).'),
+            ephemeral=True,
+        )
+
+    # ======================================================================
+    # /chatbot stats
+    # ======================================================================
+
+    @chatbot_group.command(
+        name='stats',
+        description='Show Markov model statistics',
+    )
+    @app_commands.guild_only()
+    async def chatbot_stats(
+        self,
+        interaction: Interaction,
+    ) -> None:
+        if not self.database or not interaction.guild:
+            await interaction.response.send_message(
+                'This command can only be used in a server.',
+                ephemeral=True,
+            )
+            return
+
+        config = await self.database.get_config(
+            interaction.guild.id,
+        )
+
+        chatbot = config.chatbot
+
+        key = self._make_markov_key(
+            chatbot.markov_scope,
+            guild_id=interaction.guild.id,
+            user_id=interaction.user.id,
+        )
+
+        model = await self._get_markov_model(
+            key,
+            order=chatbot.markov_order,
+        )
+
+        dialogue = await self._get_markov_dialogue(key)
+
+        await interaction.response.send_message(
+            (
+                '**Markov Statistics**\n'
+                f'Scope: `{key.scope.value}`\n'
+                f'Scope ID: `{key.scope_id}`\n'
+                f'Order: `{model.order}`\n'
+                f'Messages: `{model.message_count:,}`\n'
+                f'Tokens: `{model.token_count:,}`\n'
+                f'States: `{model.state_count:,}`\n'
+                f'Dialogue pairs: `{len(dialogue.entries):,}`'
+            ),
             ephemeral=True,
         )
 
@@ -1073,6 +1389,73 @@ class ChatbotCog(commands.Cog):
 
         await interaction.response.send_message(
             f'Chatbot has been **{state}**.',
+            ephemeral=True,
+        )
+
+    # ======================================================================
+    # /chatbot scope
+    # ======================================================================
+
+    @chatbot_group.command(
+        name='scope',
+        description='Change which Markov model scope the chatbot uses',
+    )
+    @app_commands.guild_only()
+    @app_commands.describe(
+        scope='The Markov model scope to use',
+    )
+    @app_commands.choices(
+        scope=[
+            app_commands.Choice(
+                name='Global',
+                value='global',
+            ),
+            app_commands.Choice(
+                name='Server',
+                value='server',
+            ),
+            app_commands.Choice(
+                name='User',
+                value='user',
+            ),
+        ],
+    )
+    @app_commands.checks.has_permissions(manage_guild=True)
+    async def chatbot_scope(
+        self,
+        interaction: Interaction,
+        scope: app_commands.Choice[str],
+    ) -> None:
+        if not self.database or not interaction.guild:
+            await interaction.response.send_message(
+                'This command can only be used in a server.',
+                ephemeral=True,
+            )
+            return
+
+        config = await self.database.get_config(
+            interaction.guild.id,
+        )
+
+        chatbot = config.chatbot
+        new_scope = MarkovModelScope(scope.value)
+
+        if chatbot.markov_scope == new_scope:
+            await interaction.response.send_message(
+                f'Markov model scope is already `{scope.name}`.',
+                ephemeral=True,
+            )
+            return
+
+        chatbot.markov_scope = new_scope
+
+        await self.database.update_config(
+            interaction.guild.id,
+            config,
+        )
+
+        await interaction.response.send_message(
+            f'Markov model scope changed to `{scope.name}`.',
             ephemeral=True,
         )
 

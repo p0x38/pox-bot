@@ -63,7 +63,7 @@ def test_extracts_status_code_from_exception_attribute() -> None:
 def test_extracts_retry_after_from_response_headers() -> None:
     """Retry-After must be parsed from response.headers when present."""
     response = MagicMock()
-    response.status_cose = 429
+    response.status_code = 429
     response.headers = {'Retry-After': '30'}
     response.json.side_effect = ValueError
     err = ResponseError('boom', response)

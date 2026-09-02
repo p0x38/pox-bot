@@ -115,13 +115,41 @@ _UWU_RULES = tuple(
     ]
 )
 ALPHA_STR: Final[str] = string.ascii_letters + string.digits
+
 ALPHA_ARR: Final[NDArray[np.uint8]] = np.frombuffer(
-    ALPHA_STR.encode('ascii'), dtype=np.uint8,
+    ALPHA_STR.encode('ascii'),
+    dtype=np.uint8,
 )
-REV_ALPHA_ARR: Final[NDArray[np.uint8]] = ALPHA_ARR[::-1]
 
-ENCODE_LOOKUP: Final[NDArray[np.uint8]] = np.arange(256, dtype=np.uint8)
-ENCODE_LOOKUP[ALPHA_ARR] = REV_ALPHA_ARR
+LOWERCASE_ARR: Final[NDArray[np.uint8]] = np.frombuffer(
+    string.ascii_lowercase.encode('ascii'),
+    dtype=np.uint8,
+)
 
-DECODE_LOOKUP: Final[NDArray[np.uint8]] = np.arange(256, dtype=np.uint8)
-DECODE_LOOKUP[REV_ALPHA_ARR] = ALPHA_ARR
+UPPERCASE_ARR: Final[NDArray[np.uint8]] = np.frombuffer(
+    string.ascii_uppercase.encode('ascii'),
+    dtype=np.uint8,
+)
+
+DIGIT_ARR: Final[NDArray[np.uint8]] = np.frombuffer(
+    string.digits.encode('ascii'),
+    dtype=np.uint8,
+)
+
+ENCODE_LOOKUP: Final[NDArray[np.uint8]] = np.arange(
+    256,
+    dtype=np.uint8,
+)
+
+ENCODE_LOOKUP[LOWERCASE_ARR] = LOWERCASE_ARR[::-1]
+ENCODE_LOOKUP[UPPERCASE_ARR] = UPPERCASE_ARR[::-1]
+ENCODE_LOOKUP[DIGIT_ARR] = DIGIT_ARR[::-1]
+
+DECODE_LOOKUP: Final[NDArray[np.uint8]] = np.arange(
+    256,
+    dtype=np.uint8,
+)
+
+DECODE_LOOKUP[LOWERCASE_ARR[::-1]] = LOWERCASE_ARR
+DECODE_LOOKUP[UPPERCASE_ARR[::-1]] = UPPERCASE_ARR
+DECODE_LOOKUP[DIGIT_ARR[::-1]] = DIGIT_ARR

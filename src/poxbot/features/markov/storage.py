@@ -18,7 +18,7 @@ from sqlalchemy import (
 )
 
 from ...shared.abc.base_database import BaseDatabase
-from .model import MarkovModel
+from .model import MarkovModel, MarkovModelKey
 
 
 class MarkovStorage(Protocol):
@@ -26,19 +26,19 @@ class MarkovStorage(Protocol):
 
     async def load(
         self,
-        guild_id: int,
+        key: MarkovModelKey,
         model: MarkovModel,
     ) -> None: ...
 
     async def save(
         self,
-        guild_id: int,
+        key: MarkovModelKey,
         model: MarkovModel,
     ) -> None: ...
 
     async def clear(
         self,
-        guild_id: int,
+        key: MarkovModelKey,
     ) -> None: ...
 
 
@@ -47,23 +47,24 @@ class InMemoryMarkovStorage:
 
     def __init__(self) -> None:
         self.data: dict[
-            int,
+            MarkovModelKey,
             dict[tuple[str, ...], Counter[str]],
         ] = {}
 
         self.metadata: dict[
-            int,
+            MarkovModelKey,
             tuple[int, int, int],
         ] = {}
 
     async def load(
         self,
-        guild_id: int,
+        key: MarkovModelKey,
         model: MarkovModel,
     ) -> None:
+        """Load a Markov model from memory."""
         model.clear()
 
-        metadata = self.metadata.get(guild_id)
+        metadata = self.metadata.get(key)
 
         if metadata is not None:
             order, message_count, token_count = metadata
@@ -74,36 +75,38 @@ class InMemoryMarkovStorage:
             model.message_count = message_count
             model.token_count = token_count
 
-        guild_data = self.data.get(guild_id)
+        model_data = self.data.get(key)
 
-        if not guild_data:
+        if not model_data:
             return
 
-        for state, transitions in guild_data.items():
+        for state, transitions in model_data.items():
             model.transitions[state].update(transitions)
 
     async def save(
         self,
-        guild_id: int,
+        key: MarkovModelKey,
         model: MarkovModel,
     ) -> None:
-        self.metadata[guild_id] = (
+        """Save a Markov model to memory."""
+        self.metadata[key] = (
             model.order,
             model.message_count,
             model.token_count,
         )
 
-        self.data[guild_id] = {
+        self.data[key] = {
             state: Counter(transitions)
             for state, transitions in model.transitions.items()
         }
 
     async def clear(
         self,
-        guild_id: int,
+        key: MarkovModelKey,
     ) -> None:
-        self.data.pop(guild_id, None)
-        self.metadata.pop(guild_id, None)
+        """Delete a Markov model from memory."""
+        self.data.pop(key, None)
+        self.metadata.pop(key, None)
 
 
 class MarkovDatabase(BaseDatabase, MarkovStorage):
@@ -115,9 +118,16 @@ class MarkovDatabase(BaseDatabase, MarkovStorage):
         'markov_models',
         metadata,
         Column(
-            'guild_id',
+            'scope',
+            String(16),
+            primary_key=True,
+            nullable=False,
+        ),
+        Column(
+            'scope_id',
             BigInteger,
             primary_key=True,
+            nullable=False,
         ),
         Column(
             'order',
@@ -140,19 +150,28 @@ class MarkovDatabase(BaseDatabase, MarkovStorage):
         'markov_transitions',
         metadata,
         Column(
-            'guild_id',
+            'scope',
+            String(16),
+            primary_key=True,
+            nullable=False,
+        ),
+        Column(
+            'scope_id',
             BigInteger,
             primary_key=True,
+            nullable=False,
         ),
         Column(
             'state',
             String,
             primary_key=True,
+            nullable=False,
         ),
         Column(
             'next_token',
             String,
             primary_key=True,
+            nullable=False,
         ),
         Column(
             'count',
@@ -186,6 +205,16 @@ class MarkovDatabase(BaseDatabase, MarkovStorage):
 
         return tuple(str(token) for token in result)
 
+    @staticmethod
+    def _scope_values(
+        key: MarkovModelKey,
+    ) -> dict[str, str | int]:
+        """Convert a model key into database values."""
+        return {
+            'scope': key.scope.value,
+            'scope_id': key.scope_id,
+        }
+
     async def on_load(self) -> None:
         """Create Markov tables if they do not exist."""
         async with self.engine.begin() as connection:
@@ -197,11 +226,13 @@ class MarkovDatabase(BaseDatabase, MarkovStorage):
 
     async def load(
         self,
-        guild_id: int,
+        key: MarkovModelKey,
         model: MarkovModel,
     ) -> None:
-        """Load a guild's Markov model."""
+        """Load a Markov model from the database."""
         model.clear()
+
+        values = self._scope_values(key)
 
         async with self.get_session() as session:
             model_result = await session.execute(
@@ -210,7 +241,8 @@ class MarkovDatabase(BaseDatabase, MarkovStorage):
                     self.model_table.c.message_count,
                     self.model_table.c.token_count,
                 ).where(
-                    self.model_table.c.guild_id == guild_id,
+                    self.model_table.c.scope == values['scope'],
+                    self.model_table.c.scope_id == values['scope_id'],
                 ),
             )
 
@@ -226,10 +258,11 @@ class MarkovDatabase(BaseDatabase, MarkovStorage):
             if stored_order != model.order:
                 self.logger.warning(
                     (
-                        'Ignoring Markov model for guild %s: '
+                        'Ignoring Markov model for %s/%s: '
                         'stored order=%s, requested order=%s'
                     ),
-                    guild_id,
+                    key.scope.value,
+                    key.scope_id,
                     stored_order,
                     model.order,
                 )
@@ -244,43 +277,48 @@ class MarkovDatabase(BaseDatabase, MarkovStorage):
                     self.transition_table.c.next_token,
                     self.transition_table.c.count,
                 ).where(
-                    self.transition_table.c.guild_id == guild_id,
+                    self.transition_table.c.scope == values['scope'],
+                    self.transition_table.c.scope_id == values['scope_id'],
                 ),
             )
 
             for row in result:
                 mapping = row._mapping
 
-                state = mapping['state']
+                state = self._deserialize_state(
+                    mapping['state'],
+                )
                 next_token = mapping['next_token']
                 count = mapping['count']
 
-                model.transitions[
-                    self._deserialize_state(state)
-                ][next_token] = count
+                model.transitions[state][next_token] = count
 
     async def save(
         self,
-        guild_id: int,
+        key: MarkovModelKey,
         model: MarkovModel,
     ) -> None:
-        """Save a guild's complete Markov model."""
+        """Save a Markov model to the database."""
+        values = self._scope_values(key)
+
         async with self.get_session() as session, session.begin():
             await session.execute(
                 delete(self.transition_table).where(
-                    self.transition_table.c.guild_id == guild_id,
+                    self.transition_table.c.scope == values['scope'],
+                    self.transition_table.c.scope_id == values['scope_id'],
                 ),
             )
 
             await session.execute(
                 delete(self.model_table).where(
-                    self.model_table.c.guild_id == guild_id,
+                    self.model_table.c.scope == values['scope'],
+                    self.model_table.c.scope_id == values['scope_id'],
                 ),
             )
 
             await session.execute(
                 insert(self.model_table).values(
-                    guild_id=guild_id,
+                    **values,
                     order=model.order,
                     message_count=model.message_count,
                     token_count=model.token_count,
@@ -289,7 +327,7 @@ class MarkovDatabase(BaseDatabase, MarkovStorage):
 
             rows = [
                 {
-                    'guild_id': guild_id,
+                    **values,
                     'state': self._serialize_state(state),
                     'next_token': next_token,
                     'count': count,
@@ -306,18 +344,22 @@ class MarkovDatabase(BaseDatabase, MarkovStorage):
 
     async def clear(
         self,
-        guild_id: int,
+        key: MarkovModelKey,
     ) -> None:
-        """Delete a guild's Markov model."""
+        """Delete a Markov model from the database."""
+        values = self._scope_values(key)
+
         async with self.get_session() as session, session.begin():
             await session.execute(
                 delete(self.transition_table).where(
-                    self.transition_table.c.guild_id == guild_id,
+                    self.transition_table.c.scope == values['scope'],
+                    self.transition_table.c.scope_id == values['scope_id'],
                 ),
             )
 
             await session.execute(
                 delete(self.model_table).where(
-                    self.model_table.c.guild_id == guild_id,
+                    self.model_table.c.scope == values['scope'],
+                    self.model_table.c.scope_id == values['scope_id'],
                 ),
             )

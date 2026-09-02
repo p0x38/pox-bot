@@ -25,7 +25,7 @@ def test_reverse_letter_cipher() -> None:
         ),
     )
 
-    assert encoded.output == 'zyx98'
+    assert encoded.output == 'zyx87'
 
     decoded = transformer.transform(
         TransformerRequest(

@@ -12,7 +12,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from ..src.poxbot.features.ai.manager import LLMManager
+from poxbot.features.ai.manager import LLMManager
 
 # Add src to path to allow imports
 sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))

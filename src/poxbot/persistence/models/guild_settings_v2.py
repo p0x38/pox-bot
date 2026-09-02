@@ -1,7 +1,7 @@
 import uuid
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
-from enum import IntEnum
+from enum import Enum, IntEnum
 
 from pytz import UTC
 
@@ -129,10 +129,17 @@ class ChatbotMethodType(IntEnum):
     markov_chain = 1
 
 
+class MarkovModelScope(Enum):
+    GLOBAL = "global"
+    SERVER = "server"
+    USER = "user"
+
+
 @dataclass
 class ChatbotConfig(BaseConfigData):
     enabled: bool = False
     type: ChatbotMethodType = ChatbotMethodType.ai
+    markov_scope: MarkovModelScope = MarkovModelScope.SERVER
     markov_order: int = 2
     markov_max_tokens: int = 50
 
