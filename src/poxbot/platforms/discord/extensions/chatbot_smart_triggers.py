@@ -7,10 +7,10 @@ from discord.ext import commands
 from pytz import UTC
 
 from ....application import PoxBot
-from ....features.ai.manager import LLMProviderType
 from ....features.chatbot.trigger import SmartTriggerEvaluator, TriggerReason
 from ....features.markov.model import MarkovGenerationResult
 from ....persistence.models.guild_settings_v2 import ChatbotMethodType
+from ....services.ai import LLMProviderType
 from .chatbot import ChatbotCog
 
 
