@@ -6,6 +6,7 @@ from collections.abc import Sequence
 from typing import Protocol
 
 from sqlalchemy import (
+    BigInteger,
     Column,
     Integer,
     MetaData,
@@ -115,7 +116,7 @@ class MarkovDatabase(BaseDatabase, MarkovStorage):
         metadata,
         Column(
             'guild_id',
-            Integer,
+            BigInteger,
             primary_key=True,
         ),
         Column(
@@ -140,7 +141,7 @@ class MarkovDatabase(BaseDatabase, MarkovStorage):
         metadata,
         Column(
             'guild_id',
-            Integer,
+            BigInteger,
             primary_key=True,
         ),
         Column(
