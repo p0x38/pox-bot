@@ -109,6 +109,15 @@ class ExtensionEvent:
     result: ExtensionOperationResult | None
 
 
+@dataclass
+class ExtensionDiscoveryOptions:
+    recursive: bool = False
+    respect_ignore: bool = True
+    include_private: bool = False
+    include_init: bool = False
+    include_disabled: bool = False
+
+
 class ExtensionManager:
     OP_MAP: ClassVar[dict[ExtensionOperation, ExtensionCallable]] = {
         ExtensionOperation.LOAD: lambda b, x, /: b.load_extension(x),
@@ -121,29 +130,32 @@ class ExtensionManager:
         cogs_path: str = './src/poxbot/platforms/discord/extensions',
         package: str = 'poxbot.platforms.discord.extensions',
         excluded_extensions: list[str] | None = None,
+        platform: str = 'discord',
     ):
         self.extension_logger = get_logger(__name__, prefix='ExtensionManager')
-        self.extension_logger.debug('INIT')
-        self.extension_logger.debug('cogs_path(raw)=%s', cogs_path)
-        self.extension_logger.debug('package=%s', package)
+
         self.cogs_path = Path(cogs_path)
         self.package = package
+        self.platform = platform.lower()
+
         self.excluded_extensions = set(excluded_extensions or [])
 
         self.states: dict[str, ExtensionState] = {}
         self._paths: dict[str, str] = {}
+
+        self.extension_logger.debug('Initialized extension manager\nDiscovery options: ')
 
         self._load_ext_ignore_file()
 
     def _load_ext_ignore_file(self) -> None:
         ignore_file_path = Path('src/poxbot/assets/.ext-ignore')
         self.extension_logger.debug(
-            'loading .ext-ignore from %s', ignore_file_path.resolve(),
+            'loading .ext-ignore from "%s"', ignore_file_path.resolve(),
         )
 
         if not ignore_file_path.is_file():
             self.extension_logger.debug(
-                'no .ext-ignore file found at %s', ignore_file_path,
+                'no .ext-ignore file found at "%s"', ignore_file_path,
             )
             return
 
@@ -211,7 +223,11 @@ class ExtensionManager:
         bot: BotLike,
         target: str,
         operation: ExtensionOperation,
+        *,
+        options: ExtensionDiscoveryOptions | None = None,
     ) -> list[str]:
+        options = options or ExtensionDiscoveryOptions()
+
         if self.is_wildcard(target):
             available_in_folder = []
             self.extension_logger.debug(
@@ -411,14 +427,15 @@ class ExtensionManager:
         concurrency: int = 5,
         progress_queue: asyncio.Queue | None = None,
     ) -> ExtensionOperationResult:
-        self.extension_logger.debug(
-            'RUN OPERATION START op=%s targets=%s', operation, list(targets),
-        )
         lock = asyncio.Lock()
 
         start = perf_counter()
         targets_list = list(targets)
         total = len(targets_list)
+        
+        self.extension_logger.debug(
+            'RUN OPERATION START op=%s targets=%s', operation, list(targets),
+        )
 
         with start_span('extension.batch.run') as span:
             span.set_attribute('operation', operation.value)
