@@ -1,6 +1,7 @@
-from __future__ import annotations
+from typing import cast
 
 from discord import Interaction
+from discord.ext import commands
 
 from ....application import PoxBot
 from .chatbot import ChatbotCog
@@ -27,7 +28,8 @@ if ChatbotCog.chatbot_group.get_command('reload') is None:
         description='Reload the chatbot and Markov runtime state',
     )
     async def chatbot_reload(interaction: Interaction) -> None:
-        cog = interaction.client.get_cog('ChatbotCog')
+        bot = cast(commands.Bot, interaction.client)
+        cog = bot.get_cog('ChatbotCog')
 
         if not isinstance(cog, ChatbotCog):
             await interaction.response.send_message(
@@ -46,6 +48,6 @@ if ChatbotCog.chatbot_group.get_command('reload') is None:
         )
 
 
-async def setup(bot: PoxBot) -> None:
+async def setup(bot: PoxBot) -> None:  # ruff: ignore[unused-async]
     """Register runtime-only chatbot controls on the existing chatbot group."""
     del bot
