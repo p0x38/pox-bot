@@ -15,6 +15,7 @@ from sqlalchemy import (
     delete,
     insert,
     select,
+    text,
 )
 
 from ...shared.abc.base_database import BaseDatabase
@@ -300,8 +301,17 @@ class MarkovDatabase(BaseDatabase, MarkovStorage):
     ) -> None:
         """Save a Markov model to the database."""
         values = self._scope_values(key)
+        lock_key = f'markov:{values["scope"]}:{values["scope_id"]}'
 
         async with self.get_session() as session, session.begin():
+            # Multiple message handlers can persist the same scope concurrently.
+            # Serialize replacement saves so DELETE + INSERT cannot race and
+            # violate the transition table primary key.
+            await session.execute(
+                text('SELECT pg_advisory_xact_lock(hashtextextended(:key, 0))'),
+                {'key': lock_key},
+            )
+
             await session.execute(
                 delete(self.transition_table).where(
                     self.transition_table.c.scope == values['scope'],
