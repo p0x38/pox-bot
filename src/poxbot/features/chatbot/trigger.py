@@ -12,9 +12,9 @@ class TriggerReason(IntEnum):
 
     NONE = 0
     CONTEXT = 1
-    NAME = 2
-    QUESTION = 3
-    REPLY = 4
+    QUESTION = 2
+    REPLY = 3
+    NAME = 4
     MENTION = 5
 
 
@@ -75,8 +75,10 @@ class SmartTriggerEvaluator:
         if not content:
             return self._best(candidates)
 
+        # Name references outrank reply/question signals so the existing
+        # chatbot listener remains the sole handler for name-based triggers.
         if self._contains_bot_name(content):
-            candidates.append(TriggerDecision(TriggerReason.NAME, 0.9))
+            candidates.append(TriggerDecision(TriggerReason.NAME, 0.96))
 
         # A question by itself is intentionally not enough. Recent bot activity
         # provides the conversational context needed to avoid replying to every
