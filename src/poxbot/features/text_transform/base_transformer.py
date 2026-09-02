@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from collections.abc import Mapping
 from time import perf_counter
-from typing import Any, TypeVar
+from typing import Any
 
 import numpy as np
 
@@ -75,7 +75,7 @@ class BaseTextTransformer(ABC):
         if typ is np.ndarray:
             return np.asarray(value)
         if not isinstance(value, typ):
-            raise TypeError(  # noqa: TRY003
+            raise TypeError(
                 f"{key!r} must be {typ.__name__}",
             )
         return value

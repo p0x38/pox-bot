@@ -1,12 +1,14 @@
 from __future__ import annotations
-from typing import ClassVar
+
 import shlex
+from typing import ClassVar
+
 from textual import on
 from textual.app import App, ComposeResult
-from textual.containers import Container
-from textual.widgets import Footer, Header, Input, RichLog
 from textual.binding import Binding, BindingType
+from textual.containers import Container
 from textual.suggester import Suggester
+from textual.widgets import Footer, Header, Input, RichLog
 
 
 class CommandSuggester(Suggester):

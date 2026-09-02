@@ -49,7 +49,7 @@ class ImageCog(Cog):
         if not length:
             length = 8
         length = clamp(length, 4, 10)
-        return ''.join(random.choices(string.ascii_letters + string.digits, k=length))  # noqa: S311
+        return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
     def generate_basename(self, suffix: str | None = None):
         prefix = self.base_virtual_filename_prefix
@@ -75,7 +75,7 @@ class ImageCog(Cog):
             if attachment.content_type and attachment.content_type.startswith('image'):
                 target_url = attachment.url
             else:
-                raise RuntimeError('First attachment is not image')  # noqa: TRY003
+                raise RuntimeError('First attachment is not image')
         elif target is not None:
             if isinstance(target, (Member, User)):
                 target_url = target.display_avatar.url
@@ -83,9 +83,9 @@ class ImageCog(Cog):
                 if target.id:
                     target_url = target.url
                 else:
-                    raise TypeError('Type of emoji must not be built-in emoji')  # noqa: TRY003
+                    raise TypeError('Type of emoji must not be built-in emoji')
             else:
-                raise ValueError(  # noqa: TRY003
+                raise ValueError(
                     'Invalid parameter.'
                     'Make sure to specify the type from User, Custom Emoji or Image.',
                 )
@@ -95,10 +95,10 @@ class ImageCog(Cog):
         if target_url and self.bot.resources.session:
             async with self.bot.resources.session.get(target_url) as resp:
                 if resp.status != 200:
-                    raise RuntimeError('Failed to retrieve image')  # noqa: TRY003
+                    raise RuntimeError('Failed to retrieve image')
                 return await resp.read()
         else:
-            raise ValueError('Target was empty')  # noqa: TRY003
+            raise ValueError('Target was empty')
 
     async def make_pat_gif(self, b: bytes) -> BytesIO:
         istream = BytesIO(b)

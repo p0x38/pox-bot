@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import timedelta
 from io import BytesIO
 from typing import Any

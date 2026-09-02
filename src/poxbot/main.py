@@ -1,5 +1,6 @@
 import asyncio
 import contextlib
+import logging
 from importlib.metadata import version
 
 from .bootstrap import Bootstrap
@@ -66,8 +67,6 @@ def run(namespace: object | None = None):
         if bootstrap._context is not None:
             bootstrap.context.logger.exception('Uncaught exception!')
         else:
-            import logging
-
             logging.getLogger(__name__).exception('Uncaught exception!')
     finally:
         if bootstrap._context is not None:

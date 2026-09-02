@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from discord import Guild, Message
+from discord import Guild
 from sqlalchemy import delete, desc, extract, func, select
 
 from ...shared.bases import BaseDatabase

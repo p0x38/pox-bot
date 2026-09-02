@@ -1,8 +1,6 @@
-from .metrics import Metrics
-
-from .provider import setup_otel
-
 from ...config.schema import TraceConfig
+from .metrics import Metrics
+from .provider import setup_otel
 
 metrics: Metrics | None = None
 

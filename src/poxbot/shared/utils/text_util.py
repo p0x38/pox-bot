@@ -20,7 +20,6 @@ def crop_word(text: str, needle_word: str, padding: int = 8, emphasis: bool = Tr
             + "**"
             + cropped[rel_start + needle_len:]
         )
-    else:
-        low = max(0, start - padding)
-        high = min(len(text), start + needle_len + padding)
-        return text[low:high]
+    low = max(0, start - padding)
+    high = min(len(text), start + needle_len + padding)
+    return text[low:high]

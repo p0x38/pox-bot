@@ -53,7 +53,10 @@ class JSONFormatter(Formatter):
         if record.exc_info:
             exc_type, exc_value, _ = record.exc_info
             if exc_value:
-                payload["error"] = f"{exc_type.__name__}: {exc_value}" if exc_type else str(exc_value)
+                payload["error"] = (
+                    f"{exc_type.__name__}: {exc_value}"
+                    if exc_type else str(exc_value)
+                )
             
             if not record.exc_text:
                 record.exc_text = self.formatException(record.exc_info)

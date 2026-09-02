@@ -488,7 +488,13 @@ class PoxBot(commands.AutoShardedBot):
 
                 content = text_res
         else:
-            description = f'An error occurred while executing the command: `{error}`'  # ruff: ignore[unused-variable]
+            description = f'An error occurred while executing the command: `{error}`'
+            embed = Embed(
+                title=f'Error: {target_error_name}',
+                description=description,
+                color=Color.red(),
+                timestamp=datetime.now(UTC),
+            )
 
         if interaction.type == InteractionType.application_command:
             if embed:

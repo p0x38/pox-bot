@@ -6,7 +6,6 @@ from typing import Any
 from gtts import gTTS, gTTSError
 from gtts.lang import tts_langs
 
-from ....infrastructure.logger import get_logger
 from ....shared.abc.tts_engine import BaseTTSEngine
 from ....shared.exceptions.tts_error import SpeechGenerationError
 from ..models import TTSMetricsData, TTSRequest, TTSResult
@@ -26,7 +25,7 @@ class GoogleTTSEngine(BaseTTSEngine):
         else:
             self.logger.info("Fetched gTTS languages!")
     
-    async def generate(self, request: TTSRequest, manager: Any) -> TTSResult:  # noqa: ARG002
+    async def generate(self, request: TTSRequest, manager: Any) -> TTSResult:
         start_time = perf_counter()
         abuffer = BytesIO()
         
@@ -37,7 +36,7 @@ class GoogleTTSEngine(BaseTTSEngine):
             tts.write_to_fp(abuffer)
             abuffer.seek(0)
         except gTTSError as e:
-            raise SpeechGenerationError(f"gTTS library error: {e}") from e  # noqa: TRY003
+            raise SpeechGenerationError(f"gTTS library error: {e}") from e
         
         elapsed = perf_counter() - start_time
         metrics = TTSMetricsData(

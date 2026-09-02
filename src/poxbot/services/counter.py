@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 class CounterManager:
-    def __init__(self, bot: 'PoxBot'):  # noqa: UP037
+    def __init__(self, bot: 'PoxBot'):  # ruff: ignore[quoted-annotation]
         self.logger = get_logger(__name__, prefix='CounterManager')
         self.bot = bot
 

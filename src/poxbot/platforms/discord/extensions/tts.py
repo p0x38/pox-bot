@@ -11,8 +11,6 @@ from discord import (
 )
 from discord.ext import commands
 
-from ....features.tts.models import TTSRequest
-
 from ....application import PoxBot
 from ....features.tts.manager import TTSManager
 from ....shared.enums.tts import TTSEngineType
@@ -110,7 +108,7 @@ class TextToSpeechCog(commands.Cog):
         
         try:
             result = await self.tts_manager.generate_speech(request_data)
-        except Exception as e:
+        except Exception:
             pass
 
     async def generate_tts(

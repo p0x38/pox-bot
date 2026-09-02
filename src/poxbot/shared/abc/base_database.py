@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from ..utils.metrics import Metrics
 
 
-class BaseDatabase(ABC):
+class BaseDatabase(ABC):  # ruff: ignore[abstract-base-class-without-abstract-method]
     """An abstract base class representing a database using SQLAlchemy.
 
     This class defines the core asynchronous interface and connection management
@@ -65,7 +65,9 @@ class BaseDatabase(ABC):
             engine_kwargs['max_overflow'] = 16
 
         if validated_dsn not in BaseDatabase._engines:
-            BaseDatabase._engines[validated_dsn] = create_async_engine(validated_dsn, **engine_kwargs)
+            BaseDatabase._engines[validated_dsn] = create_async_engine(
+                validated_dsn, **engine_kwargs
+            )
 
         self.engine = BaseDatabase._engines[validated_dsn]
         self.async_session = async_sessionmaker(
@@ -126,8 +128,8 @@ class BaseDatabase(ABC):
         """Run the initialization sequence by triggering lifecycle hooks."""
         await self.on_load()
         self.logger.info('Setup sequence completed.')
-    
-    async def on_load(self):  # noqa: B027
+
+    async def on_load(self):  # ruff: ignore[empty-method-without-abstract-decorator]
         """Provide a lifecycle hook executed during setup.
 
         Subclasses should override this method to perform initial tasks
@@ -278,7 +280,7 @@ class BaseDatabase(ABC):
         """Dispose of the database engine and release all connections."""
         if not BaseDatabase._engines:
             return
-        
+
         for dsn, engine in list(BaseDatabase._engines.items()):
             with contextlib.suppress(Exception):
                 await engine.dispose()

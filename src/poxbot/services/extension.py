@@ -1,4 +1,3 @@
-# ruff: noqa: D101, D102
 import asyncio
 import fnmatch
 from collections.abc import AsyncIterator, Awaitable, Callable, Iterable
@@ -143,19 +142,23 @@ class ExtensionManager:
         self.states: dict[str, ExtensionState] = {}
         self._paths: dict[str, str] = {}
 
-        self.extension_logger.debug('Initialized extension manager\nDiscovery options: ')
+        self.extension_logger.debug(
+            'Initialized extension manager\nDiscovery options: '
+        )
 
         self._load_ext_ignore_file()
 
     def _load_ext_ignore_file(self) -> None:
         ignore_file_path = Path('src/poxbot/assets/.ext-ignore')
         self.extension_logger.debug(
-            'loading .ext-ignore from "%s"', ignore_file_path.resolve(),
+            'loading .ext-ignore from "%s"',
+            ignore_file_path.resolve(),
         )
 
         if not ignore_file_path.is_file():
             self.extension_logger.debug(
-                'no .ext-ignore file found at "%s"', ignore_file_path,
+                'no .ext-ignore file found at "%s"',
+                ignore_file_path,
             )
             return
 
@@ -231,7 +234,8 @@ class ExtensionManager:
         if self.is_wildcard(target):
             available_in_folder = []
             self.extension_logger.debug(
-                'FILES RAW: %s', list(self.cogs_path.rglob('*.py')),
+                'FILES RAW: %s',
+                list(self.cogs_path.rglob('*.py')),
             )
             for f in self.cogs_path.rglob('*.py'):
                 if f.name.startswith('_'):
@@ -432,9 +436,11 @@ class ExtensionManager:
         start = perf_counter()
         targets_list = list(targets)
         total = len(targets_list)
-        
+
         self.extension_logger.debug(
-            'RUN OPERATION START op=%s targets=%s', operation, list(targets),
+            'RUN OPERATION START op=%s targets=%s',
+            operation,
+            list(targets),
         )
 
         with start_span('extension.batch.run') as span:
@@ -463,14 +469,18 @@ class ExtensionManager:
                         break
 
                     self.extension_logger.debug(
-                        '[worker %d] got item=%s', worker_id, item,
+                        '[worker %d] got item=%s',
+                        worker_id,
+                        item,
                     )
 
                     queue_session_start = perf_counter()
                     index, ext = item
 
                     self.extension_logger.debug(
-                        '[worker %d] executing ext=%s', worker_id, ext,
+                        '[worker %d] executing ext=%s',
+                        worker_id,
+                        ext,
                     )
 
                     with start_span('extension.worker.execute') as span:
@@ -480,7 +490,9 @@ class ExtensionManager:
                         try:
                             op = self.OP_MAP[operation]
                             self.extension_logger.debug(
-                                'operation mapped: %s -> %s', operation, op,
+                                'operation mapped: %s -> %s',
+                                operation,
+                                op,
                             )
 
                             result = await self._run_operation(

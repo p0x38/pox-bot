@@ -17,11 +17,11 @@ def format_duration(n: float) -> str:
     if ms < 100:
         return f'{ms:.2f}ms'
     if n < 1:
-        return f'{int(round(ms))}ms'
+        return f'{round(ms)}ms'
     if n < 10:
         return f'{n:.2f}s'
     if n < 60:
-        return f'{int(round(n))}s'
+        return f'{round(n)}s'
 
     duration = timedelta(seconds=n)
     days = duration.days

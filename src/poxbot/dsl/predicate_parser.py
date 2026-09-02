@@ -23,7 +23,7 @@ class SafeStringPredicateEvaluator:
         ast.LtE: operator.le,
         ast.Gt: operator.gt,
         ast.GtE: operator.ge,
-        ast.In: lambda l, r: l in r,  # ruff: ignore[ambiguous-variable-name]
+        ast.In: lambda l, r: l in r,
     }
     _BINOPS: ClassVar[dict[type[ast.AST], Callable]] = {
         ast.Add: operator.add,

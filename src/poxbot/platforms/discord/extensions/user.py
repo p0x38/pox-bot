@@ -70,7 +70,7 @@ class TimeoutModal(ui.Modal, title='User timeout'):
             td = parse_duration(self.duration.value)
 
             if td.total_seconds() <= 0:
-                raise ValueError(  # noqa: TRY301
+                raise ValueError(
                     self.bot.internal_translator.T(
                         'error.custom.timeout_duration_lessflow',
                         loc,
@@ -80,17 +80,17 @@ class TimeoutModal(ui.Modal, title='User timeout'):
             td = min(td, MAX_TIMEOUT)
 
             if not interaction.guild:
-                raise RuntimeError(  # noqa: TRY301
+                raise RuntimeError(
                     self.bot.internal_translator.T('error.custom.guild_only', loc),
                 )
 
             if isinstance(interaction.user, User):
-                raise TypeError(  # noqa: TRY301
+                raise TypeError(
                     self.bot.internal_translator.T('error.exceptions.Unknown', loc),
                 )
 
             if self.target == interaction.user:
-                raise RuntimeError(  # noqa: TRY301
+                raise RuntimeError(
                     self.bot.internal_translator.T(
                         'error.custom.tried_to_timeout_himself',
                         loc,
@@ -98,7 +98,7 @@ class TimeoutModal(ui.Modal, title='User timeout'):
                 )
 
             if self.target == interaction.guild.owner:
-                raise RuntimeError(  # noqa: TRY301
+                raise RuntimeError(
                     self.bot.internal_translator.T(
                         'error.custom.tried_to_timeout_owner',
                         loc,
@@ -106,7 +106,7 @@ class TimeoutModal(ui.Modal, title='User timeout'):
                 )
 
             if self.target.top_role >= interaction.user.top_role:
-                raise RuntimeError(  # noqa: TRY301
+                raise RuntimeError(
                     self.bot.internal_translator.T(
                         'error.custom.tried_to_timeout_higher',
                         loc,
@@ -114,7 +114,7 @@ class TimeoutModal(ui.Modal, title='User timeout'):
                 )
 
             if not interaction.guild.me.guild_permissions.moderate_members:
-                raise RuntimeError(  # noqa: TRY301
+                raise RuntimeError(
                     self.bot.internal_translator.T(
                         'error.custom.forbidden_timeout',
                         loc,
@@ -122,7 +122,7 @@ class TimeoutModal(ui.Modal, title='User timeout'):
                 )
 
             if self.target.top_role >= interaction.guild.me.top_role:
-                raise RuntimeError(  # noqa: TRY301
+                raise RuntimeError(
                     self.bot.internal_translator.T(
                         'error.custom.cannot_timeout_higher',
                         loc,
@@ -242,7 +242,9 @@ class DynamicUserInfoView(ui.View):
                 self.locale,
             )
             embed.add_field(
-                name=translated_field_name, value=display_value, inline=True,
+                name=translated_field_name,
+                value=display_value,
+                inline=True,
             )
 
         await interaction.edit_original_response(embed=embed, view=self)
@@ -269,7 +271,9 @@ class UserCog(commands.Cog):
 
             try:
                 await member.kick(
-                    reason=f'{interaction.user.display_name} kicked user via Context menu',
+                    reason=(
+                        f'{interaction.user.display_name} kicked user via Context menu'
+                    ),
                 )
                 embed.description = self.bot.internal_translator.T(
                     'messages.kick_user',
@@ -313,7 +317,9 @@ class UserCog(commands.Cog):
 
             try:
                 await member.ban(
-                    reason=f'{interaction.user.display_name} banned user via Context menu',
+                    reason=(
+                        f'{interaction.user.display_name} banned user via Context menu'
+                    ),
                 )
                 embed.description = self.bot.internal_translator.T(
                     'messages.ban_user',
@@ -440,18 +446,18 @@ class UserCog(commands.Cog):
                     'user_creation': user.created_at.strftime('%Y-%m-%d %H:%M:%S')
                     + f' (<t:{int(user.created_at.timestamp())}:R>)',
                 }
-                
+
                 translated_strings = []
-                
+
                 for key in format_userflags(user.public_flags):
                     result = self.bot.internal_translator.T(key, loc)
                     if result == key:
                         continue
-                    
+
                     translated_strings.append(result)
-                    
+
                 temp1['user_additional'] = ', '.join(translated_strings)
-                
+
                 if user.system:
                     temp1['user_type'] = self.bot.internal_translator.T(
                         'text.user_type.system',
@@ -751,7 +757,8 @@ class UserCog(commands.Cog):
         try:
             await member.ban(reason=reason)
             await member.send(
-                f"You're banned by {ctx.user.name}.\nReason: {reason if reason else 'No reason provided'}",
+                f"You're banned by {ctx.user.name}."
+                "\nReason: {reason if reason else 'No reason provided'}",
             )
             return await ctx.response.send_message(
                 f'Banned <@{member.id}>.',
@@ -813,7 +820,11 @@ class UserCog(commands.Cog):
     ):
         await member.timeout(
             timedelta(minutes=length),
-            reason=f'You\'re timed out. "{reason if reason else "No reason provided from source"}", by {ctx.user.name}',
+            reason=(
+                f"You're timed out. "
+                f'{reason if reason else "No reason provided from source"}", '
+                f'by {ctx.user.name}'
+            ),
         )
         return await ctx.response.send_message(
             f'Timed out {member.mention} for {length} minutes.',
@@ -1194,7 +1205,7 @@ class UserCog(commands.Cog):
         embed = Embed(title=f'Random message by {member.display_name}', description='')
 
         if user_messages:
-            random_message = random.choice(user_messages)  # noqa: S311
+            random_message = random.choice(user_messages)
             embed.description = (
                 f'[{random_message.created_at.strftime("%Y-%m-%d %H:%M:%S")}]'
                 f'(https://discord.com/channels/{random_message.guild.id}/{random_message.channel.id}/{random_message.id}): '

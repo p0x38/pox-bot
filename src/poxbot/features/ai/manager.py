@@ -219,6 +219,7 @@ class LLMManager:
 
             except Exception:
                 # Not all response objects support JSON decoding.
+                # TODO: log exception
                 pass
 
         return details

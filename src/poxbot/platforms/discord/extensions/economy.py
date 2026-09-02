@@ -256,7 +256,7 @@ class EconomyCog(commands.Cog):
 
                 return await interaction.followup.send(embed=embed)
 
-            earned = random.randint(50, 300)  # noqa: S311
+            earned = random.randint(50, 300)
             user.wallet += earned
             user.last_work = now
             await self.economy.save_user(user)
@@ -585,7 +585,7 @@ class EconomyCog(commands.Cog):
                 embed.timestamp = datetime.now(UTC)
                 return await interaction.followup.send(embed=embed, ephemeral=True)
 
-            reward = random.randint(100, 900)  # noqa: S311
+            reward = random.randint(100, 900)
             user.wallet += reward
             user.last_daily = now
 

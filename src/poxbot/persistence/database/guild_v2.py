@@ -3,9 +3,8 @@ from typing import TYPE_CHECKING
 from sqlalchemy import func, select
 from sqlalchemy.orm.attributes import flag_modified
 
-from ...shared.bases.base_orm_model import Base
-
 from ...shared.bases import BaseDatabase
+from ...shared.bases.base_orm_model import Base
 from ...shared.utils import Cache
 from ..models.guild_settings_v2 import GuildConfigV2
 from ..models.guild_settings_v2_orm import ActiveTicket, GuildSettings

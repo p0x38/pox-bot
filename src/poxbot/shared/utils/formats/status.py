@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from ....application.bot import PoxBot
 
 
-def format_status(bot: 'PoxBot', client_status: ClientStatus, locale: Locale | str):
+def format_status(bot: PoxBot, client_status: ClientStatus, locale: Locale | str):
     result = ''
     if isinstance(client_status.status, Status):
         status = client_status.status

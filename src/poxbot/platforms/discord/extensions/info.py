@@ -83,7 +83,7 @@ class FeedbackModal(ui.Modal):
         await self.send_feedback(interaction)
         await interaction.followup.send('Thank you for your feedback!', ephemeral=True)
 
-    async def on_error(self, interaction: Interaction, error: Exception) -> None:  # noqa: ARG002
+    async def on_error(self, interaction: Interaction, error: Exception) -> None:
         self.bot.logger.error(
             'Exception thrown while trying to process the submission',
         )

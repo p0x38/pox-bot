@@ -1,8 +1,19 @@
-from src.utils._ciphers.masking import cellular_automata_mask
+from poxbot.features.text_transform.models import TransformerRequest
+from poxbot.features.text_transform.transformers.cellular_automata import (
+    CellularAutomataMaskTransformer,
+)
 
 
-def test_cellular_automata_masking():
+def test_cellular_automata_masking() -> None:
     """Verify Conway rules introduce structural masks successfully."""
+    transformer = CellularAutomataMaskTransformer()
     secret = 'Confidential Information'
-    masked = cellular_automata_mask(secret, generations=2)
-    assert masked != secret
+
+    masked = transformer.transform(
+        TransformerRequest(
+            text=secret,
+            options={'generations': 2},
+        ),
+    )
+
+    assert masked.output != secret

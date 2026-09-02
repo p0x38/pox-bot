@@ -14,7 +14,7 @@ class GuildConfigType(TypeDecorator):
     impl = JSONB
     cache_ok = True
 
-    def process_bind_param(self, value, dialect):  # noqa: ARG002
+    def process_bind_param(self, value, dialect):
         if isinstance(value, GuildConfigV2):
             return orjson.loads(orjson.dumps(value.to_dict()))
         if isinstance(value, dict):
@@ -26,7 +26,7 @@ class GuildConfigType(TypeDecorator):
                 return {}
         return value
 
-    def process_result_value(self, value, dialect):  # noqa: ARG002
+    def process_result_value(self, value, dialect):
         if value is None or value == '':
             return MutableGuildConfig.coerce(self, GuildConfigV2())
 

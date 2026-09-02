@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import base64
 
-from ..models import TransformerContext, TransformerRequest
-
 from ..base_transformer import BaseTextTransformer
+from ..models import TransformerContext, TransformerRequest
 
 
 class Base64Transformer(BaseTextTransformer):

@@ -1,4 +1,4 @@
-from .context import get_request_id, get_extension
+from .context import get_extension, get_request_id
 
 
 def enrich_extra(extra: dict | None) -> dict:

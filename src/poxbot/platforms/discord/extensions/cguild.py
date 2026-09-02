@@ -62,7 +62,7 @@ class LoggingView(ui.View):
         return embed
 
     @ui.button(label='Prev', style=ButtonStyle.gray)
-    async def previous_page(self, interaction: Interaction, button: ui.Button):  # noqa: ARG002
+    async def previous_page(self, interaction: Interaction, button: ui.Button):
         if self.current_page > 0:
             self.current_page -= 1
             await interaction.response.edit_message(
@@ -76,7 +76,7 @@ class LoggingView(ui.View):
             )
 
     @ui.button(label='Next', style=ButtonStyle.gray)
-    async def next_page(self, interaction: Interaction, button: ui.Button):  # noqa: ARG002
+    async def next_page(self, interaction: Interaction, button: ui.Button):
         total_pages = self.get_total_pages()
         if self.current_page < total_pages - 1:
             self.current_page += 1

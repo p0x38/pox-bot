@@ -37,8 +37,12 @@ class I18nManager:
         except Exception as e:
             self.logger.error('Failed to load available_languages.json: %s', e)
 
-    def T(
-        self, key: str, locale: str | Locale, placeholders: dict | None = None, **kwargs,
+    def T(  # ruff: ignore[invalid-function-name]
+        self,
+        key: str,
+        locale: str | Locale,
+        placeholders: dict | None = None,
+        **kwargs,
     ) -> str:
         if locale is None:
             return key

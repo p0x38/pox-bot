@@ -86,7 +86,7 @@ class OTelGaugeProxy:
 
 class Metrics:
     def __init__(self, config: TraceConfig):
-        from ...infrastructure.logger import get_logger  # noqa: PLC0415
+        from ...infrastructure.logger import get_logger  # ruff: ignore[import-outside-top-level, unsorted-imports]
 
         self.logger = get_logger(__name__, prefix='TelemetryManager')
         self.config = config
@@ -160,7 +160,9 @@ class Metrics:
             )
 
         self.logger.info(
-            f'Prometheus metrics endpoint listening on http://{self.config.prometheus_host}:{self.config.prometheus_server_port}',
+            "Prometheus metrics endpoint listening on http://%s:%d",
+            self.config.prometheus_host,
+            self.config.prometheus_server_port,
         )
 
     def increment_counter(
@@ -194,7 +196,7 @@ class Metrics:
         if name not in self._dynamic_gauges:
 
             def create_fallback(gauge_name=name):
-                def callback(options: Any) -> list[metrics.Observation]:  # noqa: ARG001
+                def callback(options: Any) -> list[metrics.Observation]:
                     return [
                         metrics.Observation(val, attrs)
                         for (g_name, _), (val, attrs) in self._gauge_values.items()

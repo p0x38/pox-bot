@@ -28,17 +28,19 @@ class Bootstrap:
         settings = await ConfigManager.get_settings()
         dashboard = TextualDashboard() if self.show_textual else None
 
-        configure_logging(settings, log_widget=dashboard.log_widget if dashboard is not None else None)
-        
-        system_logger = get_logger(__name__, prefix="System")
-        
-        i18n = I18nManager(locales_path="src/poxbot/assets/locales")
+        configure_logging(
+            settings, log_widget=dashboard.log_widget if dashboard is not None else None
+        )
+
+        system_logger = get_logger(__name__, prefix='System')
+
+        i18n = I18nManager(locales_path='src/poxbot/assets/locales')
         await i18n.initialize()
-        
-        root = Path(__file__).resolve()  # noqa: ASYNC240
-        
-        fastapi_class = FastAPIManager(host="0.0.0.0", port=8000)
-        
+
+        root = Path(__file__).resolve()  # ruff: ignore[blocking-path-method-in-async-function]
+
+        fastapi_class = FastAPIManager(host='0.0.0.0', port=8000)
+
         self._context = ApplicationContext(
             settings=settings,
             logger=system_logger,
@@ -48,7 +50,7 @@ class Bootstrap:
             dashboard=dashboard,
         )
         return self._context
-    
+
     async def create_bot(self) -> PoxBot:
         context = await self.create_context()
 
@@ -57,13 +59,13 @@ class Bootstrap:
             intents=Intents.all(),
             command_prefix=commands.when_mentioned_or(context.settings.bot_prefix),
         )
-    
+
     @property
     def context(self) -> ApplicationContext:
         if self._context is None:
-            raise RuntimeError("Context has not been created yet.")  # noqa: TRY003
+            raise RuntimeError('Context has not been created yet.')
         return self._context
-    
+
     @property
     def token(self) -> str:
         token = self.context.settings.token_config.discord_token

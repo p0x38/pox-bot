@@ -11,7 +11,7 @@ _configured = False
 
 
 def configure_logging(settings: BotSettings, *, log_widget: RichLog | None = None):
-    global _configured  # noqa: PLW0603
+    global _configured
     
     logging.getLogger("urllib3").setLevel(logging.INFO)
     logging.getLogger("requests").setLevel(logging.INFO)

@@ -144,7 +144,7 @@ class MessageCog(commands.Cog):
     async def purge_messages(self, interaction: Interaction, limit: int | None = 100):
         await interaction.response.defer()
 
-        def check_messages(m):  # noqa: ARG001
+        def check_messages(m):
             return not interaction.message
 
         if isinstance(interaction.channel, discord.TextChannel):
@@ -311,7 +311,7 @@ class MessageCog(commands.Cog):
         embed = Embed(title='Random Message')
 
         if messages:
-            random_message = random.choice(messages)  # noqa: S311
+            random_message = random.choice(messages)
             embed.title = f'Message by {random_message.author.name}'
             embed.description = random_message.content
             embed.set_footer(text=f'Message ID: {random_message.id}')

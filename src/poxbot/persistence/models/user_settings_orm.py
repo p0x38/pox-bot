@@ -3,19 +3,18 @@ from sqlalchemy import BigInteger, Text, TypeDecorator
 from sqlalchemy.orm import Mapped, mapped_column
 
 from ...shared.bases import Base
-
 from .user_settings import SettingsData
 
 
 class SettingsDataType(TypeDecorator):
     impl = Text
 
-    def process_bind_param(self, value, dialect):  # noqa: ARG002
+    def process_bind_param(self, value, dialect):
         if isinstance(value, SettingsData):
             return orjson.dumps(value.to_dict()).decode('utf-8')
         return value
 
-    def process_result_value(self, value, dialect):  # noqa: ARG002
+    def process_result_value(self, value, dialect):
         return SettingsData.from_dict(orjson.loads(value)) if value else SettingsData
 
 

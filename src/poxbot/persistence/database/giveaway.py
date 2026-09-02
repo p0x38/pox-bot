@@ -3,9 +3,8 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import delete, select
 
-from ...shared.bases.base_orm_model import Base
-
 from ...shared.bases import BaseDatabase
+from ...shared.bases.base_orm_model import Base
 from ..models.giveaway_orm import Giveaway
 
 if TYPE_CHECKING:

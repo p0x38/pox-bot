@@ -116,8 +116,8 @@ class ModerationCog(commands.Cog):
         self,
         interaction: Interaction,
         trigger: str,
-        match_type: BlacklistEntryMatchType = BlacklistEntryMatchType.default,  # noqa: ARG002
-        case_insensitive: bool = True,  # noqa: ARG002
+        match_type: BlacklistEntryMatchType = BlacklistEntryMatchType.default,
+        case_insensitive: bool = True,
         reason: str | None = None,
     ):
         loc = await self.bot.get_locale(interaction)

@@ -1,5 +1,5 @@
 import os
-import pickle
+import pickle  # ruff: ignore[suspicious-pickle-import]
 from pathlib import Path
 from typing import Any
 
@@ -108,4 +108,4 @@ class ResourceManager:
         async with aiofiles.open(file_path, 'rb') as f:
             binary_content = await f.read()
 
-        return pickle.loads(binary_content)
+        return pickle.loads(binary_content)  # ruff: ignore[suspicious-pickle-usage]
