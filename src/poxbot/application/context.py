@@ -13,7 +13,7 @@ from ..services.i18n import I18nManager
 
 
 @dataclass(slots=True, frozen=True)
-class ApplicationContext:  # noqa: D101
+class ApplicationContext:
     settings: BotSettings
     
     logger: LoggerAdapter | Logger

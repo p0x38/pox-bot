@@ -211,7 +211,7 @@ class PoxBot(commands.AutoShardedBot):
                     'An unexpected error was occurred while syncing commands',
                 )
 
-    async def setup_hook(self) -> None:  # ruff: ignore[undocumented-public-method]
+    async def setup_hook(self) -> None:
         def _download_nltk_data():
             try:
                 nltk.data.find('tokenizers/punkt')
@@ -240,7 +240,7 @@ class PoxBot(commands.AutoShardedBot):
             self.metrics.start_server()
         self.logger.info('OpenTelemetry OTLP metrics pipeline has been initialized.')
 
-    async def on_ready(self):  # ruff: ignore[D102]
+    async def on_ready(self):
         with start_span('bot.ready'):
             self.logger.info(
                 'Discord bot is ready to process!\nGuilds: (%s)',
@@ -254,7 +254,7 @@ class PoxBot(commands.AutoShardedBot):
         gc.collect()
         self.logger.debug('Successfully ran garbage collection')
 
-    async def on_message(self, message: Message):  # ruff: ignore[D102]
+    async def on_message(self, message: Message):
         if message.author == self.user or message.mention_everyone:
             return
 
@@ -276,7 +276,7 @@ class PoxBot(commands.AutoShardedBot):
                 self.counter_manager.increment('total_prefix_commands_ran')
                 await self.process_commands(message)
 
-    async def on_command_completion(self, ctx: commands.Context):  # noqa: D102
+    async def on_command_completion(self, ctx: commands.Context):
         self.logger.info(
             '',
             extra={
@@ -285,7 +285,7 @@ class PoxBot(commands.AutoShardedBot):
             },
         )
 
-    async def on_command_error(self, ctx: commands.Context, e: commands.CommandError):  # noqa: D102
+    async def on_command_error(self, ctx: commands.Context, e: commands.CommandError):
         try:
             self.logger.error(
                 'Exception thrown while trying to process command: %s',
@@ -302,7 +302,7 @@ class PoxBot(commands.AutoShardedBot):
         except (HTTPException, Forbidden, TypeError, ValueError):
             self.logger.exception('Could not send error embed: %s')
 
-    def format_channel_info(self, channel: Messageable | None):  # noqa: D102
+    def format_channel_info(self, channel: Messageable | None):
         formatted_channel_identity = ''
 
         if not channel:
@@ -339,7 +339,7 @@ class PoxBot(commands.AutoShardedBot):
 
         return formatted_channel_identity
 
-    async def on_interaction(self, interaction: Interaction):  # noqa: D102
+    async def on_interaction(self, interaction: Interaction):
         if (
             interaction.type == InteractionType.application_command
             and isinstance(interaction.command, app_commands.Command)
@@ -365,7 +365,7 @@ class PoxBot(commands.AutoShardedBot):
             )
             self.statistics.interaction_statistics.count(interaction.command_failed)
 
-    async def close(self) -> None:  # noqa: D102
+    async def close(self) -> None:
         if hasattr(self, 'counter_manager'):
             await self.counter_manager.save_async()
 
@@ -374,15 +374,15 @@ class PoxBot(commands.AutoShardedBot):
 
         return await super().close()
 
-    async def reload_all_cogs(self):  # noqa: D102
+    async def reload_all_cogs(self):
         return await self.extension_manager.reload(self, '*')
 
-    def get_uptime_seconds(self, start_timestamp: float) -> float:  # noqa: D102
+    def get_uptime_seconds(self, start_timestamp: float) -> float:
         return (
             datetime.now(UTC) - datetime.fromtimestamp(start_timestamp, tz=UTC)
         ).total_seconds()
 
-    async def get_locale(self, interaction: Interaction):  # noqa: D102
+    async def get_locale(self, interaction: Interaction):
         return (
             await self.database.settings.get_locale(interaction)
             if (hasattr(self, 'database') and self.database and self.database.settings)
@@ -488,7 +488,7 @@ class PoxBot(commands.AutoShardedBot):
 
                 content = text_res
         else:
-            description = f'An error occurred while executing the command: `{error}`'  # noqa: F841
+            description = f'An error occurred while executing the command: `{error}`'  # ruff: ignore[unused-variable]
 
         if interaction.type == InteractionType.application_command:
             if embed:

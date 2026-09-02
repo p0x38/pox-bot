@@ -23,7 +23,7 @@ class SafeStringPredicateEvaluator:
         ast.LtE: operator.le,
         ast.Gt: operator.gt,
         ast.GtE: operator.ge,
-        ast.In: lambda l, r: l in r,  # noqa: E741
+        ast.In: lambda l, r: l in r,  # ruff: ignore[ambiguous-variable-name]
     }
     _BINOPS: ClassVar[dict[type[ast.AST], Callable]] = {
         ast.Add: operator.add,
@@ -124,7 +124,7 @@ class SafeStringPredicateEvaluator:
     def __init__(self, expression: str, rng: Random | None = None):
         self.logger = get_logger(__name__, prefix='PredicateDSLParser')
         self.expression = expression
-        self.rng = rng or Random()  # noqa: S311
+        self.rng = rng or Random()
         self.error_message: str | None = None
 
         def _replace_match(match: re._Match) -> str:
@@ -204,7 +204,7 @@ class SafeStringPredicateEvaluator:
             }
 
             start_time = perf_counter()
-            try:  # noqa: PLW0717
+            try:
                 res = self._eval_node(self.node, context, depth=0)
 
                 if isinstance(res, bool):
@@ -240,7 +240,7 @@ class SafeStringPredicateEvaluator:
         depth: int,
     ) -> Any:
         if depth > self.MAX_RECURSION_DEPTH:
-            raise ValueError('Max recursion depth exceeded')  # noqa: TRY003
+            raise ValueError('Max recursion depth exceeded')
         if node is None:
             return None
 
@@ -260,7 +260,7 @@ class SafeStringPredicateEvaluator:
             name_id = node.id
             if name_id in context:
                 return context[name_id]
-            raise ValueError(f'Undefined variable or identifier: {name_id}')  # noqa: TRY003
+            raise ValueError(f'Undefined variable or identifier: {name_id}')
 
         if isinstance(node, ast.IfExp):
             cond = self._eval_node(node.test, context, depth + 1)
@@ -272,10 +272,10 @@ class SafeStringPredicateEvaluator:
             left = self._eval_node(node.left, context, depth + 1)
             current_left = left
 
-            for op, comparator in zip(node.ops, node.comparators):  # noqa: B905
+            for op, comparator in zip(node.ops, node.comparators):
                 op_type = type(op)
                 if op_type not in self._OPERATORS:
-                    raise ValueError('Unsupported operator')  # noqa: TRY003
+                    raise ValueError('Unsupported operator')
 
                 right = self._eval_node(comparator, context, depth + 1)
                 if not self._OPERATORS[op_type](current_left, right):
@@ -292,7 +292,7 @@ class SafeStringPredicateEvaluator:
                 method_name = node.func.attr
 
                 if not isinstance(obj, str):
-                    raise TypeError('Attributes are only supported on strings')  # noqa: TRY003
+                    raise TypeError('Attributes are only supported on strings')
 
                 if method_name in self.ALLOWED_STRING_METHODS:
                     method = getattr(obj, method_name)
@@ -310,7 +310,7 @@ class SafeStringPredicateEvaluator:
                         self._eval_node(arg, context, depth + 1) for arg in node.args
                     ]
                     return func_obj(*args)
-            raise ValueError(f'Unsupported function or method call: {node.func}')  # noqa: TRY003
+            raise ValueError(f'Unsupported function or method call: {node.func}')
 
         if isinstance(node, ast.BoolOp):
             if isinstance(node.op, ast.And):
@@ -333,7 +333,7 @@ class SafeStringPredicateEvaluator:
             slc = self._eval_node(node.slice, context, depth + 1)
 
             if not isinstance(value, (str, list, tuple)):
-                raise TypeError('Unsafe subscript target')  # noqa: TRY003
+                raise TypeError('Unsafe subscript target')
 
             return value[slc]
 
@@ -355,14 +355,14 @@ class SafeStringPredicateEvaluator:
 
             fn = self._BINOPS.get(op_type)
             if fn is None:
-                raise ValueError('Unsupported binary operation')  # noqa: TRY003
+                raise ValueError('Unsupported binary operation')
 
             return fn(left, right)
 
         if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Not):
             return not self._eval_node(node.operand, context, depth + 1)
 
-        raise ValueError(f'Unsupported syntax: {type(node).__name__}')  # noqa: TRY003
+        raise ValueError(f'Unsupported syntax: {type(node).__name__}')
 
     def _validate_ast(self, node: ast.AST) -> None:
         for child in ast.walk(node):
@@ -372,4 +372,4 @@ class SafeStringPredicateEvaluator:
             if isinstance(child, (ast.cmpop, ast.boolop, ast.operator)):
                 continue
 
-            raise ValueError(f'Disallowed AST node: {type(child).__name__}')  # noqa: TRY003
+            raise ValueError(f'Disallowed AST node: {type(child).__name__}')

@@ -140,7 +140,7 @@ class TraceConfig(BaseModel):
     otlp_traces_endpoint: str | None = None
     otlp_metrics_endpoint: str | None = None
     loki_url: str = 'http://127.0.0.1:3100/loki/api/v1/push'
-    prometheus_host: str = '0.0.0.0'  # noqa: S104
+    prometheus_host: str = '0.0.0.0'
     prometheus_server_port: int = 8001
     insecure: bool = True
     sampling_ratio: float = Field(default=1.0, ge=0.0, le=1.0)
