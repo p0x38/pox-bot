@@ -28,9 +28,6 @@ class TfidfIndex:
 
         for document in documents:
             tokens = tuple(token for token in document if token.strip())
-            if not tokens:
-                continue
-
             self._documents.append(tokens)
             self._document_frequency.update(set(tokens))
 
@@ -51,8 +48,9 @@ class TfidfIndex:
         document_counts = Counter(document_tokens)
         vocabulary = query_counts.keys() | document_counts.keys()
 
-        query_vector: dict[str, float] = {}
-        document_vector: dict[str, float] = {}
+        query_norm = 0.0
+        document_norm = 0.0
+        dot_product = 0.0
 
         for token in vocabulary:
             document_frequency = self._document_frequency.get(token, 0)
@@ -60,24 +58,17 @@ class TfidfIndex:
                 (1 + corpus_size) / (1 + document_frequency),
             ) + 1.0
 
-            query_vector[token] = query_counts[token] * inverse_document_frequency
-            document_vector[token] = (
-                document_counts[token] * inverse_document_frequency
-            )
+            query_weight = query_counts[token] * inverse_document_frequency
+            document_weight = document_counts[token] * inverse_document_frequency
 
-        query_norm = math.sqrt(sum(value * value for value in query_vector.values()))
-        document_norm = math.sqrt(
-            sum(value * value for value in document_vector.values()),
-        )
+            query_norm += query_weight * query_weight
+            document_norm += document_weight * document_weight
+            dot_product += query_weight * document_weight
 
         if query_norm == 0.0 or document_norm == 0.0:
             return 0.0
 
-        dot_product = sum(
-            query_vector[token] * document_vector[token]
-            for token in vocabulary
-        )
-        return dot_product / (query_norm * document_norm)
+        return dot_product / math.sqrt(query_norm * document_norm)
 
     def rank(self, query: Iterable[str]) -> list[tuple[int, float]]:
         """Rank indexed documents by cosine similarity."""
