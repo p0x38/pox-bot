@@ -37,11 +37,11 @@ if ChatbotCog.chatbot_group.get_command('reload') is None:
             return
 
         cached_entries = _clear_markov_runtime(cog)
+        noun = 'entry' if cached_entries == 1 else 'entries'
 
         await interaction.response.send_message(
             'Chatbot runtime state reloaded. '
-            f'Cleared {cached_entries} cached Markov entr'
-            f"{'y' if cached_entries == 1 else 'ies'}.",
+            f'Cleared {cached_entries} cached Markov {noun}.',
             ephemeral=True,
         )
 
