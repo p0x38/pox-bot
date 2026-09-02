@@ -1,14 +1,14 @@
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 from functools import wraps
-from typing import Any, Awaitable, Callable, cast
+from typing import Any, cast
 
 from discord import Message
 
 from ....application import PoxBot
 from ....persistence.models.guild_settings_v2 import MarkovModelScope
 from .chatbot import ChatbotCog
-
 
 OriginalLearnMarkovMessage = Callable[..., Awaitable[None]]
 
