@@ -1,6 +1,5 @@
 from discord import Embed, Interaction, app_commands
 from discord.ext import commands
-
 from src.bot import PoxBot
 
 

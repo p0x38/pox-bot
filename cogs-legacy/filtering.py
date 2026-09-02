@@ -1,6 +1,5 @@
 from discord import Interaction, app_commands
 from discord.ext import commands
-
 from src.bot import PoxBot
 
 
@@ -10,7 +9,7 @@ class FilterCog(commands.Cog):
 
     group = app_commands.Group(name="config_server", description="Config set for server.")
 
-    async def toggle_key_autocomplete(self, interaction: Interaction, current: str) -> list[app_commands.Choice[str]]:  # noqa: ARG002
+    async def toggle_key_autocomplete(self, interaction: Interaction, current: str) -> list[app_commands.Choice[str]]:
         return [app_commands.Choice(name=key, value=key) for key in self.bot.available_togglers if current in key]
 
     @group.command(name="enable", description="Enables a toggle.")

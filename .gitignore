@@ -88,3 +88,5 @@ voices/
 wheels/
 *.sql
 *.dump
+
+notes/**

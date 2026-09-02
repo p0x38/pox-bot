@@ -41,11 +41,13 @@ ignore = [
     "TRY003",
     "B905",
 ]
+preview = true
 
 [lint.per-file-ignores]
 "typings/*" = ["ALL"]
 "tests/*" = ["ARG", "S101", "D", "S105"]
 "src/poxbot/legacy_cogs/**" = ["ALL"]
+"cogs-legacy/**" = ["ALL"]
 "src/poxbot/platforms/discord/extensions/*" = ["D", "RET503"]
 
 [lint.pycodestyle]

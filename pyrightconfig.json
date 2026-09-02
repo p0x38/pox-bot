@@ -4,7 +4,7 @@
         "tests"
     ],
     "exclude": [
-        "legacy_cogs",
+        "cog-legacy",
         "src/poxbot/legacy_cogs",
         "**/node_modules",
         "**/__pycache__",

@@ -4,7 +4,6 @@ import os
 import aiofiles
 from discord import Color, Embed, Interaction, Member, TextChannel, app_commands
 from discord.ext import commands
-
 from logger import logger
 from src.bot import PoxBot
 from src.translator import translator_instance as i18n
@@ -136,11 +135,10 @@ class WelcomeCog(commands.Cog):
             await self.save()
             embed.description = i18n.T("command.welcome.set_channel.embeds.disabled.description", loc)
             return await interaction.followup.send("Welcome channel has been disabled.")
-        else:
-            self.data[interaction.guild.id]['welcome'] = channel.id
-            await self.save()
-            embed.description = i18n.T("command.welcome.set_channel.embeds.changed.description", loc, {"target_mention": channel.mention})
-            return await interaction.followup.send(embed=embed)
+        self.data[interaction.guild.id]['welcome'] = channel.id
+        await self.save()
+        embed.description = i18n.T("command.welcome.set_channel.embeds.changed.description", loc, {"target_mention": channel.mention})
+        return await interaction.followup.send(embed=embed)
 
     @group.command(name="test", description=app_commands.locale_str("command.welcome.test.description"))
     @app_commands.guild_only()
@@ -170,9 +168,8 @@ class WelcomeCog(commands.Cog):
             await self.send_message("join", is_enabled, interaction.guild.me, rule_channel_id)
             embed.description = i18n.T("command.welcome.test.embeds.sent.description", loc)
             return await interaction.followup.send(embed=embed)
-        else:
-            embed.description = i18n.T("command.welcome.test.embeds.unconfigured.description", loc)
-            return await interaction.followup.send(embed=embed)
+        embed.description = i18n.T("command.welcome.test.embeds.unconfigured.description", loc)
+        return await interaction.followup.send(embed=embed)
 
     @group.command(name="set_rules_channel", description=app_commands.locale_str("command.welcome.set_rules_channel.description"))
     @app_commands.guild_only()
@@ -194,11 +191,10 @@ class WelcomeCog(commands.Cog):
             await self.save()
             embed.description = i18n.T("command.welcome.set_rules_channel.embeds.disabled.description", loc)
             return await interaction.followup.send(embed=embed)
-        else:
-            self.data[interaction.guild.id]['rules'] = channel.id
-            await self.save()
-            embed.description = i18n.T("command.welcome.set_rules_channel.embeds.success.description", loc)
-            return await interaction.followup.send(embed=embed)
+        self.data[interaction.guild.id]['rules'] = channel.id
+        await self.save()
+        embed.description = i18n.T("command.welcome.set_rules_channel.embeds.success.description", loc)
+        return await interaction.followup.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(WelcomeCog(bot))

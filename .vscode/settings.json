@@ -163,5 +163,5 @@
     ],
     "python.analysis.typeEvaluation.deprecateTypingAliases": true,
     "python.analysis.typeEvaluation.enableReachabilityAnalysis": true,
-    "python.analysis.autoImportCompletions": true
+    "python.analysis.autoImportCompletions": true,
 }
