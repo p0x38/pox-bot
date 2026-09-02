@@ -24,6 +24,7 @@ from discord.ext import commands
 from pytz import UTC
 
 from ....application import PoxBot
+from ....features.markov.dialogue import MarkovDialogueMemory
 from ....features.markov.generator import MarkovGenerator
 from ....features.markov.model import MarkovModel
 from ....features.markov.storage import MarkovDatabase
@@ -76,6 +77,12 @@ class ChatbotCog(commands.Cog):
 
         self.markov_tokenizer = MarkovTokenizer()
         self.markov_models: dict[int, MarkovModel] = {}
+        self.markov_dialogues: dict[int, MarkovDialogueMemory] = {}
+        self.markov_dialogue_dir = app_dir.user_data_path / 'markov'
+        self.markov_dialogue_dir.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
 
         # ------------------------------------------------------------------
         # Runtime state
@@ -94,12 +101,12 @@ class ChatbotCog(commands.Cog):
     @property
     def markov_storage(self) -> MarkovDatabase:
         database = self.bot.database.markov
-    
+
         if database is None:
             raise RuntimeError(
                 'Markov database is not initialized',
             )
-    
+
         return database
 
     # ======================================================================
@@ -130,10 +137,81 @@ class ChatbotCog(commands.Cog):
                 'Failed to persist history for %s',
                 channel_id,
             )
-            
+
     # ======================================================================
     # Markov persistence
     # ======================================================================
+
+    def _get_markov_dialogue_path(self, guild_id: int) -> Path:
+        return self.markov_dialogue_dir / f'{guild_id}-dialogue.json'
+
+    async def _get_markov_dialogue(
+        self,
+        guild_id: int,
+    ) -> MarkovDialogueMemory:
+        dialogue = self.markov_dialogues.get(guild_id)
+
+        if dialogue is not None:
+            return dialogue
+
+        dialogue = MarkovDialogueMemory(
+            self.markov_tokenizer,
+        )
+        file_path = self._get_markov_dialogue_path(guild_id)
+
+        if file_path.is_file():
+            try:
+                async with aiofiles.open(file_path, 'rb') as file:
+                    raw = await file.read()
+
+                loaded = orjson.loads(raw) if raw else []
+
+                if isinstance(loaded, list):
+                    for item in loaded:
+                        if not isinstance(item, dict):
+                            continue
+
+                        prompt = item.get('prompt')
+                        response = item.get('response')
+
+                        if isinstance(prompt, str) and isinstance(response, str):
+                            dialogue.learn(prompt, response)
+
+            except Exception:
+                self.bot.logger.exception(
+                    'Failed to load Markov dialogue memory for guild %s',
+                    guild_id,
+                )
+
+        self.markov_dialogues[guild_id] = dialogue
+        return dialogue
+
+    async def _save_markov_dialogue(
+        self,
+        guild_id: int,
+    ) -> None:
+        dialogue = self.markov_dialogues.get(guild_id)
+
+        if dialogue is None:
+            return
+
+        file_path = self._get_markov_dialogue_path(guild_id)
+        payload = [
+            {
+                'prompt': entry.prompt,
+                'response': entry.response,
+            }
+            for entry in dialogue.entries
+        ]
+
+        try:
+            async with aiofiles.open(file_path, 'wb') as file:
+                await file.write(orjson.dumps(payload))
+        except Exception:
+            self.bot.logger.exception(
+                'Failed to save Markov dialogue memory for guild %s',
+                guild_id,
+            )
 
     async def _get_markov_model(
         self,
@@ -182,14 +260,36 @@ class ChatbotCog(commands.Cog):
             guild_id,
             None,
         )
+        self.markov_dialogues.pop(
+            guild_id,
+            None,
+        )
 
         await self.markov_storage.clear(
             guild_id,
         )
-    
+
+        file_path = self._get_markov_dialogue_path(guild_id)
+        with contextlib.suppress(FileNotFoundError):
+            file_path.unlink()
+
     # ======================================================================
     # Markov learning / generation
     # ======================================================================
+
+    def _clean_markov_prompt(self, message: Message) -> str:
+        content = message.content.strip()
+
+        if self.bot.user:
+            content = content.replace(
+                f'<@{self.bot.user.id}>',
+                '',
+            ).replace(
+                f'<@!{self.bot.user.id}>',
+                '',
+            )
+
+        return ' '.join(content.split())
 
     async def learn_markov_message(
         self,
@@ -234,6 +334,13 @@ class ChatbotCog(commands.Cog):
         if not message.guild:
             return None
 
+        dialogue = await self._get_markov_dialogue(message.guild.id)
+        prompt = self._clean_markov_prompt(message)
+
+        learned_response = dialogue.find(prompt)
+        if learned_response:
+            return learned_response
+
         model = await self._get_markov_model(
             message.guild.id,
             order=order,
@@ -249,7 +356,7 @@ class ChatbotCog(commands.Cog):
 
         response = generator.generate(
             max_tokens=max_tokens,
-            seed=message.content,
+            seed=prompt,
         )
 
         if not response:
@@ -677,14 +784,12 @@ class ChatbotCog(commands.Cog):
             # --------------------------------------------------------------
 
             case ChatbotMethodType.markov_chain:
-                # Learn from every normal message while Markov mode is
-                # enabled, not only messages directed at the bot.
                 await self.learn_markov_message(
                     message,
                     order=chatbot.markov_order,
                 )
 
-                if not self._is_triggered(message):
+                if not self._is_markov_triggered(message):
                     return
 
                 member = message.guild.me or message.guild.get_member(
@@ -714,6 +819,13 @@ class ChatbotCog(commands.Cog):
                     response[:2000],
                     allowed_mentions=AllowedMentions.none(),
                 )
+
+                dialogue = await self._get_markov_dialogue(message.guild.id)
+                dialogue.learn(
+                    self._clean_markov_prompt(message),
+                    response,
+                )
+                await self._save_markov_dialogue(message.guild.id)
 
             case _:
                 return
