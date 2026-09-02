@@ -138,6 +138,7 @@ class SmartChatbotTriggersCog(commands.Cog):
                     model=self.bot.settings.llm_config.model_id,
                     include_history=permissions.read_message_history,
                 )
+                self._mark_cooldown(message.author.id)
 
             case ChatbotMethodType.markov_chain:
                 result: MarkovGenerationResult | None = (
