@@ -16,12 +16,15 @@ class MarkovTokenizer:
         re.UNICODE,
     )
 
+    DISCORD_MENTION_PATTERN = re.compile(r'<(?:@!?|@&|#)\d+>')
+
     def tokenize(self, text: str) -> list[str]:
-        """Convert text into Markov tokens."""
+        """Convert text into Markov tokens, excluding Discord mentions."""
         if not text:
             return []
 
-        return self.TOKEN_PATTERN.findall(text)
+        sanitized = self.DISCORD_MENTION_PATTERN.sub('', text)
+        return self.TOKEN_PATTERN.findall(sanitized)
 
     def detokenize(
         self,
