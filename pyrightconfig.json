@@ -1,0 +1,17 @@
+{
+    "include": [
+        "src/poxbot",
+        "tests"
+    ],
+    "exclude": [
+        "legacy_cogs",
+        "src/poxbot/legacy_cogs",
+        "**/node_modules",
+        "**/__pycache__",
+        "**/.*",
+        ".venv"
+    ],
+    "typeCheckingMode": "standard",
+    "venvPath": ".",
+    "venv": ".venv"
+}
