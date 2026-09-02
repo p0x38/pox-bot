@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
-from typing import Any
 
 from discord import AllowedMentions, Message
 from discord.ext import commands
 from pytz import UTC
 
 from ....application import PoxBot
+from ....features.ai.manager import LLMProviderType
 from ....features.chatbot.trigger import SmartTriggerEvaluator, TriggerReason
 from ....features.markov.model import MarkovGenerationResult
 from ....persistence.models.guild_settings_v2 import ChatbotMethodType
@@ -64,7 +64,7 @@ class SmartChatbotTriggersCog(commands.Cog):
         self._last_responses[message.channel.id] = response
         return False
 
-    def _evaluator(self, chatbot: ChatbotCog) -> SmartTriggerEvaluator:
+    def _evaluator(self) -> SmartTriggerEvaluator:
         if not self.bot.user:
             raise RuntimeError('Bot user is not set')
 
@@ -94,22 +94,20 @@ class SmartChatbotTriggersCog(commands.Cog):
             return
 
         chatbot = self._get_chatbot()
-        if chatbot is None:
+        if chatbot is None or chatbot.database is None:
             return
 
         config = await chatbot.database.get_config(message.guild.id)
         if not config.chatbot.enabled:
             return
 
-        evaluator = self._evaluator(chatbot)
-        decision = evaluator.evaluate(
+        decision = self._evaluator().evaluate(
             message,
             recent_bot_activity=self._recent_bot_activity(chatbot, message),
         )
 
         # The normal chatbot listener already handles explicit mentions and
-        # name-based triggers. This extension only adds genuinely contextual
-        # triggers to avoid duplicate responses.
+        # name-based triggers. This extension only adds contextual triggers.
         if decision.reason not in {TriggerReason.REPLY, TriggerReason.QUESTION}:
             return
 
@@ -136,7 +134,7 @@ class SmartChatbotTriggersCog(commands.Cog):
             case ChatbotMethodType.ai:
                 await chatbot.respond(
                     message=message,
-                    provider='openrouter',
+                    provider=LLMProviderType.OPEN_ROUTER.value,
                     model=self.bot.settings.llm_config.model_id,
                     include_history=permissions.read_message_history,
                 )
@@ -176,3 +174,8 @@ class SmartChatbotTriggersCog(commands.Cog):
 
             case _:
                 return
+
+
+async def setup(bot: PoxBot) -> None:
+    """Register the smart chatbot trigger listener."""
+    await bot.add_cog(SmartChatbotTriggersCog(bot))
