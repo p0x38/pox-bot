@@ -27,6 +27,7 @@ class TriggerDecision:
 
     @property
     def should_respond(self) -> bool:
+        """Return whether the decision passes its evaluator threshold."""
         return self.reason is not TriggerReason.NONE
 
 
@@ -53,27 +54,49 @@ class SmartTriggerEvaluator:
         )
         self.threshold = max(0.0, min(1.0, threshold))
 
-    def evaluate(self, message: Message) -> TriggerDecision:
+    def evaluate(
+        self,
+        message: Message,
+        *,
+        recent_bot_activity: bool = False,
+    ) -> TriggerDecision:
         if message.author.bot:
             return TriggerDecision()
 
+        candidates: list[TriggerDecision] = []
+
         if self._is_direct_mention(message):
-            return TriggerDecision(TriggerReason.MENTION, 1.0)
+            candidates.append(TriggerDecision(TriggerReason.MENTION, 1.0))
 
         if self._is_reply_to_bot(message):
-            return TriggerDecision(TriggerReason.REPLY, 0.95)
+            candidates.append(TriggerDecision(TriggerReason.REPLY, 0.95))
 
         content = message.content.strip()
         if not content:
-            return TriggerDecision()
+            return self._best(candidates)
 
         if self._contains_bot_name(content):
-            return TriggerDecision(TriggerReason.NAME, 0.9)
+            candidates.append(TriggerDecision(TriggerReason.NAME, 0.9))
 
         if self._is_question(content):
-            return TriggerDecision(TriggerReason.QUESTION, 0.8)
+            score = 0.8 if recent_bot_activity else 0.0
+            if score:
+                candidates.append(TriggerDecision(TriggerReason.QUESTION, score))
 
-        return TriggerDecision()
+        if recent_bot_activity and not candidates:
+            candidates.append(TriggerDecision(TriggerReason.CONTEXT, 0.65))
+
+        return self._best(candidates)
+
+    def _best(self, candidates: list[TriggerDecision]) -> TriggerDecision:
+        if not candidates:
+            return TriggerDecision()
+
+        decision = max(candidates, key=lambda item: item.score)
+        if decision.score < self.threshold:
+            return TriggerDecision()
+
+        return decision
 
     def _is_direct_mention(self, message: Message) -> bool:
         return (
