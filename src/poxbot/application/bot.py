@@ -211,7 +211,7 @@ class PoxBot(commands.AutoShardedBot):
                     'An unexpected error was occurred while syncing commands',
                 )
 
-    async def setup_hook(self) -> None:  # noqa: D102
+    async def setup_hook(self) -> None:  # ruff: ignore[undocumented-public-method]
         def _download_nltk_data():
             try:
                 nltk.data.find('tokenizers/punkt')
@@ -240,7 +240,7 @@ class PoxBot(commands.AutoShardedBot):
             self.metrics.start_server()
         self.logger.info('OpenTelemetry OTLP metrics pipeline has been initialized.')
 
-    async def on_ready(self):  # noqa: D102
+    async def on_ready(self):  # ruff: ignore[D102]
         with start_span('bot.ready'):
             self.logger.info(
                 'Discord bot is ready to process!\nGuilds: (%s)',
@@ -254,7 +254,7 @@ class PoxBot(commands.AutoShardedBot):
         gc.collect()
         self.logger.debug('Successfully ran garbage collection')
 
-    async def on_message(self, message: Message):  # noqa: D102
+    async def on_message(self, message: Message):  # ruff: ignore[D102]
         if message.author == self.user or message.mention_everyone:
             return
 
@@ -481,7 +481,9 @@ class PoxBot(commands.AutoShardedBot):
 
                 if text_res == text_key:
                     text_res = translator.T(
-                        'error.exceptions.AppCommandError', str(loc), kwargs,
+                        'error.exceptions.AppCommandError',
+                        str(loc),
+                        kwargs,
                     )
 
                 content = text_res
