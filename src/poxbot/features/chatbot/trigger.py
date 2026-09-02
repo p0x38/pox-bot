@@ -27,7 +27,7 @@ class TriggerDecision:
 
     @property
     def should_respond(self) -> bool:
-        """Return whether the decision passes its evaluator threshold."""
+        """Return whether this decision requests a response."""
         return self.reason is not TriggerReason.NONE
 
 
@@ -78,10 +78,11 @@ class SmartTriggerEvaluator:
         if self._contains_bot_name(content):
             candidates.append(TriggerDecision(TriggerReason.NAME, 0.9))
 
-        if self._is_question(content):
-            score = 0.8 if recent_bot_activity else 0.0
-            if score:
-                candidates.append(TriggerDecision(TriggerReason.QUESTION, score))
+        # A question by itself is intentionally not enough. Recent bot activity
+        # provides the conversational context needed to avoid replying to every
+        # unrelated question in a busy channel.
+        if self._is_question(content) and recent_bot_activity:
+            candidates.append(TriggerDecision(TriggerReason.QUESTION, 0.8))
 
         if recent_bot_activity and not candidates:
             candidates.append(TriggerDecision(TriggerReason.CONTEXT, 0.65))
@@ -107,7 +108,8 @@ class SmartTriggerEvaluator:
     def _is_reply_to_bot(self, message: Message) -> bool:
         reference = message.reference
         resolved = reference.resolved if reference else None
-        return isinstance(resolved, Message) and resolved.author.id == self.bot_user_id
+        author = getattr(resolved, 'author', None)
+        return getattr(author, 'id', None) == self.bot_user_id
 
     def _contains_bot_name(self, content: str) -> bool:
         normalized = content.casefold()
@@ -117,4 +119,4 @@ class SmartTriggerEvaluator:
         )
 
     def _is_question(self, content: str) -> bool:
-        return content.endswith("?") or bool(self._QUESTION_PATTERN.search(content))
+        return content.endswith('?') or bool(self._QUESTION_PATTERN.search(content))
