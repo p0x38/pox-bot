@@ -6,7 +6,6 @@ class BotConstants:
         self.max_servers: Final[int] = 90
         self.exclude_extensions: Final[list[str]] = [
             'chat',
-            'chatbot',
             'eew',
             'log',
             'others',

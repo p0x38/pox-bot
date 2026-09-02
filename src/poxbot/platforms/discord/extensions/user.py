@@ -38,6 +38,7 @@ from ....shared.utils import (
     parse_duration,
 )
 from ....shared.utils.formats.user import format_userflags
+from ....shared.utils.text_util import format_discord_message
 
 MAX_TIMEOUT = timedelta(days=28)
 SUFFIX = 'Action taken by {} via ContextMenu'
@@ -986,7 +987,10 @@ class UserCog(commands.Cog):
             )
             embed.color = Color.green()
         else:
-            embed.description = f'The server needs {remaining} more members to reach the goal of {goal} members.'
+            embed.description = (
+                f'The server needs {remaining} more members'
+                f'to reach the goal of {goal} members.'
+            )
             embed.color = Color.blurple()
 
         return await interaction.followup.send(embed=embed)
@@ -994,7 +998,10 @@ class UserCog(commands.Cog):
     @cached(60)
     @group.command(
         name='find_first_message_contains',
-        description='Finds the first message sent by specified user containing the keyword in the current channel.',
+        description=(
+            'Finds the first message sent by specified user'
+            'containing the keyword in the current channel.'
+        ),
     )
     @app_commands.guild_only()
     @app_commands.describe(member='Member to search messages for.')
@@ -1030,14 +1037,24 @@ class UserCog(commands.Cog):
         )
 
         if first_message and first_message.guild:
+            # TODO: change to format_discord_message
+            message_url = (
+                f'https://discord.com/channels/'
+                f'{first_message.guild.id}/'
+                f'{first_message.channel.id}/'
+                f'{first_message.id}'
+            )
+
             embed.description = (
-                f'[{first_message.created_at.strftime("%Y-%m-%d %H:%M:%S")}]'
-                f'(https://discord.com/channels/{first_message.guild.id}/{first_message.channel.id}/{first_message.id}): '
-                f'{first_message.content}'
+                f'[{first_message.created_at:%Y-%m-%d %H:%M:%S}]'
+                f'({message_url}): {first_message.content}'
             )
             embed.color = Color.blue()
         else:
-            embed.description = f"No messages found by {member.display_name} containing '**{keyword}**'."
+            embed.description = (
+                f'No messages found by {member.display_name} containing '
+                f"'**{keyword}**'."
+            )
             embed.color = Color.red()
 
         return await interaction.followup.send(embed=embed)
@@ -1087,16 +1104,26 @@ class UserCog(commands.Cog):
 
         if messages:
             lines = [
-                f'- [{msg.created_at.strftime("%Y-%m-%d %H:%M:%S")}]'
-                f'(https://discord.com/channels/{msg.guild.id}/{msg.channel.id}/{msg.id}): '
-                f'{crop_word(msg.content, keyword) or shorten(msg.content, width=30)}'
+                format_discord_message(
+                    msg,
+                    lambda content: (
+                        crop_word(content, keyword)
+                        or shorten(
+                            content,
+                            width=30,
+                        )
+                    ),
+                )
                 for msg in messages
             ]
 
             embed.description = '\n'.join(lines)
             embed.color = Color.blue()
         else:
-            embed.description = f"No messages found by {member.display_name} containing '**{keyword}**'."
+            embed.description = (
+                f'No messages found by {member.display_name} containing'
+                f" '**{keyword}**'."
+            )
             embed.color = Color.red()
 
         return await interaction.followup.send(embed=embed)
@@ -1104,7 +1131,9 @@ class UserCog(commands.Cog):
     @cached(120 * 2)
     @group.command(
         name='first_message',
-        description='Gets the first message sent by specified user in the current channel.',
+        description=(
+            'Gets the first message sent by specified user in the current channel.'
+        ),
     )
     @app_commands.guild_only()
     @app_commands.describe(member='Member to get first message for.')
@@ -1126,10 +1155,17 @@ class UserCog(commands.Cog):
         embed = Embed(title=f'First message by {member.display_name}', description='')
 
         if first_message and first_message.guild:
+            # TODO: change to format_discord_message
+            message_url = (
+                f'https://discord.com/channels/'
+                f'{first_message.guild.id}/'
+                f'{first_message.channel.id}/'
+                f'{first_message.id}'
+            )
+
             embed.description = (
-                f'[{first_message.created_at.strftime("%Y-%m-%d %H:%M:%S")}]'
-                f'(https://discord.com/channels/{first_message.guild.id}/{first_message.channel.id}/{first_message.id}): '
-                f'{first_message.content}'
+                f'[{first_message.created_at:%Y-%m-%d %H:%M:%S}]'
+                f'({message_url}): {first_message.content}'
             )
             embed.color = Color.blue()
         else:
@@ -1143,7 +1179,9 @@ class UserCog(commands.Cog):
     @cached(60)
     @group.command(
         name='latest_message',
-        description='Gets the latest message sent by specified user in the current channel.',
+        description=(
+            'Gets the latest message sent by specified user in the current channel.'
+        ),
     )
     @app_commands.guild_only()
     @app_commands.describe(member='Member to get latest message for.')
@@ -1165,10 +1203,17 @@ class UserCog(commands.Cog):
         embed = Embed(title=f'Latest message by {member.display_name}', description='')
 
         if latest_message and latest_message.guild:
+            # TODO: change to format_discord_message
+            message_url = (
+                f'https://discord.com/channels/'
+                f'{latest_message.guild.id}/'
+                f'{latest_message.channel.id}/'
+                f'{latest_message.id}'
+            )
+
             embed.description = (
-                f'[{latest_message.created_at.strftime("%Y-%m-%d %H:%M:%S")}]'
-                f'(https://discord.com/channels/{latest_message.guild.id}/{latest_message.channel.id}/{latest_message.id}): '
-                f'{latest_message.content}'
+                f'[{latest_message.created_at:%Y-%m-%d %H:%M:%S}]'
+                f'({message_url}): {latest_message.content}'
             )
             embed.color = Color.blue()
         else:
@@ -1182,7 +1227,9 @@ class UserCog(commands.Cog):
     @cached(60)
     @group.command(
         name='random_message',
-        description='Gets a random message sent by specified user in the current channel.',
+        description=(
+            'Gets a random message sent by specified user in the current channel.'
+        ),
     )
     @app_commands.guild_only()
     @app_commands.describe(member='Member to get random message for.')
@@ -1206,10 +1253,17 @@ class UserCog(commands.Cog):
 
         if user_messages:
             random_message = random.choice(user_messages)
+            # TODO: change to format_discord_message
+            message_url = (
+                f'https://discord.com/channels/'
+                f'{random_message.guild.id}/'
+                f'{random_message.channel.id}/'
+                f'{random_message.id}'
+            )
+
             embed.description = (
-                f'[{random_message.created_at.strftime("%Y-%m-%d %H:%M:%S")}]'
-                f'(https://discord.com/channels/{random_message.guild.id}/{random_message.channel.id}/{random_message.id}): '
-                f'{random_message.content}'
+                f'[{random_message.created_at:%Y-%m-%d %H:%M:%S}]'
+                f'({message_url}): {random_message.content}'
             )
             embed.color = Color.blue()
         else:

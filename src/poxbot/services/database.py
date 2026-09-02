@@ -2,6 +2,7 @@ import asyncio
 from time import perf_counter
 from typing import TYPE_CHECKING
 
+from ..features.markov.storage import MarkovDatabase
 from ..infrastructure.logger.tracing import traced
 from ..persistence.database.economy import EconomyDatabase
 from ..persistence.database.giveaway import GiveawayDatabase
@@ -17,7 +18,12 @@ if TYPE_CHECKING:
 
 
 class DatabaseManager:
-    def __init__(self, bot: 'PoxBot', dsn: str, translation_manager: I18nManager):
+    def __init__(
+        self,
+        bot: 'PoxBot',
+        dsn: str,
+        translation_manager: I18nManager,
+    ):
         self.bot = bot
         self.dsn = dsn
         self.translation_manager = translation_manager
@@ -29,6 +35,7 @@ class DatabaseManager:
         self.guild: GuildSettingsDatabase | None = None
         self.user: UserDatabase | None = None
         self.metrics: MetricsDatabase | None = None
+        self.markov: MarkovDatabase | None = None
 
         self.loaded: bool = False
 
@@ -44,6 +51,7 @@ class DatabaseManager:
                 self.guild,
                 self.user,
                 self.metrics,
+                self.markov,
             )
             if db is not None
         ]
@@ -53,17 +61,21 @@ class DatabaseManager:
             self.bot.metrics.set_gauge(
                 name='bot_database_status',
                 description=(
-                    'Database connectivity status (1 for connected, 0 for disconnected)'
+                    'Database connectivity status '
+                    '(1 for connected, 0 for disconnected)'
                 ),
                 value=value,
             )
 
     async def _batch_call(self, method_name: str):
         await asyncio.gather(
-            *(getattr(database, method_name)() for database in self.databases),
+            *(
+                getattr(database, method_name)()
+                for database in self.databases
+            ),
         )
-        
-    @traced("db.connect")
+
+    @traced('db.connect')
     async def connect(self):
         if self.loaded:
             return
@@ -72,17 +84,40 @@ class DatabaseManager:
 
         async def _do_connect():
             self.settings = SettingsDatabase(
-                self.bot, self.dsn, manager=self.translation_manager,
+                self.bot,
+                self.dsn,
+                manager=self.translation_manager,
             )
-            self.stats = StatisticsDatabase(self.bot, self.dsn)
-            self.economy = EconomyDatabase(self.bot, self.dsn)
-            self.giveaway = GiveawayDatabase(self.bot, self.dsn)
-            self.guild = GuildSettingsDatabase(self.bot, self.dsn)
-            self.user = UserDatabase(self.bot, self.dsn)
-            self.metrics = MetricsDatabase(self.bot, self.dsn)
+            self.stats = StatisticsDatabase(
+                self.bot,
+                self.dsn,
+            )
+            self.economy = EconomyDatabase(
+                self.bot,
+                self.dsn,
+            )
+            self.giveaway = GiveawayDatabase(
+                self.bot,
+                self.dsn,
+            )
+            self.guild = GuildSettingsDatabase(
+                self.bot,
+                self.dsn,
+            )
+            self.user = UserDatabase(
+                self.bot,
+                self.dsn,
+            )
+            self.metrics = MetricsDatabase(
+                self.bot,
+                self.dsn,
+            )
+            self.markov = MarkovDatabase(
+                self.bot,
+                self.dsn,
+            )
 
             await self._batch_call('connect')
-            
             await self._batch_call('setup')
 
         if self.bot.metrics:
@@ -98,12 +133,13 @@ class DatabaseManager:
         self.loaded = True
 
         init_duration = perf_counter() - start_time
+
         if self.bot.metrics:
             self.bot.metrics.record_histogram(
                 name='bot_database_init_duration_seconds',
                 description=(
-                    'The total initialization and setup duration of all database '
-                    'components in seconds'
+                    'The total initialization and setup duration '
+                    'of all database components in seconds'
                 ),
                 value=init_duration,
             )
@@ -117,4 +153,5 @@ class DatabaseManager:
         await self._batch_call('close')
 
         self.loaded = False
+
         await self._set_status_gauge(0.0)

@@ -26,6 +26,7 @@ from pytz import UTC
 from ....application import PoxBot
 from ....features.markov.generator import MarkovGenerator
 from ....features.markov.model import MarkovModel
+from ....features.markov.storage import MarkovDatabase
 from ....features.markov.tokenizer import MarkovTokenizer
 from ....persistence.models.guild_settings_v2 import ChatbotMethodType
 from ....services.ai import LLMManager, LLMProviderType
@@ -76,12 +77,6 @@ class ChatbotCog(commands.Cog):
         self.markov_tokenizer = MarkovTokenizer()
         self.markov_models: dict[int, MarkovModel] = {}
 
-        self.markov_persistence_dir = app_dir.user_data_path / 'markov'
-        self.markov_persistence_dir.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
-
         # ------------------------------------------------------------------
         # Runtime state
         # ------------------------------------------------------------------
@@ -95,6 +90,17 @@ class ChatbotCog(commands.Cog):
         ]
 
         self.database = bot.database.guild
+
+    @property
+    def markov_storage(self) -> MarkovDatabase:
+        database = self.bot.database.markov
+    
+        if database is None:
+            raise RuntimeError(
+                'Markov database is not initialized',
+            )
+    
+        return database
 
     # ======================================================================
     # AI history persistence
@@ -124,13 +130,10 @@ class ChatbotCog(commands.Cog):
                 'Failed to persist history for %s',
                 channel_id,
             )
-
+            
     # ======================================================================
     # Markov persistence
     # ======================================================================
-
-    def _get_markov_file_path(self, guild_id: int) -> Path:
-        return self.markov_persistence_dir / f'{guild_id}.json'
 
     async def _get_markov_model(
         self,
@@ -141,127 +144,49 @@ class ChatbotCog(commands.Cog):
         model = self.markov_models.get(guild_id)
 
         if model is not None:
-            # If the configured order changed, discard the cached model.
             if model.order == order:
                 return model
 
             self.markov_models.pop(guild_id, None)
 
         model = MarkovModel(order=order)
-        file_path = self._get_markov_file_path(guild_id)
 
-        if file_path.is_file():
-            try:
-                async with aiofiles.open(file_path, 'rb') as f:
-                    raw = await f.read()
-
-                if raw:
-                    data = orjson.loads(raw)
-
-                    stored_order = int(data.get('order', order))
-
-                    if stored_order != order:
-                        self.bot.logger.warning(
-                            (
-                                'Markov model for guild %s has order %s, '
-                                'but current configuration uses order %s. '
-                                'Ignoring persisted model.'
-                            ),
-                            guild_id,
-                            stored_order,
-                            order,
-                        )
-                    else:
-                        model.message_count = int(
-                            data.get('message_count', 0),
-                        )
-                        model.token_count = int(
-                            data.get('token_count', 0),
-                        )
-
-                        for transition in data.get(
-                            'transitions',
-                            [],
-                        ):
-                            prefix = tuple(str(token) for token in transition['prefix'])
-                            next_token = str(transition['next'])
-                            count = int(
-                                transition.get('count', 1),
-                            )
-
-                            if len(prefix) != model.order or count <= 0:
-                                continue
-
-                            model.transitions[prefix][next_token] += count
-
-                        # Old files did not contain message_count.
-                        # If transitions exist but the counter doesn't,
-                        # treat the model as trained so generation works.
-                        if model.message_count == 0 and model.transitions:
-                            model.message_count = 1
-
-            except Exception:
-                self.bot.logger.exception(
-                    'Failed to load Markov model for guild %s',
-                    guild_id,
-                )
+        await self.markov_storage.load(
+            guild_id,
+            model,
+        )
 
         self.markov_models[guild_id] = model
 
         return model
 
-    async def _save_markov_model(self, guild_id: int) -> None:
+    async def _save_markov_model(
+        self,
+        guild_id: int,
+    ) -> None:
         model = self.markov_models.get(guild_id)
 
         if model is None:
             return
 
-        transitions = [
-            {
-                'prefix': list(prefix),
-                'next': next_token,
-                'count': count,
-            }
-            for prefix, counter in model.transitions.items()
-            for next_token, count in counter.items()
-        ]
+        await self.markov_storage.save(
+            guild_id,
+            model,
+        )
 
-        data = {
-            'version': 2,
-            'order': model.order,
-            'message_count': model.message_count,
-            'token_count': model.token_count,
-            'transitions': transitions,
-        }
+    async def _clear_markov_model(
+        self,
+        guild_id: int,
+    ) -> None:
+        self.markov_models.pop(
+            guild_id,
+            None,
+        )
 
-        try:
-            async with aiofiles.open(
-                self._get_markov_file_path(guild_id),
-                'wb',
-            ) as f:
-                await f.write(orjson.dumps(data))
-
-        except Exception:
-            self.bot.logger.exception(
-                'Failed to save Markov model for guild %s',
-                guild_id,
-            )
-
-    async def _clear_markov_model(self, guild_id: int) -> None:
-        self.markov_models.pop(guild_id, None)
-
-        file_path = self._get_markov_file_path(guild_id)
-
-        try:
-            if file_path.is_file():
-                file_path.unlink()
-
-        except Exception:
-            self.bot.logger.exception(
-                'Failed to delete Markov model for guild %s',
-                guild_id,
-            )
-
+        await self.markov_storage.clear(
+            guild_id,
+        )
+    
     # ======================================================================
     # Markov learning / generation
     # ======================================================================
@@ -293,12 +218,11 @@ class ChatbotCog(commands.Cog):
             order=order,
         )
 
-        # IMPORTANT:
-        # MarkovModel.train() expects an iterable of tokens,
-        # not the raw message string.
         model.train(tokens)
 
-        await self._save_markov_model(message.guild.id)
+        await self._save_markov_model(
+            message.guild.id,
+        )
 
     async def generate_markov_response(
         self,
@@ -323,13 +247,11 @@ class ChatbotCog(commands.Cog):
             self.markov_tokenizer,
         )
 
-        # First attempt: use the incoming message as a seed.
         response = generator.generate(
             max_tokens=max_tokens,
             seed=message.content,
         )
 
-        # If the seed doesn't lead anywhere, start from START.
         if not response:
             response = generator.generate(
                 max_tokens=max_tokens,
@@ -688,6 +610,12 @@ class ChatbotCog(commands.Cog):
 
         return self.is_matching(message.content)
 
+    def _is_markov_triggered(self, message: Message) -> bool:
+        if not self.bot.user:
+            return False
+
+        return self.bot.user in message.mentions and not message.mention_everyone
+
     # ======================================================================
     # Message listener
     # ======================================================================
@@ -968,7 +896,7 @@ class ChatbotCog(commands.Cog):
 
         chatbot = config.chatbot
 
-        new_mode = ChatbotMethodType(mode.value)
+        new_mode = ChatbotMethodType[mode.value]
 
         if chatbot.type == new_mode:
             await interaction.response.send_message(
@@ -986,9 +914,53 @@ class ChatbotCog(commands.Cog):
         #     interaction.guild.id,
         #     config,
         # )
+        await self.database.update_config(
+            interaction.guild.id,
+            config,
+        )
 
         await interaction.response.send_message(
             f'Chatbot mode changed to `{mode.name}`.',
+            ephemeral=True,
+        )
+
+    # ======================================================================
+    # /chatbot toggle
+    # ======================================================================
+
+    @chatbot_group.command(
+        name='toggle',
+        description='Enable or disable the chatbot',
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_permissions(manage_guild=True)
+    async def chatbot_toggle(
+        self,
+        interaction: Interaction,
+    ) -> None:
+        if not self.database or not interaction.guild:
+            await interaction.response.send_message(
+                'This command can only be used in a server.',
+                ephemeral=True,
+            )
+            return
+
+        config = await self.database.get_config(
+            interaction.guild.id,
+        )
+
+        chatbot = config.chatbot
+        chatbot.enabled = not chatbot.enabled
+
+        await self.database.update_config(
+            interaction.guild.id,
+            config,
+        )
+
+        state = 'enabled' if chatbot.enabled else 'disabled'
+
+        await interaction.response.send_message(
+            f'Chatbot has been **{state}**.',
             ephemeral=True,
         )
 

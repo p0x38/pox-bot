@@ -783,6 +783,9 @@
                     "title": "{user}'s status! :3"
                 }
             }
+        },
+        "hash_value": {
+            "description": "Get user's hash code."
         }
     },
     "userphone": {
