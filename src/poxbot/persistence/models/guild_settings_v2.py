@@ -133,6 +133,8 @@ class ChatbotMethodType(IntEnum):
 class ChatbotConfig(BaseConfigData):
     enabled: bool = False
     type: ChatbotMethodType = ChatbotMethodType.ai
+    markov_order: int = 2
+    markov_max_tokens: int = 50
 
 
 @dataclass
@@ -245,7 +247,7 @@ class GuildConfigV2:
             filters=filter_map,
         )
 
-        lv = f.get('levling', {})
+        lv = f.get('leveling', {})
         parsed['leveling'] = LevelingConfig(
             enabled=lv.get('enabled', False),
             last_execution=lv.get('last_execution', datetime.now(UTC).timestamp()),
@@ -302,13 +304,35 @@ class GuildConfigV2:
         )
 
         chatbot_raw = f.get('chatbot', {})
+
+        chatbot_type_raw = chatbot_raw.get(
+            'type',
+            ChatbotMethodType.ai,
+        )
+
+        try:
+            chatbot_type = ChatbotMethodType(
+                chatbot_type_raw,
+            )
+        except (ValueError, TypeError):
+            if isinstance(chatbot_type_raw, str):
+                try:
+                    chatbot_type = ChatbotMethodType[
+                        chatbot_type_raw.lower()
+                    ]
+                except KeyError:
+                    chatbot_type = ChatbotMethodType.ai
+            else:
+                chatbot_type = ChatbotMethodType.ai
+
         parsed['chatbot'] = ChatbotConfig(
             enabled=chatbot_raw.get('enabled', False),
             last_execution=chatbot_raw.get(
-                'last_execution', datetime.now(UTC).timestamp(),
+                'last_execution',
+                datetime.now(UTC).timestamp(),
             ),
             last_executor=chatbot_raw.get('last_executor'),
-            type=chatbot_raw.get('type', ChatbotMethodType.ai),
+            type=chatbot_type,
         )
 
         return cls(version=data.get('version', 3), features=parsed)
