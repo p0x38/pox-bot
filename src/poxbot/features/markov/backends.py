@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import random
 from collections.abc import Iterable
 from typing import Literal
 
@@ -58,11 +59,7 @@ class CustomMarkovBackend:
 
             tokens = list(transitions)
             weights = list(transitions.values())
-            token = markovify.Chain(
-                None,
-                self.model.order,
-                model={state: dict(zip(tokens, weights, strict=True))},
-            ).move(state)
+            token = random.choices(tokens, weights=weights, k=1)[0]
 
             if token == self.model.END:
                 break
