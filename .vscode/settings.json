@@ -82,7 +82,7 @@
     "i18n-ally.tabStyle": "space",
     "i18n-ally.translate.saveAsCandidates": true,
     "json.trace.server": "messages",
-    "python-envs.defaultEnvManager": "ms-python.python:venv",
+    "python-envs.defaultEnvManager": "ms-python.python:system",
     "python.analysis.autoSearchPaths": false,
     "python.analysis.completeFunctionParens": false,
     "python.analysis.diagnosticMode": "workspace",
