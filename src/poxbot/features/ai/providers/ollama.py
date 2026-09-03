@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import asyncio
 from collections.abc import AsyncGenerator
 from typing import TYPE_CHECKING, Any
 
 from pygent import Agent
 from pygent.memory import ConversationMemory
-from pygent.providers.openrouter import OpenRouterProvider
+from pygent.providers.ollama import OllamaProvider
 from pygent.types import Message
 
 from ....shared.abc.base_provider import BaseLLMProvider
@@ -17,20 +16,16 @@ if TYPE_CHECKING:
     from ....services.ai import LLMManager
 
 
-class OpenRouterStreamer(BaseLLMProvider):
-    """Pygent-backed OpenRouter provider adapter.
-
-    Pygent owns provider communication and agent execution while this adapter
-    preserves pox-bot's existing streaming-manager interface.
-    """
+class OllamaStreamer(BaseLLMProvider):
+    """Pygent-backed Ollama provider adapter."""
 
     def __init__(
         self,
         manager: 'LLMManager',
-        api_key: str | None,
+        host: str | None,
     ) -> None:
         self.mgr = manager
-        self.api_key = api_key
+        self.host = host
 
     async def stream_response(
         self,
@@ -39,12 +34,7 @@ class OpenRouterStreamer(BaseLLMProvider):
         ctx: LLMRequestContext,
         base_labels: dict[str, str],
     ) -> AsyncGenerator[str, None]:
-        """Generate a response through Pygent.
-
-        The surrounding manager retains its historical async-generator API.
-        Pygent's current OpenRouter provider performs a complete request, so
-        the final response is yielded as one chunk for now.
-        """
+        """Generate a response through a local or remote Ollama instance."""
         if not isinstance(query, list) or not query:
             raise InvalidQueryData()
 
@@ -60,11 +50,7 @@ class OpenRouterStreamer(BaseLLMProvider):
         if history:
             memory.seed(history)
 
-        provider = OpenRouterProvider(
-            llm_model,
-            api_key=self.api_key,
-            app_name="pox-bot",
-        )
+        provider = OllamaProvider(llm_model, host=self.host)
         agent = Agent(
             provider,
             max_iterations=4,
@@ -80,13 +66,14 @@ class OpenRouterStreamer(BaseLLMProvider):
 
         if response.text:
             await self.mgr._record_metric(
-                name='bot_ai_ttft_seconds',
+                name='bot_llm_response_latency_seconds',
                 m_type='histogram',
                 value_or_amount=ctx.elapsed_seconds,
                 labels=base_labels,
-                description='Time to first token (TTFT) for LLM responses in seconds',
+                description='Total latency for LLM responses in seconds',
             )
-            self.mgr.logger.info('LLM generated response through Pygent.')
+            self.mgr.logger.info(
+                'LLM generated response through Pygent Ollama (%s).',
+                llm_model,
+            )
             yield response.text
-
-        await asyncio.sleep(0)
