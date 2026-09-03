@@ -10,6 +10,12 @@
 ## Work In Progress
 
 - [ ] Improve nMarkov dialogue memory
+- [ ] Integrate Pygent into the AI chatbot runtime
+  - [x] Add the Pygent-backed OpenRouter adapter
+  - [x] Keep the existing ChatbotCog interface
+  - [ ] Regenerate `uv.lock` with the Pygent dependency
+  - [ ] Add integration tests
+  - [ ] Replace the legacy AI provider dependencies
 
 ## Planned
 
