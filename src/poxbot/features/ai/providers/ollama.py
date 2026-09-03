@@ -59,10 +59,7 @@ class OllamaStreamer(BaseLLMProvider):
             memory=memory,
         )
 
-        try:
-            response = await agent.run(last_message)
-        finally:
-            await provider.aclose()
+        response = await agent.run(last_message)
 
         if response.text:
             await self.mgr._record_metric(
