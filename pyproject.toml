@@ -80,6 +80,9 @@ packages = ["src/poxbot"]
 [tool.hatch.envs.default]
 dependencies = ["pytest", "pytest-asyncio"]
 
+[tool.hatch.metadata]
+allow-direct-references = true
+
 [project.optional-dependencies]
 cpu = ["torch"]
 gpu = ["torch"]
