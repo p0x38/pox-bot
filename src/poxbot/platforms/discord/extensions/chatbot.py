@@ -912,7 +912,7 @@ class ChatbotCog(commands.Cog):
 
                 await self.respond(
                     message=message,
-                    provider=LLMProviderType.OPEN_ROUTER.value,
+                    provider=self.bot.settings.llm_config.provider_type,
                     model=self.bot.settings.llm_config.model_id,
                     include_history=permissions.read_message_history,
                 )
