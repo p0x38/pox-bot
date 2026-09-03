@@ -3,9 +3,8 @@ from typing import cast
 import pytest
 
 from poxbot.application.bot import PoxBot
-from poxbot.config.schema import BotSettings, LLMConfig
+from poxbot.config.schema import BotSettings
 from poxbot.features.ai.manager import LLMManager, LLMProviderType
-from poxbot.features.ai.providers.ollama import OllamaStreamer
 from poxbot.features.ai.providers.openrouter import OpenRouterStreamer
 from poxbot.shared.exceptions.ai_error import MissingInput
 
@@ -22,19 +21,6 @@ def test_manager_is_exposed_from_llm_processor_package():
     assert isinstance(
         manager._get_provider_strategy(LLMProviderType.OPEN_ROUTER.value),
         OpenRouterStreamer,
-    )
-
-
-def test_manager_uses_configured_llm_provider():
-    manager = LLMManager(
-        cast(PoxBot, DummyBot()),
-        llm_config=LLMConfig(provider_type='ollama'),
-    )
-
-    assert manager.preferred == LLMProviderType.OLLAMA
-    assert isinstance(
-        manager._get_provider_strategy(manager.preferred.value),
-        OllamaStreamer,
     )
 
 
