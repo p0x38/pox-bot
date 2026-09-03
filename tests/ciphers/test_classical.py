@@ -36,9 +36,9 @@ def test_reverse_letter_cipher() -> None:
     )
 
     assert decoded.output == 'abc12'
-    assert transformer.transform(
+    assert not transformer.transform(
         TransformerRequest(text=''),
-    ).output == ''  # ruff: ignore[compare-to-empty-string]
+    ).output
 
 
 def test_caesar_cipher_shifts() -> None:
@@ -86,20 +86,23 @@ def test_rail_fence_bounds() -> None:
         ),
     )
 
-    assert transformer.transform(
-        TransformerRequest(
-            text=encoded.output,
-            decode=True,
-            options={'key': 3},
-        ),
-    ).output == message
+    assert (
+        transformer.transform(
+            TransformerRequest(
+                text=encoded.output,
+                decode=True,
+                options={'key': 3},
+            ),
+        ).output
+        == message
+    )
 
-    assert transformer.transform(
+    assert not transformer.transform(
         TransformerRequest(
             text='',
             options={'key': 3},
         ),
-    ).output == ''  # ruff: ignore[compare-to-empty-string]
+    ).output
 
 
 def test_morse_code_translation() -> None:
@@ -154,6 +157,6 @@ def test_psc1_block_rotation() -> None:
     )
 
     assert decoded.output == text
-    assert transformer.transform(
+    assert not transformer.transform(
         TransformerRequest(text=''),
-    ).output == ''  # ruff: ignore[compare-to-empty-string]
+    ).output

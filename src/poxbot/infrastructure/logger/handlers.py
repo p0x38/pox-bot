@@ -21,7 +21,7 @@ console = Console()
 
 class TextualRichHandler(RichHandler):
     def __init__(self, log_widget: RichLog, console: Console, *args, **kwargs) -> None:
-        super().__init__(console=console, *args, **kwargs)
+        super().__init__(console=console, *args, **kwargs)  # ruff: ignore[star-arg-unpacking-after-keyword-arg]
         self.log_widget = log_widget
 
     def emit(self, record: logging.LogRecord) -> None:
@@ -61,7 +61,8 @@ def setup_console_handler(
 
     if log_widget is not None:
         handler: logging.Handler = TextualRichHandler(
-            log_widget=log_widget, **handler_kwargs,
+            log_widget=log_widget,
+            **handler_kwargs,
         )
     else:
         handler = RichHandler(**handler_kwargs)

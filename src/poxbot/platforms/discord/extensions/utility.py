@@ -117,10 +117,11 @@ class UtilityCog(commands.Cog):
     async def coin_flip(self, interaction: Interaction, text: str | None = None):
         await interaction.response.defer()
         locale = self.bot.get_locale(interaction)
-        
+
         result = np.random.randint(0, 1)
         txt = self.bot.internal_translator.T(
-            'text.coinflip.true' if result == 1 else 'text.coinflip.false', str(locale),
+            'text.coinflip.true' if result == 1 else 'text.coinflip.false',
+            str(locale),
         )
 
         embed = Embed(color=Color.random())

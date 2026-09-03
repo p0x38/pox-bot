@@ -57,7 +57,9 @@ class StatsCog(commands.Cog):
                 new_level = xp_process_result.get('new_level')
 
                 self.bot.logger.debug(
-                    '%s reached to %d!', message.author.name, new_level,
+                    '%s reached to %d!',
+                    message.author.name,
+                    new_level,
                 )
 
     group = app_commands.Group(
@@ -109,7 +111,7 @@ class StatsCog(commands.Cog):
             embed.color = Color.red()
 
             return interaction.followup.send(embed=embed)
-    
+
     @group.command(
         name='top',
         description=app_commands.locale_str('command.stats.top.description'),
@@ -285,7 +287,7 @@ class StatsCog(commands.Cog):
 
         try:
             font_path = '/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc'
-            if not pathlib.Path(font_path).exists():  # noqa: ASYNC240
+            if not pathlib.Path(font_path).exists():  # ruff: ignore[blocking-path-method-in-async-function]
                 font_path = '/usr/share/fonts/truetype/fonts-japanese-gothic.ttf'
 
             def generate_wc():

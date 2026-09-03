@@ -3,7 +3,7 @@ from logging import Filter, LogRecord
 
 class ExcludeConsoleFilter(Filter):
     def filter(self, record: LogRecord):
-        return not getattr(record, "no_console", False)
+        return not getattr(record, 'no_console', False)
 
 
 class SkipEmptyMessageFilter(Filter):

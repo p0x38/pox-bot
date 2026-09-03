@@ -21,7 +21,9 @@ class ExporterExtension(commands.Cog):
         self.bot = bot
         self.filename = 'commands.json'
         self.logger = get_logger(
-            __name__, prefix='Exporter', extension='ExporterExtension',
+            __name__,
+            prefix='Exporter',
+            extension='ExporterExtension',
         )
 
     def _generate_commands_json(self) -> list:
@@ -64,19 +66,21 @@ class ExporterExtension(commands.Cog):
                 for param in cmd.parameters:
                     param_type = str(param.type).replace('AppCommandOptionType.', '')
 
-                    parameters_data.append({
-                        'name': param.name,
-                        'display': param.display_name,
-                        'description': str(param.description),
-                        'type': param_type,
-                        'required': param.required,
-                        'has_autocomplete': bool(param.autocomplete),
-                        'choices': (
-                            [choice.name for choice in param.choices]
-                            if param.choices
-                            else []
-                        ),
-                    })
+                    parameters_data.append(
+                        {
+                            'name': param.name,
+                            'display': param.display_name,
+                            'description': str(param.description),
+                            'type': param_type,
+                            'required': param.required,
+                            'has_autocomplete': bool(param.autocomplete),
+                            'choices': (
+                                [choice.name for choice in param.choices]
+                                if param.choices
+                                else []
+                            ),
+                        }
+                    )
 
                 return {
                     'type': 'slash_command',
@@ -106,25 +110,30 @@ class ExporterExtension(commands.Cog):
             return {}
 
         def parse_prefix_command(
-            cmd: commands.Command | commands.Group, parent_name: str = '',
+            cmd: commands.Command | commands.Group,
+            parent_name: str = '',
         ) -> dict[str, Any]:
             full_name = f'{parent_name} {cmd.name}'.strip()
 
             parameters_data = []
             for param_name, param in cmd.clean_params.items():
                 param_type = getattr(
-                    param.annotation, '__name__', str(param.annotation),
+                    param.annotation,
+                    '__name__',
+                    str(param.annotation),
                 )
                 if 'inspect._empty' in param_type:
                     param_type = 'Any'
 
                 is_required = param.default is param.empty
-                parameters_data.append({
-                    'name': param_name,
-                    'type': param_type,
-                    'required': is_required,
-                    'default': str(param.default) if not is_required else None,
-                })
+                parameters_data.append(
+                    {
+                        'name': param_name,
+                        'type': param_type,
+                        'required': is_required,
+                        'default': str(param.default) if not is_required else None,
+                    }
+                )
 
             base_data = {
                 'name': cmd.name,
@@ -154,16 +163,14 @@ class ExporterExtension(commands.Cog):
                 exported_data.append(data)
 
         exported_data.extend(
-            parse_prefix_command(cmd)
-            for cmd in self.bot.commands
-            if cmd.parent is None
+            parse_prefix_command(cmd) for cmd in self.bot.commands if cmd.parent is None
         )
 
         return exported_data
 
     def _save_to_file(self) -> Path:
         commands_list = self._generate_commands_json()
-        
+
         save_path = app_dir.user_data_path / self.filename
 
         with save_path.open('w', encoding='utf-8') as f:

@@ -181,9 +181,8 @@ class LLMManager:
             headers = getattr(response, 'headers', None)
 
         if headers:
-            details['retry_after'] = (
-                headers.get('Retry-After')
-                or headers.get('retry-after')
+            details['retry_after'] = headers.get('Retry-After') or headers.get(
+                'retry-after'
             )
 
         # ---------------------------------------------------------
@@ -201,14 +200,12 @@ class LLMManager:
 
                     if isinstance(error_data, dict):
                         details['message'] = (
-                            error_data.get('message')
-                            or details['message']
+                            error_data.get('message') or details['message']
                         )
 
-                        details['error_code'] = (
-                            error_data.get('code')
-                            or error_data.get('type')
-                        )
+                        details['error_code'] = error_data.get(
+                            'code'
+                        ) or error_data.get('type')
 
                         if error_data.get('metadata'):
                             metadata = error_data['metadata']
@@ -223,11 +220,10 @@ class LLMManager:
                         details['message'] = str(error_data)
 
                     details['retry_after'] = (
-                        json_data.get('retry_after')
-                        or details['retry_after']
+                        json_data.get('retry_after') or details['retry_after']
                     )
 
-            except Exception:
+            except Exception:  # ruff: ignore[try-except-pass]
                 # Not all response objects support JSON decoding.
                 # TODO: log exception
                 pass
@@ -318,10 +314,7 @@ class LLMManager:
         # Provider/server errors
         # ---------------------------------------------------------
 
-        if (
-            status_code is not None
-            and status_code >= 500
-        ) or (
+        if (status_code is not None and status_code >= 500) or (
             'bad gateway' in message_lower
             or 'service unavailable' in message_lower
             or 'gateway timeout' in message_lower
@@ -439,9 +432,7 @@ class LLMManager:
                         'status': 'success',
                         'error_type': 'none',
                     },
-                    description=(
-                        'Total count of requests sent to LLM providers'
-                    ),
+                    description=('Total count of requests sent to LLM providers'),
                 )
 
             except Exception as exception:
@@ -508,16 +499,14 @@ class LLMManager:
 
                 elif error_type == 'auth':
                     self.logger.error(
-                        'LLM authentication failed | '
-                        'provider=%s | model=%s',
+                        'LLM authentication failed | provider=%s | model=%s',
                         provider_type,
                         llm_model,
                     )
 
                 elif error_type == 'timeout':
                     self.logger.warning(
-                        'LLM request timed out | '
-                        'provider=%s | model=%s',
+                        'LLM request timed out | provider=%s | model=%s',
                         provider_type,
                         llm_model,
                     )
@@ -540,9 +529,7 @@ class LLMManager:
                         'status': 'error',
                         'error_type': error_type,
                     },
-                    description=(
-                        'Total count of requests sent to LLM providers'
-                    ),
+                    description=('Total count of requests sent to LLM providers'),
                 )
 
                 # -------------------------------------------------

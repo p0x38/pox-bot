@@ -33,29 +33,32 @@ class GlobalChatCog(commands.Cog):
         self.antispam_managers: dict[int, AntiSpamManager] = {}
         self.censored_words = [r'(?:https?://)?discord\.gg\/[a-zA-Z0-9]+']
         self.whitelisted_urls = []
-        
+
         self.webhook_cache: dict[int, Webhook] = {}
 
     def _record_counter(self, name: str, description: str, labels: dict[str, str]):
         if self.bot.metrics:
             self.bot.metrics.increment_counter(
-                name=name, description=description, amount=1, labels=labels,
+                name=name,
+                description=description,
+                amount=1,
+                labels=labels,
             )
-    
+
     async def _get_or_create_webhook(self, channel: TextChannel) -> Webhook | None:
         if channel.id in self.webhook_cache:
             return self.webhook_cache[channel.id]
-        
+
         try:
             webhooks = await channel.webhooks()
             for wh in webhooks:
                 if wh.user == self.bot.user:
                     self.webhook_cache[channel.id] = wh
                     return wh
-            
+
             new_wh = await channel.create_webhook(
-                name="p0x38bot_globalchat_webhook",
-                reason="Create a webhook for sending global chat messages",
+                name='p0x38bot_globalchat_webhook',
+                reason='Create a webhook for sending global chat messages',
             )
             self.webhook_cache[channel.id] = new_wh
         except (Forbidden, HTTPException):
@@ -127,7 +130,8 @@ class GlobalChatCog(commands.Cog):
             pass
 
         embed = Embed(
-            description=f"⚠️ {message.author.mention}, don't spam!", color=Color.red(),
+            description=f"⚠️ {message.author.mention}, don't spam!",
+            color=Color.red(),
         )
         await message.channel.send(embed=embed, delete_after=5.0)
 
@@ -135,13 +139,16 @@ class GlobalChatCog(commands.Cog):
         text = unicodedata.normalize('NFKC', text)
         text = re.sub(r'[\u200b-\u200f\uFEFF\u202a-\u202e]', '', text)
 
-        found = self.bot.resources.url_extrator.find_urls(
-            text,
-            only_unique=True,
-            check_dns=False,
-            get_indices=True,
-            with_schema_only=True,
-        ) or []
+        found = (
+            self.bot.resources.url_extrator.find_urls(
+                text,
+                only_unique=True,
+                check_dns=False,
+                get_indices=True,
+                with_schema_only=True,
+            )
+            or []
+        )
 
         for item in reversed(found):
             if isinstance(item, str):
@@ -185,7 +192,9 @@ class GlobalChatCog(commands.Cog):
             )
 
         return self.bot.internal_translator.T(
-            'text.moderation.flagged_message', locale, {'categories': combined},
+            'text.moderation.flagged_message',
+            locale,
+            {'categories': combined},
         )
 
     async def is_text_sendable(self, message: Message):
@@ -221,9 +230,10 @@ class GlobalChatCog(commands.Cog):
         )
 
         description_text = original.content.replace(
-            '@everyone', '@\u200beveryone',
+            '@everyone',
+            '@\u200beveryone',
         ).replace('@here', '@\u200bhere')
-        
+
         content_text = await self.censor_urls(description_text)
 
         if not description_text:
@@ -302,10 +312,12 @@ class GlobalChatCog(commands.Cog):
                     for attachment in original.attachments:
                         if not attachment.content_type:
                             continue
-                        if not attachment.content_type.startswith((
-                            'image',
-                            'video',
-                        )):
+                        if not attachment.content_type.startswith(
+                            (
+                                'image',
+                                'video',
+                            )
+                        ):
                             continue
 
                         try:
@@ -334,7 +346,7 @@ class GlobalChatCog(commands.Cog):
                                 continue
 
                             webhook_kwargs = {
-                                'username': f"{display_name} ({original_guild.name})",
+                                'username': f'{display_name} ({original_guild.name})',
                                 'avatar_url': original.author.display_avatar.url,
                                 'wait': True,
                                 'content': content_text,
@@ -436,7 +448,8 @@ class GlobalChatCog(commands.Cog):
         if not interaction.guild or not self.bot.database.guild:
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
-                    'error.embeds.database_not_available.description', loc,
+                    'error.embeds.database_not_available.description',
+                    loc,
                 ),
             )
 
@@ -475,7 +488,8 @@ class GlobalChatCog(commands.Cog):
         if not interaction.guild or not self.bot.database.guild:
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
-                    'error.embeds.database_not_available.description', loc,
+                    'error.embeds.database_not_available.description',
+                    loc,
                 ),
             )
 
@@ -485,7 +499,8 @@ class GlobalChatCog(commands.Cog):
         if not config.global_chat.channel_id:
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
-                    'error.embeds.feature_not_available.description', loc,
+                    'error.embeds.feature_not_available.description',
+                    loc,
                 ),
             )
 
@@ -502,7 +517,7 @@ class GlobalChatCog(commands.Cog):
             f'Global chat delivery mode set to {mode}.',
         )
         return None
-    
+
     @group.command(
         name='silent',
         description=app_commands.locale_str('command.global_chat.silent.description'),
@@ -514,7 +529,8 @@ class GlobalChatCog(commands.Cog):
         if not interaction.guild or not self.bot.database.guild:
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
-                    'error.embeds.database_not_available.description', loc,
+                    'error.embeds.database_not_available.description',
+                    loc,
                 ),
             )
 
@@ -524,7 +540,8 @@ class GlobalChatCog(commands.Cog):
         if not config.global_chat.channel_id:
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
-                    'error.embeds.feature_not_available.description', loc,
+                    'error.embeds.feature_not_available.description',
+                    loc,
                 ),
             )
 
@@ -557,7 +574,8 @@ class GlobalChatCog(commands.Cog):
         if not interaction.guild or not self.bot.database.guild:
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
-                    'error.embeds.database_not_available.description', loc,
+                    'error.embeds.database_not_available.description',
+                    loc,
                 ),
             )
 
@@ -567,7 +585,8 @@ class GlobalChatCog(commands.Cog):
         if not config.global_chat.channel_id:
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
-                    'error.embeds.feature_not_available.description', loc,
+                    'error.embeds.feature_not_available.description',
+                    loc,
                 ),
             )
 
@@ -600,7 +619,8 @@ class GlobalChatCog(commands.Cog):
         if not interaction.guild or not self.bot.database.guild:
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
-                    'error.embeds.database_not_available.description', loc,
+                    'error.embeds.database_not_available.description',
+                    loc,
                 ),
             )
 
@@ -613,7 +633,8 @@ class GlobalChatCog(commands.Cog):
             else self.bot.internal_translator.T('text.unset', loc)
         )
         status_text = self.bot.internal_translator.T(
-            'text.run_status.running' if gc.enabled else 'text.run_status.stopped', loc,
+            'text.run_status.running' if gc.enabled else 'text.run_status.stopped',
+            loc,
         )
 
         embed = Embed(
@@ -655,7 +676,8 @@ class GlobalChatCog(commands.Cog):
             if antispam and antispam.enabled and isinstance(antispam, AntiSpamFilter):
                 embed.add_field(
                     name=self.bot.internal_translator.T(
-                        'label.global_chat_antispam', loc,
+                        'label.global_chat_antispam',
+                        loc,
                     ),
                     value=self.bot.internal_translator.T(
                         'command.global_chat.status.labels.anti_spam',

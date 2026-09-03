@@ -1,4 +1,3 @@
-
 from discord import app_commands
 
 from ...enums import AppCommandContextFlag, AppInstallationFlag
@@ -23,10 +22,10 @@ def installation_type_to_intflag(
     installation_type: app_commands.AppInstallationType,
 ) -> AppInstallationFlag:
     flags = AppInstallationFlag(0)
-    
+
     if installation_type.guild:
         flags |= AppInstallationFlag.GUILD
     if installation_type.user:
         flags |= AppInstallationFlag.USER
-    
+
     return flags

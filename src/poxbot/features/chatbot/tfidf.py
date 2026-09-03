@@ -54,9 +54,12 @@ class TfidfIndex:
 
         for token in vocabulary:
             document_frequency = self._document_frequency.get(token, 0)
-            inverse_document_frequency = math.log(
-                (1 + corpus_size) / (1 + document_frequency),
-            ) + 1.0
+            inverse_document_frequency = (
+                math.log(
+                    (1 + corpus_size) / (1 + document_frequency),
+                )
+                + 1.0
+            )
 
             query_weight = query_counts[token] * inverse_document_frequency
             document_weight = document_counts[token] * inverse_document_frequency
@@ -65,7 +68,7 @@ class TfidfIndex:
             document_norm += document_weight * document_weight
             dot_product += query_weight * document_weight
 
-        if query_norm == 0.0 or document_norm == 0.0:
+        if math.isclose(query_norm, 0.0) or math.isclose(document_norm, 0.0):
             return 0.0
 
         return dot_product / math.sqrt(query_norm * document_norm)

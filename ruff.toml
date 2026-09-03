@@ -35,20 +35,24 @@ select = [
     "T20",
 ]
 ignore = [
-    "S104",
-    "S311",
-    "PLW0717",
-    "TRY003",
-    "B905",
+    "hardcoded-bind-all-interfaces",
+    "suspicious-non-cryptographic-random-usage",
+    "too-many-statements-in-try-clause",
+    "raise-vanilla-args",
+    "zip-without-explicit-strict",
+    "ambiguous-variable-name",
+    "quoted-annotation",
+    "invalid-function-name",
+    "hardcoded-password-string",
 ]
 preview = true
 
 [lint.per-file-ignores]
 "typings/*" = ["ALL"]
-"tests/*" = ["ARG", "S101", "D", "S105"]
+"tests/*" = ["ARG", "assert", "D", "hardcoded-password-string"]
 "src/poxbot/legacy_cogs/**" = ["ALL"]
 "cogs-legacy/**" = ["ALL"]
-"src/poxbot/platforms/discord/extensions/*" = ["D", "RET503"]
+"src/poxbot/platforms/discord/extensions/*" = ["D", "implicit-return"]
 
 [lint.pycodestyle]
 max-doc-length = 128

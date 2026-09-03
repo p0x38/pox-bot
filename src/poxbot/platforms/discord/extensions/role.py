@@ -123,19 +123,19 @@ class RoleCog(commands.Cog):
             '\n'.join(lines),
             allowed_mentions=AllowedMentions.none(),
         )
-    
+
     @group.command(
         name='list_users_in_role',
         description=app_commands.locale_str(
-            "command.role.list_users_in_role.description",
+            'command.role.list_users_in_role.description',
         ),
     )
     async def list_users_in_role(self, interaction: Interaction, role: Role):
         if interaction.guild is None:
             return await interaction.response.send_message("You're using User-mode.")
-        
+
         lines = [f'<@{user.id}>' for user in role.members]
-        
+
         return await interaction.response.send_message(
             '\n'.join(lines),
             allowed_mentions=AllowedMentions.none(),

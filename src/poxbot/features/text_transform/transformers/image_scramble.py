@@ -12,7 +12,10 @@ class ImageGlitchScrambleTransformer(BaseTextTransformer):
     """Scramble text as though it were rows of pixels in a square image."""
 
     def _transform(
-        self, request: TransformerRequest, *, context: TransformerContext | None = None,
+        self,
+        request: TransformerRequest,
+        *,
+        context: TransformerContext | None = None,
     ) -> str:
         """Reshape string to a 2D matrix, shift rows randomly, and transpose."""
         text = request.text

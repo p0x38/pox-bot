@@ -27,7 +27,7 @@ class GuildConfigType(TypeDecorator):
         return value
 
     def process_result_value(self, value, dialect):
-        if value is None or value == '':
+        if value is None or not value:
             return MutableGuildConfig.coerce(self, GuildConfigV2())
 
         if isinstance(value, dict):
@@ -41,7 +41,8 @@ class GuildConfigType(TypeDecorator):
                 if isinstance(value, str) and not value.strip():
                     return MutableGuildConfig.coerce(self, GuildConfigV2())
                 return MutableGuildConfig.coerce(
-                    self, GuildConfigV2.from_dict(orjson.loads(value)),
+                    self,
+                    GuildConfigV2.from_dict(orjson.loads(value)),
                 )
             except Exception:
                 return MutableGuildConfig.coerce(self, GuildConfigV2())
@@ -56,8 +57,7 @@ class MutableGuildConfig(Mutable, GuildConfigV2):
             if isinstance(value, GuildConfigV2):
                 try:
                     data = value.to_dict()
-                    nu = cls.from_dict(data)
-                    return nu
+                    return cls.from_dict(data)
                 except Exception:
                     nu = cls()
                     nu.__dict__.update(value.__dict__)

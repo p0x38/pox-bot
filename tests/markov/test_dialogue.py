@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+
 from poxbot.features.markov.dialogue import MarkovDialogueMemory
 from poxbot.features.markov.tokenizer import MarkovTokenizer
 
@@ -45,7 +47,7 @@ def test_dialogue_exact_match_has_perfect_score() -> None:
     match = memory.find_match('hello there')
 
     assert match is not None
-    assert match.score == 1.0
+    assert math.isclose(match.score, 1.0)
     assert match.response == 'hello!'
 
 

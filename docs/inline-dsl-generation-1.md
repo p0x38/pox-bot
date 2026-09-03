@@ -93,7 +93,6 @@ Here are some powerful DSL snippets you can feed to the bot.
 Capitalizes vowels, deletes numbers, and leaves everything else alone.
 ```python
 'upper' if is_vowel else ('delete' if is_digit else 'keep')
-
 ```
 
 * **Input**: `Hello 123 world!`
@@ -105,7 +104,6 @@ Replaces the letter 'a' with an explosion emoji 💥, and makes everything else 
 
 ```python
 '💥' if char.lower() == 'a' else 'lower'
-
 ```
 
 ### ③ Character Multiplication
@@ -114,7 +112,6 @@ Multiplies exclamation marks by 3!
 
 ```python
 char * 3 if char == '!' else char
-
 ```
 
 ### ④ Randomized Encryption (Coin Flip Reverse)
@@ -123,7 +120,6 @@ If the character is a lowercase letter, there is a 50% chance it flips (A-Z mirr
 
 ```python
 'reverse' if (rmatch('^[a-z]$') and chance(0.5)) else char
-
 ```
 
 * **Input**: `test world`
@@ -135,7 +131,6 @@ Converts ONLY the first letter of every space-separated word into LEET speak, an
 
 ```python
 leet(char) if word_idx == 0 else 'lower'
-
 ```
 
 ### ⑥ Lookahead & Dictionary Mapping
@@ -144,7 +139,6 @@ If the *next* character is a `?`, replace the current character with `@`. Otherw
 
 ```python
 '@' if next_char == '?' else {'s': '$', 'i': '1'}.get(char.lower(), char)
-
 ```
 
 ---

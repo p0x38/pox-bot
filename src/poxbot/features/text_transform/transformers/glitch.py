@@ -11,7 +11,10 @@ class GlitchVoidCaseTransformer(BaseTextTransformer):
     """Randomly inject void elements and blocky void characters."""
 
     def _transform(
-        self, request: TransformerRequest, *, context: TransformerContext | None = None,
+        self,
+        request: TransformerRequest,
+        *,
+        context: TransformerContext | None = None,
     ) -> str:
         """Replace 25% of the text characters with blocky glitch symbols."""
         text = request.text

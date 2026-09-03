@@ -1,4 +1,7 @@
 from dataclasses import asdict, dataclass
+from datetime import datetime
+
+from pytz import UTC
 
 
 @dataclass
@@ -30,8 +33,4 @@ class GiveawayData:
         return asdict(self)
 
     def is_expired(self) -> bool:
-        from datetime import datetime
-
-        from pytz import UTC
-
         return self.end_time <= int(datetime.now(UTC).timestamp())

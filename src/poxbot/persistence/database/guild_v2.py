@@ -17,11 +17,11 @@ class GuildSettingsDatabase(BaseDatabase):
     def __init__(self, bot: 'PoxBot', dsn: str):
         super().__init__(bot, dsn)
         self._cache = Cache(ttl=500)
-    
+
     async def on_load(self):
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
-        self.logger.debug("Initialized tables")
+        self.logger.debug('Initialized tables')
 
     async def get_config(self, guild_id: int) -> GuildConfigV2:
         async with self.async_session() as session, session.begin():
@@ -50,11 +50,8 @@ class GuildSettingsDatabase(BaseDatabase):
 
     async def find_random_partner(self, requester_guild_id: int) -> int | None:
         async with self.async_session() as session, session.begin():
-            stmt = (
-                select(GuildSettings.guild_id)
-                .where(
-                    GuildSettings.guild_id != requester_guild_id,
-                )
+            stmt = select(GuildSettings.guild_id).where(
+                GuildSettings.guild_id != requester_guild_id,
             )
 
             if 'sqlite' in self.engine.url.drivername:
@@ -69,7 +66,7 @@ class GuildSettingsDatabase(BaseDatabase):
                     GuildSettings.config['features']['userphone']['status'].as_integer()
                     == 1,
                 )
-                
+
             stmt = stmt.limit(1)
             result = await session.execute(stmt)
             return result.scalar_one_or_none()

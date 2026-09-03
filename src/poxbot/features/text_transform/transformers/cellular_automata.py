@@ -12,7 +12,10 @@ class CellularAutomataMaskTransformer(BaseTextTransformer):
     """Mask text using a Conway-like cellular automata grid generation."""
 
     def _transform(
-        self, request: TransformerRequest, *, context: TransformerContext | None = None,
+        self,
+        request: TransformerRequest,
+        *,
+        context: TransformerContext | None = None,
     ) -> str:
         """XOR mask the text bits using a generated cellular automata grid."""
         text = request.text
@@ -58,17 +61,17 @@ class CellularAutomataMaskTransformer(BaseTextTransformer):
 
         masked = bits ^ grid.ravel()[: bits.size]
         return np.packbits(masked).tobytes().decode('ascii', errors='replace')
-    
+
     @classmethod
     def _parse_int_list(cls, value: str | list[int]) -> list[int]:
         if isinstance(value, list):
             return value
-        return [int(x.strip()) for x in value.split(",") if x.strip()]
-    
+        return [int(x.strip()) for x in value.split(',') if x.strip()]
+
     @classmethod
     def parse_options(cls, **options):
         return {
-            "generations": int(options.get("generations", 5)),
-            "survival": cls._parse_int_list(options.get("survival", [2, 3])),
-            "birth": cls._parse_int_list(options.get("birth", [3])),
+            'generations': int(options.get('generations', 5)),
+            'survival': cls._parse_int_list(options.get('survival', [2, 3])),
+            'birth': cls._parse_int_list(options.get('birth', [3])),
         }

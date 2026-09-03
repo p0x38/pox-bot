@@ -16,7 +16,10 @@ class ZalgoTransformer(BaseTextTransformer):
     """
 
     def _transform(
-        self, request: TransformerRequest, *, context: TransformerContext | None = None,
+        self,
+        request: TransformerRequest,
+        *,
+        context: TransformerContext | None = None,
     ) -> str:
         """Apply chaotic Zalgo corruption to the input text payload."""
         text = request.text

@@ -18,10 +18,11 @@ class MemoryManagerCog(commands.Cog):
     @tasks.loop(minutes=30)
     async def cleanup_loop(self):
         collected = gc.collect()
-        
+
         if collected > 0:
             self.logger.debug(
-                'Cleared %d unreachable objects', collected,
+                'Cleared %d unreachable objects',
+                collected,
             )
 
 

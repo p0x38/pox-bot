@@ -26,7 +26,7 @@ class DialogueMatch:
 class MarkovDialogueMemory:
     """Lightweight conversational retrieval using TF-IDF and cosine similarity."""
 
-    _whitespace = re.compile(r"\s+")
+    _whitespace = re.compile(r'\s+')
 
     def __init__(
         self,

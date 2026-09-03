@@ -14,7 +14,10 @@ class MockingCaseTransformer(BaseTextTransformer):
     """
 
     def _transform(
-        self, request: TransformerRequest, *, context: TransformerContext | None = None,
+        self,
+        request: TransformerRequest,
+        *,
+        context: TransformerContext | None = None,
     ) -> str:
         """Apply mocking casing based on selected sequence type or random span."""
         text = request.text

@@ -44,7 +44,7 @@ class ResourceManager:
         if not target_path.exists():
             raise FileNotFoundError(f'Asset not found at: {target_path}')
         return target_path
-    
+
     async def get_asset_path_async(self, *paths: str) -> Path:
         target_path = self.assets_path.joinpath(*paths)
         if not target_path.exists():
@@ -77,7 +77,9 @@ class ResourceManager:
         return [ContributorItem.model_validate(item) for item in raw_data]
 
     async def save_with_orjson_async(
-        self, data: dict[str, Any] | list[Any], *paths: str,
+        self,
+        data: dict[str, Any] | list[Any],
+        *paths: str,
     ):
         file_path = self.assets_path.joinpath(*paths)
         file_path.parent.mkdir(parents=True, exist_ok=True)

@@ -50,10 +50,12 @@ class ChannelCog(commands.Cog):
 
         if not interaction.guild:
             embed.title = self.bot.internal_translator.T(
-                'error.embeds.guild_only.title', loc,
+                'error.embeds.guild_only.title',
+                loc,
             )
             embed.description = self.bot.internal_translator.T(
-                'error.embeds.guild_only.description', loc,
+                'error.embeds.guild_only.description',
+                loc,
             )
             return await interaction.response.send_message(embed=embed)
 
@@ -66,14 +68,16 @@ class ChannelCog(commands.Cog):
                     if not isinstance(retrieved_channel, TextChannel):
                         raise TypeError(
                             self.bot.internal_translator.T(
-                                'error.custom.unsupported_channel', loc,
+                                'error.custom.unsupported_channel',
+                                loc,
                             ),
                         )
 
                     if not hasattr(retrieved_channel, 'slowmode_delay'):
                         raise TypeError(
                             self.bot.internal_translator.T(
-                                'error.custom.channel_has_no_slowmode_property', loc,
+                                'error.custom.channel_has_no_slowmode_property',
+                                loc,
                             ),
                         )
 
@@ -83,7 +87,8 @@ class ChannelCog(commands.Cog):
                     return await interaction.followup.send(embed=embed)
             else:
                 embed.description = self.bot.internal_translator.T(
-                    'error.embeds.guild_only.description', loc,
+                    'error.embeds.guild_only.description',
+                    loc,
                 )
                 return await interaction.followup.send(embed=embed)
 
@@ -98,7 +103,8 @@ class ChannelCog(commands.Cog):
 
             if not (0 <= seconds <= 21600):
                 embed.description = self.bot.internal_translator.T(
-                    'error.embeds.slowmode_out_of_range.description', loc,
+                    'error.embeds.slowmode_out_of_range.description',
+                    loc,
                 )
                 return await interaction.followup.send(embed=embed)
 
@@ -106,7 +112,8 @@ class ChannelCog(commands.Cog):
 
             success_embed = Embed(
                 title=self.bot.internal_translator.T(
-                    'command.channel.slowmode.embeds.successful.title', loc,
+                    'command.channel.slowmode.embeds.successful.title',
+                    loc,
                 ),
                 description=self.bot.internal_translator.T(
                     'command.channel.slowmode.embeds.successful.description',
@@ -122,12 +129,15 @@ class ChannelCog(commands.Cog):
                 "Tried to edit slowmode, but bot doesn't have permission to change it.",
             )
             embed.description = self.bot.internal_translator.T(
-                'command.channel.slowmode.error.forbidden', loc,
+                'command.channel.slowmode.error.forbidden',
+                loc,
             )
             await interaction.followup.send(embed=embed)
         except Exception as e:
             embed.description = self.bot.internal_translator.T(
-                'error.exceptions.Unknown', loc, {'e': e},
+                'error.exceptions.Unknown',
+                loc,
+                {'e': e},
             )
             await interaction.followup.send(embed=embed)
 
@@ -145,10 +155,12 @@ class ChannelCog(commands.Cog):
 
         if not interaction.guild:
             embed.title = self.bot.internal_translator.T(
-                'error.embeds.guild_only.title', loc,
+                'error.embeds.guild_only.title',
+                loc,
             )
             embed.description = self.bot.internal_translator.T(
-                'error.embeds.guild_only.description', loc,
+                'error.embeds.guild_only.description',
+                loc,
             )
             return await interaction.response.send_message(embed=embed)
 
@@ -219,10 +231,12 @@ class ChannelCog(commands.Cog):
             else:
                 exist = False
                 embed.title = self.bot.internal_translator.T(
-                    'error.embeds.unsupported_channel_type.title', loc,
+                    'error.embeds.unsupported_channel_type.title',
+                    loc,
                 )
                 embed.description = self.bot.internal_translator.T(
-                    'error.embeds.unsupported_channel_type.description', loc,
+                    'error.embeds.unsupported_channel_type.description',
+                    loc,
                 )
 
             if exist:
@@ -238,7 +252,8 @@ class ChannelCog(commands.Cog):
                     rows_to_add.update(extrarows)
 
                 rows_to_add = self.bot.internal_translator.translate_map(
-                    rows_to_add, loc,
+                    rows_to_add,
+                    loc,
                 )
 
                 for name, value in rows_to_add.items():

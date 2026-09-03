@@ -130,9 +130,9 @@ class ChatbotMethodType(IntEnum):
 
 
 class MarkovModelScope(Enum):
-    GLOBAL = "global"
-    SERVER = "server"
-    USER = "user"
+    GLOBAL = 'global'
+    SERVER = 'server'
+    USER = 'user'
 
 
 @dataclass
@@ -191,7 +191,7 @@ class GuildConfigV2:
         if not isinstance(feat, UserphoneConfig):
             return UserphoneConfig()
         return feat
-    
+
     @property
     def chatbot(self) -> ChatbotConfig:
         feat = self.features.get('chatbot')
@@ -239,7 +239,8 @@ class GuildConfigV2:
                     ),
                 )
             filter_map['word'] = WordFilter(
-                enabled=wf.get('enabled', False), blacklists=bl,
+                enabled=wf.get('enabled', False),
+                blacklists=bl,
             )
 
         if 'anti_spam' in sub_feats:
@@ -248,7 +249,8 @@ class GuildConfigV2:
         parsed['filtering'] = FilterConfig(
             enabled=filt_raw.get('enabled', False),
             last_execution=filt_raw.get(
-                'last_execution', datetime.now(UTC).timestamp(),
+                'last_execution',
+                datetime.now(UTC).timestamp(),
             ),
             last_executor=filt_raw.get('last_executor'),
             filters=filter_map,
@@ -278,7 +280,8 @@ class GuildConfigV2:
         parsed['userphone'] = UserphoneConfig(
             enabled=phone_raw.get('enabled', False),
             last_execution=phone_raw.get(
-                'last_execution', datetime.now(UTC).timestamp(),
+                'last_execution',
+                datetime.now(UTC).timestamp(),
             ),
             last_executor=phone_raw.get('last_executor'),
             channel_id=phone_raw.get('channel_id'),
@@ -324,9 +327,7 @@ class GuildConfigV2:
         except (ValueError, TypeError):
             if isinstance(chatbot_type_raw, str):
                 try:
-                    chatbot_type = ChatbotMethodType[
-                        chatbot_type_raw.lower()
-                    ]
+                    chatbot_type = ChatbotMethodType[chatbot_type_raw.lower()]
                 except KeyError:
                     chatbot_type = ChatbotMethodType.ai
             else:

@@ -13,7 +13,10 @@ class CaesarCipherTransformer(BaseTextTransformer):
     """Classic Caesar cipher."""
 
     def _transform(
-        self, request: TransformerRequest, *, context: TransformerContext | None = None,
+        self,
+        request: TransformerRequest,
+        *,
+        context: TransformerContext | None = None,
     ) -> str:
         """Shift alphabet characters by a fixed key amount."""
         text = request.text

@@ -265,38 +265,38 @@ class ImageCog(Cog):
             choices.append(
                 app_commands.Choice(name=path.stem.replace('_', ' '), value=str(path)),
             )
-        
+
         return list(
             islice(
                 (
-                    v for v in choices
-                    if (current or "").lower() in (getattr(v, "name", "") or "")
-                    .lower()
+                    v
+                    for v in choices
+                    if (current or '').lower() in (getattr(v, 'name', '') or '').lower()
                 ),
                 25,
             ),
         )
-    
+
     @group.command(
         name='asset',
-        description=app_commands.locale_str("command.image.asset.description"),
+        description=app_commands.locale_str('command.image.asset.description'),
     )
     @app_commands.autocomplete(image=image_autocomplete)
     @app_commands.checks.cooldown(2, 6, key=lambda i: i.user.id)
     async def generate_image(self, interaction: Interaction, image: str):
         await interaction.response.defer()
-        
+
         path = pathlib.Path(image)
-        
-        if path.exists():  # noqa: ASYNC240
+
+        if path.exists():  # ruff: ignore[blocking-path-method-in-async-function]
             async with aiofiles.open(image, 'rb') as f:
                 content = await f.read()
-            
+
             pic = File(BytesIO(content), filename=path.name)
-            
+
             return await interaction.followup.send(file=pic)
 
-        await interaction.followup.send("Could not find the image with that")
+        await interaction.followup.send('Could not find the image with that')
 
 
 async def setup(bot):

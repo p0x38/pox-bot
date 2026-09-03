@@ -12,7 +12,10 @@ class RailFenceTransformer(BaseTextTransformer):
     """Rail fence cipher."""
 
     def _transform(
-        self, request: TransformerRequest, *, context: TransformerContext | None = None,
+        self,
+        request: TransformerRequest,
+        *,
+        context: TransformerContext | None = None,
     ) -> str:
         """Route letters in a zigzag pattern across virtual rails."""
         text = request.text

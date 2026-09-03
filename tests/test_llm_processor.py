@@ -27,7 +27,7 @@ def test_manager_is_exposed_from_llm_processor_package():
 def test_llm_config_accepts_provider_type_from_environment(monkeypatch):
     monkeypatch.setenv('LLM_CONFIG__PROVIDER_TYPE', 'ollama')
 
-    settings = BotSettings(_env_file=None)
+    settings = BotSettings()
 
     assert settings.llm_config.provider_type == 'ollama'
 

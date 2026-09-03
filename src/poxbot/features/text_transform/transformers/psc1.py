@@ -12,7 +12,10 @@ class Psc1Transformer(BaseTextTransformer):
     """Apply ROT13 and reverse every 5-character block."""
 
     def _transform(
-        self, request: TransformerRequest, *, context: TransformerContext | None = None,
+        self,
+        request: TransformerRequest,
+        *,
+        context: TransformerContext | None = None,
     ) -> str:
         """Run ROT13 rotation and invert elements within chunk boundaries."""
         text = request.text

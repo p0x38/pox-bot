@@ -15,11 +15,11 @@ from ..services.i18n import I18nManager
 @dataclass(slots=True, frozen=True)
 class ApplicationContext:
     settings: BotSettings
-    
+
     logger: LoggerAdapter | Logger
-    
+
     root_path: StdPath | AsyncPath
-    
+
     i18n: I18nManager
     fastapi_class: FastAPIManager
     dashboard: TextualDashboard | None = None

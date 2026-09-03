@@ -91,7 +91,7 @@ class LoggerConfig(BaseModel):
         console_logging (ConsoleLoggingConfig): Dedicated settings for console log
             output.
     """
-    
+
     enabled: bool = True
     level: Literal['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] = 'DEBUG'
     file_logging: FileLoggingConfig = Field(default_factory=FileLoggingConfig)

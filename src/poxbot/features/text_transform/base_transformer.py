@@ -61,11 +61,11 @@ class BaseTextTransformer(ABC):
     @property
     def name(self) -> str:
         return self.__class__.__name__.removesuffix('Transformer').lower()
-    
+
     @staticmethod
     def option(options: Mapping[str, Any], key: str, typ: type, default: Any) -> Any:
         value = options.get(key, default)
-        
+
         if typ is bool:
             return bool(value)
         if typ is int:
@@ -76,11 +76,10 @@ class BaseTextTransformer(ABC):
             return np.asarray(value)
         if not isinstance(value, typ):
             raise TypeError(
-                f"{key!r} must be {typ.__name__}",
+                f'{key!r} must be {typ.__name__}',
             )
         return value
-    
+
     @classmethod
     def parse_options(cls, **options) -> dict[str, Any]:
         return options
-    

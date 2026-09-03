@@ -56,14 +56,14 @@ class OpenRouterStreamer(BaseLLMProvider):
         last_message = messages[-1]
         history = messages[:-1]
 
-        memory = ConversationMemory(conversation_id="pox-bot")
+        memory = ConversationMemory(conversation_id='pox-bot')
         if history:
             memory.seed(history)
 
         provider = OpenRouterProvider(
             llm_model,
             api_key=self.api_key,
-            app_name="pox-bot",
+            app_name='pox-bot',
         )
         agent = Agent(
             provider,

@@ -149,13 +149,13 @@ class SmartChatbotTriggersCog(commands.Cog):
                 self._mark_cooldown(message.author.id)
 
             case ChatbotMethodType.markov_chain:
-                result: MarkovGenerationResult | None = (
-                    await chatbot.generate_markov_response(
-                        message,
-                        scope=config.chatbot.markov_scope,
-                        max_tokens=config.chatbot.markov_max_tokens,
-                        order=config.chatbot.markov_order,
-                    )
+                result: (
+                    MarkovGenerationResult | None
+                ) = await chatbot.generate_markov_response(
+                    message,
+                    scope=config.chatbot.markov_scope,
+                    max_tokens=config.chatbot.markov_max_tokens,
+                    order=config.chatbot.markov_order,
                 )
 
                 if result is None:

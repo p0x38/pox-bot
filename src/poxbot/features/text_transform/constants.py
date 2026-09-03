@@ -79,7 +79,6 @@ _UWU_RULES = tuple(
         (r'remember', 'rember'),
         (r'frightened?', 'fwigten'),
         (r'worse', 'wose'),
-        
         # --- R / L Rules --- #
         (r'th(?!e)', 'f'),
         (r'fi', 'fwi'),
@@ -91,7 +90,6 @@ _UWU_RULES = tuple(
         (r'ry', 'wwy'),
         (r'ly', 'wy'),
         (r'([b-df-hj-np-tv-z])le$', r'\1wal'),
-        
         # --- Phonemes & Vowels Rules --- #
         (r'n[aeiou]*t', 'nd'),
         (r'fuc', 'fwuc'),
@@ -101,13 +99,10 @@ _UWU_RULES = tuple(
         (r'ove', 'uv'),
         (r'n([aeiou])', r'ny\1'),
         (r'([^aeiou\s])o', r'\1wo'),
-        
         # --- Convert remaining R and L into W --- #
         (r'[lrw]+', 'w'),
-        
         # --- Aggregation of Laughter --- #
         (r'\b(?:ha|hah|heh|hehe)+\b', 'hehe'),
-        
         # --- UwU-ify emoticons --- #
         (r'([><:;=\']*)?[xX]+[dD]+', r'\1x3'),
         (r'([><:;=\'_]+)-?[\)\]\>]+', r'\13'),

@@ -39,7 +39,8 @@ class GitInfo:
             )
 
             self.commit_hash, self.short_hash, self.commit_message = log_data.split(
-                '\n', 2,
+                '\n',
+                2,
             )
             self.branch_name = branch_name
             self.loaded = True

@@ -36,7 +36,10 @@ class HillCipherTransformer(BaseTextTransformer):
         return math.gcd(determinant, 26) == 1
 
     def _transform(
-        self, request: TransformerRequest, *, context: TransformerContext | None = None,
+        self,
+        request: TransformerRequest,
+        *,
+        context: TransformerContext | None = None,
     ) -> str:
         """Encrypt or decrypt alphabetic text using Hill Matrix multiplication."""
         text = request.text
@@ -65,20 +68,17 @@ class HillCipherTransformer(BaseTextTransformer):
         blocks = np.fromiter((ord(c) - 65 for c in clean), dtype=int).reshape(-1, size)
         transformed_blocks = (blocks @ matrix.T) % 26
         return ''.join(chr(num + 65) for num in transformed_blocks.ravel())
-    
+
     @classmethod
     def parse_options(cls, **options):
-        matrix = options.get("key_matrix")
+        matrix = options.get('key_matrix')
         if matrix is None:
             raise MissingKeyMatrixError()
-        
+
         if isinstance(matrix, str):
-            matrix = [
-                [int(v) for v in row.split(",")]
-                for row in matrix.split(";")
-            ]
-        
+            matrix = [[int(v) for v in row.split(',')] for row in matrix.split(';')]
+
         return {
-            "key_matrix": matrix,
-            "pad_char": str(options.get("pad_char", "X"))[:1],
+            'key_matrix': matrix,
+            'pad_char': str(options.get('pad_char', 'X'))[:1],
         }

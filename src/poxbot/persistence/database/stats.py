@@ -59,7 +59,10 @@ class StatisticsDatabase(BaseDatabase):
             return list(result.scalars().all())
 
     async def get_guild_leaderboard(
-        self, guild: Guild, sort_by: str = 'xp', limit: int = 10,
+        self,
+        guild: Guild,
+        sort_by: str = 'xp',
+        limit: int = 10,
     ):
         async with self.async_session() as session, session.begin():
             col = getattr(UserStatistics, sort_by, UserStatistics.xp)

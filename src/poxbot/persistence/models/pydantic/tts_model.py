@@ -7,13 +7,12 @@ from pydantic import AfterValidator, BaseModel, RootModel
 
 from ....shared.enums.tts import TTSEngineType
 
-BASE_ASSETS_PATH = Path(__file__).resolve().parent.parent.parent.parent / "assets"
+BASE_ASSETS_PATH = Path(__file__).resolve().parent.parent.parent.parent / 'assets'
 
 
 def resolve_voice_path(v: Path) -> Path:
     if not v.is_absolute():
-        full_path = BASE_ASSETS_PATH / v
-        return full_path
+        return BASE_ASSETS_PATH / v
     return v
 
 

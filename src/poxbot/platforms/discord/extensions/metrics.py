@@ -40,7 +40,9 @@ class OpenTelemetryMetrics(commands.Cog):
         self.update_all_gauges.cancel()
 
     async def _instrumented_tree_error(
-        self, interaction: Interaction, error: app_commands.AppCommandError,
+        self,
+        interaction: Interaction,
+        error: app_commands.AppCommandError,
     ):
         original_error = getattr(error, 'original', None)
         error_name = error.__class__.__name__

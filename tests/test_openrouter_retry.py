@@ -1,4 +1,5 @@
 """Tests for the Pygent-backed OpenRouter adapter."""
+
 from __future__ import annotations
 
 import sys
@@ -16,17 +17,17 @@ from poxbot.features.ai.request_context import LLMRequestContext
 from poxbot.shared.exceptions.ai_error import InvalidQueryData
 
 
-def _make_streamer() -> OpenRouterStreamer:
+def _make_streamer() -> tuple[OpenRouterStreamer, MagicMock]:
     """Build an OpenRouterStreamer with a mocked manager."""
     manager = MagicMock()
     manager._record_metric = AsyncMock()
-    return OpenRouterStreamer(manager, api_key='test-key')
+    return OpenRouterStreamer(manager, api_key='test-key'), manager
 
 
 @pytest.mark.asyncio
 async def test_invalid_query_is_rejected() -> None:
     """Non-list and empty queries must be rejected before agent execution."""
-    streamer = _make_streamer()
+    streamer, _ = _make_streamer()
 
     for query in ('not a list', []):
         with pytest.raises(InvalidQueryData):
@@ -42,32 +43,38 @@ async def test_invalid_query_is_rejected() -> None:
 @pytest.mark.asyncio
 async def test_invalid_message_is_rejected() -> None:
     """Malformed message data must be converted to InvalidQueryData."""
-    streamer = _make_streamer()
+    streamer, _ = _make_streamer()
 
-    with patch(
-        'poxbot.features.ai.providers.openrouter.Message.model_validate',
-        side_effect=ValueError('invalid message'),
+    with (
+        patch(
+            'poxbot.features.ai.providers.openrouter.Message.model_validate',
+            side_effect=ValueError('invalid message'),
+        ),
+        pytest.raises(InvalidQueryData),
     ):
-        with pytest.raises(InvalidQueryData):
-            async for _ in streamer.stream_response(
-                llm_model='gpt-4o',
-                query=[{'role': 'user', 'content': 'hello'}],
-                ctx=LLMRequestContext(),
-                base_labels={},
-            ):
-                pass
+        async for _ in streamer.stream_response(
+            llm_model='gpt-4o',
+            query=[{'role': 'user', 'content': 'hello'}],
+            ctx=LLMRequestContext(),
+            base_labels={},
+        ):
+            pass
 
 
 @pytest.mark.asyncio
 async def test_response_is_generated_through_pygent() -> None:
     """A valid query should run an Agent and yield its response text."""
-    streamer = _make_streamer()
+    streamer, manager = _make_streamer()
     user_message = SimpleNamespace(role='user', content='hello')
     response = SimpleNamespace(text='Hello from Pygent')
+
+    mock_run = AsyncMock(return_value=response)
     agent = MagicMock()
-    agent.run = AsyncMock(return_value=response)
+    agent.run = mock_run
+
+    mock_aclose = AsyncMock()
     provider = MagicMock()
-    provider.aclose = AsyncMock()
+    provider.aclose = mock_aclose
 
     with (
         patch(
@@ -111,15 +118,15 @@ async def test_response_is_generated_through_pygent() -> None:
         total_timeout=60.0,
         memory=memory_cls.return_value,
     )
-    agent.run.assert_awaited_once_with(user_message)
-    provider.aclose.assert_awaited_once()
-    streamer.mgr._record_metric.assert_awaited_once()
+    mock_run.assert_awaited_once_with(user_message)
+    mock_aclose.assert_awaited_once()
+    manager._record_metric.assert_awaited_once()
 
 
 @pytest.mark.asyncio
 async def test_history_is_seeded_into_conversation_memory() -> None:
     """Messages before the final message should be seeded as conversation history."""
-    streamer = _make_streamer()
+    streamer, _ = _make_streamer()
     history = [
         SimpleNamespace(role='user', content='first'),
         SimpleNamespace(role='assistant', content='second'),
@@ -127,10 +134,14 @@ async def test_history_is_seeded_into_conversation_memory() -> None:
     last_message = SimpleNamespace(role='user', content='third')
     messages = [*history, last_message]
     response = SimpleNamespace(text='reply')
+
+    mock_run = AsyncMock(return_value=response)
     agent = MagicMock()
-    agent.run = AsyncMock(return_value=response)
+    agent.run = mock_run
+
     provider = MagicMock()
     provider.aclose = AsyncMock()
+
     memory = MagicMock()
 
     with (
@@ -146,7 +157,10 @@ async def test_history_is_seeded_into_conversation_memory() -> None:
             'poxbot.features.ai.providers.openrouter.OpenRouterProvider',
             return_value=provider,
         ),
-        patch('poxbot.features.ai.providers.openrouter.Agent', return_value=agent),
+        patch(
+            'poxbot.features.ai.providers.openrouter.Agent',
+            return_value=agent,
+        ),
     ):
         result = [
             piece
@@ -164,17 +178,23 @@ async def test_history_is_seeded_into_conversation_memory() -> None:
 
     assert result == ['reply']
     memory.seed.assert_called_once_with(history)
-    agent.run.assert_awaited_once_with(last_message)
+    mock_run.assert_awaited_once_with(last_message)
+
+    provider.aclose.assert_awaited_once()
 
 
 @pytest.mark.asyncio
 async def test_agent_error_is_propagated_and_provider_is_closed() -> None:
     """Agent failures should propagate while the provider is still closed."""
-    streamer = _make_streamer()
+    streamer, manager = _make_streamer()
+
+    mock_run = AsyncMock(side_effect=RuntimeError('generation failed'))
     agent = MagicMock()
-    agent.run = AsyncMock(side_effect=RuntimeError('generation failed'))
+    agent.run = mock_run
+
+    mock_aclose = AsyncMock()
     provider = MagicMock()
-    provider.aclose = AsyncMock()
+    provider.aclose = mock_aclose
 
     with (
         patch(
@@ -185,7 +205,10 @@ async def test_agent_error_is_propagated_and_provider_is_closed() -> None:
             'poxbot.features.ai.providers.openrouter.OpenRouterProvider',
             return_value=provider,
         ),
-        patch('poxbot.features.ai.providers.openrouter.Agent', return_value=agent),
+        patch(
+            'poxbot.features.ai.providers.openrouter.Agent',
+            return_value=agent,
+        ),
         pytest.raises(RuntimeError, match='generation failed'),
     ):
         async for _ in streamer.stream_response(
@@ -196,18 +219,22 @@ async def test_agent_error_is_propagated_and_provider_is_closed() -> None:
         ):
             pass
 
-    provider.aclose.assert_awaited_once()
-    streamer.mgr._record_metric.assert_not_awaited()
+    mock_aclose.assert_awaited_once()
+    manager._record_metric.assert_not_awaited()
 
 
 @pytest.mark.asyncio
 async def test_empty_response_does_not_record_metric() -> None:
     """An empty model response should not yield text or record TTFT."""
-    streamer = _make_streamer()
+    streamer, manager = _make_streamer()
+
+    mock_run = AsyncMock(return_value=SimpleNamespace(text=''))
     agent = MagicMock()
-    agent.run = AsyncMock(return_value=SimpleNamespace(text=''))
+    agent.run = mock_run
+
+    mock_aclose = AsyncMock()
     provider = MagicMock()
-    provider.aclose = AsyncMock()
+    provider.aclose = mock_aclose
 
     with (
         patch(
@@ -218,7 +245,10 @@ async def test_empty_response_does_not_record_metric() -> None:
             'poxbot.features.ai.providers.openrouter.OpenRouterProvider',
             return_value=provider,
         ),
-        patch('poxbot.features.ai.providers.openrouter.Agent', return_value=agent),
+        patch(
+            'poxbot.features.ai.providers.openrouter.Agent',
+            return_value=agent,
+        ),
     ):
         result = [
             piece
@@ -231,5 +261,5 @@ async def test_empty_response_does_not_record_metric() -> None:
         ]
 
     assert result == []
-    provider.aclose.assert_awaited_once()
-    streamer.mgr._record_metric.assert_not_awaited()
+    mock_aclose.assert_awaited_once()
+    manager._record_metric.assert_not_awaited()

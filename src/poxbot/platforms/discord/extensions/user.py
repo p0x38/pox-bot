@@ -848,9 +848,9 @@ class UserCog(commands.Cog):
         embed = Embed(title='Members in this server', description='')
 
         if interaction.guild:
-            embed.description = ', '.join([
-                f'<@{m.id}>' for m in interaction.guild.members
-            ])
+            embed.description = ', '.join(
+                [f'<@{m.id}>' for m in interaction.guild.members]
+            )
         else:
             embed.description = 'This command only works in guild.'
             return await interaction.followup.send(embed=embed)
@@ -1243,11 +1243,13 @@ class UserCog(commands.Cog):
         user_messages = []
 
         if isinstance(interaction.channel, TextChannel):
-            user_messages.extend([
-                msg
-                async for msg in interaction.channel.history(limit=None)
-                if msg.author.id == member.id
-            ])
+            user_messages.extend(
+                [
+                    msg
+                    async for msg in interaction.channel.history(limit=None)
+                    if msg.author.id == member.id
+                ]
+            )
 
         embed = Embed(title=f'Random message by {member.display_name}', description='')
 

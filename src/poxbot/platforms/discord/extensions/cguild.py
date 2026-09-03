@@ -140,7 +140,7 @@ class GuildCog(commands.Cog):
                     guild.description
                     if guild.description
                     else self.bot.internal_translator.T(
-                        "command.guild.info.placeholders.no_description",
+                        'command.guild.info.placeholders.no_description',
                         str(loc),
                     )
                 ),
@@ -148,15 +148,20 @@ class GuildCog(commands.Cog):
                 'server_owner': (
                     guild.owner.mention
                     if guild.owner
-                    else self.bot.internal_translator.T("text.unknown", str(loc))
+                    else self.bot.internal_translator.T('text.unknown', str(loc))
                 ),
                 'server_members': self.bot.internal_translator.T(
-                    "command.guild.info.placeholders.members", str(loc), {
-                        "count": len(guild.members),
-                    }),
+                    'command.guild.info.placeholders.members',
+                    str(loc),
+                    {
+                        'count': len(guild.members),
+                    },
+                ),
                 'server_creation': guild.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                 'server_shard': guild.shard_id if guild.shard_id else 'N/A',
-                'server_large': self.bot.internal_translator.T('Yes' if guild.large else 'No'),
+                'server_large': self.bot.internal_translator.T(
+                    'Yes' if guild.large else 'No'
+                ),
                 'server_roles': f'{len(guild.roles):,} roles',
                 'server_emojis': f'{len(guild.emojis):,} emojis',
                 'server_stickers': f'{len(guild.stickers):,} stickers',
@@ -438,7 +443,7 @@ class GuildCog(commands.Cog):
         embed = Embed(
             title=(
                 f"Member contains with '{keyword}' "
-                "by username in {interaction.guild.name}"
+                'by username in {interaction.guild.name}'
             ),
             description='',
             color=Color.green(),
@@ -477,15 +482,17 @@ class GuildCog(commands.Cog):
 
         embed = Embed(
             title=f'List of roles in {interaction.guild.name}',
-            description='\n'.join([
-                role.mention
-                for role in sorted(
-                    interaction.guild.roles,
-                    key=lambda r: r.position,
-                    reverse=True,
-                )
-                if not role.managed and role.name != '@everyone'
-            ]),
+            description='\n'.join(
+                [
+                    role.mention
+                    for role in sorted(
+                        interaction.guild.roles,
+                        key=lambda r: r.position,
+                        reverse=True,
+                    )
+                    if not role.managed and role.name != '@everyone'
+                ]
+            ),
             color=Color.green(),
         )
 

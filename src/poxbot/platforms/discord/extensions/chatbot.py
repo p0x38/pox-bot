@@ -34,7 +34,7 @@ from ....features.markov.model import (
 from ....features.markov.storage import MarkovDatabase
 from ....features.markov.tokenizer import MarkovTokenizer
 from ....persistence.models.guild_settings_v2 import ChatbotMethodType, MarkovModelScope
-from ....services.ai import LLMManager, LLMProviderType
+from ....services.ai import LLMManager
 from ....shared.utils.app_path import app_dir
 
 
@@ -1462,7 +1462,7 @@ class ChatbotCog(commands.Cog):
         updated_config = await self.database.get_config(
             interaction.guild.id,
         )
-        
+
         self.bot.logger.debug(
             'Reloaded chatbot scope: %s',
             updated_config.chatbot.markov_scope.value,

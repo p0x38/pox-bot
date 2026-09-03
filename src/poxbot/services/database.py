@@ -61,18 +61,14 @@ class DatabaseManager:
             self.bot.metrics.set_gauge(
                 name='bot_database_status',
                 description=(
-                    'Database connectivity status '
-                    '(1 for connected, 0 for disconnected)'
+                    'Database connectivity status (1 for connected, 0 for disconnected)'
                 ),
                 value=value,
             )
 
     async def _batch_call(self, method_name: str):
         await asyncio.gather(
-            *(
-                getattr(database, method_name)()
-                for database in self.databases
-            ),
+            *(getattr(database, method_name)() for database in self.databases),
         )
 
     @traced('db.connect')

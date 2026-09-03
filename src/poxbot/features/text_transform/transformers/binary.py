@@ -17,7 +17,10 @@ class BinaryTransformer(BaseTextTransformer):
     """Binary encoder and decoder using NumPy bits unpacking."""
 
     def _transform(
-        self, request: TransformerRequest, *, context: TransformerContext | None = None,
+        self,
+        request: TransformerRequest,
+        *,
+        context: TransformerContext | None = None,
     ) -> str:
         """Encode text to space-separated binary strings or decode them back."""
         text = request.text

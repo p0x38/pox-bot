@@ -48,7 +48,8 @@ class DMSendModal(discord.ui.Modal):
             sent_by_text = self.enable_sent_by
             if self.member.id == 1321324137850994758:
                 combine.append(
-                    f'Sent by `{interaction.user.name}` with sent_by_text is {sent_by_text}.',
+                    f'Sent by `{interaction.user.name}` '
+                    f'with sent_by_text is {sent_by_text}.',
                 )
             elif sent_by_text:
                 combine.append(f'\nSent by `{interaction.user.name}`.')
@@ -304,9 +305,9 @@ class MessageCog(commands.Cog):
         messages = []
 
         if isinstance(interaction.channel, discord.TextChannel):
-            messages.extend([
-                message async for message in interaction.channel.history(limit=1000)
-            ])
+            messages.extend(
+                [message async for message in interaction.channel.history(limit=1000)]
+            )
 
         embed = Embed(title='Random Message')
 

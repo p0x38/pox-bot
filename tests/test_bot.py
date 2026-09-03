@@ -109,7 +109,8 @@ async def test_bot_close(bot):
     bot.counter_manager.save_async = AsyncMock()
 
     with patch(
-        'discord.ext.commands.AutoShardedBot.close', new_callable=AsyncMock,
+        'discord.ext.commands.AutoShardedBot.close',
+        new_callable=AsyncMock,
     ) as mock_super_close:
         await bot.close()
 

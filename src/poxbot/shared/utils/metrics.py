@@ -160,7 +160,7 @@ class Metrics:
             )
 
         self.logger.info(
-            "Prometheus metrics endpoint listening on http://%s:%d",
+            'Prometheus metrics endpoint listening on http://%s:%d',
             self.config.prometheus_host,
             self.config.prometheus_server_port,
         )

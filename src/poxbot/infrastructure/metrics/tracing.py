@@ -18,7 +18,9 @@ class Tracing:
 
     @asynccontextmanager
     async def span_async(
-        self, name: str, **attributes: Any,
+        self,
+        name: str,
+        **attributes: Any,
     ) -> AsyncGenerator[Span, None]:
         with self.tracer.start_as_current_span(name) as span:
             for key, value in attributes.items():

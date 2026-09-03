@@ -16,7 +16,9 @@ class ScaryModeCog(commands.Cog):
         self.cooldown_time: float = self.scary_duration + (60 * 2)
 
         self._cooldown = commands.CooldownMapping.from_cooldown(
-            1, self.cooldown_time, commands.BucketType.default,
+            1,
+            self.cooldown_time,
+            commands.BucketType.default,
         )
 
         self.scary_pattern = re.compile(r"^aren'?t you died$", re.IGNORECASE)
@@ -59,7 +61,7 @@ class ScaryModeCog(commands.Cog):
                 task = asyncio.create_task(
                     self._reset_scary_mode_after_delay(self.scary_duration),
                 )
-                
+
                 self.bot.tasks.add(task)
                 task.add_done_callback(self.bot.tasks.discard)
 

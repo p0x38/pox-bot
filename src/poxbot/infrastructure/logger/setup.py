@@ -11,11 +11,11 @@ _configured = False
 
 
 def configure_logging(settings: BotSettings, *, log_widget: RichLog | None = None):
-    global _configured
-    
-    logging.getLogger("urllib3").setLevel(logging.INFO)
-    logging.getLogger("requests").setLevel(logging.INFO)
-    logging.getLogger("logging_loki").setLevel(logging.INFO)
+    global _configured  # ruff: ignore[global-statement]
+
+    logging.getLogger('urllib3').setLevel(logging.INFO)
+    logging.getLogger('requests').setLevel(logging.INFO)
+    logging.getLogger('logging_loki').setLevel(logging.INFO)
     logging.getLogger('discord').setLevel(logging.INFO)
 
     if _configured:
@@ -27,7 +27,7 @@ def configure_logging(settings: BotSettings, *, log_widget: RichLog | None = Non
     root = getLogger()
     root.setLevel(level)
     root.handlers.clear()
-    
+
     if settings.logger.enabled:
         if settings.logger.console_logging.enabled:
             setup_console_handler(root, level, settings, log_widget=log_widget)
@@ -40,5 +40,5 @@ def configure_logging(settings: BotSettings, *, log_widget: RichLog | None = Non
 
 
 def get_logger(name: str, *, prefix: str | None = None, extension: str | None = None):
-    extra = {"prefix": prefix, "extension": extension}
+    extra = {'prefix': prefix, 'extension': extension}
     return PrefixAdapter(getLogger(name), extra)

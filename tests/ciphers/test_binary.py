@@ -24,17 +24,20 @@ def test_binary_empty_or_malformed() -> None:
     """Verify handling of empty or padding-corrupted inputs."""
     transformer = BinaryTransformer()
 
-    assert transformer.transform(
+    assert not transformer.transform(
         TransformerRequest(text=''),
-    ).output == ''  # ruff: ignore[compare-to-empty-string]
+    ).output
 
-    assert transformer.transform(
+    assert not transformer.transform(
         TransformerRequest(text='', decode=True),
-    ).output == ''  # ruff: ignore[compare-to-empty-string]
+    ).output
 
-    assert transformer.transform(
-        TransformerRequest(
-            text='01001000   01101001',
-            decode=True,
-        ),
-    ).output == 'Hi'
+    assert (
+        transformer.transform(
+            TransformerRequest(
+                text='01001000   01101001',
+                decode=True,
+            ),
+        ).output
+        == 'Hi'
+    )

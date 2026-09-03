@@ -27,7 +27,10 @@ class TicketDatabase(BaseDatabase):
             return list(result.scalars().all())
 
     async def create_ticket_with_log(
-        self, channel_id: int, user_id: int, guild_id: int,
+        self,
+        channel_id: int,
+        user_id: int,
+        guild_id: int,
     ):
         async with self.async_session() as session, session.begin():
             session.add(

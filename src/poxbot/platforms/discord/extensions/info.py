@@ -58,7 +58,8 @@ class FeedbackModal(ui.Modal):
                 return
 
             feedback_content = textwrap.fill(
-                textwrap.dedent(self.feedback.value.strip()), width=50,
+                textwrap.dedent(self.feedback.value.strip()),
+                width=50,
             )
             if not feedback_content:
                 feedback_content = 'No feedback text'
@@ -89,7 +90,9 @@ class FeedbackModal(ui.Modal):
         )
         if not interaction.response.is_done():
             await interaction.response.send_message(
-                'Oops! something went wrong.', ephemeral=True, delete_after=10,
+                'Oops! something went wrong.',
+                ephemeral=True,
+                delete_after=10,
             )
 
 
@@ -103,39 +106,45 @@ class DynamicInfoView(ui.View):
         self.select_callback.options = [
             SelectOption(
                 label=self.bot.internal_translator.T(
-                    'modal.DynamicInfoView.options.identity.label', locale,
+                    'modal.DynamicInfoView.options.identity.label',
+                    locale,
                 ),
                 value='identity',
                 emoji='🛠️',
             ),
             SelectOption(
                 label=self.bot.internal_translator.T(
-                    'modal.DynamicInfoView.options.stats.label', locale,
+                    'modal.DynamicInfoView.options.stats.label',
+                    locale,
                 ),
                 value='stats',
                 emoji='📈',
             ),
             SelectOption(
                 label=self.bot.internal_translator.T(
-                    'modal.DynamicInfoView.options.hardware.label', locale,
+                    'modal.DynamicInfoView.options.hardware.label',
+                    locale,
                 ),
                 value='hardware',
                 emoji='🔧',
             ),
         ]
         self.select_callback.placeholder = self.bot.internal_translator.T(
-            'modal.DynamicInfoView.options.placeholder', locale,
+            'modal.DynamicInfoView.options.placeholder',
+            locale,
         )
 
         url_button = ui.Button(
             label=self.bot.internal_translator.T(
-                'modal.DynamicInfoView.buttons.url_button.label', locale,
+                'modal.DynamicInfoView.buttons.url_button.label',
+                locale,
             ),
             style=ButtonStyle.link,
             url='https://github.com/p0x38/pox-bot',
         )
         self.feedback_button.label = self.bot.internal_translator.T(
-            'modal.DynamicInfoView.buttons.suggest_button.label', locale,
+            'modal.DynamicInfoView.buttons.suggest_button.label',
+            locale,
         )
         self.add_item(url_button)
 
@@ -155,9 +164,11 @@ class DynamicInfoView(ui.View):
             color=Color.blue(),
             timestamp=datetime.now(UTC),
         )
-        for _, field_info in category_data['fields'].items():
+        for field_info in category_data['fields'].values():
             embed.add_field(
-                name=field_info['display'], value=field_info['value'], inline=True,
+                name=field_info['display'],
+                value=field_info['value'],
+                inline=True,
             )
 
         await interaction.edit_original_response(embed=embed, view=self)
@@ -196,21 +207,24 @@ class DynamicInfoView(ui.View):
             uptime_delta = datetime.now(UTC) - self.bot.statistics.bot_launch_datetime
             uptime_str = format_duration(uptime_delta.total_seconds())
 
-        temp = {
+        return {
             'identity': {
                 'title': self.bot.internal_translator.T(
-                    'modal.DynamicInfoView.data.identity.title', loc,
+                    'modal.DynamicInfoView.data.identity.title',
+                    loc,
                 ),
                 'fields': {
                     'uuid': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.identity.uuid.display', loc,
+                            'modal.DynamicInfoView.data.identity.uuid.display',
+                            loc,
                         ),
                         'value': f'{self.bot.statistics.session_uuid}',
                     },
                     'version': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.identity.version.display', loc,
+                            'modal.DynamicInfoView.data.identity.version.display',
+                            loc,
                         ),
                         'value': (
                             f'git+{
@@ -227,26 +241,30 @@ class DynamicInfoView(ui.View):
                     },
                     'signature': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.identity.signature.display', loc,
+                            'modal.DynamicInfoView.data.identity.signature.display',
+                            loc,
                         ),
                         'value': self.bot.statistics.session_signature
                         or 'Unknown signature',
                     },
                     'uptime': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.identity.uptime.display', loc,
+                            'modal.DynamicInfoView.data.identity.uptime.display',
+                            loc,
                         ),
                         'value': f'{uptime_str}',
                     },
                     'latency': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.identity.latency.display', loc,
+                            'modal.DynamicInfoView.data.identity.latency.display',
+                            loc,
                         ),
                         'value': f'{self.bot.latency * 1000:.2f}ms',
                     },
                     'owner': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.identity.owner.display', loc,
+                            'modal.DynamicInfoView.data.identity.owner.display',
+                            loc,
                         ),
                         'value': 'Check GitHub repository then',
                     },
@@ -254,36 +272,42 @@ class DynamicInfoView(ui.View):
             },
             'stats': {
                 'title': self.bot.internal_translator.T(
-                    'modal.DynamicInfoView.data.stats.title', loc,
+                    'modal.DynamicInfoView.data.stats.title',
+                    loc,
                 ),
                 'fields': {
                     'guilds': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.stats.guilds.display', loc,
+                            'modal.DynamicInfoView.data.stats.guilds.display',
+                            loc,
                         ),
                         'value': f'{len(self.bot.guilds):,}',
                     },
                     'users': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.stats.users.display', loc,
+                            'modal.DynamicInfoView.data.stats.users.display',
+                            loc,
                         ),
                         'value': f'{len(self.bot.users):,}',
                     },
                     'msgs': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.stats.msgs.display', loc,
+                            'modal.DynamicInfoView.data.stats.msgs.display',
+                            loc,
                         ),
                         'value': f'{self.bot.statistics.handled_prefix_commands:,}',
                     },
                     'channels': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.stats.channels.display', loc,
+                            'modal.DynamicInfoView.data.stats.channels.display',
+                            loc,
                         ),
                         'value': f'{len(list(self.bot.get_all_channels())):,}',
                     },
                     'interactions': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.stats.interactions.display', loc,
+                            'modal.DynamicInfoView.data.stats.interactions.display',
+                            loc,
                         ),
                         'value': f'P: {
                             self.bot.statistics.interaction_statistics.total
@@ -300,42 +324,49 @@ class DynamicInfoView(ui.View):
             },
             'hardware': {
                 'title': self.bot.internal_translator.T(
-                    'modal.DynamicInfoView.data.hardware.title', loc,
+                    'modal.DynamicInfoView.data.hardware.title',
+                    loc,
                 ),
                 'fields': {
                     'platform': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.hardware.platform.display', loc,
+                            'modal.DynamicInfoView.data.hardware.platform.display',
+                            loc,
                         ),
                         'value': self.bot.runtime.get_platform_info(),
                     },
                     'cpu': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.hardware.cpu.display', loc,
+                            'modal.DynamicInfoView.data.hardware.cpu.display',
+                            loc,
                         ),
                         'value': self.cog.make_bar(cpu_usage),
                     },
                     'cpu_own': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.hardware.cpu_own.display', loc,
+                            'modal.DynamicInfoView.data.hardware.cpu_own.display',
+                            loc,
                         ),
                         'value': self.cog.make_bar(process_cpu),
                     },
                     'ram': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.hardware.ram.display', loc,
+                            'modal.DynamicInfoView.data.hardware.ram.display',
+                            loc,
                         ),
                         'value': self.cog.make_bar(memory_info.percent),
                     },
                     'ram_own': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.hardware.ram_own.display', loc,
+                            'modal.DynamicInfoView.data.hardware.ram_own.display',
+                            loc,
                         ),
                         'value': self.cog.make_bar(process_memory),
                     },
                     'disk': {
                         'display': self.bot.internal_translator.T(
-                            'modal.DynamicInfoView.data.hardware.disk.display', loc,
+                            'modal.DynamicInfoView.data.hardware.disk.display',
+                            loc,
                         ),
                         'value': self.cog.make_bar(disk_usage.percent),
                     },
@@ -353,8 +384,6 @@ class DynamicInfoView(ui.View):
             },
         }
 
-        return temp
-
 
 class InfoCog(commands.Cog):
     def __init__(self, bot: PoxBot):
@@ -364,7 +393,9 @@ class InfoCog(commands.Cog):
         name='info',
         description=app_commands.locale_str('command.info.description'),
         allowed_contexts=app_commands.AppCommandContext(
-            guild=True, dm_channel=True, private_channel=True,
+            guild=True,
+            dm_channel=True,
+            private_channel=True,
         ),
     )
 
@@ -392,10 +423,12 @@ class InfoCog(commands.Cog):
         view = DynamicInfoView(self, self.bot, loc)
         e = Embed(
             title=self.bot.internal_translator.T(
-                'command.info.retrieve.embeds.default.title', loc,
+                'command.info.retrieve.embeds.default.title',
+                loc,
             ),
             description=self.bot.internal_translator.T(
-                'command.info.retrieve.embeds.default.description', loc,
+                'command.info.retrieve.embeds.default.description',
+                loc,
             ),
         )
         e.set_footer(
@@ -474,7 +507,8 @@ class InfoCog(commands.Cog):
 
             embed = Embed(
                 title=self.bot.i18n_manager.T(
-                    'command.info.invite.embeds.default.title', loc,
+                    'command.info.invite.embeds.default.title',
+                    loc,
                 ),
                 description=self.bot.i18n_manager.T(
                     'command.info.invite.embeds.default.description',
@@ -486,18 +520,20 @@ class InfoCog(commands.Cog):
 
             if guild_count >= limit:
                 embed.description = self.bot.i18n_manager.T(
-                    'command.info.invite.error.hardlimited', loc,
+                    'command.info.invite.error.hardlimited',
+                    loc,
                 )
 
             embed.set_footer(
                 text=self.bot.i18n_manager.T(
-                    'command.info.invite.embeds.default.footer', loc,
+                    'command.info.invite.embeds.default.footer',
+                    loc,
                 ),
             )
 
             await interaction.followup.send(embed=embed)
         except Exception as e:
-            self.bot.logger.exception(f'Failed to get info: {e}')
+            self.bot.logger.exception('Failed to get info: %s', e)
             await interaction.followup.send('Error.')
 
     @group.command(

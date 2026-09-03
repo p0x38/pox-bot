@@ -48,18 +48,18 @@ def resolve_model_key(
 
         case MarkovModelScope.SERVER:
             if guild_id is None:
-                raise ValueError("Server Markov scope requires a guild ID.")
+                raise ValueError('Server Markov scope requires a guild ID.')
 
             return MarkovModelKey.server(guild_id)
 
         case MarkovModelScope.USER:
             if user_id is None:
-                raise ValueError("User Markov scope requires a user ID.")
+                raise ValueError('User Markov scope requires a user ID.')
 
             return MarkovModelKey.user(user_id)
 
         case _:
-            raise ValueError(f"Unsupported Markov model scope: {scope!r}")
+            raise ValueError(f'Unsupported Markov model scope: {scope!r}')
 
 
 class MarkovModel:
