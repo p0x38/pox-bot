@@ -2519,7 +2519,7 @@ requires-dist = [
     { name = "psutil", specifier = ">=7.2.2" },
     { name = "pydantic", specifier = ">=2.13.5,<3" },
     { name = "pydantic-settings", specifier = ">=2.15.0" },
-    { name = "pygent", marker = "extra == 'ai'", git = "https://github.com/p0x38/pygent.git?rev=79248dc372804c4e7342b89b7d0d9eab8862be49" },
+    { name = "pygent", marker = "extra == 'ai'", git = "https://github.com/p0x38/pygent.git" },
     { name = "pyicu", marker = "python_full_version < '3.12' or python_full_version >= '3.14' or sys_platform != 'win32'", specifier = ">=2.16.2" },
     { name = "pyicu", marker = "python_full_version == '3.12.*' and sys_platform == 'win32'", url = "https://github.com/cgohlke/pyicu-build/releases/download/v2.16.2/pyicu-2.16.2-cp312-cp312-win_amd64.whl" },
     { name = "pyicu", marker = "python_full_version == '3.13.*' and sys_platform == 'win32'", url = "https://github.com/cgohlke/pyicu-build/releases/download/v2.16.2/pyicu-2.16.2-cp313-cp313-win_amd64.whl" },
@@ -2794,7 +2794,7 @@ wheels = [
 [[package]]
 name = "pygent"
 version = "0.1.0"
-source = { git = "https://github.com/p0x38/pygent.git?rev=79248dc372804c4e7342b89b7d0d9eab8862be49#79248dc372804c4e7342b89b7d0d9eab8862be49" }
+source = { git = "https://github.com/p0x38/pygent.git#e08fe94fbaaf52eadfbef2d0fb776b1ee7a703a5" }
 dependencies = [
     { name = "httpx" },
     { name = "pydantic" },
