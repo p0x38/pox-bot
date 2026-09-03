@@ -15,9 +15,12 @@ class WideCaseTransformer(BaseTextTransformer):
     """
 
     def _transform(
-        self, request: TransformerRequest, *, context: TransformerContext | None = None,
+        self,
+        request: TransformerRequest,
+        *,
+        context: TransformerContext | None = None,
     ) -> str:
-        """Filter whitespace, convert to uppercase, and separate characters by spaces."""
+        """Filter whitespace -> uppercase -> separate characters by spaces."""
         text = request.text
         if not text:
             return ''

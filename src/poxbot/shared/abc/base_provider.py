@@ -7,11 +7,11 @@ from ...features.ai.request_context import LLMRequestContext
 
 class BaseLLMProvider(ABC):
     """Abstract base class representing a unified AI/LLM Provider.
-    
+
     Every concrete provider strategy (e.g., OpenRouter, Gemini, OpenAI) must
     inherit from this class and implement the streaming response interface.
     """
-    
+
     @abstractmethod
     def stream_response(
         self,
@@ -32,4 +32,3 @@ class BaseLLMProvider(ABC):
             AsyncGenerator[str, None]: Text chunks streamed directly from the provider.
         """
         pass
-    

@@ -12,7 +12,8 @@ class UserProfile(Base):
     description: Mapped[str | None] = mapped_column(nullable=True)
     nickname: Mapped[str | None] = mapped_column(nullable=True)
     updated_at: Mapped[datetime] = mapped_column(
-        server_default=func.now(), onupdate=func.now(),
+        server_default=func.now(),
+        onupdate=func.now(),
     )
 
 
@@ -22,5 +23,6 @@ class UserActivity(Base):
     commands_run: Mapped[int] = mapped_column(BigInteger, default=0)
     messages_sent: Mapped[int] = mapped_column(BigInteger, default=0)
     last_active_at: Mapped[datetime] = mapped_column(
-        server_default=func.now(), onupdate=func.now(),
+        server_default=func.now(),
+        onupdate=func.now(),
     )

@@ -356,7 +356,7 @@ class ConversionCog(commands.Cog):
         self,
         interaction: Interaction,
         text: str,
-        mode: str = "words",
+        mode: str = 'words',
     ):
         await self._run_transform(
             interaction,
@@ -429,7 +429,7 @@ class ConversionCog(commands.Cog):
             text,
             decode=decode,
         )
-    
+
     @cached(60)
     @group.command(
         name='uwu',
@@ -451,25 +451,27 @@ class ConversionCog(commands.Cog):
         lowercase: bool = True,
     ):
         raw_options = {
-            "stutter": bool(stutters),
-            "faces": bool(faces),
-            "actions": bool(actions),
-            "lowercase": lowercase,
-            "stutter_chance": stutters,
-            "stutter_max": 3,
-            "face_chance": faces,
-            "action_chance": actions,
+            'stutter': bool(stutters),
+            'faces': bool(faces),
+            'actions': bool(actions),
+            'lowercase': lowercase,
+            'stutter_chance': stutters,
+            'stutter_max': 3,
+            'face_chance': faces,
+            'action_chance': actions,
         }
-        
-        parsed_opts = self.bot.text_converter.get_transformer("uwu").parse_options(**raw_options)
-        
+
+        parsed_opts = self.bot.text_converter.get_transformer('uwu').parse_options(
+            **raw_options
+        )
+
         await self._run_transform(
             interaction,
             'uwu',
             text,
             **parsed_opts,
         )
-    
+
     @cached(60)
     @group.command(
         name='base64',
@@ -491,43 +493,48 @@ class ConversionCog(commands.Cog):
             text,
             decode=decode,
         )
-    
+
     async def predicate_autocomplete(
         self,
         interaction: Interaction,
         current: str,
     ) -> list[app_commands.Choice[str]]:
         suggestions = [
-            "idx",
-            "index",
-            "char",
-            "is_vowel",
-            "is_alpha",
-            "is_digit",
-            "is_space",
-            "idx % 2 == 0",
+            'idx',
+            'index',
+            'char',
+            'is_vowel',
+            'is_alpha',
+            'is_digit',
+            'is_space',
+            'idx % 2 == 0',
             "char in 'aeiou'",
-            "idx < 5",
-            "not is_space",
+            'idx < 5',
+            'not is_space',
         ]
-        
+
         current_lower = current.lower()
-        
-        matched_choices = [
+
+        return [
             app_commands.Choice(name=opt, value=opt)
             for opt in suggestions
             if current_lower in opt.lower()
         ][:25]
-        
-        return matched_choices
-    
-    @group.command(name="predicate", description=app_commands.locale_str("command.conversion.predicate.description"))
+
+    @group.command(
+        name='predicate',
+        description=app_commands.locale_str('command.conversion.predicate.description'),
+    )
     @app_commands.describe(
         text=app_commands.locale_str('command.conversion.parameters.text'),
-        predicate=app_commands.locale_str('command.conversion.predicate.parameters.predicate'),
+        predicate=app_commands.locale_str(
+            'command.conversion.predicate.parameters.predicate'
+        ),
     )
     @app_commands.autocomplete(predicate=predicate_autocomplete)
-    async def _custom_predicate_transform(self, interaction: Interaction, text: str, predicate: str):
+    async def _custom_predicate_transform(
+        self, interaction: Interaction, text: str, predicate: str
+    ):
         await self._run_transform(
             interaction,
             'predicate',

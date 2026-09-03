@@ -14,14 +14,12 @@ if TYPE_CHECKING:
 
 
 class CounterManager:
-    def __init__(self, bot: 'PoxBot'):  # ruff: ignore[quoted-annotation]
+    def __init__(self, bot: 'PoxBot'):
         self.logger = get_logger(__name__, prefix='CounterManager')
         self.bot = bot
 
         self._counters: dict[str, int] = {}
         self._lock = asyncio.Lock()
-
-        self.db_sync_loop.start()
 
     def increment(self, name: str, amount: int = 1) -> None:
         if name not in self._counters:
@@ -97,14 +95,16 @@ class CounterManager:
                     if len(parts) >= 3:
                         target_id = parts[2]
                         await metrics_db.increment_interaction(
-                            target=target_id, amount=amount,
+                            target=target_id,
+                            amount=amount,
                         )
                 elif key.startswith('messages:'):
                     parts = key.split(':')
                     if len(parts) >= 2:
                         guild_id = parts[1]
                         await metrics_db.increment_message_by_id(
-                            guild_id=guild_id, amount=amount,
+                            guild_id=guild_id,
+                            amount=amount,
                         )
             except Exception:
                 self.logger.exception(
@@ -112,9 +112,11 @@ class CounterManager:
                 )
 
     async def load_async(self) -> None:
-        pass
+        if not self.db_sync_loop.is_running():
+            self.db_sync_loop.start()
 
     async def save_async(self) -> None:
-        self.db_sync_loop.cancel()
+        if self.db_sync_loop.is_running():
+            self.db_sync_loop.cancel()
 
         await self.sync_to_database()

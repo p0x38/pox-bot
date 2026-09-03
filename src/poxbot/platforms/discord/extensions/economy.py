@@ -565,7 +565,7 @@ class EconomyCog(commands.Cog):
 
             now = int(time.time())
             cooldown = 86400
-            
+
             last_daily = user.last_daily if user.last_daily is not None else 0
 
             if now - last_daily < cooldown:

@@ -14,13 +14,16 @@ class VideoCog(commands.Cog):
 
     @cached(60)
     async def generate_funny_fade_video(
-        self, interaction: Interaction, message: Message,
+        self,
+        interaction: Interaction,
+        message: Message,
     ):
         _start_time = datetime.now(UTC)
 
         if not message.attachments or len(message.attachments) != 1:
             return await interaction.response.send_message(
-                'This message has not exactly one attachment.', ephemeral=True,
+                'This message has not exactly one attachment.',
+                ephemeral=True,
             )
 
         attachment = message.attachments[0]

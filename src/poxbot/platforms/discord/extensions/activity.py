@@ -43,8 +43,6 @@ class ActivityCog(commands.Cog):
         self.status_check_loop.cancel()
 
     async def generate_status(self):
-        total_guilds = len(self.bot.guilds)
-
         if self.status_messages:
             chosen = self.rng.choice(self.status_messages)
         else:

@@ -30,8 +30,7 @@ async def _learn_markov_message_with_logging(
     tokens = self.markov_tokenizer.tokenize(message.content.strip())
 
     self.bot.logger.debug(
-        '[MARKOV] Learning message: scope=%s scope_id=%s user_id=%s '
-        'tokens=%d order=%d',
+        '[MARKOV] Learning message: scope=%s scope_id=%s user_id=%s tokens=%d order=%d',
         scope.value,
         message.guild.id if message.guild else None,
         message.author.id,
@@ -61,6 +60,6 @@ if ChatbotCog.learn_markov_message is _original_learn_markov_message:
     )
 
 
-async def setup(bot: PoxBot) -> None:
+async def setup(bot: PoxBot) -> None:  # ruff: ignore[unused-async]
     """Install Markov learning diagnostics on the chatbot cog."""
     del bot

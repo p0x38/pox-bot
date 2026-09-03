@@ -20,11 +20,11 @@ class EconomyDatabase(BaseDatabase):
     def __init__(self, bot: 'PoxBot', dsn: str):
         super().__init__(bot, dsn)
         self._cache = Cache(ttl=300)
-    
+
     async def on_load(self):
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
-        self.logger.debug("Initialized tables")
+        self.logger.debug('Initialized tables')
 
     async def get_user(self, user_id: int) -> EconomyUser:
         cached = self._cache.get(user_id)
@@ -48,7 +48,7 @@ class EconomyDatabase(BaseDatabase):
     async def get_shop_items(self) -> list[EconomyItem]:
         async with self.async_session() as session:
             result = await session.execute(
-                select(EconomyItem).where(EconomyItem.price != None),  # noqa: E711
+                select(EconomyItem).where(EconomyItem.price.is_not(None)),
             )
             return list(result.scalars().all())
 

@@ -4,6 +4,7 @@ The method must pull out status codes, Retry-After values, and JSON
 error bodies from the various exception shapes the SDK / HTTP stack
 may produce, so that logs give operators an actionable picture.
 """
+
 from __future__ import annotations
 
 import sys

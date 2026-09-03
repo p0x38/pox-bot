@@ -127,8 +127,7 @@ class MarkovifyBackend(CustomMarkovBackend):
 
         for state, transitions in self.model.transitions.items():
             markov_state = tuple(
-                self._BEGIN if token == self.model.START else token
-                for token in state
+                self._BEGIN if token == self.model.START else token for token in state
             )
             markov_transitions = {
                 self._END if token == self.model.END else token: count

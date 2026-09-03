@@ -14,11 +14,11 @@ if TYPE_CHECKING:
 class GiveawayDatabase(BaseDatabase):
     def __init__(self, bot: 'PoxBot', dsn: str):
         super().__init__(bot, dsn)
-    
+
     async def on_load(self):
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
-        self.logger.debug("Initialized tables")
+        self.logger.debug('Initialized tables')
 
     async def get_active_giveaways(self) -> list[Giveaway]:
         async with self.async_session() as session, session.begin():

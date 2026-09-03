@@ -10,7 +10,10 @@ class MorseCodeTransformer(BaseTextTransformer):
     """Encode or decode Morse code."""
 
     def _transform(
-        self, request: TransformerRequest, *, context: TransformerContext | None = None,
+        self,
+        request: TransformerRequest,
+        *,
+        context: TransformerContext | None = None,
     ) -> str:
         """Convert plaintext into slash-separated Morse code, or vice versa."""
         text = request.text

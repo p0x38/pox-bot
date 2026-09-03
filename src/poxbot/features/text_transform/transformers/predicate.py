@@ -15,7 +15,7 @@ class PredicateCaseTransformer(BaseTextTransformer):
     """
 
     _sig_cache: ClassVar[dict[Callable[..., object], int]] = {}
-    
+
     @staticmethod
     def _mirror_char(char: str) -> str:
         if not char.isalpha() or len(char) != 1:

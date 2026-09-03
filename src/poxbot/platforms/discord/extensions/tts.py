@@ -1,3 +1,4 @@
+import contextlib
 from datetime import timedelta
 from time import time
 from typing import Any
@@ -96,20 +97,13 @@ class TextToSpeechCog(commands.Cog):
             )
         return choices
 
-    async def _generate_tts(self, interaction: Interaction, request_data: dict[str, Any]):
-        loc = await self.bot.get_locale(interaction)
+    async def _generate_tts(
+        self, interaction: Interaction, request_data: dict[str, Any]
+    ):
         await interaction.response.defer(thinking=True)
-        
-        embed = Embed()
-        
-        def _assert_valid_result(res: Any) -> None:
-            if not res or not getattr(res, 'output', None):
-                raise EmptyInputError()
-        
-        try:
-            result = await self.tts_manager.generate_speech(request_data)
-        except Exception:
-            pass
+
+        with contextlib.suppress(Exception):
+            await self.tts_manager.generate_speech(request_data)
 
     async def generate_tts(
         self,

@@ -12,23 +12,23 @@ def approach_target(
     seed: int | None = None,
 ) -> list[float]:
     rng = np.random.default_rng(seed)
-    
+
     cmin, cmax = current_range
     current = target + rng.uniform(cmin, cmax)
-    
+
     history: list[float] = [current]
-    
+
     smin, smax = step_variance
-    
+
     for _ in range(max_iterations):
         diff = target - current
-        
-        if abs(diff) <= .25:
+
+        if abs(diff) <= 0.25:
             break
-        
+
         step = diff * rng.uniform(smin, smax) * x
         current += step
-        
+
         history.append(current)
     return history
 
@@ -40,7 +40,7 @@ def clamp[T: (int, float)](value: T, lo: T, hi: T) -> T:
 def get_next_power_of_two(n: int) -> int:
     if n <= 0:
         return 1
-    
+
     exponent = math.ceil(math.log2(n + 1))
-    
-    return 2 ** exponent
+
+    return 2**exponent

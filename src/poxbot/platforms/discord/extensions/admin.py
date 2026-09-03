@@ -38,11 +38,11 @@ class AdminOnlyCog(commands.Cog):
         return Embed(
             description=(
                 f'{title}\n\n'
-                f'`[{self.bar(data.current, data.total)}]` {percent:.1f}%\n'
+                f'``[{self.bar(data.current, data.total)}]` '
+                f'{percent:.1f}%\n'
                 f'Progress: {data.current}/{data.total}\n'
                 f'Loaded: {data.loaded} | Failed: {data.failed}'
-            )
-            or 'Processing...',
+            ),
             color=Color.yellow(),
         )
 

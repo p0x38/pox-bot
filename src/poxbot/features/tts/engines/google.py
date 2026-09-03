@@ -17,32 +17,34 @@ class GoogleTTSEngine(BaseTTSEngine):
         self.gtts_languages: dict[str, str] = {}
 
     async def initialize(self, manager: Any) -> None:
-        self.logger.info("Fetching gTTS languages...")
+        self.logger.info('Fetching gTTS languages...')
         try:
             self.gtts_languages = tts_langs()
         except Exception:
-            self.logger.exception("Failed to fetch gTTS languages during initialization")
+            self.logger.exception(
+                'Failed to fetch gTTS languages during initialization'
+            )
         else:
-            self.logger.info("Fetched gTTS languages!")
-    
+            self.logger.info('Fetched gTTS languages!')
+
     async def generate(self, request: TTSRequest, manager: Any) -> TTSResult:
         start_time = perf_counter()
         abuffer = BytesIO()
-        
+
         lang = request.voice or 'en'
-        
+
         try:
             tts = gTTS(text=request.text, lang=lang)
             tts.write_to_fp(abuffer)
             abuffer.seek(0)
         except gTTSError as e:
-            raise SpeechGenerationError(f"gTTS library error: {e}") from e
-        
+            raise SpeechGenerationError(f'gTTS library error: {e}') from e
+
         elapsed = perf_counter() - start_time
         metrics = TTSMetricsData(
             duration=timedelta(seconds=elapsed),
             char_count=len(request.text),
-            engine_name="GOOGLE_TTS",
+            engine_name='GOOGLE_TTS',
         )
-        
-        return TTSResult(output=abuffer, media_type="mp3", metrics=metrics)
+
+        return TTSResult(output=abuffer, media_type='mp3', metrics=metrics)

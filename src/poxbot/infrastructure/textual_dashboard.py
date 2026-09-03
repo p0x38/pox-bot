@@ -127,7 +127,8 @@ class TextualDashboard(App[None]):
             auto_scroll=True,
         )
         self.input_widget = CommandInput(
-            log_widget=self.log_widget, placeholder='Type a command…',
+            log_widget=self.log_widget,
+            placeholder='Type a command…',
         )
 
     def compose(self) -> ComposeResult:

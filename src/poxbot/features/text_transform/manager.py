@@ -80,7 +80,12 @@ class TextTransformManager:
                     self.register_transformer(m_name, attr(seed=self.seed))
 
     def create_request(
-        self, name: str, text: str, *, decode: bool = False, **options,
+        self,
+        name: str,
+        text: str,
+        *,
+        decode: bool = False,
+        **options,
     ) -> TransformerRequest:
         transformer = self.get_transformer(name)
 
@@ -117,7 +122,10 @@ class TextTransformManager:
                 span.set_attribute('text.chars_in', len(request.text))  # pyright: ignore[reportOptionalMemberAccess]
 
             request = self.create_request(
-                name, request.text, decode=request.decode, **request.options,
+                name,
+                request.text,
+                decode=request.decode,
+                **request.options,
             )
             result = self._transformers[name].transform(request, context=context)
 

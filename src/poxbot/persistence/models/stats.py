@@ -39,7 +39,10 @@ class LeaderboardData:
     def from_rows(cls, rows, sort_by: str):
         items = [
             LeaderboardItem(
-                user_id=row['user_id'], xp=row['xp'], level=row['level'], rank=i + 1,
+                user_id=row['user_id'],
+                xp=row['xp'],
+                level=row['level'],
+                rank=i + 1,
             )
             for i, row in enumerate(rows)
         ]

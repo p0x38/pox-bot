@@ -82,13 +82,15 @@ class WelcomeCog(commands.Cog):
             }
 
             if leaving:
-                rows_to_add.update({
-                    'user_join': member.joined_at.astimezone(UTC).strftime(
-                        '%Y-%m-%d %H:%M:%S',
-                    )
-                    if member.joined_at
-                    else 'Unknown',
-                })
+                rows_to_add.update(
+                    {
+                        'user_join': member.joined_at.astimezone(UTC).strftime(
+                            '%Y-%m-%d %H:%M:%S',
+                        )
+                        if member.joined_at
+                        else 'Unknown',
+                    }
+                )
 
             for name, value in rows_to_add.items():
                 embed.add_field(name=name, value=value, inline=False)
@@ -111,10 +113,12 @@ class WelcomeCog(commands.Cog):
         if not self.bot.database.guild:
             embed = Embed(
                 title=self.bot.internal_translator.T(
-                    'error.embeds.database_not_available.title', loc,
+                    'error.embeds.database_not_available.title',
+                    loc,
                 ),
                 description=self.bot.internal_translator.T(
-                    'error.embeds.database_not_available.description', loc,
+                    'error.embeds.database_not_available.description',
+                    loc,
                 ),
                 timestamp=datetime.now(UTC),
                 color=Color.red(),
@@ -125,10 +129,12 @@ class WelcomeCog(commands.Cog):
         if not interaction.guild:
             embed = Embed(
                 title=self.bot.internal_translator.T(
-                    'error.embeds.guild_only.title', loc,
+                    'error.embeds.guild_only.title',
+                    loc,
                 ),
                 description=self.bot.internal_translator.T(
-                    'error.embeds.guild_only.description', loc,
+                    'error.embeds.guild_only.description',
+                    loc,
                 ),
                 timestamp=datetime.now(UTC),
                 color=Color.red(),
@@ -153,19 +159,23 @@ class WelcomeCog(commands.Cog):
 
         if not interaction.guild:
             embed.title = self.bot.internal_translator.T(
-                'error.embeds.guild_only.title', loc,
+                'error.embeds.guild_only.title',
+                loc,
             )
             embed.description = self.bot.internal_translator.T(
-                'error.embeds.guild_only.description', loc,
+                'error.embeds.guild_only.description',
+                loc,
             )
             return await interaction.followup.send(embed=embed)
 
         if not self.bot.database.guild:
             embed.title = self.bot.internal_translator.T(
-                'error.embeds.database_not_available.title', loc,
+                'error.embeds.database_not_available.title',
+                loc,
             )
             embed.description = self.bot.internal_translator.T(
-                'error.embeds.database_not_available.description', loc,
+                'error.embeds.database_not_available.description',
+                loc,
             )
             return await interaction.followup.send(embed=embed)
 
@@ -184,7 +194,8 @@ class WelcomeCog(commands.Cog):
         await self.bot.database.guild.update_config(guild_id, guild_settings)
 
         embed.title = self.bot.internal_translator.T(
-            'command.welcome.toggle.embeds.default.title', loc,
+            'command.welcome.toggle.embeds.default.title',
+            loc,
         )
         embed.description = self.bot.internal_translator.T(
             'command.welcome.toggle.embeds.default.description',
@@ -211,19 +222,23 @@ class WelcomeCog(commands.Cog):
 
         if not interaction.guild:
             embed.title = self.bot.internal_translator.T(
-                'error.embeds.guild_only.title', loc,
+                'error.embeds.guild_only.title',
+                loc,
             )
             embed.description = self.bot.internal_translator.T(
-                'error.embeds.guild_only.description', loc,
+                'error.embeds.guild_only.description',
+                loc,
             )
             return await interaction.followup.send(embed=embed)
 
         if not self.bot.database.guild:
             embed.title = self.bot.internal_translator.T(
-                'error.embeds.database_not_available.title', loc,
+                'error.embeds.database_not_available.title',
+                loc,
             )
             embed.description = self.bot.internal_translator.T(
-                'error.embeds.database_not_available.description', loc,
+                'error.embeds.database_not_available.description',
+                loc,
             )
             return await interaction.followup.send(embed=embed)
 
@@ -244,7 +259,8 @@ class WelcomeCog(commands.Cog):
         await self.bot.database.guild.update_config(guild_id, guild_settings)
 
         embed.title = self.bot.internal_translator.T(
-            'command.welcome.joinchannel.embeds.default.title', loc,
+            'command.welcome.joinchannel.embeds.default.title',
+            loc,
         )
         embed.description = self.bot.internal_translator.T(
             'command.welcome.joinchannel.embeds.default.description',
@@ -271,19 +287,23 @@ class WelcomeCog(commands.Cog):
 
         if not interaction.guild:
             embed.title = self.bot.internal_translator.T(
-                'error.embeds.guild_only.title', loc,
+                'error.embeds.guild_only.title',
+                loc,
             )
             embed.description = self.bot.internal_translator.T(
-                'error.embeds.guild_only.description', loc,
+                'error.embeds.guild_only.description',
+                loc,
             )
             return await interaction.followup.send(embed=embed)
 
         if not self.bot.database.guild:
             embed.title = self.bot.internal_translator.T(
-                'error.embeds.database_not_available.title', loc,
+                'error.embeds.database_not_available.title',
+                loc,
             )
             embed.description = self.bot.internal_translator.T(
-                'error.embeds.database_not_available.description', loc,
+                'error.embeds.database_not_available.description',
+                loc,
             )
             return await interaction.followup.send(embed=embed)
 
@@ -304,7 +324,8 @@ class WelcomeCog(commands.Cog):
         await self.bot.database.guild.update_config(guild_id, guild_settings)
 
         embed.title = self.bot.internal_translator.T(
-            'command.welcome.leavechannel.embeds.default.title', loc,
+            'command.welcome.leavechannel.embeds.default.title',
+            loc,
         )
         embed.description = self.bot.internal_translator.T(
             'command.welcome.leavechannel.embeds.default.description',

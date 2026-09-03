@@ -1,4 +1,8 @@
+from math import isclose
 from types import SimpleNamespace
+from unittest.mock import MagicMock
+
+from discord import Message
 
 from poxbot.features.chatbot.trigger import SmartTriggerEvaluator, TriggerReason
 
@@ -10,18 +14,27 @@ def make_message(
     mention_everyone: bool = False,
     reply_author_id: int | None = None,
     author_bot: bool = False,
-) -> SimpleNamespace:
-    resolved = None
-    if reply_author_id is not None:
-        resolved = SimpleNamespace(author=SimpleNamespace(id=reply_author_id))
+) -> Message:
+    message = MagicMock(spec=Message)
 
-    return SimpleNamespace(
-        author=SimpleNamespace(bot=author_bot),
-        content=content,
-        mentions=list(mentions),
-        mention_everyone=mention_everyone,
-        reference=SimpleNamespace(resolved=resolved),
-    )
+    author = MagicMock()
+    author.bot = author_bot
+
+    message.author = author
+    message.content = content
+    message.mentions = list(mentions)
+    message.mention_everyone = mention_everyone
+
+    if reply_author_id is None:
+        message.reference = None
+    else:
+        reference = MagicMock()
+        resolved = MagicMock()
+        resolved.author.id = reply_author_id
+        reference.resolved = resolved
+        message.reference = reference
+
+    return message
 
 
 def test_mention_is_highest_priority() -> None:
@@ -37,7 +50,7 @@ def test_mention_is_highest_priority() -> None:
     decision = evaluator.evaluate(message)
 
     assert decision.reason is TriggerReason.MENTION
-    assert decision.score == 1.0
+    assert isclose(decision.score, 1.0, rel_tol=1e-9, abs_tol=1e-9)
 
 
 def test_reply_triggers_without_bot_name() -> None:

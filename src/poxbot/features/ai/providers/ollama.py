@@ -46,7 +46,7 @@ class OllamaStreamer(BaseLLMProvider):
         last_message = messages[-1]
         history = messages[:-1]
 
-        memory = ConversationMemory(conversation_id="pox-bot")
+        memory = ConversationMemory(conversation_id='pox-bot')
         if history:
             memory.seed(history)
 

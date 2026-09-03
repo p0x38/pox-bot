@@ -10,12 +10,15 @@ from src.translator import translator_instance as i18n
 
 
 class WelcomeCog(commands.Cog):
-    group = app_commands.Group(name="welcome", description=app_commands.locale_str("command.welcome.description"))
+    group = app_commands.Group(
+        name='welcome',
+        description=app_commands.locale_str('command.welcome.description'),
+    )
 
     def __init__(self, bot):
         self.bot: PoxBot = bot
         self.data = {}
-        self.file_path = os.path.join(self.bot.root_path, "data/welcome.json")
+        self.file_path = os.path.join(self.bot.root_path, 'data/welcome.json')
 
     async def save(self):
         data_to_save = {str(k): v for k, v in self.data.items()}
@@ -23,13 +26,13 @@ class WelcomeCog(commands.Cog):
         try:
             async with aiofiles.open(self.file_path, mode='w+', encoding='utf-8') as f:
                 await f.write(json.dumps(data_to_save, indent=4))
-            logger.info("welcome.json Saved")
+            logger.info('welcome.json Saved')
         except Exception as e:
-            logger.exception(f"Error saving welcome.json asynchronously: {e}")
+            logger.exception(f'Error saving welcome.json asynchronously: {e}')
 
     async def load(self):
         if not os.path.exists(self.file_path):
-            logger.warning("welcome.json not found. Starting with empty...")
+            logger.warning('welcome.json not found. Starting with empty...')
             return {}
 
         try:
@@ -38,18 +41,18 @@ class WelcomeCog(commands.Cog):
 
             raw_data = json.loads(content)
             self.data = {int(k): v for k, v in raw_data.items()}
-            logger.info("welcome.json loaded")
+            logger.info('welcome.json loaded')
         except json.JSONDecodeError:
-            logger.error("Error decoding JSON. Starting with empty data.")
+            logger.error('Error decoding JSON. Starting with empty data.')
             self.data = {}
 
     @commands.Cog.listener()
     async def on_ready(self):
-        logger.info("Loading database...")
+        logger.info('Loading database...')
         await self.load()
 
     async def cog_unload(self) -> None:
-        logger.info("Saving data")
+        logger.info('Saving data')
         await self.save()
 
     @commands.Cog.listener()
@@ -61,7 +64,7 @@ class WelcomeCog(commands.Cog):
             rule_channel_id = is_enabled2.get('rules', 0)
 
             if is_enabled != 0:
-                await self.send_message("join", is_enabled, member, rule_channel_id)
+                await self.send_message('join', is_enabled, member, rule_channel_id)
 
     @commands.Cog.listener()
     async def on_member_leave(self, member: Member):
@@ -71,12 +74,16 @@ class WelcomeCog(commands.Cog):
             is_enabled = is_enabled2.get('welcome', 0)
 
             if is_enabled != 0:
-                await self.send_message("left", is_enabled, member)
+                await self.send_message('left', is_enabled, member)
 
-    async def send_message(self, state: str, channel_id: int, member: Member, rules_id: int | None = None):
+    async def send_message(
+        self, state: str, channel_id: int, member: Member, rules_id: int | None = None
+    ):
         channel = self.bot.get_channel(channel_id)
-        if channel is None: return
-        if not isinstance(channel, TextChannel): return
+        if channel is None:
+            return
+        if not isinstance(channel, TextChannel):
+            return
 
         embed = Embed()
 
@@ -84,27 +91,47 @@ class WelcomeCog(commands.Cog):
         loc = i18n._normalize_locale(guild.preferred_locale)
 
         try:
-            if state == "join":
-                title = i18n.T("command.welcome.embeds.join.title", loc, {"guild": guild.name})
-                desc = i18n.T("command.welcome.embeds.join.description", loc, {
-                    "mention": member.mention,
-                    "rules_mention": f"<#{rules_id}" if rules_id != 0 else ""
-                })
+            if state == 'join':
+                title = i18n.T(
+                    'command.welcome.embeds.join.title', loc, {'guild': guild.name}
+                )
+                desc = i18n.T(
+                    'command.welcome.embeds.join.description',
+                    loc,
+                    {
+                        'mention': member.mention,
+                        'rules_mention': f'<#{rules_id}' if rules_id != 0 else '',
+                    },
+                )
 
                 if rules_id == 0:
-                    desc = i18n.T("command.welcome.embeds.join.description_no_rules", loc, {"mention": member.mention})
+                    desc = i18n.T(
+                        'command.welcome.embeds.join.description_no_rules',
+                        loc,
+                        {'mention': member.mention},
+                    )
 
                 embed.title = title
                 embed.description = desc
                 embed.color = Color.brand_green()
 
-                footer_text = i18n.T("command.welcome.embeds.join.footer", loc, {"count": guild.member_count})
+                footer_text = i18n.T(
+                    'command.welcome.embeds.join.footer',
+                    loc,
+                    {'count': guild.member_count},
+                )
                 embed.set_footer(text=footer_text)
-            elif state == "left":
-                title = i18n.T("command.welcome.embeds.left.title", loc, {"guild": guild.name, "display": member.display_name})
-                desc = i18n.T("command.welcome.embeds.left.description", loc, {
-                    "display": member.display_name
-                })
+            elif state == 'left':
+                title = i18n.T(
+                    'command.welcome.embeds.left.title',
+                    loc,
+                    {'guild': guild.name, 'display': member.display_name},
+                )
+                desc = i18n.T(
+                    'command.welcome.embeds.left.description',
+                    loc,
+                    {'display': member.display_name},
+                )
 
                 embed.title = title
                 embed.description = desc
@@ -112,17 +139,24 @@ class WelcomeCog(commands.Cog):
 
             await channel.send(content=member.mention, embed=embed)
         except Exception as e:
-            logger.exception(i18n.T("error.exceptions.Unknown", loc, {"e": e}))
+            logger.exception(i18n.T('error.exceptions.Unknown', loc, {'e': e}))
             return
 
-    @group.command(name="set_channel", description=app_commands.locale_str("command.welcome.set_channel.description"))
+    @group.command(
+        name='set_channel',
+        description=app_commands.locale_str('command.welcome.set_channel.description'),
+    )
     @app_commands.guild_only()
     async def set_channel(self, interaction: Interaction, channel: TextChannel | None):
-        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
+        loc = (
+            await self.bot.settings_db.get_locale(interaction)
+            if self.bot.settings_db
+            else interaction.locale
+        )
         embed = Embed(color=Color.blurple())
 
         if interaction.guild is None:
-            embed.description = i18n.T("error.custom.guild_only", loc)
+            embed.description = i18n.T('error.custom.guild_only', loc)
             embed.color = Color.red()
             return await interaction.response.send_message(embed=embed)
 
@@ -133,21 +167,34 @@ class WelcomeCog(commands.Cog):
         if channel is None:
             self.data[interaction.guild.id]['welcome'] = 0
             await self.save()
-            embed.description = i18n.T("command.welcome.set_channel.embeds.disabled.description", loc)
-            return await interaction.followup.send("Welcome channel has been disabled.")
+            embed.description = i18n.T(
+                'command.welcome.set_channel.embeds.disabled.description', loc
+            )
+            return await interaction.followup.send('Welcome channel has been disabled.')
         self.data[interaction.guild.id]['welcome'] = channel.id
         await self.save()
-        embed.description = i18n.T("command.welcome.set_channel.embeds.changed.description", loc, {"target_mention": channel.mention})
+        embed.description = i18n.T(
+            'command.welcome.set_channel.embeds.changed.description',
+            loc,
+            {'target_mention': channel.mention},
+        )
         return await interaction.followup.send(embed=embed)
 
-    @group.command(name="test", description=app_commands.locale_str("command.welcome.test.description"))
+    @group.command(
+        name='test',
+        description=app_commands.locale_str('command.welcome.test.description'),
+    )
     @app_commands.guild_only()
     async def test_channel(self, interaction: Interaction):
-        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
+        loc = (
+            await self.bot.settings_db.get_locale(interaction)
+            if self.bot.settings_db
+            else interaction.locale
+        )
         embed = Embed(color=Color.blurple())
 
         if interaction.guild is None:
-            embed.description = i18n.T("error.custom.guild_only", loc)
+            embed.description = i18n.T('error.custom.guild_only', loc)
             embed.color = Color.red()
             return await interaction.response.send_message(embed=embed)
 
@@ -156,8 +203,10 @@ class WelcomeCog(commands.Cog):
         is_enabled2 = self.data.get(interaction.guild.id)
 
         if not is_enabled2:
-            embed.description = i18n.T("error.embeds.welcome_channel_not_enabled.description", loc)
-            embed.title = i18n.T("error.embeds.welcome_channel_not_enabled.title", loc)
+            embed.description = i18n.T(
+                'error.embeds.welcome_channel_not_enabled.description', loc
+            )
+            embed.title = i18n.T('error.embeds.welcome_channel_not_enabled.title', loc)
             embed.color = Color.red()
             return await interaction.response.send_message(embed=embed)
 
@@ -165,20 +214,35 @@ class WelcomeCog(commands.Cog):
         rule_channel_id = is_enabled2.get('rules', 0)
 
         if is_enabled != 0:
-            await self.send_message("join", is_enabled, interaction.guild.me, rule_channel_id)
-            embed.description = i18n.T("command.welcome.test.embeds.sent.description", loc)
+            await self.send_message(
+                'join', is_enabled, interaction.guild.me, rule_channel_id
+            )
+            embed.description = i18n.T(
+                'command.welcome.test.embeds.sent.description', loc
+            )
             return await interaction.followup.send(embed=embed)
-        embed.description = i18n.T("command.welcome.test.embeds.unconfigured.description", loc)
+        embed.description = i18n.T(
+            'command.welcome.test.embeds.unconfigured.description', loc
+        )
         return await interaction.followup.send(embed=embed)
 
-    @group.command(name="set_rules_channel", description=app_commands.locale_str("command.welcome.set_rules_channel.description"))
+    @group.command(
+        name='set_rules_channel',
+        description=app_commands.locale_str(
+            'command.welcome.set_rules_channel.description'
+        ),
+    )
     @app_commands.guild_only()
     async def set_rule_channel(self, interaction: Interaction, channel: TextChannel):
-        loc = await self.bot.settings_db.get_locale(interaction) if self.bot.settings_db else interaction.locale
+        loc = (
+            await self.bot.settings_db.get_locale(interaction)
+            if self.bot.settings_db
+            else interaction.locale
+        )
         embed = Embed(color=Color.blurple())
 
         if interaction.guild is None:
-            embed.description = i18n.T("error.custom.guild_only", loc)
+            embed.description = i18n.T('error.custom.guild_only', loc)
             embed.color = Color.red()
             return await interaction.response.send_message(embed=embed)
 
@@ -189,12 +253,17 @@ class WelcomeCog(commands.Cog):
         if channel is None:
             self.data[interaction.guild.id]['rules'] = 0
             await self.save()
-            embed.description = i18n.T("command.welcome.set_rules_channel.embeds.disabled.description", loc)
+            embed.description = i18n.T(
+                'command.welcome.set_rules_channel.embeds.disabled.description', loc
+            )
             return await interaction.followup.send(embed=embed)
         self.data[interaction.guild.id]['rules'] = channel.id
         await self.save()
-        embed.description = i18n.T("command.welcome.set_rules_channel.embeds.success.description", loc)
+        embed.description = i18n.T(
+            'command.welcome.set_rules_channel.embeds.success.description', loc
+        )
         return await interaction.followup.send(embed=embed)
+
 
 async def setup(bot):
     await bot.add_cog(WelcomeCog(bot))

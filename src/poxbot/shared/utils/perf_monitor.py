@@ -35,10 +35,12 @@ class PerformanceMonitor:
             if len(traceback_str) > 80:
                 traceback_str = traceback_str[-80:]
 
-            leak_reports.append({
-                'size_diff_kb': stat.size_diff / 1024,
-                'traceback': traceback_str,
-            })
+            leak_reports.append(
+                {
+                    'size_diff_kb': stat.size_diff / 1024,
+                    'traceback': traceback_str,
+                }
+            )
 
         return {
             'latency_ms': latency,
@@ -51,13 +53,19 @@ class PerformanceMonitor:
         embed = Embed(title='Bot performance statistics', color=Color.blue())
 
         embed.add_field(
-            name='API Latency', value=f'`{stats["latency_ms"]} ms`', inline=True,
+            name='API Latency',
+            value=f'`{stats["latency_ms"]} ms`',
+            inline=True,
         )
         embed.add_field(
-            name='CPU Usage', value=f'`{stats["cpu_percent"]} %`', inline=True,
+            name='CPU Usage',
+            value=f'`{stats["cpu_percent"]} %`',
+            inline=True,
         )
         embed.add_field(
-            name='RAM Usage', value=f'`{stats["ram_usage_mb"]:.1f} MB`', inline=True,
+            name='RAM Usage',
+            value=f'`{stats["ram_usage_mb"]:.1f} MB`',
+            inline=True,
         )
 
         leak_msg = ''

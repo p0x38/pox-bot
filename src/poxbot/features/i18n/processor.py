@@ -11,7 +11,7 @@ from anyio import Path as AsyncPath
 
 from ...infrastructure.logger import get_logger
 
-logger = get_logger(__name__, prefix="I18n", extension="i18n")
+logger = get_logger(__name__, prefix='I18n', extension='i18n')
 
 
 def natural_key(s: str):
@@ -84,10 +84,10 @@ class I18nProcessor:
                 report.append(f"* Key: '{key}' in {', '.join(sorted(langs))}")
 
             logger.warning(
-                "\n".join(report),
+                '\n'.join(report),
                 extra={
-                    "missing_keys": list(self.missing_keys_buffer.keys()),
-                    "languages": {
+                    'missing_keys': list(self.missing_keys_buffer.keys()),
+                    'languages': {
                         k: list(v) for k, v in self.missing_keys_buffer.items()
                     },
                 },
@@ -198,10 +198,14 @@ class I18nProcessor:
 
         for idx, name in enumerate(arg_names):
             icu_pattern = re.sub(
-                rf'(?<=\{{){re.escape(name)}(?=\s*,)', str(idx), icu_pattern,
+                rf'(?<=\{{){re.escape(name)}(?=\s*,)',
+                str(idx),
+                icu_pattern,
             )
             icu_pattern = re.sub(
-                rf'(?<=\{{){re.escape(name)}(?=\}})', str(idx), icu_pattern,
+                rf'(?<=\{{){re.escape(name)}(?=\}})',
+                str(idx),
+                icu_pattern,
             )
 
         msg_format = icu.MessageFormat(icu_pattern, icu.Locale(lang.replace('-', '_')))
@@ -224,25 +228,25 @@ class I18nProcessor:
         **kwargs,
     ) -> str:
         """Translate a string key to a localized string with fallback support.
-        
+
         Args:
             key: Translation key as string or list of strings for fallback chain.
             locale_str: Locale string to translate to.
             **kwargs: Format arguments for ICU or string formatting.
-            
+
         Returns:
             Translated and formatted string.
         """
         lang = self._normalize_locale(locale_str)
-        target_tone = kwargs.get("tone") or self.options.fallback_tone
+        target_tone = kwargs.get('tone') or self.options.fallback_tone
 
         keys_to_try = key if isinstance(key, list) else [key]
         primary_key = keys_to_try[0]
-        
+
         translated = None
         namespace = 'main'
         key_path = ''
-        
+
         for current_key in keys_to_try:
             if '.' in current_key:
                 namespace, key_path = current_key.split('.', 1)
@@ -342,7 +346,9 @@ class I18nProcessor:
                 except Exception:
                     logger.exception(
                         "ICU format failed for '%s' (locale=%s, kwargs=%s)",
-                        primary_key, lang, kwargs,
+                        primary_key,
+                        lang,
+                        kwargs,
                     )
                     for k, v in kwargs.items():
                         translated = translated.replace(f'{{{k}}}', str(v))

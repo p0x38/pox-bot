@@ -1,4 +1,3 @@
-
 from discord import PublicUserFlags
 
 FLAG_LABELS = {
@@ -23,7 +22,8 @@ FLAG_LABELS = {
 
 
 def format_userflags(
-    user_flag: PublicUserFlags, use_translation_key: bool = True,
+    user_flag: PublicUserFlags,
+    use_translation_key: bool = True,
 ):
     return [
         f'text.user_flags.{flag.name}'

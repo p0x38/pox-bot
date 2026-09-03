@@ -35,9 +35,9 @@ class SmartTriggerEvaluator:
     """Evaluate Discord messages for direct and conversational bot triggers."""
 
     _QUESTION_PATTERN = re.compile(
-        r"(?:^|[\s,;:!?])"
-        r"(?:who|what|when|where|why|how|can|could|would|will|do|does|did|"
-        r"is|are|am|should|tell|explain)\b",
+        r'(?:^|[\s,;:!?])'
+        r'(?:who|what|when|where|why|how|can|could|would|will|do|does|did|'
+        r'is|are|am|should|tell|explain)\b',
         re.IGNORECASE,
     )
 
@@ -49,9 +49,7 @@ class SmartTriggerEvaluator:
         threshold: float = 0.75,
     ) -> None:
         self.bot_user_id = bot_user_id
-        self.bot_names = tuple(
-            name.casefold() for name in bot_names if name.strip()
-        )
+        self.bot_names = tuple(name.casefold() for name in bot_names if name.strip())
         self.threshold = max(0.0, min(1.0, threshold))
 
     def evaluate(
@@ -102,9 +100,8 @@ class SmartTriggerEvaluator:
         return decision
 
     def _is_direct_mention(self, message: Message) -> bool:
-        return (
-            not message.mention_everyone
-            and any(user.id == self.bot_user_id for user in message.mentions)
+        return not message.mention_everyone and any(
+            user.id == self.bot_user_id for user in message.mentions
         )
 
     def _is_reply_to_bot(self, message: Message) -> bool:
@@ -116,8 +113,7 @@ class SmartTriggerEvaluator:
     def _contains_bot_name(self, content: str) -> bool:
         normalized = content.casefold()
         return any(
-            re.search(rf"\b{re.escape(name)}\b", normalized)
-            for name in self.bot_names
+            re.search(rf'\b{re.escape(name)}\b', normalized) for name in self.bot_names
         )
 
     def _is_question(self, content: str) -> bool:

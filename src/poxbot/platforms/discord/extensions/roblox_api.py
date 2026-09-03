@@ -24,7 +24,9 @@ class RobloxAPICog(commands.Cog):
         name='roblox',
         description=app_commands.locale_str('command.roblox.description'),
         allowed_contexts=app_commands.AppCommandContext(
-            guild=True, dm_channel=True, private_channel=True,
+            guild=True,
+            dm_channel=True,
+            private_channel=True,
         ),
     )
 
@@ -36,9 +38,9 @@ class RobloxAPICog(commands.Cog):
     ) -> list[app_commands.Choice[str]]:
         if not current:
             return []
-        
+
         choices = []
-        
+
         async for user in self._client.user_search(current).items(25):
             choices.append(
                 app_commands.Choice(
@@ -46,10 +48,10 @@ class RobloxAPICog(commands.Cog):
                     value=user.name,
                 ),
             )
-            
+
             if len(choices) >= 25:
                 break
-        
+
         return choices
 
     @cached(300)

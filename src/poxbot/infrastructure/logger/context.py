@@ -1,8 +1,8 @@
 from contextvars import ContextVar
 from uuid import uuid4
 
-request_id_var: ContextVar[str | None] = ContextVar("request_id", default=None)
-extension_var: ContextVar[str | None] = ContextVar("extension", default=None)
+request_id_var: ContextVar[str | None] = ContextVar('request_id', default=None)
+extension_var: ContextVar[str | None] = ContextVar('extension', default=None)
 
 
 def get_request_id() -> str:

@@ -99,13 +99,13 @@ async def test_generate_markov_response_prefers_dialogue_memory(
 
     requested_keys: list[MarkovModelKey] = []
 
-    async def fake_get_dialogue(
+    async def fake_get_dialogue(  # ruff: ignore[unused-async]
         key: MarkovModelKey,
     ) -> MarkovDialogueMemory:
         requested_keys.append(key)
         return memory
 
-    async def fail_generate(*args: object, **kwargs: object) -> None:
+    async def fail_generate(*args: object, **kwargs: object) -> None:  # ruff: ignore[unused-async]
         pytest.fail('Markov generation should not run')
 
     monkeypatch.setattr(

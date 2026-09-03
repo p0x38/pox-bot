@@ -17,7 +17,8 @@ class RuntimeState:
                 os_rel = freedesktop_os_release()
                 if os_rel and os_rel.get('ID') == 'ubuntu':
                     platform_info = distro.name(pretty=True)
-            except Exception:
+            except Exception:  # ruff: ignore[try-except-pass]
+                # TODO: log exception incase
                 pass
         elif system_info == 'Windows':
             platform_info = 'Windows' + ' '.join(list(win32_ver()))

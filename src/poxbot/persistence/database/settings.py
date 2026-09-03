@@ -18,12 +18,11 @@ class SettingsDatabase(BaseDatabase):
         super().__init__(bot, dsn)
         self.settings_cache = Cache(ttl=600)
         self.manager = manager
-    
+
     async def on_load(self):
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
-        self.logger.debug("Initialized tables")
-    
+        self.logger.debug('Initialized tables')
 
     async def get_locale(self, interaction: Interaction) -> str:
         user_id = interaction.user.id

@@ -48,7 +48,6 @@ class MinecraftCog(commands.Cog):
         embed = Embed(title=f'Information for "{address}"')
 
         try:
-            row_to_add = {}
             server = await JavaServer.async_lookup(address)
 
             status = await server.async_status()
@@ -56,8 +55,10 @@ class MinecraftCog(commands.Cog):
             row_to_add = {
                 'minecraft_server_version': status.version.name,
                 'minecraft_server_protocol': status.version.protocol,
-                'minecraft_server_latency': f'{status.latency:2f} ms',
-                'minecraft_server_players': f'{status.players.online}/{status.players.max}',
+                'minecraft_server_latency': f'{status.latency:.2f} ms',
+                'minecraft_server_players': (
+                    f'{status.players.online}/{status.players.max}'
+                ),
             }
 
             try:

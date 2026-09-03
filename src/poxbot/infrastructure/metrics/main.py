@@ -4,10 +4,13 @@ from .provider import setup_otel
 
 metrics: Metrics | None = None
 
-def create_metrics(config: TraceConfig, service_name: str = "pox-discord-bot") -> Metrics:
-    global metrics  # noqa: PLW0602
+
+def create_metrics(
+    config: TraceConfig, service_name: str = 'pox-discord-bot'
+) -> Metrics:
+    global metrics  # ruff: ignore[global-variable-not-assigned]
     if metrics is not None:
         return metrics
-    
+
     tracer, meter = setup_otel(config, service_name)
     return Metrics(config=config, tracer=tracer, meter=meter)

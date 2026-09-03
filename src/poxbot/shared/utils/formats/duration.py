@@ -43,13 +43,13 @@ def format_duration(n: float) -> str:
 
 def parse_duration(text: str) -> timedelta:
     text = text.strip().lower()
-    
+
     if text.isdigit():
         return timedelta(seconds=int(text))
-    
+
     if ':' in text:
         parts = text.split(':')
-        
+
         if len(parts) == 2:
             m, s = parts
             return timedelta(minutes=int(m), seconds=int(s))
@@ -65,11 +65,10 @@ def parse_duration(text: str) -> timedelta:
                 seconds=int(s),
             )
         raise ValueError()
-    
+
     match = DURATION_REGEX.fullmatch(text)
     if match:
         parts = {k: int(v) if v else 0 for k, v in match.groupdict().items()}
         return timedelta(**parts)
-    
-    raise ValueError()
 
+    raise ValueError()
