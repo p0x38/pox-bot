@@ -199,7 +199,7 @@ async def test_rate_limit_exhausts_retries_and_raises():
     streamer.client.chat.send_async = AsyncMock(side_effect=rate_err)
 
     with patch(
-        'src.poxbot.features.ai.providers.openrouter.asyncio.sleep',
+        'poxbot.features.ai.providers.openrouter.asyncio.sleep',
         new=AsyncMock(),
     ), pytest.raises(RateLimitError):
         async for _ in streamer.stream_response(
@@ -227,7 +227,7 @@ async def test_non_rate_limit_error_does_not_retry():
     streamer.client.chat.send_async = AsyncMock(side_effect=boom)
 
     with patch(
-        'src.poxbot.features.ai.providers.openrouter.asyncio.sleep',
+        'poxbot.features.ai.providers.openrouter.asyncio.sleep',
         new=AsyncMock(),
     ) as sleep_mock, pytest.raises(ValueError):  # ruff: ignore[pytest-raises-too-broad]
         async for _ in streamer.stream_response(
@@ -257,7 +257,7 @@ async def test_exponential_backoff_when_no_retry_after_header():
 
     sleep_mock = AsyncMock()
     with patch(
-        'src.poxbot.features.ai.providers.openrouter.asyncio.sleep',
+        'poxbot.features.ai.providers.openrouter.asyncio.sleep',
         new=sleep_mock,
     ), pytest.raises(RateLimitError):
         async for _ in streamer.stream_response(
