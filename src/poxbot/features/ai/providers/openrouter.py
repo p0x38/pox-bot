@@ -26,7 +26,7 @@ class OpenRouterStreamer(BaseLLMProvider):
 
     def __init__(
         self,
-        manager: 'LLMManager',
+        manager: LLMManager,
         api_key: str | None,
     ) -> None:
         self.mgr = manager
@@ -80,11 +80,11 @@ class OpenRouterStreamer(BaseLLMProvider):
 
         if response.text:
             await self.mgr._record_metric(
-                name='bot_ai_ttft_seconds',
+                name='bot_llm_response_latency_seconds',
                 m_type='histogram',
                 value_or_amount=ctx.elapsed_seconds,
                 labels=base_labels,
-                description='Time to first token (TTFT) for LLM responses in seconds',
+                description='Total latency for LLM responses in seconds',
             )
             self.mgr.logger.info('LLM generated response through Pygent.')
             yield response.text

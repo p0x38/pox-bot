@@ -21,7 +21,7 @@ class OllamaStreamer(BaseLLMProvider):
 
     def __init__(
         self,
-        manager: 'LLMManager',
+        manager: LLMManager,
         host: str | None,
     ) -> None:
         self.mgr = manager
@@ -46,11 +46,14 @@ class OllamaStreamer(BaseLLMProvider):
         last_message = messages[-1]
         history = messages[:-1]
 
-        memory = ConversationMemory(conversation_id="pox-bot")
+        memory = ConversationMemory(conversation_id='pox-bot')
         if history:
             memory.seed(history)
 
-        provider = OllamaProvider(llm_model, host=self.host)
+        provider = OllamaProvider(
+            llm_model,
+            host=self.host,
+        )
         agent = Agent(
             provider,
             max_iterations=4,
@@ -59,10 +62,7 @@ class OllamaStreamer(BaseLLMProvider):
             memory=memory,
         )
 
-        try:
-            response = await agent.run(last_message)
-        finally:
-            await provider.aclose()
+        response = await agent.run(last_message)
 
         if response.text:
             await self.mgr._record_metric(
