@@ -132,9 +132,17 @@ class SmartChatbotTriggersCog(commands.Cog):
 
         match config.chatbot.type:
             case ChatbotMethodType.ai:
+                provider = self.bot.settings.llm_config.provider_type
+                if provider not in {item.value for item in LLMProviderType}:
+                    chatbot.bot.logger.error(
+                        'Unsupported LLM provider configured: %s',
+                        provider,
+                    )
+                    return
+
                 await chatbot.respond(
                     message=message,
-                    provider=LLMProviderType.OPEN_ROUTER.value,
+                    provider=provider,
                     model=self.bot.settings.llm_config.model_id,
                     include_history=permissions.read_message_history,
                 )
@@ -178,5 +186,4 @@ class SmartChatbotTriggersCog(commands.Cog):
 
 
 async def setup(bot: PoxBot) -> None:
-    """Register the smart chatbot trigger listener."""
     await bot.add_cog(SmartChatbotTriggersCog(bot))

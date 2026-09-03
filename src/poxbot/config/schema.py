@@ -69,9 +69,9 @@ class ConsoleLoggingConfig(BaseModel):
     """Define configuration metrics for terminal-based log presentation.
 
     Attributes:
-        enabled (bool): The toggle for visibility to show/hide logs in console.
+        enabled (bool): The toggle for visibility to show/hide logs.
         rich_tracebacks (bool): Toggle status to enable advanced terminal tracebacks.
-        level (str): The threshold logging level enforced for standard output.
+        level (str): The threshold logging level for standard output.
         markup (bool): Toggle status to support inline console formatting tags.
     """
 
@@ -86,7 +86,7 @@ class LoggerConfig(BaseModel):
 
     Attributes:
         enabled (bool): The toggle for visibility to enable logging.
-        level (str): The root logging severity threshold for the application.
+        level (str): The root logging severity for the application.
         file_logging (FileLoggingConfig): Dedicated settings for file log output.
         console_logging (ConsoleLoggingConfig): Dedicated settings for console log
             output.
@@ -122,8 +122,7 @@ class TraceConfig(BaseModel):
         opentelemetry_endpoint (str): Base destination URI for OTLP collectors.
         otlp_traces_endpoint (str | None): Explicit endpoint target for processing
             traces.
-        otlp_metrics_endpoint (str | None): Explicit endpoint target for collecting
-            metrics.
+        otlp_metrics_endpoint (str | None): Explicit endpoint for collecting metrics.
         loki_url (str): Target endpoint for dispatching collected logs to Grafana Loki.
         prometheus_host (str): The local network interface address for Prometheus
             metrics.
@@ -152,9 +151,11 @@ class LLMConfig(BaseModel):
     """Represent setting parameters allocated for language model behaviors.
 
     Attributes:
+        provider_type (str): The configured LLM provider identifier.
         model_id (str): The identifier tag of the targeted model variant.
     """
 
+    provider_type: Literal['openrouter', 'ollama', 'gemini', 'openai'] = 'openrouter'
     model_id: str = ''
 
 
@@ -174,8 +175,7 @@ class BotSettings(BaseSettings):
         llm_config (LLMConfig): Properties dictating current active model variants.
         bot_name (str): The displayed identifier name of the system bot client.
         default_language (str): The fallback localization language code.
-        bot_prefix (str): The designated text trigger pattern for executing bot
-            commands.
+        bot_prefix (str): The designated text trigger pattern for executing the bot.
         environment (str): The current deployment context stage name.
     """
 
