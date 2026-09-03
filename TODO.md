@@ -17,6 +17,7 @@
   - [ ] Regenerate `uv.lock` with the Pygent dependency
   - [ ] Add integration tests
   - [ ] Replace the legacy AI provider dependencies
+  - [x] Use `LLM_CONFIG__PROVIDER_TYPE` for provider selection
 
 ## Planned
 
