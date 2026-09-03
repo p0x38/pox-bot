@@ -38,7 +38,7 @@ jobs:
         run: uv lock --check
 
       - name: Install dependencies
-        run: uv sync --locked
+        run: uv sync --locked --extra ai --extra cpu --extra piper --extra minecraft --extra audio
 
       - name: Run Ruff
         run: uv run ruff check .
@@ -65,7 +65,7 @@ jobs:
         run: uv lock --check
 
       - name: Install dependencies
-        run: uv sync --locked
+        run: uv sync --locked --extra ai --extra cpu --extra piper --extra minecraft --extra audio
 
       - name: Run Pyright
         run: uv run pyright
@@ -92,7 +92,7 @@ jobs:
         run: uv lock --check
 
       - name: Install dependencies
-        run: uv sync --locked
+        run: uv sync --locked --extra ai --extra cpu --extra piper --extra minecraft --extra audio
 
       - name: Run tests
         run: uv run pytest
