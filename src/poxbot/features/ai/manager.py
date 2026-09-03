@@ -16,6 +16,7 @@ from ...shared.exceptions.ai_error import (
     UnknownProvider,
 )
 from ...shared.utils.metrics import Metrics
+from .providers.ollama import OllamaStreamer
 from .providers.openrouter import OpenRouterStreamer
 from .request_context import LLMRequestContext
 
@@ -117,6 +118,15 @@ class LLMManager:
                 strategy = OpenRouterStreamer(
                     self,
                     current_api_key,
+                )
+
+                self._strategy_cache[provider_type] = strategy
+                return strategy
+
+            case LLMProviderType.OLLAMA.value:
+                strategy = OllamaStreamer(
+                    self,
+                    getattr(self.config, 'ollama_host', None),
                 )
 
                 self._strategy_cache[provider_type] = strategy
