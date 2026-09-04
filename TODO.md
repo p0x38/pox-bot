@@ -34,3 +34,4 @@
   - [ ] Improve bot mention stripping
   - [ ] Track response usage/frequency
   - [ ] Add dialogue statistics to `/chatbot status`
+- [ ] Add support for Matrix protocol
