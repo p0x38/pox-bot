@@ -12,6 +12,12 @@
     },
     "admin": {
         "description": "ボットにあれこれ指示しちゃおう！ >:D",
+        "list_guilds": {
+            "description": "クエリに合うギルドをぴょこっと一覧で見せるよ！ :3"
+        },
+        "leave_guild": {
+            "description": "そのギルドから、わたしがささっと抜けちゃうよ！ :3"
+        },
         "reboot": {
             "description": "キャッシュをお掃除するために、ボットを再起動するよ！ :3"
         },

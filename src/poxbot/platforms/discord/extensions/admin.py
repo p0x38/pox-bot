@@ -2,8 +2,17 @@ import asyncio
 import contextlib
 from time import monotonic, perf_counter
 
-from discord import Color, Embed, HTTPException, Interaction, RateLimited, app_commands
+from discord import (
+    Color,
+    Embed,
+    Guild,
+    HTTPException,
+    Interaction,
+    RateLimited,
+    app_commands,
+)
 from discord.ext import commands
+from rapidfuzz import fuzz, process
 
 from ....application import PoxBot
 from ....services.extension import ExtensionOperation, ExtensionProgress
@@ -160,6 +169,87 @@ class AdminOnlyCog(commands.Cog):
         self.bot.should_restart = True
 
         await self.bot.close()
+
+    def find_guild_by_fuzzy(
+        self, search_query: str, *, extract_limit: int = 8
+    ) -> list[Guild]:
+        query = search_query.strip()
+        if not query or not self.bot.guilds:
+            return []
+
+        if query.isdigit():
+            guild_id = int(query)
+            guild = self.bot.get_guild(guild_id)
+            if guild:
+                return [guild]
+
+        guild_map = {guild.name: guild for guild in self.bot.guilds}
+
+        results = process.extract(
+            query,
+            guild_map.keys(),
+            scorer=fuzz.WRatio,
+            limit=extract_limit,
+        )
+
+        matched_guilds = []
+
+        for res in results:
+            match res:
+                case (str(matched_name), float(score), _) if score >= 50:
+                    guild_obj = guild_map[matched_name]
+                    if guild_obj not in matched_guilds:
+                        matched_guilds.append(guild_obj)
+                case _:
+                    continue
+
+        return matched_guilds
+
+    @group.command(
+        name='list_guilds',
+        description=app_commands.locale_str('command.admin.list_guilds.description'),
+    )
+    async def list_guilds_info(self, interaction: Interaction, query: str):
+        await interaction.response.defer(ephemeral=True, thinking=True)
+
+        matched_guilds = self.find_guild_by_fuzzy(query)
+
+        if matched_guilds:
+            lines = f"Matched guilds ({len(matched_guilds)}): \n"
+
+            for guild in matched_guilds:
+                lines += f"- {guild.name} ({guild.id})\n"
+
+            await interaction.followup.send(
+                lines,
+                ephemeral=True,
+            )
+        else:
+            await interaction.followup.send(
+                "No matching guilds are found.",
+                ephemeral=True,
+            )
+
+    @group.command(
+        name='leave_guild',
+        description=app_commands.locale_str('command.admin.leave_guild.description'),
+    )
+    async def leave_guild(self, interaction: Interaction, guild_id: int):
+        await interaction.response.defer(ephemeral=True, thinking=True)
+
+        guild_obj = self.bot.get_guild(guild_id)
+        
+        if guild_obj:
+            await guild_obj.leave()
+            await interaction.followup.send(
+                "Successfully left the guild!",
+                ephemeral=True,
+            )
+        else:
+            await interaction.followup.send(
+                "The guild wasn't even exist from my brain!",
+                ephemeral=True,
+            )
 
 
 async def setup(bot):

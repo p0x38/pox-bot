@@ -12,6 +12,12 @@
     },
     "admin": {
         "description": "Commands for bossing me around! >:D",
+        "list_guilds": {
+            "description": "Lists the matching guilds by the query. :3"
+        },
+        "leave_guild": {
+            "description": "Tries to leave the target guild. :3"
+        },
         "reboot": {
             "description": "Reboot the bot to enforce cache clean."
         },
