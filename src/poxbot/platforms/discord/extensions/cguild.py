@@ -10,7 +10,7 @@ from discord import (
     app_commands,
     ui,
 )
-from discord.app_commands import Choice, locale_str
+from discord.app_commands import Choice
 from discord.ext import commands
 
 from ....application import PoxBot
@@ -329,13 +329,17 @@ class GuildCog(commands.Cog):
     @app_commands.guild_only()
     @app_commands.checks.has_permissions(moderate_members=True)
     async def get_member(self, interaction: Interaction):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer()
 
         if not interaction.guild:
             return await interaction.followup.send(
                 embed=Embed(
                     title='Error',
-                    description=locale_str('error.GuildOnly'),
+                    description=self.bot.internal_translator.T(
+                        'error.custom.guild_only',
+                        loc,
+                    ),
                     color=Color.red(),
                 ),
             )
@@ -380,13 +384,17 @@ class GuildCog(commands.Cog):
         include_bot: bool = False,
         include_member: bool = True,
     ):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer()
 
         if not interaction.guild:
             return await interaction.followup.send(
                 embed=Embed(
                     title='Error',
-                    description=locale_str('error.GuildOnly'),
+                    description=self.bot.internal_translator.T(
+                        'error.custom.guild_only',
+                        loc,
+                    ),
                     color=Color.red(),
                 ),
             )
@@ -429,13 +437,17 @@ class GuildCog(commands.Cog):
     )
     @app_commands.guild_install()
     async def search_members(self, interaction: Interaction, keyword: str):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer()
 
         if not interaction.guild:
             return await interaction.followup.send(
                 embed=Embed(
                     title='Error',
-                    description=locale_str('error.GuildOnly'),
+                    description=self.bot.internal_translator.T(
+                        'error.custom.guild_only',
+                        loc,
+                    ),
                     color=Color.red(),
                 ),
             )
@@ -465,17 +477,21 @@ class GuildCog(commands.Cog):
     @cached(60)
     @checker_group.command(
         name='role_list',
-        description=app_commands.locale_str('command.guild.roles_list.description'),
+        description=app_commands.locale_str('command.guild.role_list.description'),
     )
     @app_commands.guild_install()
     async def get_roles(self, interaction: Interaction):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer()
 
         if not interaction.guild:
             return await interaction.followup.send(
                 embed=Embed(
                     title='Error',
-                    description=locale_str('error.GuildOnly'),
+                    description=self.bot.internal_translator.T(
+                        'error.custom.guild_only',
+                        loc,
+                    ),
                     color=Color.red(),
                 ),
             )

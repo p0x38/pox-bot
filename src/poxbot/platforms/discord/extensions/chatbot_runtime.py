@@ -1,6 +1,6 @@
 from typing import cast
 
-from discord import Interaction
+from discord import Interaction, app_commands
 from discord.ext import commands
 
 from ....application import PoxBot
@@ -25,7 +25,7 @@ if ChatbotCog.chatbot_group.get_command('reload') is None:
 
     @ChatbotCog.chatbot_group.command(
         name='reload',
-        description='Reload the chatbot and Markov runtime state',
+        description=app_commands.locale_str('command.chatbot.reload.description'),
     )
     async def chatbot_reload(interaction: Interaction) -> None:
         bot = cast(commands.Bot, interaction.client)

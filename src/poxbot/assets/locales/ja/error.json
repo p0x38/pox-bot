@@ -107,6 +107,42 @@
             "description": "サーバーはすでに通話中です。",
             "title": "すでに電話中です！ \n:3"
         },
+        "no_members": {
+            "description": "メンバーが見つかりませんでした。",
+            "title": "メンバーが見つかりません。"
+        },
+        "no_transactions": {
+            "description": "取引が見つかりませんでした。",
+            "title": "取引が見つかりません。"
+        },
+        "invalid_bytebeat_formula": {
+            "description": "Bytebeat の数式が無効です。"
+        },
+        "server_feature_not_found": {
+            "description": "サーバー機能が見つかりませんでした。",
+            "title": "機能が見つかりません。"
+        },
+        "confliction": {
+            "description": "この操作は別の設定と競合しています。",
+            "title": "設定が競合しています。"
+        },
+        "no_connection": {
+            "description": "データベースに接続できません。"
+        },
+        "data_not_found": {
+            "description": "要求されたデータが見つかりませんでした。",
+            "title": "データが見つかりません。"
+        },
+        "tts_no_model": {
+            "description": "テキスト読み上げモデルが設定されていません。",
+            "title": "TTSモデルがありません。"
+        },
+        "tts_not_installed": {
+            "description": "テキスト読み上げ機能がインストールされていません。"
+        },
+        "no_reloadable_extensions": {
+            "description": "再読み込みできる拡張機能がありません。"
+        },
         "send_error": {
             "description": "送信しようとしてエラーが発生しました: {e}",
             "title": "おっと、送信エラーです。 \n3:"

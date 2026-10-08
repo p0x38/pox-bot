@@ -405,8 +405,8 @@ class InfoCog(commands.Cog):
         return f'[`{bar}`] {round(percent, 2)}%'
 
     @group.command(
-        name='retrieve',
-        description=app_commands.locale_str('command.info.retrieve.description'),
+        name='bot',
+        description=app_commands.locale_str('command.info.bot.description'),
     )
     async def retrieve_bot_information(self, interaction: Interaction):
         await interaction.response.defer(thinking=True)
@@ -423,17 +423,17 @@ class InfoCog(commands.Cog):
         view = DynamicInfoView(self, self.bot, loc)
         e = Embed(
             title=self.bot.internal_translator.T(
-                'command.info.retrieve.embeds.default.title',
+                'command.info.bot.embeds.default.title',
                 loc,
             ),
             description=self.bot.internal_translator.T(
-                'command.info.retrieve.embeds.default.description',
+                'command.info.bot.embeds.default.description',
                 loc,
             ),
         )
         e.set_footer(
             text=self.bot.internal_translator.T(
-                'command.info.retrieve.embeds.default.footer',
+                'command.info.bot.embeds.default.footer',
                 loc,
                 {'platform': platform.system()},
             ),

@@ -43,7 +43,6 @@ class ImageCog(Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
         self.base_virtual_filename_prefix = 'tonguebot_'
-        self.label = 'Generated with TongueBot'
 
     def generate_random_string(self, length: int | None = 8):
         if not length:
@@ -124,14 +123,27 @@ class ImageCog(Cog):
         _interaction: Interaction,
         current: str,
     ) -> list[app_commands.Choice[str]]:
-        choices = ['light', 'dark']
+        choices = [
+            ('light', 'command.image.qrcode.choices.light'),
+            ('dark', 'command.image.qrcode.choices.dark'),
+        ]
         return [
-            app_commands.Choice(name=choice, value=choice)
-            for choice in choices
-            if current.lower() in choice.lower()
+            app_commands.Choice(
+                name=app_commands.locale_str(key),
+                value=value,
+            )
+            for value, key in choices
+            if current.lower() in value.lower()
         ]
 
-    @group.command(name='qrcode', description='Generate QR Code')
+    @group.command(
+        name='qrcode',
+        description=app_commands.locale_str('command.image.qrcode.description'),
+    )
+    @app_commands.describe(
+        text=app_commands.locale_str('command.image.qrcode.parameters.text'),
+        theme=app_commands.locale_str('command.image.qrcode.parameters.theme'),
+    )
     @app_commands.autocomplete(theme=theme_autocomplete)
     async def generate_qrcode(
         self,
@@ -140,8 +152,12 @@ class ImageCog(Cog):
         theme: str | None = 'dark',
     ):
         embed = Embed(color=Color.green())
+        loc = str(interaction.locale)
         if not text.strip():
-            embed.description = 'The input cannot be empty!'
+            embed.description = self.bot.internal_translator.T(
+                'messages.qrcode.empty_input',
+                loc,
+            )
             embed.color = Color.red()
             return await interaction.response.send_message(embed=embed)
 
@@ -184,7 +200,10 @@ class ImageCog(Cog):
             except Exception:
                 font = ImageFont.load_default(font_size)
 
-            label_text = self.label
+            label_text = self.bot.internal_translator.T(
+                'messages.qrcode.generated_label',
+                loc,
+            )
             padding = 20
             extra_height = font_size + padding * 3
 
@@ -208,11 +227,17 @@ class ImageCog(Cog):
 
             file = File(fp=buffer, filename=filename)
             embed.set_image(url=f'attachment://{filename}')
-            embed.description = 'Generated! >:D'
+            embed.description = self.bot.internal_translator.T(
+                'messages.qrcode.generated',
+                loc,
+            )
 
             await interaction.followup.send(embed=embed, file=file)
         else:
-            embed.description = "Couldn't generate image! D:"
+            embed.description = self.bot.internal_translator.T(
+                'messages.qrcode.failed',
+                loc,
+            )
             await interaction.followup.send(embed=embed)
 
     @group.command(
@@ -296,7 +321,12 @@ class ImageCog(Cog):
 
             return await interaction.followup.send(file=pic)
 
-        await interaction.followup.send('Could not find the image with that')
+        await interaction.followup.send(
+            self.bot.internal_translator.T(
+                'messages.image_asset_not_found',
+                str(interaction.locale),
+            ),
+        )
 
 
 async def setup(bot):

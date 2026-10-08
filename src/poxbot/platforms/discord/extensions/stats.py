@@ -320,10 +320,14 @@ class StatsCog(commands.Cog):
 
     @group.command(
         name='active_pattern',
-        description='Generates a graph of messages per hour',
+        description=app_commands.locale_str(
+            'command.stats.active_pattern.description',
+        ),
     )
     @app_commands.describe(
-        target='Specify if you want to specify member (Use empty for whole channel)',
+        target=app_commands.locale_str(
+            'command.stats.active_pattern.parameters.target',
+        ),
     )
     async def active_pattern_command(
         self,

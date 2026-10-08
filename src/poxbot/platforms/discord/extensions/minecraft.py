@@ -27,7 +27,7 @@ class MinecraftCog(commands.Cog):
 
     minecraft_group = app_commands.Group(
         name='minecraft',
-        description='Sub-group',
+        description=app_commands.locale_str('command.minecraft.description'),
         allowed_contexts=app_commands.AppCommandContext(
             guild=True,
             dm_channel=True,

@@ -54,5 +54,8 @@
     "user_roles": "役割",
     "user_stats": "ユーザー統計",
     "user_status": "状態",
-    "user_wallet": "財布"
+    "user_wallet": "財布",
+    "global_chat_status": "グローバルチャットの状態",
+    "global_chat_channel": "グローバルチャットチャンネル",
+    "global_chat_antispam": "スパム対策"
 }

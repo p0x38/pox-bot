@@ -77,17 +77,23 @@ class MessageCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
 
-    group = app_commands.Group(name='message', description='An group for messages.')
+    group = app_commands.Group(
+        name='message',
+        description=app_commands.locale_str('command.message.description'),
+    )
 
     @group.command(
         name='say',
-        description='Makes the bot say something in current channel.',
+        description=app_commands.locale_str('command.message.say.description'),
     )
     @app_commands.guild_only()
     async def say_something(self, ctx: Interaction, *, msg: str):
         await ctx.response.send_message(f'{msg}')
 
-    @group.command(name='send', description='Sends a message.')
+    @group.command(
+        name='send',
+        description=app_commands.locale_str('command.message.send.description'),
+    )
     @app_commands.checks.cooldown(1, 3.0, key=lambda i: i.user.id)
     @app_commands.guild_only()
     async def send_message(
@@ -107,9 +113,11 @@ class MessageCog(commands.Cog):
 
     @group.command(
         name='mass_delete',
-        description='Deletes messages before specified messages.',
+        description=app_commands.locale_str('command.message.mass_delete.description'),
     )
-    @app_commands.describe(limit='How much range bot will delete.')
+    @app_commands.describe(
+        limit=app_commands.locale_str('command.message.mass_delete.parameters.limit'),
+    )
     @app_commands.checks.has_permissions(manage_channels=True, manage_messages=True)
     @app_commands.guild_only()
     async def mass_delete_messages(
@@ -138,7 +146,7 @@ class MessageCog(commands.Cog):
 
     @group.command(
         name='purge',
-        description='Purges a specific amount of messages sent earlier.',
+        description=app_commands.locale_str('command.message.purge.description'),
     )
     @app_commands.checks.has_permissions(manage_messages=True)
     @app_commands.guild_only()
@@ -155,7 +163,10 @@ class MessageCog(commands.Cog):
             )
             await interaction.followup.send(f'Purged {len(deleted)} messages.')
 
-    @group.command(name='direct_message', description='DMs to a member')
+    @group.command(
+        name='direct_message',
+        description=app_commands.locale_str('command.message.direct_message.description'),
+    )
     @app_commands.checks.has_permissions(send_messages=True)
     @app_commands.guild_only()
     async def send_dm_to_member(
@@ -169,7 +180,7 @@ class MessageCog(commands.Cog):
     @cached(60)
     @group.command(
         name='search_for',
-        description='Searches messages in current channel.',
+        description=app_commands.locale_str('command.message.search_for.description'),
     )
     @app_commands.guild_only()
     async def search_messages_in_channel(
@@ -211,7 +222,7 @@ class MessageCog(commands.Cog):
     @cached(120)
     @group.command(
         name='last_sent',
-        description='Fetches the last message from the current channel.',
+        description=app_commands.locale_str('command.message.last_sent.description'),
     )
     @app_commands.guild_only()
     async def fetch_last_message(self, interaction: Interaction):
@@ -244,7 +255,7 @@ class MessageCog(commands.Cog):
     @cached(240)
     @group.command(
         name='first_sent',
-        description='Fetches the first message from the current channel.',
+        description=app_commands.locale_str('command.message.first_sent.description'),
     )
     @app_commands.guild_only()
     async def fetch_first_message(self, interaction: Interaction):
@@ -278,7 +289,7 @@ class MessageCog(commands.Cog):
     @cached(60)
     @group.command(
         name='message_count',
-        description='Counts messages in the current channel.',
+        description=app_commands.locale_str('command.message.message_count.description'),
     )
     @app_commands.guild_only()
     async def count_messages_in_channel(self, interaction: Interaction):
@@ -297,7 +308,9 @@ class MessageCog(commands.Cog):
     @cached(60)
     @group.command(
         name='get_random_message',
-        description='Fetches a random message from the current channel.',
+        description=app_commands.locale_str(
+            'command.message.get_random_message.description',
+        ),
     )
     @app_commands.guild_only()
     async def fetch_random_message(self, interaction: Interaction):

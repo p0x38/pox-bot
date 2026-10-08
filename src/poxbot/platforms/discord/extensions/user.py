@@ -375,7 +375,9 @@ class UserCog(commands.Cog):
 
     @group.command(
         name='guild_duration',
-        description='Checks how long user has been in the server.',
+        description=app_commands.locale_str(
+            'command.user.guild_duration.description',
+        ),
     )
     @app_commands.guild_only()
     async def check_how_long_user_has_been(
@@ -700,10 +702,15 @@ class UserCog(commands.Cog):
 
         return await interaction.followup.send(embed=embed)
 
-    @group.command(name='kick', description='Kick a member.')
+    @group.command(
+        name='kick',
+        description=app_commands.locale_str('command.user.kick.description'),
+    )
     @app_commands.checks.has_permissions(kick_members=True)
-    @app_commands.describe(member='Member to kick.')
-    @app_commands.describe(reason='Reason for member to give in DM.')
+    @app_commands.describe(
+        member=app_commands.locale_str('command.user.kick.parameters.member'),
+        reason=app_commands.locale_str('command.user.kick.parameters.reason'),
+    )
     @app_commands.guild_only()
     async def kick(
         self,
@@ -749,10 +756,15 @@ class UserCog(commands.Cog):
         finally:
             await interaction.followup.send(embed=embed)
 
-    @group.command(name='ban', description='Bans member from the server')
+    @group.command(
+        name='ban',
+        description=app_commands.locale_str('command.user.ban.description'),
+    )
     @app_commands.checks.has_permissions(ban_members=True)
-    @app_commands.describe(member='Member to ban')
-    @app_commands.describe(reason='Reason to ban')
+    @app_commands.describe(
+        member=app_commands.locale_str('command.user.ban.parameters.member'),
+        reason=app_commands.locale_str('command.user.ban.parameters.reason'),
+    )
     @app_commands.guild_only()
     async def ban_member(self, ctx: Interaction, member: Member, *, reason: str = ''):
         try:
@@ -771,9 +783,14 @@ class UserCog(commands.Cog):
                 ephemeral=True,
             )
 
-    @group.command(name='unban', description='Unbans member')
+    @group.command(
+        name='unban',
+        description=app_commands.locale_str('command.user.unban.description'),
+    )
     @app_commands.checks.has_permissions(ban_members=True)
-    @app_commands.describe(member='Member to unban')
+    @app_commands.describe(
+        member=app_commands.locale_str('command.user.unban.parameters.member'),
+    )
     @app_commands.guild_only()
     async def unban_member(self, ctx: Interaction, member: Member):
         try:
@@ -788,10 +805,15 @@ class UserCog(commands.Cog):
                 ephemeral=True,
             )
 
-    @group.command(name='warn', description='Warns member')
+    @group.command(
+        name='warn',
+        description=app_commands.locale_str('command.user.warn.description'),
+    )
     @app_commands.checks.has_permissions(moderate_members=True)
-    @app_commands.describe(member='Member to warn')
-    @app_commands.describe(reason='Reason to warn')
+    @app_commands.describe(
+        member=app_commands.locale_str('command.user.warn.parameters.member'),
+        reason=app_commands.locale_str('command.user.warn.parameters.reason'),
+    )
     @app_commands.guild_only()
     async def warn_member(self, ctx: Interaction, member: Member, *, reason: str = ''):
         try:
@@ -806,11 +828,16 @@ class UserCog(commands.Cog):
             self.bot.logger.exception('Failed to warn user')
             return await ctx.response.send_message(f'Failed to warn. {e}')
 
-    @group.command(name='timeout', description='Warns member')
+    @group.command(
+        name='timeout',
+        description=app_commands.locale_str('command.user.timeout.description'),
+    )
     @app_commands.checks.has_permissions(moderate_members=True)
-    @app_commands.describe(member='Member to time-out')
-    @app_commands.describe(reason='Reason to time-out')
-    @app_commands.describe(length='Length of time-out (minutes)')
+    @app_commands.describe(
+        member=app_commands.locale_str('command.user.timeout.parameters.member'),
+        reason=app_commands.locale_str('command.user.timeout.parameters.reason'),
+        length=app_commands.locale_str('command.user.timeout.parameters.length'),
+    )
     @app_commands.guild_only()
     async def timeout_member(
         self,
@@ -831,9 +858,18 @@ class UserCog(commands.Cog):
             f'Timed out {member.mention} for {length} minutes.',
         )
 
-    @group.command(name='remove_timeout', description='Un-timeout member')
+    @group.command(
+        name='remove_timeout',
+        description=app_commands.locale_str(
+            'command.user.remove_timeout.description',
+        ),
+    )
     @app_commands.checks.has_permissions(moderate_members=True)
-    @app_commands.describe(member='Member to remove timeout')
+    @app_commands.describe(
+        member=app_commands.locale_str(
+            'command.user.remove_timeout.parameters.member',
+        ),
+    )
     @app_commands.guild_only()
     async def untimeout_member(self, ctx: Interaction, member: Member):
         await member.edit(timed_out_until=None)
@@ -841,7 +877,10 @@ class UserCog(commands.Cog):
             f'Took the timeout for {member.mention}.',
         )
 
-    @group.command(name='total_members', description='Returns total members')
+    @group.command(
+        name='total_members',
+        description=app_commands.locale_str('command.user.total_members.description'),
+    )
     @app_commands.guild_only()
     async def get_list_members(self, interaction: Interaction):
         await interaction.response.defer(thinking=True)
@@ -955,7 +994,9 @@ class UserCog(commands.Cog):
 
     @group.command(
         name='to_reachgoal',
-        description='Returns remaining members to reach a goal value.',
+        description=app_commands.locale_str(
+            'command.user.to_reachgoal.description',
+        ),
     )
     @app_commands.guild_only()
     async def get_remaining_members(
@@ -998,14 +1039,19 @@ class UserCog(commands.Cog):
     @cached(60)
     @group.command(
         name='find_first_message_contains',
-        description=(
-            'Finds the first message sent by specified user'
-            'containing the keyword in the current channel.'
+        description=app_commands.locale_str(
+            'command.user.find_first_message_contains.description',
         ),
     )
     @app_commands.guild_only()
-    @app_commands.describe(member='Member to search messages for.')
-    @app_commands.describe(keyword='Keyword to search for in messages.')
+    @app_commands.describe(
+        member=app_commands.locale_str(
+            'command.user.find_first_message_contains.parameters.member',
+        ),
+        keyword=app_commands.locale_str(
+            'command.user.find_first_message_contains.parameters.keyword',
+        ),
+    )
     async def find_first_message_contains(
         self,
         interaction: Interaction,
@@ -1062,11 +1108,19 @@ class UserCog(commands.Cog):
     @cached(120)
     @group.command(
         name='search_messages',
-        description='Searches messages sent by specified user in the current channel.',
+        description=app_commands.locale_str(
+            'command.user.search_messages.description',
+        ),
     )
     @app_commands.guild_only()
-    @app_commands.describe(member='Member to search messages for.')
-    @app_commands.describe(keyword='Keyword to search for in messages.')
+    @app_commands.describe(
+        member=app_commands.locale_str(
+            'command.user.search_messages.parameters.member',
+        ),
+        keyword=app_commands.locale_str(
+            'command.user.search_messages.parameters.keyword',
+        ),
+    )
     async def search_user_messages(
         self,
         interaction: Interaction,
@@ -1131,12 +1185,16 @@ class UserCog(commands.Cog):
     @cached(120 * 2)
     @group.command(
         name='first_message',
-        description=(
-            'Gets the first message sent by specified user in the current channel.'
+        description=app_commands.locale_str(
+            'command.user.first_message.description',
         ),
     )
     @app_commands.guild_only()
-    @app_commands.describe(member='Member to get first message for.')
+    @app_commands.describe(
+        member=app_commands.locale_str(
+            'command.user.first_message.parameters.member',
+        ),
+    )
     async def get_first_user_message(self, interaction: Interaction, member: Member):
         await interaction.response.defer(thinking=True)
         if interaction.channel is None or interaction.guild is None:
@@ -1179,12 +1237,16 @@ class UserCog(commands.Cog):
     @cached(60)
     @group.command(
         name='latest_message',
-        description=(
-            'Gets the latest message sent by specified user in the current channel.'
+        description=app_commands.locale_str(
+            'command.user.latest_message.description',
         ),
     )
     @app_commands.guild_only()
-    @app_commands.describe(member='Member to get latest message for.')
+    @app_commands.describe(
+        member=app_commands.locale_str(
+            'command.user.latest_message.parameters.member',
+        ),
+    )
     async def get_latest_user_message(self, interaction: Interaction, member: Member):
         await interaction.response.defer(thinking=True)
         if interaction.channel is None or interaction.guild is None:
@@ -1227,12 +1289,16 @@ class UserCog(commands.Cog):
     @cached(60)
     @group.command(
         name='random_message',
-        description=(
-            'Gets a random message sent by specified user in the current channel.'
+        description=app_commands.locale_str(
+            'command.user.random_message.description',
         ),
     )
     @app_commands.guild_only()
-    @app_commands.describe(member='Member to get random message for.')
+    @app_commands.describe(
+        member=app_commands.locale_str(
+            'command.user.random_message.parameters.member',
+        ),
+    )
     async def get_random_user_message(self, interaction: Interaction, member: Member):
         await interaction.response.defer(thinking=True)
         if interaction.channel is None:
@@ -1276,7 +1342,10 @@ class UserCog(commands.Cog):
 
         return await interaction.followup.send(embed=embed)
 
-    @group.command(name='is_pepo', description='check if this dude is pepo')
+    @group.command(
+        name='is_pepo',
+        description=app_commands.locale_str('command.user.is_pepo.description'),
+    )
     @app_commands.guild_only()
     async def is_pepo(self, interaction: Interaction, member: Member):
         await interaction.response.defer(thinking=True)
@@ -1290,7 +1359,10 @@ class UserCog(commands.Cog):
         return await interaction.followup.send(embed=e)
 
     @cached(120 * 4)
-    @group.command(name='hash_value', description="Get user's hash code.")
+    @group.command(
+        name='hash_value',
+        description=app_commands.locale_str('command.user.hash_value.description'),
+    )
     @app_commands.guild_only()
     async def get_user_hash(self, interaction: Interaction, member: Member):
         await interaction.response.defer(thinking=True)

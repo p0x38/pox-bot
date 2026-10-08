@@ -5,9 +5,13 @@
             "default": {
                 "title": "The magic 8-ball says...\n{question}!"
             }
+        },
+        "parameters": {
+            "question": "What should I answer? :3"
         }
     },
     "admin": {
+        "description": "Commands for bossing me around! >:D",
         "reboot": {
             "description": "Reboot the bot to enforce cache clean."
         },
@@ -73,10 +77,25 @@
         "add_event": {
             "description": "Adds a global event to my history! :3"
         },
+        "clear": {
+            "description": "Wipe the Markov model clean! 3:"
+        },
+        "clear_history": {
+            "description": "Forget this server's AI chat history! 3:"
+        },
         "clear_memories": {
             "description": "Wipes my chat memory clean! 3:"
         },
+        "clear_server": {
+            "description": "Wipe this server's Markov model and chat history! 3:"
+        },
         "description": "A group for my AI chatbot stuff! :3",
+        "generate": {
+            "description": "Make the Markov model say something! :3"
+        },
+        "markov_stats": {
+            "description": "Peek at the Markov model stats! :3"
+        },
         "mem": {
             "description": "Let's peek into Jim's brain space~ :3",
             "embeds": {
@@ -87,6 +106,9 @@
             "messages": {
                 "empty": "My brain is completely empty right now. 3:"
             }
+        },
+        "mode": {
+            "description": "Give my chatbot a mode switch! :3"
         },
         "perf": {
             "description": "Shows how hard my hardware is working! :3",
@@ -100,8 +122,20 @@
                 "empty_logs": "I don't have any performance data right now... 3:"
             }
         },
+        "reload": {
+            "description": "Give the chatbot and Markov runtime a refresh! >:D"
+        },
+        "scope": {
+            "description": "Pick which Markov model my chatbot uses! :3"
+        },
         "stats": {
             "description": "Shows my global bot stats! :3"
+        },
+        "status": {
+            "description": "See what my chatbot settings are up to! :3"
+        },
+        "toggle": {
+            "description": "Turn my chatbot on or off! :3"
         },
         "unlock": {
             "description": "Forcefully unlocks the channel if I get stuck! >:D",
@@ -132,6 +166,110 @@
                     "title": "Info for contributor {contributor}~"
                 }
             }
+        }
+    },
+    "conversion": {
+        "base64": {
+            "description": "Encode or decode Base64 text! :3"
+        },
+        "binary": {
+            "description": "Turn text into beep-boop binary! :3",
+            "parameters": {
+                "block_size": "How many bits go in each block."
+            }
+        },
+        "caesar": {
+            "description": "Encode or decode text with the Caesar cipher! >:D",
+            "parameters": {
+                "shift": "How many spots to scoot each letter."
+            }
+        },
+        "cellular_automata_text": {
+            "description": "Remix text with cellular automata! :3",
+            "parameters": {
+                "birth": "The rules for new cells popping up.",
+                "generations": "How many generations to simulate.",
+                "survival": "The rules for cells that survive."
+            }
+        },
+        "description": "Turn text into something a little weirder! :3",
+        "glitch": {
+            "description": "Make your text all glitchy! >:D",
+            "parameters": {
+                "rate": "How glitchy should it get?"
+            }
+        },
+        "hill": {
+            "description": "Encode or decode text with the Hill cipher! >:D",
+            "parameters": {
+                "key_matrix": "The cipher's matrix key.",
+                "pad_char": "The character to use for padding."
+            }
+        },
+        "image_scramble": {
+            "description": "Scramble an image into happy chaos! >:D",
+            "parameters": {
+                "seed": "The seed for your image-scrambling shenanigans."
+            }
+        },
+        "mocking": {
+            "description": "Make your text do the mocking-case thing! :3",
+            "parameters": {
+                "mode": "Pick a case-conversion mode."
+            }
+        },
+        "morse": {
+            "description": "Turn text into Morse code! ... --- ...",
+            "parameters": {
+                "word_separator": "What to put between encoded words."
+            }
+        },
+        "parameters": {
+            "decode": "Decode it instead of encoding it.",
+            "text": "The text to tinker with."
+        },
+        "predicate": {
+            "description": "Put a predicate to work on your text! :3",
+            "parameters": {
+                "predicate": "The predicate to apply to your text."
+            }
+        },
+        "psc1": {
+            "description": "Encode or decode text with PSC-1! >:D",
+            "parameters": {
+                "chunk_size": "How many characters go in each chunk."
+            }
+        },
+        "rail_fence": {
+            "description": "Encode or decode text with the rail fence cipher! >:D",
+            "parameters": {
+                "key": "How many rails should the cipher use?"
+            }
+        },
+        "reverse": {
+            "choices": {
+                "both": "Words and letters! >:D",
+                "letters": "Letters :3",
+                "words": "Words :3"
+            },
+            "description": "Flip your text around! :3",
+            "parameters": {
+                "mode": "Pick what to flip around."
+            }
+        },
+        "uwu": {
+            "description": "UwU-ify your text! :3",
+            "parameters": {
+                "actions": "Add some silly actions?",
+                "faces": "Sprinkle in some emoticon faces?",
+                "stutters": "Add some cute stutters?"
+            }
+        },
+        "wide": {
+            "description": "Stretch text into full-width characters! :3"
+        },
+        "zalgo": {
+            "description": "Give your text a spooky Zalgo makeover! >:D"
         }
     },
     "convert": {
@@ -390,6 +528,12 @@
         }
     },
     "global_chat": {
+        "delivery": {
+            "description": "Pick how global chat messages get delivered! :3",
+            "parameters": {
+                "mode": "The delivery mode to use."
+            }
+        },
         "description": "A group for global chat! :3",
         "setchannel": {
             "description": "Set the global chat channel! :3",
@@ -404,25 +548,14 @@
             }
         },
         "setup": {
-            "description": "Sets global chat channel up!",
+            "description": "Set up a channel for global chat! :3",
+            "embeds": {
+                "default": {
+                    "description": "Global chat is all set up in {channel}! :3"
+                }
+            },
             "parameters": {
-                "channel": "Channel to set global chat"
-            },
-            "embeds": {
-                "default": {
-                    "description": "Global chat channel set to {channel}! :3"
-                }
-            }
-        },
-        "status": {
-            "description": "Shows the status for global chat!",
-            "embeds": {
-                "default": {
-                    "title": "Global chat information for {guild_name}!"
-                }
-            },
-            "labels": {
-                "anti_spam": "Anti-spam enabled (You can send messages up to {count} per {per})"
+                "channel": "The channel for global chat."
             }
         },
         "silentmode": {
@@ -434,12 +567,23 @@
                 }
             },
             "parameters": {
-                "toggle": "Enable silent mode? (yes/no)"
+                "toggle": "Turn silent mode on? (yes/no)"
+            }
+        },
+        "status": {
+            "description": "Shows the status for global chat!",
+            "embeds": {
+                "default": {
+                    "title": "Global chat stuff for {guild_name}! :3"
+                }
+            },
+            "labels": {
+                "anti_spam": "Anti-spam is on! You can send up to {count} messages per {per} :3"
             }
         },
         "texts": {
-            "including_attachments": "{count, plural, =1 {Including # attachment} other {Including # attachments}}",
-            "including_attachments_no_text": "{count, plural, =1 {User sent # attachment} other {User sent # attachments}}"
+            "including_attachments": "{count, plural, =1 {Including # attachment :3} other {Including # attachments :3}}",
+            "including_attachments_no_text": "{count, plural, =1 {User sent # attachment!} other {User sent # attachments!}}"
         },
         "toggle": {
             "description": "Toggle global chat! :3",
@@ -450,7 +594,7 @@
                 }
             },
             "parameters": {
-                "enabled": "Enable global chat? (yes/no)"
+                "enabled": "Turn global chat on? (yes/no)"
             }
         }
     },
@@ -467,6 +611,9 @@
         },
         "kickmembers": {
             "description": "Kicks every single real member! >:D"
+        },
+        "listmembers": {
+            "description": "See who's hanging out in this server! :3"
         },
         "logs": {
             "description": "Shows the history of kicks, bans, and timeouts! 3:"
@@ -485,24 +632,38 @@
         }
     },
     "image": {
-        "description": "A group for ImageCog",
+        "asset": {
+            "description": "Fetch an image asset for you! :3"
+        },
+        "description": "A group for image shenanigans! :3",
         "petpet": {
             "description": {
-                "formal": "Pats someone.",
                 "casual": "Pats someone!",
-                "casual-silly": "Pats someone! :3"
+                "casual-silly": "Pats someone! :3",
+                "formal": "Pats someone."
             },
             "parameters": {
                 "member": {
-                    "formal": "User/Member to pat.",
                     "casual": "Someone to pat!",
-                    "casual-silly": "Someone to pat! :3"
+                    "casual-silly": "Someone to pat! :3",
+                    "formal": "User/Member to pat."
                 }
             },
             "texts": {
                 "success": {
                     "casual-silly": "{executor} petted {target}! :3"
                 }
+            }
+        },
+        "qrcode": {
+            "choices": {
+                "dark": "Dark :3",
+                "light": "Light :3"
+            },
+            "description": "Make a QR code! :3",
+            "parameters": {
+                "text": "What should the QR code say?",
+                "theme": "Pick a color theme."
             }
         }
     },
@@ -511,6 +672,9 @@
             "description": "Shows my latest git commit! :3"
         },
         "description": "A group for info and stuff! :3",
+        "feedback": {
+            "description": "Sends a feedback to bot developer :D"
+        },
         "invite": {
             "description": "Grabs my invite link so you can add me! (Limited to 90 servers though 3:)",
             "embeds": {
@@ -524,6 +688,9 @@
             "error": {
                 "hardlimited": "Aww, you can't invite me right now, I hit my server limit... 3:"
             }
+        },
+        "memory_check": {
+            "description": "Runs memory check! >:D"
         },
         "os_info": {
             "description": "Shows what OS I'm running on! :3",
@@ -541,7 +708,7 @@
                 }
             }
         },
-        "retrieve": {
+        "bot": {
             "description": "Gets all my bot info! :3",
             "embeds": {
                 "default": {
@@ -564,12 +731,6 @@
                     "description": "Over in {timezone_name}, it's currently **{timedate}**! :3"
                 }
             }
-        },
-        "feedback": {
-            "description": "Sends a feedback to bot developer :D"
-        },
-        "memory_check": {
-            "description": "Runs memory check! >:D"
         }
     },
     "leveling": {
@@ -603,20 +764,57 @@
             }
         }
     },
+    "message": {
+        "description": "A group for message mischief! :3",
+        "direct_message": {
+            "description": "Slide a member a message in their DMs! :3"
+        },
+        "first_sent": {
+            "description": "Dig up the very first message in this channel! :3"
+        },
+        "get_random_message": {
+            "description": "Pick a random message from this channel! :3"
+        },
+        "last_sent": {
+            "description": "Dig up the latest message in this channel! :3"
+        },
+        "mass_delete": {
+            "description": "Sweep away a bunch of messages! >:D",
+            "parameters": {
+                "limit": "How many messages should I sweep away?"
+            }
+        },
+        "message_count": {
+            "description": "Count the messages in this channel! :3"
+        },
+        "purge": {
+            "description": "Clear out a chosen number of recent messages! >:D"
+        },
+        "say": {
+            "description": "Make me say something in this channel! :3"
+        },
+        "search_for": {
+            "description": "Search through messages in this channel! :3"
+        },
+        "send": {
+            "description": "Send a message! :3"
+        }
+    },
     "minecraft": {
+        "description": "Minecraft commands and blocky adventures! :3",
         "profile": {
-            "description": "Retrieves minecraft user profile.",
+            "description": "Fetch a Minecraft player's profile! :3",
             "embeds": {
                 "default": {
-                    "title": "Profile for {name}"
+                    "title": "{name}'s blocky profile! :3"
                 }
             }
         },
         "server": {
-            "description": "Lookups minecraft server."
+            "description": "Look up a Minecraft server! :3"
         },
         "uuid": {
-            "description": "Retrieves Minecraft UUID from username."
+            "description": "Find a Minecraft UUID from a username! :3"
         }
     },
     "moderation": {
@@ -699,14 +897,59 @@
             }
         }
     },
+    "role": {
+        "add_role": {
+            "description": "Add a shiny new role! :3"
+        },
+        "delete_role": {
+            "description": "Delete a role (poof!) :3"
+        },
+        "description": "A group for role shenanigans! :3",
+        "edit_role": {
+            "description": "Tweak a role's permissions! :3"
+        },
+        "give_role": {
+            "description": "Hand a member a role! :3"
+        },
+        "list": {
+            "description": "Show me the roles! :3"
+        },
+        "list_users_in_role": {
+            "description": "See who's wearing a particular role! :3"
+        },
+        "take_role": {
+            "description": "Take a role away from a member! :3"
+        },
+        "user_roles": {
+            "description": "See which roles a user has! :3"
+        }
+    },
+    "settings": {
+        "description": "Peek at the settings! :3"
+    },
     "stats": {
+        "active_pattern": {
+            "description": "See when the messages are popping off! :3",
+            "parameters": {
+                "target": "Pick a member to filter by, or leave blank for the whole channel."
+            }
+        },
         "description": "Leaderboards and stats! :3",
+        "globaltop": {
+            "description": "See who's topping the global message leaderboard! >:D"
+        },
         "top": {
             "description": "Shows the top users! >:D",
             "embeds": {
                 "default": {
                     "title": "Global Leaderboard!! >:D"
                 }
+            }
+        },
+        "wordcloud": {
+            "description": "Turn message history into a word cloud! :3",
+            "wordcloud": {
+                "description": "Turn message history into a word cloud! :3"
             }
         }
     },
@@ -739,7 +982,33 @@
                 }
             }
         },
+        "ban": {
+            "description": "Send a member packing from the server! >:D",
+            "parameters": {
+                "member": "The member to send packing.",
+                "reason": "Why are they getting the boot?"
+            }
+        },
         "description": "A group for user stuff! :3",
+        "find_first_message_contains": {
+            "description": "Find their first message with a keyword in this channel! :3",
+            "parameters": {
+                "keyword": "The keyword to hunt for.",
+                "member": "Whose messages should I search?"
+            }
+        },
+        "first_message": {
+            "description": "Dig up a member's first message in this channel! :3",
+            "parameters": {
+                "member": "Whose first message should I find?"
+            }
+        },
+        "guild_duration": {
+            "description": "See how long someone's been hanging out here! :3"
+        },
+        "hash_value": {
+            "description": "Peek at a user's hash code! :3"
+        },
         "info": {
             "description": "Gets all the juicy info about a user! :3",
             "embeds": {
@@ -750,6 +1019,41 @@
             "fields": {
                 "stats": "Level {level} ({xp} XP) / {messages} Messages :3",
                 "wallet": "{coins} Coins!"
+            }
+        },
+        "is_pepo": {
+            "description": "Find out if this user is Pepo! :3"
+        },
+        "kick": {
+            "description": "Give a member the boot! >:D",
+            "parameters": {
+                "member": "The member to boot.",
+                "reason": "Why they're getting kicked (goes in their DM)."
+            }
+        },
+        "latest_message": {
+            "description": "Find a member's latest message in this channel! :3",
+            "parameters": {
+                "member": "Whose latest message should I find?"
+            }
+        },
+        "random_message": {
+            "description": "Roll the dice and find one of their messages! :3",
+            "parameters": {
+                "member": "Whose messages should I rummage through?"
+            }
+        },
+        "remove_timeout": {
+            "description": "Let a timed-out member back in the chat! :3",
+            "parameters": {
+                "member": "Who gets their timeout lifted?"
+            }
+        },
+        "search_messages": {
+            "description": "Hunt for a member's messages in this channel! :3",
+            "parameters": {
+                "keyword": "The keyword to hunt for.",
+                "member": "Whose messages should I search?"
             }
         },
         "set_nick": {
@@ -784,8 +1088,32 @@
                 }
             }
         },
-        "hash_value": {
-            "description": "Get user's hash code."
+        "timeout": {
+            "description": "Give a member a little timeout! >:D",
+            "parameters": {
+                "length": "How many minutes they should sit this one out.",
+                "member": "Who needs a timeout?",
+                "reason": "Why are they getting a timeout?"
+            }
+        },
+        "to_reachgoal": {
+            "description": "See how many more folks we need to hit the goal! :3"
+        },
+        "total_members": {
+            "description": "Count up everyone in this server! :3"
+        },
+        "unban": {
+            "description": "Let a banned member back in! :3",
+            "parameters": {
+                "member": "Who gets unbanned?"
+            }
+        },
+        "warn": {
+            "description": "Give a member a warning! :3",
+            "parameters": {
+                "member": "Who needs a warning?",
+                "reason": "What's the warning for?"
+            }
         }
     },
     "userphone": {
@@ -827,8 +1155,23 @@
         }
     },
     "utility": {
+        "coinflip": {
+            "description": "Flip a coin and see what comes up! :3"
+        },
         "listapps": {
             "description": "Shows a list all of applications opened currently in Bot host PC. (Requested by mharyt_w)"
+        },
+        "parameters": {
+            "coinflip_label": "A label for your coin flip, if you want one.",
+            "question": "What should I answer?",
+            "rolls": "How many times should I roll?",
+            "sides": "How many sides should the die have?"
+        },
+        "roll": {
+            "description": "Roll a die and tempt fate! >:D"
+        },
+        "yes_or_no": {
+            "description": "Ask me a question and get a yes-or-no answer! :3"
         }
     },
     "welcome": {

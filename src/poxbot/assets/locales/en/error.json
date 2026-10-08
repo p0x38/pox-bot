@@ -107,6 +107,42 @@
             "description": "Your server is already in a call!",
             "title": "Already calling! :3"
         },
+        "no_members": {
+            "description": "No members were found.",
+            "title": "No members found."
+        },
+        "no_transactions": {
+            "description": "No transactions were found.",
+            "title": "No transactions found."
+        },
+        "invalid_bytebeat_formula": {
+            "description": "The Bytebeat formula is invalid."
+        },
+        "server_feature_not_found": {
+            "description": "That server feature could not be found.",
+            "title": "Feature not found."
+        },
+        "confliction": {
+            "description": "This action conflicts with another setting.",
+            "title": "Conflicting settings."
+        },
+        "no_connection": {
+            "description": "The database connection is unavailable."
+        },
+        "data_not_found": {
+            "description": "The requested data could not be found.",
+            "title": "Data not found."
+        },
+        "tts_no_model": {
+            "description": "No text-to-speech model is configured.",
+            "title": "No TTS model."
+        },
+        "tts_not_installed": {
+            "description": "Text-to-speech support is not installed."
+        },
+        "no_reloadable_extensions": {
+            "description": "There are no extensions available to reload."
+        },
         "send_error": {
             "description": "Threw an error trying to send: {e}",
             "title": "Oops, send error! 3:"

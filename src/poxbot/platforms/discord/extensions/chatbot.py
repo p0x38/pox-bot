@@ -41,7 +41,7 @@ from ....shared.utils.app_path import app_dir
 class ChatbotCog(commands.Cog):
     chatbot_group = app_commands.Group(
         name='chatbot',
-        description='Configure and use the chatbot',
+        description=app_commands.locale_str('command.chatbot.description'),
     )
 
     def __init__(self, bot: PoxBot):
@@ -990,7 +990,7 @@ class ChatbotCog(commands.Cog):
 
     @chatbot_group.command(
         name='status',
-        description='Show the current chatbot configuration',
+        description=app_commands.locale_str('command.chatbot.status.description'),
     )
     @app_commands.guild_only()
     async def chatbot_status(
@@ -1028,7 +1028,7 @@ class ChatbotCog(commands.Cog):
 
     @chatbot_group.command(
         name='generate',
-        description='Generate a response from the Markov model',
+        description=app_commands.locale_str('command.chatbot.generate.description'),
     )
     @app_commands.guild_only()
     @app_commands.describe(
@@ -1121,7 +1121,7 @@ class ChatbotCog(commands.Cog):
 
     @chatbot_group.command(
         name='clear',
-        description='Clear the Markov model',
+        description=app_commands.locale_str('command.chatbot.clear.description'),
     )
     @app_commands.guild_only()
     @commands.is_owner()
@@ -1161,7 +1161,9 @@ class ChatbotCog(commands.Cog):
 
     @chatbot_group.command(
         name='clear_server',
-        description="Clear this server's Markov model and dialogue history",
+        description=app_commands.locale_str(
+            'command.chatbot.clear_server.description',
+        ),
     )
     @app_commands.guild_only()
     @app_commands.checks.has_permissions(manage_guild=True)
@@ -1193,7 +1195,9 @@ class ChatbotCog(commands.Cog):
 
     @chatbot_group.command(
         name='clear_history',
-        description="Clear this server's AI conversation history",
+        description=app_commands.locale_str(
+            'command.chatbot.clear_history.description',
+        ),
     )
     @app_commands.guild_only()
     @app_commands.checks.has_permissions(manage_guild=True)
@@ -1238,7 +1242,9 @@ class ChatbotCog(commands.Cog):
 
     @chatbot_group.command(
         name='stats',
-        description='Show Markov model statistics',
+        description=app_commands.locale_str(
+            'command.chatbot.markov_stats.description',
+        ),
     )
     @app_commands.guild_only()
     async def chatbot_stats(
@@ -1287,7 +1293,7 @@ class ChatbotCog(commands.Cog):
 
     @chatbot_group.command(
         name='mode',
-        description='Change the chatbot mode',
+        description=app_commands.locale_str('command.chatbot.mode.description'),
     )
     @app_commands.guild_only()
     @app_commands.describe(
@@ -1358,7 +1364,7 @@ class ChatbotCog(commands.Cog):
 
     @chatbot_group.command(
         name='toggle',
-        description='Enable or disable the chatbot',
+        description=app_commands.locale_str('command.chatbot.toggle.description'),
     )
     @app_commands.guild_only()
     @app_commands.checks.has_permissions(manage_guild=True)
@@ -1398,7 +1404,7 @@ class ChatbotCog(commands.Cog):
 
     @chatbot_group.command(
         name='scope',
-        description='Change which Markov model scope the chatbot uses',
+        description=app_commands.locale_str('command.chatbot.scope.description'),
     )
     @app_commands.guild_only()
     @app_commands.describe(

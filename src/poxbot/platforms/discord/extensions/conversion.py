@@ -42,6 +42,7 @@ class ConversionCog(commands.Cog):
         **kwargs: Any,
     ) -> None:
         await interaction.response.defer(thinking=True)
+        locale = str(interaction.locale)
 
         try:
             request = TransformerRequest(
@@ -56,13 +57,21 @@ class ConversionCog(commands.Cog):
             )
         except TextTransformError as e:
             await interaction.followup.send(
-                f'Failed to convert text: {e}',
+                self.bot.internal_translator.T(
+                    'messages.text_transform_failed',
+                    locale,
+                    {'error': e},
+                ),
             )
         else:
             await interaction.followup.send(
                 f'{result.output}\n'
                 f'\n'
-                f'Took {result.metrics.elapsed_ms:.2f} ms to transform',
+                f'{self.bot.internal_translator.T(
+                    "messages.text_transform_completed",
+                    locale,
+                    {"elapsed_ms": result.metrics.elapsed_ms},
+                )}',
             )
 
     @cached(60)

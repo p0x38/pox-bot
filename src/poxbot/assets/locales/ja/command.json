@@ -5,9 +5,16 @@
             "default": {
                 "title": "魔法の8ボールはこう言っています...\n\n{質問}!"
             }
+        },
+        "parameters": {
+            "question": "どんな質問に答えよう？ :3"
         }
     },
     "admin": {
+        "description": "ボットにあれこれ指示しちゃおう！ >:D",
+        "reboot": {
+            "description": "キャッシュをお掃除するために、ボットを再起動するよ！ :3"
+        },
         "reload_cogs": {
             "description": "すべての拡張機能をリロードし、スラッシュ コマンドを同期します。 \n>:D",
             "embeds": {
@@ -70,10 +77,25 @@
         "add_event": {
             "description": "私の歴史に世界的な出来事が加わりました! \n:3"
         },
+        "clear": {
+            "description": "マルコフモデルをまっさらにしちゃおう！ 3:"
+        },
+        "clear_history": {
+            "description": "このサーバーのAI会話履歴を忘れちゃおう！ 3:"
+        },
         "clear_memories": {
             "description": "チャットの記憶を完全に消去します。 \n3:"
         },
+        "clear_server": {
+            "description": "このサーバーのマルコフモデルと会話履歴をお掃除！ 3:"
+        },
         "description": "私の AI チャットボット関連のグループです。 \n:3",
+        "generate": {
+            "description": "マルコフモデルに何かしゃべらせよう！ :3"
+        },
+        "markov_stats": {
+            "description": "マルコフモデルの統計をのぞいてみよう！ :3"
+        },
         "mem": {
             "description": "ジムの脳内空間を覗いてみましょう~ :3",
             "embeds": {
@@ -84,6 +106,9 @@
             "messages": {
                 "empty": "今私の頭は完全に空っぽです。 \n3:"
             }
+        },
+        "mode": {
+            "description": "チャットボットのモードを切り替えよう！ :3"
         },
         "perf": {
             "description": "私のハードウェアがどれだけ一生懸命働いているかを示しています。 \n:3",
@@ -97,8 +122,20 @@
                 "empty_logs": "現在パフォーマンス データがありません... 3:"
             }
         },
+        "reload": {
+            "description": "チャットボットとマルコフのデータをリフレッシュ！ >:D"
+        },
+        "scope": {
+            "description": "チャットボットが使うマルコフモデルを選ぼう！ :3"
+        },
         "stats": {
             "description": "私のグローバルボット統計を表示します! \n:3"
+        },
+        "status": {
+            "description": "チャットボットの今の設定を見てみよう！ :3"
+        },
+        "toggle": {
+            "description": "チャットボットをオン・オフしちゃおう！ :3"
         },
         "unlock": {
             "description": "行き詰まったら強制的にチャンネルのロックを解除します！ \n>:D",
@@ -129,6 +166,110 @@
                     "title": "寄稿者 {contributor} の情報~"
                 }
             }
+        }
+    },
+    "conversion": {
+        "base64": {
+            "description": "テキストをBase64にエンコード・デコード！ :3"
+        },
+        "binary": {
+            "description": "テキストをピコピコバイナリに変身！ :3",
+            "parameters": {
+                "block_size": "1ブロックに何ビット入れる？"
+            }
+        },
+        "caesar": {
+            "description": "シーザー暗号でテキストを暗号化・復号しちゃおう！ >:D",
+            "parameters": {
+                "shift": "文字を何個ぶんずらす？"
+            }
+        },
+        "cellular_automata_text": {
+            "description": "セル・オートマトンでテキストをリミックス！ :3",
+            "parameters": {
+                "birth": "新しいセルが生まれるルールだよ。",
+                "generations": "何世代ぶんシミュレーションする？",
+                "survival": "セルが生き残るルールだよ。"
+            }
+        },
+        "description": "テキストをちょっぴり不思議に変身させよう！ :3",
+        "glitch": {
+            "description": "テキストをグリッチまみれにしちゃおう！ >:D",
+            "parameters": {
+                "rate": "どれくらいグリッチさせる？"
+            }
+        },
+        "hill": {
+            "description": "ヒル暗号でテキストを暗号化・復号しちゃおう！ >:D",
+            "parameters": {
+                "key_matrix": "暗号で使う鍵行列だよ。",
+                "pad_char": "入力を埋めるのに使う文字だよ。"
+            }
+        },
+        "image_scramble": {
+            "description": "画像をぐちゃぐちゃにスクランブル！ >:D",
+            "parameters": {
+                "seed": "画像スクランブルのシード値だよ。"
+            }
+        },
+        "mocking": {
+            "description": "テキストを煽りっぽい交互大小文字にしちゃおう！ :3",
+            "parameters": {
+                "mode": "大文字・小文字の変換モードを選んでね。"
+            }
+        },
+        "morse": {
+            "description": "テキストをモールス信号に変換しよう！ ... --- ...",
+            "parameters": {
+                "word_separator": "符号化した単語の間に入れる区切り文字だよ。"
+            }
+        },
+        "parameters": {
+            "decode": "エンコードじゃなくてデコードする？",
+            "text": "変身させるテキストだよ。"
+        },
+        "predicate": {
+            "description": "述語を使ってテキストを変身させよう！ :3",
+            "parameters": {
+                "predicate": "テキストに適用する述語だよ。"
+            }
+        },
+        "psc1": {
+            "description": "PSC-1でテキストを暗号化・復号しちゃおう！ >:D",
+            "parameters": {
+                "chunk_size": "1チャンクに何文字入れる？"
+            }
+        },
+        "rail_fence": {
+            "description": "レールフェンス暗号でテキストを暗号化・復号！ >:D",
+            "parameters": {
+                "key": "レールはいくつ使う？"
+            }
+        },
+        "reverse": {
+            "choices": {
+                "both": "単語も文字も！ >:D",
+                "letters": "文字だよ :3",
+                "words": "単語だよ :3"
+            },
+            "description": "テキストをひっくり返しちゃおう！ :3",
+            "parameters": {
+                "mode": "何をひっくり返すか選んでね。"
+            }
+        },
+        "uwu": {
+            "description": "テキストをUwU風にしちゃうよ！ :3",
+            "parameters": {
+                "actions": "おちゃめな動作も追加する？",
+                "faces": "顔文字をぱらぱら追加する？",
+                "stutters": "かわいいどもりを足しちゃう？"
+            }
+        },
+        "wide": {
+            "description": "テキストを全角文字にのびのび変身！ :3"
+        },
+        "zalgo": {
+            "description": "テキストを不気味なZalgo風にしちゃおう！ >:D"
         }
     },
     "convert": {
@@ -204,11 +345,11 @@
         }
     },
     "detect": {
-        "custom2": {
-            "description": "どれくらい高いか見てみましょう~:3"
-        },
         "custom_member": {
             "description": "メンバーが何かにどれだけ近づいているかをチェックします! \n:3"
+        },
+        "custom2": {
+            "description": "どれくらい高いか見てみましょう~:3"
         },
         "description": "物を発見する集団です！ \n>:D",
         "how_femboy": {
@@ -387,6 +528,12 @@
         }
     },
     "global_chat": {
+        "delivery": {
+            "description": "グローバルチャットのメッセージ配信方法を選ぼう！ :3",
+            "parameters": {
+                "mode": "使いたい配信モードだよ。"
+            }
+        },
         "description": "グローバルチャットのためのグループです！ \n:3",
         "setchannel": {
             "description": "グローバルチャットチャンネルを設定しましょう！ \n:3",
@@ -398,6 +545,17 @@
             },
             "parameters": {
                 "channel": "グローバルチャットを設定するチャンネル"
+            }
+        },
+        "setup": {
+            "description": "グローバルチャットのチャンネルを設定しよう！ :3",
+            "embeds": {
+                "default": {
+                    "description": "グローバルチャットのチャンネルは {channel} になったよ！ :3"
+                }
+            },
+            "parameters": {
+                "channel": "グローバルチャットに使うチャンネルだよ。"
             }
         },
         "silentmode": {
@@ -412,9 +570,20 @@
                 "toggle": "サイレントモードを有効にしますか? \n(はい/いいえ)"
             }
         },
+        "status": {
+            "description": "グローバルチャットの状態を見てみよう！ :3",
+            "embeds": {
+                "default": {
+                    "title": "{guild_name} のグローバルチャット情報だよ！ :3"
+                }
+            },
+            "labels": {
+                "anti_spam": "スパム対策オン！ {per} ごとに最大 {count} 件まで送信できるよ :3"
+            }
+        },
         "texts": {
-            "including_attachments": "{数、複数、=1 {含む",
-            "including_attachments_no_text": "{count, plural, =1 {ユーザーが送信しました"
+            "including_attachments": "{count, plural, =1 {添付ファイル # 件もあるよ :3} other {添付ファイル # 件もあるよ :3}}",
+            "including_attachments_no_text": "{count, plural, =1 {ユーザーが添付ファイルを # 件送ったよ！} other {ユーザーが添付ファイルを # 件送ったよ！}}"
         },
         "toggle": {
             "description": "グローバルチャットを切り替えてください！ \n:3",
@@ -443,6 +612,9 @@
         "kickmembers": {
             "description": "本物のメンバー全員をキックします！ \n>:D"
         },
+        "listmembers": {
+            "description": "このサーバーにいるみんなを見てみよう！ :3"
+        },
         "logs": {
             "description": "キック、バン、タイムアウトの履歴を表示します。 \n3:"
         },
@@ -460,7 +632,10 @@
         }
     },
     "image": {
-        "description": "ImageCog のグループ",
+        "asset": {
+            "description": "画像アセットを取ってくるよ！ :3"
+        },
+        "description": "画像でいろいろ遊んじゃおう！ :3",
         "petpet": {
             "description": {
                 "casual": "誰かを撫でてください！",
@@ -484,6 +659,17 @@
                     "formal": "撫でるユーザー/メンバー。"
                 }
             }
+        },
+        "qrcode": {
+            "choices": {
+                "dark": "ダークだよ :3",
+                "light": "ライトだよ :3"
+            },
+            "description": "QRコードを作っちゃおう！ :3",
+            "parameters": {
+                "text": "QRコードに入れる文字は何にする？",
+                "theme": "使いたい色のテーマを選んでね。"
+            }
         }
     },
     "info": {
@@ -491,6 +677,9 @@
             "description": "最新の git コミットを表示します。 \n:3"
         },
         "description": "情報などを扱うグループです！ \n:3",
+        "feedback": {
+            "description": "ボットの開発者にフィードバックを送ってね！ :3"
+        },
         "invite": {
             "description": "私の招待リンクを取得して、私を追加してください。 \n(サーバー数は 90 に制限されていますが、3:)",
             "embeds": {
@@ -504,6 +693,9 @@
             "error": {
                 "hardlimited": "ああ、今は招待できません。サーバーの制限に達しました... 3:"
             }
+        },
+        "memory_check": {
+            "description": "メモリの様子をチェックしちゃおう！ >:D"
         },
         "os_info": {
             "description": "実行している OS が表示されます。 \n:3",
@@ -521,7 +713,7 @@
                 }
             }
         },
-        "retrieve": {
+        "bot": {
             "description": "私のボット情報をすべて取得します! \n:3",
             "embeds": {
                 "default": {
@@ -577,20 +769,57 @@
             }
         }
     },
+    "message": {
+        "description": "メッセージでいろいろ遊んじゃおう！ :3",
+        "direct_message": {
+            "description": "メンバーにこっそりDMを送ろう！ :3"
+        },
+        "first_sent": {
+            "description": "このチャンネルのいちばん最初のメッセージを発掘！ :3"
+        },
+        "get_random_message": {
+            "description": "このチャンネルからランダムにメッセージを選ぶよ！ :3"
+        },
+        "last_sent": {
+            "description": "このチャンネルの最新メッセージを掘り起こすよ！ :3"
+        },
+        "mass_delete": {
+            "description": "メッセージをまとめてお掃除！ >:D",
+            "parameters": {
+                "limit": "何件お掃除する？"
+            }
+        },
+        "message_count": {
+            "description": "このチャンネルのメッセージを数えちゃおう！ :3"
+        },
+        "purge": {
+            "description": "指定した数の最近のメッセージをお掃除！ >:D"
+        },
+        "say": {
+            "description": "このチャンネルでボットに何か言わせちゃおう！ :3"
+        },
+        "search_for": {
+            "description": "このチャンネルのメッセージを探そう！ :3"
+        },
+        "send": {
+            "description": "メッセージを送っちゃおう！ :3"
+        }
+    },
     "minecraft": {
+        "description": "Minecraftのブロックな冒険コマンドだよ！ :3",
         "profile": {
-            "description": "Minecraft のユーザー プロファイルを取得します。",
+            "description": "Minecraftプレイヤーのプロフィールを見てみよう！ :3",
             "embeds": {
                 "default": {
-                    "title": "{名前}のプロフィール"
+                    "title": "{名前}のブロックなプロフィール！ :3"
                 }
             }
         },
         "server": {
-            "description": "Minecraft サーバーを検索します。"
+            "description": "Minecraftサーバーを探してみよう！ :3"
         },
         "uuid": {
-            "description": "ユーザー名から Minecraft UUID を取得します。"
+            "description": "ユーザー名からMinecraft UUIDを見つけるよ！ :3"
         }
     },
     "moderation": {
@@ -673,8 +902,47 @@
             }
         }
     },
+    "role": {
+        "add_role": {
+            "description": "新しいロールを追加しよう！ :3"
+        },
+        "delete_role": {
+            "description": "ロールをぽんっと削除！ :3"
+        },
+        "description": "ロールでいろいろ遊んじゃおう！ :3",
+        "edit_role": {
+            "description": "ロールの権限をちょこっと調整！ :3"
+        },
+        "give_role": {
+            "description": "メンバーにロールをプレゼント！ :3"
+        },
+        "list": {
+            "description": "ロール一覧を見てみよう！ :3"
+        },
+        "list_users_in_role": {
+            "description": "そのロールを持ってる人を見てみよう！ :3"
+        },
+        "take_role": {
+            "description": "メンバーからロールを取り上げちゃおう！ :3"
+        },
+        "user_roles": {
+            "description": "ユーザーが持ってるロールをチェック！ :3"
+        }
+    },
+    "settings": {
+        "description": "設定をちょっとのぞいてみよう！ :3"
+    },
     "stats": {
+        "active_pattern": {
+            "description": "メッセージがいつ盛り上がってるか見てみよう！ :3",
+            "parameters": {
+                "target": "メンバーを指定するとその人だけ、空欄ならチャンネル全体が対象だよ。"
+            }
+        },
         "description": "リーダーボードと統計！ \n:3",
+        "globaltop": {
+            "description": "全体メッセージランキングのトップを見てみよう！ >:D"
+        },
         "top": {
             "description": "上位ユーザーを表示します! \n>:D",
             "embeds": {
@@ -682,6 +950,9 @@
                     "title": "グローバルリーダーボード!! \n>:D"
                 }
             }
+        },
+        "wordcloud": {
+            "description": "メッセージ履歴からワードクラウドを作っちゃおう！ :3"
         }
     },
     "ticket": {
@@ -713,7 +984,33 @@
                 }
             }
         },
+        "ban": {
+            "description": "メンバーをサーバーからポイっとBAN！ >:D",
+            "parameters": {
+                "member": "BANしちゃうメンバーだよ。",
+                "reason": "どうしてBANするの？"
+            }
+        },
         "description": "ユーザー関連のグループです。 \n:3",
+        "find_first_message_contains": {
+            "description": "このチャンネルで、キーワード入りの最初のメッセージを探すよ！ :3",
+            "parameters": {
+                "keyword": "探したいキーワードだよ。",
+                "member": "誰のメッセージを探す？"
+            }
+        },
+        "first_message": {
+            "description": "このチャンネルで最初に送ったメッセージを掘り起こそう！ :3",
+            "parameters": {
+                "member": "誰の最初のメッセージを探す？"
+            }
+        },
+        "guild_duration": {
+            "description": "このサーバーに来てからどれくらいか見てみよう！ :3"
+        },
+        "hash_value": {
+            "description": "ユーザーのハッシュコードをのぞいちゃおう！ :3"
+        },
         "info": {
             "description": "ユーザーに関する重要な情報をすべて取得します。 \n:3",
             "embeds": {
@@ -724,6 +1021,41 @@
             "fields": {
                 "stats": "レベル {level} ({xp} XP) / {messages} メッセージ :3",
                 "wallet": "{コイン} コイン！"
+            }
+        },
+        "is_pepo": {
+            "description": "この人がPepoかどうかチェック！ :3"
+        },
+        "kick": {
+            "description": "メンバーにお帰りいただこう！ >:D",
+            "parameters": {
+                "member": "キックしちゃうメンバーだよ。",
+                "reason": "DMに書くキックの理由だよ。"
+            }
+        },
+        "latest_message": {
+            "description": "このチャンネルでの最新メッセージを探すよ！ :3",
+            "parameters": {
+                "member": "誰の最新メッセージを探す？"
+            }
+        },
+        "random_message": {
+            "description": "どれが出るかはお楽しみ！メッセージをひとつ選ぶよ :3",
+            "parameters": {
+                "member": "誰のメッセージを探す？"
+            }
+        },
+        "remove_timeout": {
+            "description": "タイムアウト中のメンバーをチャットにお迎え！ :3",
+            "parameters": {
+                "member": "誰のタイムアウトを解除する？"
+            }
+        },
+        "search_messages": {
+            "description": "このチャンネルでメンバーのメッセージを探そう！ :3",
+            "parameters": {
+                "keyword": "探したいキーワードだよ。",
+                "member": "誰のメッセージを探す？"
             }
         },
         "set_nick": {
@@ -756,6 +1088,33 @@
                 "default": {
                     "title": "{user} のステータス! \n:3"
                 }
+            }
+        },
+        "timeout": {
+            "description": "メンバーにちょっぴりタイムアウト！ >:D",
+            "parameters": {
+                "length": "何分お休みしてもらう？",
+                "member": "誰にタイムアウト？",
+                "reason": "タイムアウトの理由はなあに？"
+            }
+        },
+        "to_reachgoal": {
+            "description": "目標まであと何人か数えてみよう！ :3"
+        },
+        "total_members": {
+            "description": "このサーバーのみんなを数えちゃおう！ :3"
+        },
+        "unban": {
+            "description": "BANされたメンバーをお迎えしよう！ :3",
+            "parameters": {
+                "member": "誰のBANを解除する？"
+            }
+        },
+        "warn": {
+            "description": "メンバーに警告をお届け！ :3",
+            "parameters": {
+                "member": "誰に警告する？",
+                "reason": "警告の理由はなあに？"
             }
         }
     },
@@ -797,6 +1156,26 @@
             }
         }
     },
+    "utility": {
+        "coinflip": {
+            "description": "コインを投げて、表か裏か見てみよう！ :3"
+        },
+        "listapps": {
+            "description": "ボットのPCで今開いてるアプリを見てみよう！ :3"
+        },
+        "parameters": {
+            "coinflip_label": "コイントスに名前をつける？（お好みで！）",
+            "question": "どんな質問に答えよう？",
+            "rolls": "サイコロを何回振る？",
+            "sides": "サイコロの面はいくつ？"
+        },
+        "roll": {
+            "description": "サイコロを振って運試し！ >:D"
+        },
+        "yes_or_no": {
+            "description": "質問してね！「はい」か「いいえ」で答えるよ :3"
+        }
+    },
     "welcome": {
         "description": "ウェルカムメッセージのグループです。 \n:3",
         "joinchannel": {
@@ -823,6 +1202,72 @@
                 "channel": "メッセージを残すチャンネルを設定する"
             }
         },
+        "message": {
+            "description": "メッセージでいろいろ遊んじゃおう！ :3",
+            "direct_message": {
+                "description": "メンバーにこっそりDMを送ろう！ :3"
+            },
+            "first_sent": {
+                "description": "このチャンネルのいちばん最初のメッセージを発掘！ :3"
+            },
+            "get_random_message": {
+                "description": "このチャンネルからランダムにメッセージを選ぶよ！ :3"
+            },
+            "last_sent": {
+                "description": "このチャンネルの最新メッセージを掘り起こすよ！ :3"
+            },
+            "mass_delete": {
+                "description": "メッセージをまとめてお掃除！ >:D",
+                "parameters": {
+                    "limit": "何件お掃除する？"
+                }
+            },
+            "message_count": {
+                "description": "このチャンネルのメッセージを数えちゃおう！ :3"
+            },
+            "purge": {
+                "description": "指定した数の最近のメッセージをお掃除！ >:D"
+            },
+            "say": {
+                "description": "このチャンネルでボットに何か言わせちゃおう！ :3"
+            },
+            "search_for": {
+                "description": "このチャンネルのメッセージを探そう！ :3"
+            },
+            "send": {
+                "description": "メッセージを送っちゃおう！ :3"
+            }
+        },
+        "role": {
+            "add_role": {
+                "description": "新しいロールを追加しよう！ :3"
+            },
+            "delete_role": {
+                "description": "ロールをぽんっと削除！ :3"
+            },
+            "description": "ロールでいろいろ遊んじゃおう！ :3",
+            "edit_role": {
+                "description": "ロールの権限をちょこっと調整！ :3"
+            },
+            "give_role": {
+                "description": "メンバーにロールをプレゼント！ :3"
+            },
+            "list": {
+                "description": "ロール一覧を見てみよう！ :3"
+            },
+            "list_users_in_role": {
+                "description": "そのロールを持ってる人を見てみよう！ :3"
+            },
+            "take_role": {
+                "description": "メンバーからロールを取り上げちゃおう！ :3"
+            },
+            "user_roles": {
+                "description": "ユーザーが持ってるロールをチェック！ :3"
+            }
+        },
+        "settings": {
+            "description": "設定をちょっとのぞいてみよう！ :3"
+        },
         "toggle": {
             "description": "ウェルカムメッセージを切り替えてください。 \n:3",
             "embeds": {
@@ -833,6 +1278,26 @@
             },
             "parameters": {
                 "enabled": "ウェルカムメッセージを有効にしますか? \n(はい/いいえ)"
+            }
+        },
+        "utility": {
+            "coinflip": {
+                "description": "コインを投げて、表か裏か見てみよう！ :3"
+            },
+            "listapps": {
+                "description": "ボットのPCで今開いてるアプリを見てみよう！ :3"
+            },
+            "parameters": {
+                "coinflip_label": "コイントスに名前をつける？（お好みで！）",
+                "question": "どんな質問に答えよう？",
+                "rolls": "サイコロを何回振る？",
+                "sides": "サイコロの面はいくつ？"
+            },
+            "roll": {
+                "description": "サイコロを振って運試し！ >:D"
+            },
+            "yes_or_no": {
+                "description": "質問してね！「はい」か「いいえ」で答えるよ :3"
             }
         }
     }

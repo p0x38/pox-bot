@@ -1,4 +1,13 @@
 {
+    "image_asset_not_found": "Couldn't find that image asset.",
+    "qrcode": {
+        "empty_input": "The input cannot be empty!",
+        "failed": "Couldn't generate the QR code image.",
+        "generated": "QR code generated! >:D",
+        "generated_label": "Generated with TongueBot"
+    },
+    "text_transform_completed": "Transformed in {elapsed_ms:.2f} ms.",
+    "text_transform_failed": "Couldn't transform the text: {error}",
     "ban_user": "{user} has been banned! :3",
     "chatbot_empty": "I have no words! 3:",
     "chatbot_request_error": "It seems bot owner forgot to specify the model to generate. :/",

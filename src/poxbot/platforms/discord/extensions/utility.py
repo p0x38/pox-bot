@@ -54,7 +54,9 @@ class UtilityCog(commands.Cog):
         name='8ball',
         description=app_commands.locale_str('command.8ball.description'),
     )
-    @app_commands.describe(question='Question to answer by 8ball.')
+    @app_commands.describe(
+        question=app_commands.locale_str('command.8ball.parameters.question'),
+    )
     async def eight_ball(self, interaction: Interaction, question: str):
         loc = (
             await self.bot.database.settings.get_locale(interaction)
@@ -96,8 +98,13 @@ class UtilityCog(commands.Cog):
 
         await interaction.followup.send(embed=embed)
 
-    @app_commands.command(name='yes_or_no', description='Gives yes or no to your ask')
-    @app_commands.describe(question='Question')
+    @app_commands.command(
+        name='yes_or_no',
+        description=app_commands.locale_str('command.utility.yes_or_no.description'),
+    )
+    @app_commands.describe(
+        question=app_commands.locale_str('command.utility.parameters.question'),
+    )
     async def yes_or_no(self, interaction: Interaction, question: str):
         result = self.rng.choice(np.array(['Yeah', 'Nope'], dtype=object))
 
@@ -111,9 +118,11 @@ class UtilityCog(commands.Cog):
 
     @app_commands.command(
         name='coinflip',
-        description="Flips a coin and says 'Heads' or 'Tails'.",
+        description=app_commands.locale_str('command.utility.coinflip.description'),
     )
-    @app_commands.describe(text='Optional label for the flip')
+    @app_commands.describe(
+        text=app_commands.locale_str('command.utility.parameters.coinflip_label'),
+    )
     async def coin_flip(self, interaction: Interaction, text: str | None = None):
         await interaction.response.defer()
         locale = self.bot.get_locale(interaction)
@@ -133,11 +142,11 @@ class UtilityCog(commands.Cog):
 
     @app_commands.command(
         name='roll',
-        description='Roll one or more dice and show the result.',
+        description=app_commands.locale_str('command.utility.roll.description'),
     )
     @app_commands.describe(
-        sides='Number of sides on each die',
-        rolls='How many dice to roll',
+        sides=app_commands.locale_str('command.utility.parameters.sides'),
+        rolls=app_commands.locale_str('command.utility.parameters.rolls'),
     )
     async def roll(self, interaction: Interaction, sides: int = 6, rolls: int = 1):
         if sides < 2 or rolls < 1:

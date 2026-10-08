@@ -41,9 +41,15 @@ class RoleCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
 
-    group = app_commands.Group(name='role', description='An group for Roles.')
+    group = app_commands.Group(
+        name='role',
+        description=app_commands.locale_str('command.role.description'),
+    )
 
-    @group.command(name='give_role', description='Gives member a role.')
+    @group.command(
+        name='give_role',
+        description=app_commands.locale_str('command.role.give_role.description'),
+    )
     @app_commands.guild_only()
     @app_commands.checks.has_permissions(manage_roles=True)
     async def give_member_role(
@@ -72,7 +78,10 @@ class RoleCog(commands.Cog):
         except Exception:
             raise
 
-    @group.command(name='take_role', description='Takes role from member.')
+    @group.command(
+        name='take_role',
+        description=app_commands.locale_str('command.role.take_role.description'),
+    )
     @app_commands.guild_only()
     @app_commands.checks.has_permissions(manage_roles=True)
     async def take_member_role(
@@ -101,7 +110,10 @@ class RoleCog(commands.Cog):
         except Exception:
             raise
 
-    @group.command(name='list', description='Lists roles.')
+    @group.command(
+        name='list',
+        description=app_commands.locale_str('command.role.list.description'),
+    )
     @app_commands.guild_only()
     async def list_roles(self, interaction: Interaction):
         if interaction.guild is None:
@@ -112,7 +124,10 @@ class RoleCog(commands.Cog):
 
         return await interaction.response.send_message(embed=embed)
 
-    @group.command(name='user_roles', description="Lists user's role.")
+    @group.command(
+        name='user_roles',
+        description=app_commands.locale_str('command.role.user_roles.description'),
+    )
     @app_commands.guild_only()
     async def list_user_roles(self, interaction: Interaction, member: Member):
         if interaction.guild is None:
@@ -154,7 +169,10 @@ class RoleCog(commands.Cog):
 
         return choices[:25]
 
-    @group.command(name='edit_role', description="Edits role's permission.")
+    @group.command(
+        name='edit_role',
+        description=app_commands.locale_str('command.role.edit_role.description'),
+    )
     @app_commands.guild_only()
     @app_commands.autocomplete(permission=permission_autocomplete)
     @app_commands.checks.has_permissions(manage_roles=True)
@@ -210,7 +228,10 @@ class RoleCog(commands.Cog):
         except Exception:
             raise
 
-    @group.command(name='add_role', description='Adds a role.')
+    @group.command(
+        name='add_role',
+        description=app_commands.locale_str('command.role.add_role.description'),
+    )
     async def add_role(self, interaction: Interaction, name: str):
         if interaction.guild is None:
             return await interaction.response.send_message("You're using User-mode.")
@@ -237,7 +258,10 @@ class RoleCog(commands.Cog):
             self.bot.logger.exception('Uncaught exception')
             return None
 
-    @group.command(name='delete_role', description='Deletes a role.')
+    @group.command(
+        name='delete_role',
+        description=app_commands.locale_str('command.role.delete_role.description'),
+    )
     async def delete_role(self, interaction: Interaction, role: Role):
         if interaction.guild is None:
             return await interaction.response.send_message("You're using User-mode.")
