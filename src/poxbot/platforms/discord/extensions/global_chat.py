@@ -1,3 +1,4 @@
+import asyncio
 import re
 import unicodedata
 from time import perf_counter
@@ -20,9 +21,24 @@ from discord import (
 from discord.ext import commands
 
 from ....application import PoxBot
+from ....features.moderation import (
+    GlobalChatModerator,
+    ModerationAction,
+    ModerationResult,
+    combine_results,
+)
+from ....features.moderation.manager import (
+    MAX_IMAGE_BYTES,
+    MAX_TOTAL_IMAGE_BYTES,
+)
+from ....features.moderation.normalization import normalize_text
+from ....infrastructure.logger import get_logger
 from ....persistence.models.guild_settings_v2 import (
     AntiSpamFilter,
     GlobalChatDeliveryType,
+)
+from ....persistence.models.pydantic.blacklisted_item import (
+    BlacklistItem,
 )
 from ....services.spam import AntiSpamManager
 
@@ -30,11 +46,23 @@ from ....services.spam import AntiSpamManager
 class GlobalChatCog(commands.Cog):
     def __init__(self, bot: PoxBot):
         self.bot = bot
+        self.logger = get_logger(__name__, prefix='GlobalChat')
         self.antispam_managers: dict[int, AntiSpamManager] = {}
         self.censored_words = [r'(?:https?://)?discord\.gg\/[a-zA-Z0-9]+']
-        self.whitelisted_urls = []
+        self.whitelisted_domains = bot.constants.whitelisted_domains
+        self.blacklisted_domains = bot.constants.blacklisted_domains
 
+        self.moderator = GlobalChatModerator(
+            url_extractor=bot.resources.url_extrator,
+            blacklisted_domains=self.blacklisted_domains,
+        )
         self.webhook_cache: dict[int, Webhook] = {}
+
+    async def cog_load(self):
+        threat_data = await self.bot.resources.load_with_orjson_async(
+            'global_chat_threats.json',
+        )
+        self.moderator.load_catalog(threat_data)
 
     def _record_counter(self, name: str, description: str, labels: dict[str, str]):
         if self.bot.metrics:
@@ -145,23 +173,41 @@ class GlobalChatCog(commands.Cog):
                 only_unique=True,
                 check_dns=False,
                 get_indices=True,
-                with_schema_only=True,
+                with_schema_only=False,
             )
             or []
         )
 
         for item in reversed(found):
-            if isinstance(item, str):
-                is_whitelisted = any(w in item for w in self.whitelisted_urls)
-                if not is_whitelisted:
-                    text = text.replace(item, '[URL]')
-            else:
+            if isinstance(item, tuple) and len(item) == 2:
                 url, (start, end) = item
+
                 ext = tldextract.extract(url)
                 domain = f'{ext.domain}.{ext.suffix}'
 
-                if domain not in self.whitelisted_urls:
-                    text = text[:start] + '[URL]' + text[end:]
+                if domain in self.whitelisted_domains:
+                    continue
+
+                dummy_item = BlacklistItem({'value': domain})
+
+                if dummy_item in self.blacklisted_domains:
+                    actual_item = next(
+                        (x for x in self.blacklisted_domains if x == dummy_item), None
+                    )
+                    if actual_item:
+                        reason_names = ", ".join([
+                            (r[0] if isinstance(r, tuple) else r).value
+                            for r in actual_item.reasons
+                        ])
+                        censor_replacement = f'[URL Blocked: {reason_names}]'
+                        self.logger.warning('Blocked %s; %s', domain, reason_names)
+                    else:
+                        censor_replacement = '[URL]'
+
+                    text = text[:start] + censor_replacement + text[end:]
+                    continue
+
+                text = text[:start] + '[URL]' + text[end:]
 
         return text
 
@@ -172,24 +218,22 @@ class GlobalChatCog(commands.Cog):
             key = f'texts.moderation.categories.{cat}'
             descriptions.append(self.bot.internal_translator.T(key, locale))
 
-        if len(descriptions) == 1:
-            combined = self.bot.internal_translator.T(
-                'text.moderation.moderation.format.single',
+        if not descriptions:
+            return self.bot.internal_translator.T(
+                'text.moderation.moderation.format',
                 locale,
-                {'content': descriptions[0]},
+                count=0,
             )
-        elif len(descriptions) == 2:
-            combined = self.bot.internal_translator.T(
-                'text.moderation.moderation.format.two',
-                locale,
-                {'first': descriptions[0], 'last': descriptions[1]},
-            )
-        else:
-            combined = self.bot.internal_translator.T(
-                'text.moderation.moderation.format.multiple',
-                locale,
-                {'list': ', '.join(descriptions[:-1]), 'last': descriptions[-1]},
-            )
+
+        combined = self.bot.internal_translator.T(
+            'text.moderation.moderation.format',
+            locale,
+            count=len(descriptions),
+            content=descriptions[0],
+            first=descriptions[0],
+            last=descriptions[-1],
+            list=', '.join(descriptions[:-1]),
+        )
 
         return self.bot.internal_translator.T(
             'text.moderation.flagged_message',
@@ -198,12 +242,77 @@ class GlobalChatCog(commands.Cog):
         )
 
     async def is_text_sendable(self, message: Message):
+        normalized_content = normalize_text(message.content)
         if message.guild and self.bot.resources.profanity_filter.is_profane(
-            message.content,
+            normalized_content,
         ):
             return False
 
-        return all(not re.search(word, message.content) for word in self.censored_words)
+        return all(
+            not re.search(word, normalized_content)
+            for word in self.censored_words
+        )
+
+    async def moderate_message(self, message: Message) -> ModerationResult:
+        text_result = self.moderator.moderate_text(message.content)
+        if text_result.action == ModerationAction.BLOCK:
+            return text_result
+
+        image_data: list[bytes] = []
+        total_size = 0
+        try:
+            async with asyncio.timeout(10):
+                for attachment in message.attachments:
+                    if (
+                        not attachment.content_type
+                        or not attachment.content_type.startswith('image/')
+                    ):
+                        continue
+
+                    if (
+                        attachment.size > MAX_IMAGE_BYTES
+                        or total_size + attachment.size > MAX_TOTAL_IMAGE_BYTES
+                    ):
+                        return combine_results(
+                            text_result,
+                            ModerationResult.review(
+                                'attachment_size_limit',
+                                'Image attachments exceed moderation size limits',
+                            ),
+                        )
+
+                    data = await attachment.read()
+
+                    if (
+                        len(data) > MAX_IMAGE_BYTES
+                        or total_size + len(data) > MAX_TOTAL_IMAGE_BYTES
+                    ):
+                        return combine_results(
+                            text_result,
+                            ModerationResult.review(
+                                'attachment_size_limit',
+                                'Image attachments exceed moderation size limits',
+                            ),
+                        )
+                    total_size += len(data)
+                    image_data.append(data)
+        except (HTTPException, TimeoutError):
+            return combine_results(
+                text_result,
+                ModerationResult.review(
+                    'attachment_read_failed',
+                    'Image attachment could not be inspected',
+                ),
+            )
+
+        if not image_data:
+            return text_result
+
+        image_result = await asyncio.to_thread(
+            self.moderator.moderate_images,
+            image_data,
+        )
+        return combine_results(text_result, image_result)
 
     async def broadcast_global_message(self, original: Message):
         if not original.guild:
@@ -215,6 +324,21 @@ class GlobalChatCog(commands.Cog):
                 name='bot_global_chat_messages_total',
                 description='Total count of messages sent to the global chat system',
                 labels={'guild_id': str(original_guild.id), 'status': 'filtered'},
+            )
+            return
+
+        moderation_result = await self.moderate_message(original)
+        if moderation_result.action != ModerationAction.ALLOW:
+            self._record_counter(
+                name='bot_global_chat_messages_total',
+                description='Total count of messages sent to the global chat system',
+                labels={'guild_id': str(original_guild.id), 'status': 'filtered'},
+            )
+            self.logger.warning(
+                'Held global chat message %s in guild %s for moderation: %s',
+                original.id,
+                original_guild.id,
+                ', '.join(moderation_result.reason_codes),
             )
             return
 
@@ -312,12 +436,10 @@ class GlobalChatCog(commands.Cog):
                     for attachment in original.attachments:
                         if not attachment.content_type:
                             continue
-                        if not attachment.content_type.startswith(
-                            (
-                                'image',
-                                'video',
-                            )
-                        ):
+                        if not attachment.content_type.startswith((
+                            'image',
+                            'video',
+                        )):
                             continue
 
                         try:
@@ -473,9 +595,15 @@ class GlobalChatCog(commands.Cog):
 
     @group.command(
         name='delivery',
-        description='Set how global chat messages are delivered.',
+        description=app_commands.locale_str(
+            'command.global_chat.delivery.description',
+        ),
     )
-    @app_commands.describe(mode='Delivery mode for global chat messages.')
+    @app_commands.describe(
+        mode=app_commands.locale_str(
+            'command.global_chat.delivery.parameters.mode',
+        ),
+    )
     @app_commands.checks.has_permissions(manage_guild=True)
     async def globalchat_delivery(
         self,
@@ -520,7 +648,9 @@ class GlobalChatCog(commands.Cog):
 
     @group.command(
         name='silent',
-        description=app_commands.locale_str('command.global_chat.silent.description'),
+        description=app_commands.locale_str(
+            'command.global_chat.silentmode.description',
+        ),
     )
     @app_commands.checks.has_permissions(manage_guild=True)
     async def globalchat_set_silent(self, interaction: Interaction, value: bool):
@@ -555,9 +685,9 @@ class GlobalChatCog(commands.Cog):
         )
         await interaction.followup.send(
             self.bot.internal_translator.T(
-                'command.global_chat.silent.embeds.default.description',
+                'command.global_chat.silentmode.embeds.default.description',
                 loc,
-                status_text=status_text,
+                toggle=status_text,
             ),
         )
         return None
