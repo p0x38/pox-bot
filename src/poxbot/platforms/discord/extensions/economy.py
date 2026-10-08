@@ -314,7 +314,13 @@ class EconomyCog(commands.Cog):
 
                 return await interaction.followup.send(embed=embed)
 
-            embed = Embed(title='PoxBot Shop', color=Color.blue())
+            embed = Embed(
+                title=self.bot.internal_translator.T(
+                    'command.economy.list.embeds.default.title',
+                    loc,
+                ),
+                color=Color.blue(),
+            )
             for i in items:
                 buy_price = (
                     self.bot.internal_translator.T(

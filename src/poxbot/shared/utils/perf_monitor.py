@@ -49,8 +49,14 @@ class PerformanceMonitor:
             'leaks': leak_reports,
         }
 
-    def create_embed(self, stats: dict) -> Embed:
-        embed = Embed(title='Bot performance statistics', color=Color.blue())
+    def create_embed(self, stats: dict, locale: str = 'en') -> Embed:
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.info.memory_check.embeds.default.title',
+                locale,
+            ),
+            color=Color.blue(),
+        )
 
         embed.add_field(
             name='API Latency',

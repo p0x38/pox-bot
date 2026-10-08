@@ -37,6 +37,9 @@
         }
     },
     "embeds": {
+        "generic": {
+            "title": "エラーが発生しました"
+        },
         "blacklist_not_configured": {
             "description": "このサーバーにはブラックリストがまだ設定されていません。",
             "title": "ブラックリストが設定されていません! \n3:"

@@ -293,7 +293,10 @@ class PoxBot(commands.AutoShardedBot):
             )
 
             embed = Embed(
-                title='Error thrown while trying to process the command!',
+                title=self.internal_translator.T(
+                    'error.embeds.generic.title',
+                    (ctx.guild.preferred_locale.value if ctx.guild else 'en'),
+                ),
                 timestamp=datetime.now(UTC),
                 color=Color.red(),
             )
@@ -469,7 +472,10 @@ class PoxBot(commands.AutoShardedBot):
                     title=(
                         title_res
                         if title_res != embed_title_key
-                        else f'Error: {target_error_name}'
+                        else translator.T(
+                            'error.embeds.generic.title',
+                            str(loc),
+                        )
                     ),
                     description=(desc_res if desc_res != embed_desc_key else ''),
                     color=Color.red(),
@@ -490,7 +496,11 @@ class PoxBot(commands.AutoShardedBot):
         else:
             description = f'An error occurred while executing the command: `{error}`'
             embed = Embed(
-                title=f'Error: {target_error_name}',
+                title=(
+                    translator.T('error.embeds.generic.title', str(loc))
+                    if translator
+                    else 'Error'
+                ),
                 description=description,
                 color=Color.red(),
                 timestamp=datetime.now(UTC),

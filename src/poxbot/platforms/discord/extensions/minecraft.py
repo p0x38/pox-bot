@@ -45,7 +45,13 @@ class MinecraftCog(commands.Cog):
         loc = await self.bot.get_locale(interaction)
 
         await interaction.response.defer()
-        embed = Embed(title=f'Information for "{address}"')
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.minecraft.server.embeds.default.title',
+                loc,
+                address=address,
+            ),
+        )
 
         try:
             server = await JavaServer.async_lookup(address)

@@ -439,6 +439,9 @@
                 "closed": {
                     "description": "Come back later, we're closed! 3:",
                     "title": "Shop is closed right now! 3:"
+                },
+                "default": {
+                    "title": "PoxBot Shop"
                 }
             },
             "fields": {
@@ -535,6 +538,41 @@
             }
         },
         "description": "A group for global chat! :3",
+        "pending": {
+            "description": "List held global-chat messages waiting for moderator review.",
+            "embeds": {
+                "default": {
+                    "title": "Pending global-chat reviews",
+                    "description": "Approve or deny a case with /globalchat review using its message ID.",
+                    "case": "[Open held message]({message_link})\nReason: {reasons}"
+                }
+            },
+            "responses": {
+                "empty": "There are no global-chat messages waiting for review."
+            }
+        },
+        "review": {
+            "choices": {
+                "approve": "Approve and relay globally",
+                "deny": "Deny and discard"
+            },
+            "description": "Approve or deny a held global-chat message.",
+            "parameters": {
+                "decision": "Approve and relay the message, or deny it.",
+                "message_id": "The message ID shown by /globalchat pending."
+            },
+            "responses": {
+                "already_reviewed": "Another moderator already reviewed this case.",
+                "approved": "Approved. The original message is being relayed globally.",
+                "denied": "Denied. The message will not be relayed.",
+                "failed": "Couldn't retrieve the held message. Please try again.",
+                "invalid_id": "That message ID is invalid.",
+                "message_changed": "The message changed after it was held, so it was marked stale and not relayed.",
+                "message_missing": "The held message no longer exists, so the case was marked stale.",
+                "not_pending": "No pending review case with that message ID was found in this server.",
+                "source_unavailable": "I can't access the channel containing that message."
+            }
+        },
         "setchannel": {
             "description": "Set the global chat channel! :3",
             "embeds": {
@@ -600,35 +638,85 @@
     },
     "guild": {
         "count": {
-            "description": "Counts how many people are in here! :3"
+            "description": "Counts how many people are in here! :3",
+            "embeds": {
+                "default": {
+                    "title": "{guild_name}'s member count data"
+                }
+            }
         },
         "description": "A group for server stuff! :3",
         "icon": {
-            "description": "Shows off the server icon! :3"
+            "description": "Shows off the server icon! :3",
+            "embeds": {
+                "default": {
+                    "title": "Server Icon"
+                }
+            }
         },
         "info": {
-            "description": "Check out all the server info! :3"
+            "description": "Check out all the server info! :3",
+            "embeds": {
+                "default": {
+                    "title": "Information for {guild_name}"
+                }
+            }
         },
         "kickmembers": {
             "description": "Kicks every single real member! >:D"
         },
         "listmembers": {
-            "description": "See who's hanging out in this server! :3"
+            "description": "See who's hanging out in this server! :3",
+            "embeds": {
+                "default": {
+                    "title": "Members in {guild_name}"
+                }
+            }
         },
         "logs": {
-            "description": "Shows the history of kicks, bans, and timeouts! 3:"
+            "description": "Shows the history of kicks, bans, and timeouts! 3:",
+            "embeds": {
+                "default": {
+                    "title": "Guild history: {category}"
+                }
+            },
+            "categories": {
+                "bans": "bans",
+                "kicks": "kicks",
+                "timeouts": "timeouts"
+            }
         },
         "members_list": {
-            "description": "Lists all the cool people here! :3"
+            "description": "Lists all the cool people here! :3",
+            "embeds": {
+                "default": {
+                    "title": "{guild_name}'s members"
+                }
+            }
         },
         "nsfw_level": {
-            "description": "Checks the server's spicy level! :3"
+            "description": "Checks the server's spicy level! :3",
+            "embeds": {
+                "default": {
+                    "title": "Is server NSFW?"
+                }
+            }
         },
         "role_list": {
-            "description": "Lists all the roles in the server! :3"
+            "description": "Lists all the roles in the server! :3",
+            "embeds": {
+                "default": {
+                    "title": "List of roles in {guild_name}"
+                }
+            }
         },
         "search_members": {
-            "description": "Hunts for members matching your query! >:D"
+            "description": "Hunts for members matching your query! >:D",
+            "embeds": {
+                "default": {
+                    "title": "Members containing '{keyword}' by username in {guild_name}"
+                }
+            }
         }
     },
     "image": {
@@ -690,7 +778,12 @@
             }
         },
         "memory_check": {
-            "description": "Runs memory check! >:D"
+            "description": "Runs memory check! >:D",
+            "embeds": {
+                "default": {
+                    "title": "Bot performance statistics"
+                }
+            }
         },
         "os_info": {
             "description": "Shows what OS I'm running on! :3",
@@ -770,13 +863,31 @@
             "description": "Slide a member a message in their DMs! :3"
         },
         "first_sent": {
-            "description": "Dig up the very first message in this channel! :3"
+            "description": "Dig up the very first message in this channel! :3",
+            "embeds": {
+                "default": {
+                    "sent_title": "First Message sent in {channel_name} by {author_name}",
+                    "title": "First Message"
+                }
+            }
         },
         "get_random_message": {
-            "description": "Pick a random message from this channel! :3"
+            "description": "Pick a random message from this channel! :3",
+            "embeds": {
+                "default": {
+                    "message_title": "Message by {author_name}",
+                    "title": "Random Message"
+                }
+            }
         },
         "last_sent": {
-            "description": "Dig up the latest message in this channel! :3"
+            "description": "Dig up the latest message in this channel! :3",
+            "embeds": {
+                "default": {
+                    "sent_title": "Last Message sent in {channel_name} by {author_name}",
+                    "title": "Last Message"
+                }
+            }
         },
         "mass_delete": {
             "description": "Sweep away a bunch of messages! >:D",
@@ -794,7 +905,15 @@
             "description": "Make me say something in this channel! :3"
         },
         "search_for": {
-            "description": "Search through messages in this channel! :3"
+            "description": "Search through messages in this channel! :3",
+            "embeds": {
+                "default": {
+                    "title": "Search Results"
+                }
+            }
+        },
+        "placeholders": {
+            "not_text_channel": "Not a text channel"
         },
         "send": {
             "description": "Send a message! :3"
@@ -811,7 +930,12 @@
             }
         },
         "server": {
-            "description": "Look up a Minecraft server! :3"
+            "description": "Look up a Minecraft server! :3",
+            "embeds": {
+                "default": {
+                    "title": "Information for \"{address}\""
+                }
+            }
         },
         "uuid": {
             "description": "Find a Minecraft UUID from a username! :3"
@@ -912,7 +1036,12 @@
             "description": "Hand a member a role! :3"
         },
         "list": {
-            "description": "Show me the roles! :3"
+            "description": "Show me the roles! :3",
+            "embeds": {
+                "default": {
+                    "title": "Role list"
+                }
+            }
         },
         "list_users_in_role": {
             "description": "See who's wearing a particular role! :3"
@@ -992,6 +1121,11 @@
         "description": "A group for user stuff! :3",
         "find_first_message_contains": {
             "description": "Find their first message with a keyword in this channel! :3",
+            "embeds": {
+                "default": {
+                    "title": "First message by {user} containing '{keyword}'"
+                }
+            },
             "parameters": {
                 "keyword": "The keyword to hunt for.",
                 "member": "Whose messages should I search?"
@@ -999,15 +1133,30 @@
         },
         "first_message": {
             "description": "Dig up a member's first message in this channel! :3",
+            "embeds": {
+                "default": {
+                    "title": "First message by {user}"
+                }
+            },
             "parameters": {
                 "member": "Whose first message should I find?"
             }
         },
         "guild_duration": {
-            "description": "See how long someone's been hanging out here! :3"
+            "description": "See how long someone's been hanging out here! :3",
+            "embeds": {
+                "default": {
+                    "title": "How long has {user} been on the server?"
+                }
+            }
         },
         "hash_value": {
-            "description": "Peek at a user's hash code! :3"
+            "description": "Peek at a user's hash code! :3",
+            "embeds": {
+                "default": {
+                    "title": "User Hash Code"
+                }
+            }
         },
         "info": {
             "description": "Gets all the juicy info about a user! :3",
@@ -1022,7 +1171,12 @@
             }
         },
         "is_pepo": {
-            "description": "Find out if this user is Pepo! :3"
+            "description": "Find out if this user is Pepo! :3",
+            "embeds": {
+                "default": {
+                    "title": "Pepo Detector"
+                }
+            }
         },
         "kick": {
             "description": "Give a member the boot! >:D",
@@ -1033,12 +1187,22 @@
         },
         "latest_message": {
             "description": "Find a member's latest message in this channel! :3",
+            "embeds": {
+                "default": {
+                    "title": "Latest message by {user}"
+                }
+            },
             "parameters": {
                 "member": "Whose latest message should I find?"
             }
         },
         "random_message": {
             "description": "Roll the dice and find one of their messages! :3",
+            "embeds": {
+                "default": {
+                    "title": "Random message by {user}"
+                }
+            },
             "parameters": {
                 "member": "Whose messages should I rummage through?"
             }
@@ -1051,6 +1215,11 @@
         },
         "search_messages": {
             "description": "Hunt for a member's messages in this channel! :3",
+            "embeds": {
+                "default": {
+                    "title": "Messages by {user} containing '{keyword}'"
+                }
+            },
             "parameters": {
                 "keyword": "The keyword to hunt for.",
                 "member": "Whose messages should I search?"
@@ -1097,10 +1266,20 @@
             }
         },
         "to_reachgoal": {
-            "description": "See how many more folks we need to hit the goal! :3"
+            "description": "See how many more folks we need to hit the goal! :3",
+            "embeds": {
+                "default": {
+                    "title": "Number of members remaining to reach the goal"
+                }
+            }
         },
         "total_members": {
-            "description": "Count up everyone in this server! :3"
+            "description": "Count up everyone in this server! :3",
+            "embeds": {
+                "default": {
+                    "title": "Members in this server"
+                }
+            }
         },
         "unban": {
             "description": "Let a banned member back in! :3",
@@ -1168,10 +1347,20 @@
             "sides": "How many sides should the die have?"
         },
         "roll": {
-            "description": "Roll a die and tempt fate! >:D"
+            "description": "Roll a die and tempt fate! >:D",
+            "embeds": {
+                "default": {
+                    "title": "Dice Roll"
+                }
+            }
         },
         "yes_or_no": {
-            "description": "Ask me a question and get a yes-or-no answer! :3"
+            "description": "Ask me a question and get a yes-or-no answer! :3",
+            "embeds": {
+                "default": {
+                    "title": "Question: `{question}`"
+                }
+            }
         }
     },
     "welcome": {

@@ -164,7 +164,10 @@ class TextToSpeechCog(commands.Cog):
         except Exception as e:
             self.bot.logger.exception('Unexpected exception raised')
             embed.color = Color.red()
-            embed.title = f'Exception thrown: {e.__class__.__name__}'
+            embed.title = self.bot.internal_translator.T(
+                'error.embeds.generic.title',
+                loc,
+            )
             embed.description = str(e)
 
             await interaction.followup.send(embed=embed)

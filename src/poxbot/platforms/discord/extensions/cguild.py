@@ -17,10 +17,12 @@ from ....application import PoxBot
 
 
 class LoggingView(ui.View):
-    def __init__(self, data_dict, user, default):
+    def __init__(self, data_dict, user, default, translator, locale):
         super().__init__(timeout=60)
         self.data_dict = data_dict
         self.user = user
+        self.translator = translator
+        self.locale = locale
         self.categories = list(data_dict.keys())
 
         if isinstance(default, str):
@@ -39,7 +41,16 @@ class LoggingView(ui.View):
         category_data = self.data_dict[self.current_category]
         total_pages = self.get_total_pages()
 
-        embed = Embed(title=f'Guild history: {self.current_category}')
+        embed = Embed(
+            title=self.translator.T(
+                'command.guild.logs.embeds.default.title',
+                self.locale,
+                category=self.translator.T(
+                    f'command.guild.logs.categories.{self.current_category}',
+                    self.locale,
+                ),
+            ),
+        )
 
         start = self.current_page * self.items_per_page
         end = start + self.items_per_page
@@ -173,7 +184,14 @@ class GuildCog(commands.Cog):
             }
 
             temp1 = self.bot.internal_translator.translate_map(temp1, str(loc))
-            e = Embed(title=f'Information for {guild.name}', color=Color.blue())
+            e = Embed(
+                title=self.bot.internal_translator.T(
+                    'command.guild.info.embeds.default.title',
+                    loc,
+                    guild_name=guild.name,
+                ),
+                color=Color.blue(),
+            )
             e.set_footer(text=f'Guild ID: {guild.id}')
             e.set_author(
                 name=f'By {guild.owner.name if guild.owner else "Unknown"}',
@@ -282,7 +300,11 @@ class GuildCog(commands.Cog):
             return await interaction.followup.send(embed=embed)
 
         embed.description = '\n'.join(final_texts)
-        embed.title = f'Members in {guild.name}'
+        embed.title = self.bot.internal_translator.T(
+            'command.guild.listmembers.embeds.default.title',
+            loc,
+            guild_name=guild.name,
+        )
 
         return await interaction.followup.send(embed=embed)
 
@@ -295,7 +317,13 @@ class GuildCog(commands.Cog):
     async def check_nsfw_level(self, interaction: Interaction):
         loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(thinking=True)
-        embed = Embed(title='Is server NSFW?', description='')
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.guild.nsfw_level.embeds.default.title',
+                loc,
+            ),
+            description='',
+        )
         if interaction.guild:
             embed.description = self.bot.internal_translator.T(
                 f'text.NSFWLevel.{interaction.guild.nsfw_level.name}',
@@ -313,12 +341,16 @@ class GuildCog(commands.Cog):
     )
     @app_commands.guild_only()
     async def get_server_icon(self, interaction: Interaction):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(thinking=True)
         if interaction.guild and interaction.guild.icon:
             return await interaction.followup.send(
-                embed=Embed(title='Server Icon').set_image(
-                    url=interaction.guild.icon.url,
-                ),
+                embed=Embed(
+                    title=self.bot.internal_translator.T(
+                        'command.guild.icon.embeds.default.title',
+                        loc,
+                    ),
+                ).set_image(url=interaction.guild.icon.url),
             )
         return await interaction.followup.send('No icon found.')
 
@@ -335,7 +367,10 @@ class GuildCog(commands.Cog):
         if not interaction.guild:
             return await interaction.followup.send(
                 embed=Embed(
-                    title='Error',
+                    title=self.bot.internal_translator.T(
+                        'error.embeds.generic.title',
+                        loc,
+                    ),
                     description=self.bot.internal_translator.T(
                         'error.custom.guild_only',
                         loc,
@@ -345,7 +380,11 @@ class GuildCog(commands.Cog):
             )
 
         embed = Embed(
-            title=f"{interaction.guild.name}'s member count data",
+            title=self.bot.internal_translator.T(
+                'command.guild.count.embeds.default.title',
+                loc,
+                guild_name=interaction.guild.name,
+            ),
             description='',
             color=Color.green(),
         )
@@ -390,7 +429,10 @@ class GuildCog(commands.Cog):
         if not interaction.guild:
             return await interaction.followup.send(
                 embed=Embed(
-                    title='Error',
+                    title=self.bot.internal_translator.T(
+                        'error.embeds.generic.title',
+                        loc,
+                    ),
                     description=self.bot.internal_translator.T(
                         'error.custom.guild_only',
                         loc,
@@ -400,7 +442,11 @@ class GuildCog(commands.Cog):
             )
 
         embed = Embed(
-            title=f"{interaction.guild.name}'s members",
+            title=self.bot.internal_translator.T(
+                'command.guild.members_list.embeds.default.title',
+                loc,
+                guild_name=interaction.guild.name,
+            ),
             description='',
             color=Color.green(),
         )
@@ -443,7 +489,10 @@ class GuildCog(commands.Cog):
         if not interaction.guild:
             return await interaction.followup.send(
                 embed=Embed(
-                    title='Error',
+                    title=self.bot.internal_translator.T(
+                        'error.embeds.generic.title',
+                        loc,
+                    ),
                     description=self.bot.internal_translator.T(
                         'error.custom.guild_only',
                         loc,
@@ -453,9 +502,11 @@ class GuildCog(commands.Cog):
             )
 
         embed = Embed(
-            title=(
-                f"Member contains with '{keyword}' "
-                'by username in {interaction.guild.name}'
+            title=self.bot.internal_translator.T(
+                'command.guild.search_members.embeds.default.title',
+                loc,
+                keyword=keyword,
+                guild_name=interaction.guild.name,
             ),
             description='',
             color=Color.green(),
@@ -487,7 +538,10 @@ class GuildCog(commands.Cog):
         if not interaction.guild:
             return await interaction.followup.send(
                 embed=Embed(
-                    title='Error',
+                    title=self.bot.internal_translator.T(
+                        'error.embeds.generic.title',
+                        loc,
+                    ),
                     description=self.bot.internal_translator.T(
                         'error.custom.guild_only',
                         loc,
@@ -497,7 +551,11 @@ class GuildCog(commands.Cog):
             )
 
         embed = Embed(
-            title=f'List of roles in {interaction.guild.name}',
+            title=self.bot.internal_translator.T(
+                'command.guild.role_list.embeds.default.title',
+                loc,
+                guild_name=interaction.guild.name,
+            ),
             description='\n'.join(
                 [
                     role.mention
@@ -551,11 +609,18 @@ class GuildCog(commands.Cog):
     )
     @app_commands.checks.has_permissions(view_audit_log=True)
     async def show_history(self, interaction: Interaction):
+        loc = await self.bot.get_locale(interaction)
         if not interaction.guild:
             return await interaction.response.send_message('Must be in guild.')
         history_data = await self.fetch_guild_history(interaction.guild)
 
-        view = LoggingView(history_data, interaction.user, 'kicks')
+        view = LoggingView(
+            history_data,
+            interaction.user,
+            'kicks',
+            self.bot.internal_translator,
+            loc,
+        )
         await interaction.response.send_message(embed=view.create_embed(), view=view)
 
 

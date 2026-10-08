@@ -550,8 +550,9 @@ class InfoCog(commands.Cog):
     async def run_memorycheck(self, interaction: Interaction):
         await interaction.response.defer()
 
+        loc = await self.bot.get_locale(interaction)
         stats = self.bot.perf_monitor.get_stats()
-        embed = self.bot.perf_monitor.create_embed(stats)
+        embed = self.bot.perf_monitor.create_embed(stats, str(loc))
 
         await interaction.followup.send(embed=embed)
 

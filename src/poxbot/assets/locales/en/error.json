@@ -37,6 +37,9 @@
         }
     },
     "embeds": {
+        "generic": {
+            "title": "Something went wrong"
+        },
         "blacklist_not_configured": {
             "description": "The blacklist hasn't been configured for this server yet.",
             "title": "Blacklist isn't set up! 3:"

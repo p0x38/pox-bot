@@ -189,6 +189,7 @@ class MessageCog(commands.Cog):
         keyword: str,
         limit: int | None = 100,
     ):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer()
         found_messages = []
 
@@ -209,7 +210,12 @@ class MessageCog(commands.Cog):
                         } (ID: {message.id})',
                     )
 
-        embed = Embed(title='Search Results')
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.message.search_for.embeds.default.title',
+                loc,
+            ),
+        )
 
         if found_messages:
             embed.description = '\n'.join(found_messages)
@@ -226,22 +232,33 @@ class MessageCog(commands.Cog):
     )
     @app_commands.guild_only()
     async def fetch_last_message(self, interaction: Interaction):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer()
         message = None
         if isinstance(interaction.channel, discord.TextChannel):
             message = interaction.channel.last_message
 
-        embed = Embed(title='Last Message')
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.message.last_sent.embeds.default.title',
+                loc,
+            ),
+        )
 
         if message:
-            embed.title = f'Last Message sent in {
-                (
+            embed.title = self.bot.internal_translator.T(
+                'command.message.last_sent.embeds.default.sent_title',
+                loc,
+                channel_name=(
                     interaction.channel.name
-                    if interaction.channel
-                    and isinstance(interaction.channel, discord.TextChannel)
-                    else "Not an Text Channel"
-                )
-            } by {message.author.name}'
+                    if isinstance(interaction.channel, discord.TextChannel)
+                    else self.bot.internal_translator.T(
+                        'command.message.placeholders.not_text_channel',
+                        loc,
+                    )
+                ),
+                author_name=message.author.name,
+            )
             embed.description = message.content
             embed.set_footer(text=f'Message ID: {message.id}')
             embed.color = discord.Color.green()
@@ -259,23 +276,34 @@ class MessageCog(commands.Cog):
     )
     @app_commands.guild_only()
     async def fetch_first_message(self, interaction: Interaction):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer()
         message = None
         if isinstance(interaction.channel, discord.TextChannel):
             async for msg in interaction.channel.history(limit=1, oldest_first=True):
                 message = msg
 
-        embed = Embed(title='First Message')
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.message.first_sent.embeds.default.title',
+                loc,
+            ),
+        )
 
         if message:
-            embed.title = f'First Message sent in {
-                (
+            embed.title = self.bot.internal_translator.T(
+                'command.message.first_sent.embeds.default.sent_title',
+                loc,
+                channel_name=(
                     interaction.channel.name
-                    if interaction.channel
-                    and isinstance(interaction.channel, discord.TextChannel)
-                    else "Not an Text Channel"
-                )
-            } by {message.author.name}'
+                    if isinstance(interaction.channel, discord.TextChannel)
+                    else self.bot.internal_translator.T(
+                        'command.message.placeholders.not_text_channel',
+                        loc,
+                    )
+                ),
+                author_name=message.author.name,
+            )
             embed.description = message.content
             embed.set_footer(text=f'Message ID: {message.id}')
             embed.color = discord.Color.purple()
@@ -314,6 +342,7 @@ class MessageCog(commands.Cog):
     )
     @app_commands.guild_only()
     async def fetch_random_message(self, interaction: Interaction):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer()
         messages = []
 
@@ -322,11 +351,20 @@ class MessageCog(commands.Cog):
                 [message async for message in interaction.channel.history(limit=1000)]
             )
 
-        embed = Embed(title='Random Message')
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.message.get_random_message.embeds.default.title',
+                loc,
+            ),
+        )
 
         if messages:
             random_message = random.choice(messages)
-            embed.title = f'Message by {random_message.author.name}'
+            embed.title = self.bot.internal_translator.T(
+                'command.message.get_random_message.embeds.default.message_title',
+                loc,
+                author_name=random_message.author.name,
+            )
             embed.description = random_message.content
             embed.set_footer(text=f'Message ID: {random_message.id}')
             embed.color = discord.Color.blue()

@@ -118,9 +118,16 @@ class RoleCog(commands.Cog):
     async def list_roles(self, interaction: Interaction):
         if interaction.guild is None:
             return await interaction.response.send_message("You're using User-mode.")
+        loc = await self.bot.get_locale(interaction)
         lines = [f'<@&{role.id}>' for role in interaction.guild.roles]
 
-        embed = Embed(title='Role list', description='\n'.join(lines[::-1]))
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.role.list.embeds.default.title',
+                loc,
+            ),
+            description='\n'.join(lines[::-1]),
+        )
 
         return await interaction.response.send_message(embed=embed)
 

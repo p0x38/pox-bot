@@ -1,4 +1,6 @@
 import asyncio
+import hashlib
+import json
 import re
 import unicodedata
 from time import perf_counter
@@ -15,6 +17,7 @@ from discord import (
     Message,
     NotFound,
     TextChannel,
+    Thread,
     Webhook,
     app_commands,
 )
@@ -24,6 +27,7 @@ from ....application import PoxBot
 from ....features.moderation import (
     GlobalChatModerator,
     ModerationAction,
+    ModerationReason,
     ModerationResult,
     combine_results,
 )
@@ -48,7 +52,6 @@ class GlobalChatCog(commands.Cog):
         self.bot = bot
         self.logger = get_logger(__name__, prefix='GlobalChat')
         self.antispam_managers: dict[int, AntiSpamManager] = {}
-        self.censored_words = [r'(?:https?://)?discord\.gg\/[a-zA-Z0-9]+']
         self.whitelisted_domains = bot.constants.whitelisted_domains
         self.blacklisted_domains = bot.constants.blacklisted_domains
 
@@ -241,20 +244,19 @@ class GlobalChatCog(commands.Cog):
             {'categories': combined},
         )
 
-    async def is_text_sendable(self, message: Message):
-        normalized_content = normalize_text(message.content)
-        if message.guild and self.bot.resources.profanity_filter.is_profane(
-            normalized_content,
-        ):
-            return False
-
-        return all(
-            not re.search(word, normalized_content)
-            for word in self.censored_words
-        )
-
     async def moderate_message(self, message: Message) -> ModerationResult:
         text_result = self.moderator.moderate_text(message.content)
+        if message.guild and self.bot.resources.profanity_filter.is_profane(
+            normalize_text(message.content),
+        ):
+            text_result = combine_results(
+                text_result,
+                ModerationResult.block(
+                    ModerationReason.PROFANITY,
+                    'Message contains profanity',
+                ),
+            )
+
         if text_result.action == ModerationAction.BLOCK:
             return text_result
 
@@ -276,7 +278,7 @@ class GlobalChatCog(commands.Cog):
                         return combine_results(
                             text_result,
                             ModerationResult.review(
-                                'attachment_size_limit',
+                                ModerationReason.ATTACHMENT_SIZE_LIMIT,
                                 'Image attachments exceed moderation size limits',
                             ),
                         )
@@ -290,7 +292,7 @@ class GlobalChatCog(commands.Cog):
                         return combine_results(
                             text_result,
                             ModerationResult.review(
-                                'attachment_size_limit',
+                                ModerationReason.ATTACHMENT_SIZE_LIMIT,
                                 'Image attachments exceed moderation size limits',
                             ),
                         )
@@ -300,7 +302,7 @@ class GlobalChatCog(commands.Cog):
             return combine_results(
                 text_result,
                 ModerationResult.review(
-                    'attachment_read_failed',
+                    ModerationReason.ATTACHMENT_READ_FAILED,
                     'Image attachment could not be inspected',
                 ),
             )
@@ -314,33 +316,147 @@ class GlobalChatCog(commands.Cog):
         )
         return combine_results(text_result, image_result)
 
-    async def broadcast_global_message(self, original: Message):
+    def _get_moderation_reason_labels(
+        self,
+        reason_codes: tuple[str, ...] | list[str],
+        locale: str,
+    ) -> list[str]:
+        reason_labels = []
+        for reason_code in reason_codes:
+            try:
+                reason = ModerationReason(reason_code)
+            except ValueError:
+                reason = ModerationReason.INDICATOR_MATCH
+
+            reason_labels.append(
+                self.bot.internal_translator.T(
+                    f'text.moderation.global_chat.reasons.{reason.value}',
+                    locale,
+                ),
+            )
+
+        return reason_labels
+
+    def _get_moderation_notice(self, result: ModerationResult, locale: str) -> Embed:
+        reason_labels = self._get_moderation_reason_labels(
+            result.reason_codes,
+            locale,
+        )
+        if not reason_labels:
+            reason_labels = self._get_moderation_reason_labels(
+                [],
+                locale,
+            )
+
+        action_key = (
+            'review'
+            if result.action == ModerationAction.REVIEW
+            else 'blocked'
+        )
+        separator = '、' if locale.lower().startswith('ja') else '; '
+        return Embed(
+            title=self.bot.internal_translator.T(
+                f'text.moderation.global_chat.{action_key}.title',
+                locale,
+            ),
+            description=self.bot.internal_translator.T(
+                f'text.moderation.global_chat.{action_key}.description',
+                locale,
+                reasons=separator.join(reason_labels),
+            ),
+            color=(
+                Color.orange()
+                if result.action == ModerationAction.REVIEW
+                else Color.red()
+            ),
+        )
+
+    async def _send_moderation_notice(
+        self,
+        message: Message,
+        result: ModerationResult,
+    ) -> None:
+        if not message.guild:
+            return
+
+        notice = self._get_moderation_notice(
+            result,
+            str(message.guild.preferred_locale),
+        )
+        try:
+            await message.reply(
+                embed=notice,
+                delete_after=10.0,
+                mention_author=False,
+                allowed_mentions=AllowedMentions.none(),
+            )
+        except (Forbidden, NotFound) as error:
+            self.logger.warning(
+                'Could not send moderation notice for message %s in guild %s: %s',
+                message.id,
+                message.guild.id,
+                error,
+            )
+        except HTTPException:
+            self.logger.exception(
+                'Failed to send moderation notice for message %s in guild %s',
+                message.id,
+                message.guild.id,
+            )
+
+    @staticmethod
+    def _message_fingerprint(message: Message) -> str:
+        snapshot = [
+            message.content,
+            [
+                (attachment.id, attachment.filename, attachment.size)
+                for attachment in message.attachments
+            ],
+        ]
+        return hashlib.sha256(
+            json.dumps(snapshot, ensure_ascii=False, separators=(',', ':')).encode(),
+        ).hexdigest()
+
+    async def broadcast_global_message(
+        self,
+        original: Message,
+        *,
+        approved: bool = False,
+    ):
         if not original.guild:
             return
         original_guild = original.guild
 
-        if not await self.is_text_sendable(original):
-            self._record_counter(
-                name='bot_global_chat_messages_total',
-                description='Total count of messages sent to the global chat system',
-                labels={'guild_id': str(original_guild.id), 'status': 'filtered'},
-            )
-            return
-
-        moderation_result = await self.moderate_message(original)
-        if moderation_result.action != ModerationAction.ALLOW:
-            self._record_counter(
-                name='bot_global_chat_messages_total',
-                description='Total count of messages sent to the global chat system',
-                labels={'guild_id': str(original_guild.id), 'status': 'filtered'},
-            )
-            self.logger.warning(
-                'Held global chat message %s in guild %s for moderation: %s',
-                original.id,
-                original_guild.id,
-                ', '.join(moderation_result.reason_codes),
-            )
-            return
+        if not approved:
+            moderation_result = await self.moderate_message(original)
+            if moderation_result.action != ModerationAction.ALLOW:
+                self._record_counter(
+                    name='bot_global_chat_messages_total',
+                    description=(
+                        'Total count of messages sent to the global chat system'
+                    ),
+                    labels={'guild_id': str(original_guild.id), 'status': 'filtered'},
+                )
+                self.logger.warning(
+                    'Held global chat message %s in guild %s for moderation: %s',
+                    original.id,
+                    original_guild.id,
+                    ', '.join(moderation_result.reason_codes),
+                )
+                if (
+                    moderation_result.action == ModerationAction.REVIEW
+                    and self.bot.database.guild
+                ):
+                    await self.bot.database.guild.create_global_chat_moderation_case(
+                        message_id=original.id,
+                        guild_id=original_guild.id,
+                        channel_id=original.channel.id,
+                        author_id=original.author.id,
+                        reason_codes=list(moderation_result.reason_codes),
+                        message_fingerprint=self._message_fingerprint(original),
+                    )
+                await self._send_moderation_notice(original, moderation_result)
+                return
 
         profile = (
             await self.bot.database.user.get_full_profile(original.author.id)
@@ -822,6 +938,244 @@ class GlobalChatCog(commands.Cog):
 
         await interaction.followup.send(embed=embed)
         return None
+
+    @group.command(
+        name='pending',
+        description=app_commands.locale_str(
+            'command.global_chat.pending.description',
+        ),
+    )
+    @app_commands.checks.has_permissions(manage_messages=True)
+    async def globalchat_pending(self, interaction: Interaction):
+        loc = str(await self.bot.get_locale(interaction))
+        await interaction.response.defer(ephemeral=True)
+
+        if not interaction.guild or not self.bot.database.guild:
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'error.embeds.database_not_available.description',
+                    loc,
+                ),
+            )
+
+        cases = await self.bot.database.guild.get_pending_global_chat_moderation_cases(
+            interaction.guild.id,
+        )
+        if not cases:
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'command.global_chat.pending.responses.empty',
+                    loc,
+                ),
+            )
+
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.global_chat.pending.embeds.default.title',
+                loc,
+            ),
+            description=self.bot.internal_translator.T(
+                'command.global_chat.pending.embeds.default.description',
+                loc,
+            ),
+            color=Color.orange(),
+        )
+        for case in cases:
+            message_link = (
+                f'https://discord.com/channels/{case.guild_id}/'
+                f'{case.channel_id}/{case.message_id}'
+            )
+            reason_labels = self._get_moderation_reason_labels(
+                case.reason_codes,
+                loc,
+            )
+            separator = '、' if loc.lower().startswith('ja') else '; '
+            reason_text = separator.join(reason_labels) or (
+                self.bot.internal_translator.T(
+                    'text.moderation.global_chat.reasons.indicator_match',
+                    loc,
+                )
+            )
+            embed.add_field(
+                name=str(case.message_id),
+                value=self.bot.internal_translator.T(
+                    'command.global_chat.pending.embeds.default.case',
+                    loc,
+                    message_link=message_link,
+                    reasons=reason_text,
+                ),
+                inline=False,
+            )
+
+        await interaction.followup.send(embed=embed)
+        return None
+
+    @group.command(
+        name='review',
+        description=app_commands.locale_str(
+            'command.global_chat.review.description',
+        ),
+    )
+    @app_commands.describe(
+        message_id=app_commands.locale_str(
+            'command.global_chat.review.parameters.message_id',
+        ),
+        decision=app_commands.locale_str(
+            'command.global_chat.review.parameters.decision',
+        ),
+    )
+    @app_commands.choices(
+        decision=[
+            app_commands.Choice(
+                name=app_commands.locale_str(
+                    'command.global_chat.review.choices.approve',
+                ),
+                value='approve',
+            ),
+            app_commands.Choice(
+                name=app_commands.locale_str(
+                    'command.global_chat.review.choices.deny',
+                ),
+                value='deny',
+            ),
+        ],
+    )
+    @app_commands.checks.has_permissions(manage_messages=True)
+    async def globalchat_review(
+        self,
+        interaction: Interaction,
+        message_id: str,
+        decision: app_commands.Choice[str],
+    ):
+        loc = await self.bot.get_locale(interaction)
+        await interaction.response.defer(ephemeral=True)
+
+        if not interaction.guild or not self.bot.database.guild:
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'error.embeds.database_not_available.description',
+                    loc,
+                ),
+            )
+
+        try:
+            parsed_message_id = int(message_id)
+        except ValueError:
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'command.global_chat.review.responses.invalid_id',
+                    loc,
+                ),
+            )
+
+        database = self.bot.database.guild
+        guild_id = interaction.guild.id
+        case = await database.get_global_chat_moderation_case(
+            guild_id,
+            parsed_message_id,
+        )
+        if case is None or case.status != 'pending':
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'command.global_chat.review.responses.not_pending',
+                    loc,
+                ),
+            )
+
+        if decision.value == 'deny':
+            resolved = await database.resolve_global_chat_moderation_case(
+                guild_id=guild_id,
+                message_id=parsed_message_id,
+                status='denied',
+                reviewer_id=interaction.user.id,
+            )
+            response_key = 'denied' if resolved else 'already_reviewed'
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    f'command.global_chat.review.responses.{response_key}',
+                    loc,
+                ),
+            )
+
+        channel = interaction.guild.get_channel_or_thread(case.channel_id)
+        try:
+            if channel is None:
+                channel = await self.bot.fetch_channel(case.channel_id)
+            if not isinstance(channel, (TextChannel, Thread)):
+                return await interaction.followup.send(
+                    self.bot.internal_translator.T(
+                        'command.global_chat.review.responses.source_unavailable',
+                        loc,
+                    ),
+                )
+            original = await channel.fetch_message(case.message_id)
+        except NotFound:
+            await database.resolve_global_chat_moderation_case(
+                guild_id=guild_id,
+                message_id=parsed_message_id,
+                status='stale',
+                reviewer_id=interaction.user.id,
+            )
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'command.global_chat.review.responses.message_missing',
+                    loc,
+                ),
+            )
+        except Forbidden:
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'command.global_chat.review.responses.source_unavailable',
+                    loc,
+                ),
+            )
+        except HTTPException:
+            self.logger.exception(
+                'Failed to fetch pending global-chat message %s',
+                parsed_message_id,
+            )
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'command.global_chat.review.responses.failed',
+                    loc,
+                ),
+            )
+
+        if self._message_fingerprint(original) != case.message_fingerprint:
+            await database.resolve_global_chat_moderation_case(
+                guild_id=guild_id,
+                message_id=parsed_message_id,
+                status='stale',
+                reviewer_id=interaction.user.id,
+            )
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'command.global_chat.review.responses.message_changed',
+                    loc,
+                ),
+            )
+
+        resolved = await database.resolve_global_chat_moderation_case(
+            guild_id=guild_id,
+            message_id=parsed_message_id,
+            status='approved',
+            reviewer_id=interaction.user.id,
+        )
+        if not resolved:
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'command.global_chat.review.responses.already_reviewed',
+                    loc,
+                ),
+            )
+
+        await self.broadcast_global_message(original, approved=True)
+        return await interaction.followup.send(
+            self.bot.internal_translator.T(
+                'command.global_chat.review.responses.approved',
+                loc,
+            ),
+        )
 
 
 async def setup(bot: PoxBot):

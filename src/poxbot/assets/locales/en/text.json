@@ -194,7 +194,32 @@
         "moderation": {
             "format": "{count, plural, =0 {No content has been flagged. might be a false positive.} =1 {{content}} =2 {{first} and {last}} other {{list}, and {last}}}"
         },
-        "flagged_message": "The content has been flagged as {categories}."
+        "flagged_message": "The content has been flagged as {categories}.",
+        "global_chat": {
+            "blocked": {
+                "title": "Message not shared",
+                "description": "This message was not shared to global chat because it matched a safety rule: {reasons}."
+            },
+            "review": {
+                "title": "Message held for review",
+                "description": "This message was not shared to global chat because it needs a safety check: {reasons}. If you think this is a mistake, ask your server moderators."
+            },
+            "reasons": {
+                "profanity": "Profanity is not allowed",
+                "discord_invite": "Discord invite links are not allowed",
+                "attachment_size_limit": "Image attachments exceed moderation size limits",
+                "image_decode_failed": "An image could not be inspected safely",
+                "image_not_supported": "An image format or dimensions could not be inspected safely",
+                "attachment_read_failed": "An image attachment could not be inspected",
+                "blocked_domain": "A blocked or malicious link was detected",
+                "local_domain": "A locally blocked link was detected",
+                "ip_logger": "An IP-logging link was detected",
+                "url_shorteners": "A blocked URL shortener was detected",
+                "unknown": "A blocked link was detected",
+                "giveaway_scam": "A known giveaway-scam indicator matched",
+                "indicator_match": "A known moderation indicator matched"
+            }
+        }
     },
     "earthquake_reports": {
         "jma": {

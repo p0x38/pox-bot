@@ -758,8 +758,16 @@ class ChatbotCog(commands.Cog):
                         output += chunk
 
                 except Exception as e:
+                    locale = (
+                        message.guild.preferred_locale.value
+                        if message.guild
+                        else 'en'
+                    )
                     embed = Embed(
-                        title=e.__class__.__name__,
+                        title=self.bot.internal_translator.T(
+                            'error.embeds.generic.title',
+                            locale,
+                        ),
                         description=str(e),
                         color=Color.red(),
                     )

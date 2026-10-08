@@ -106,10 +106,15 @@ class UtilityCog(commands.Cog):
         question=app_commands.locale_str('command.utility.parameters.question'),
     )
     async def yes_or_no(self, interaction: Interaction, question: str):
+        loc = await self.bot.get_locale(interaction)
         result = self.rng.choice(np.array(['Yeah', 'Nope'], dtype=object))
 
         embed = Embed(
-            title=f'Question: `{question}`',
+            title=self.bot.internal_translator.T(
+                'command.utility.yes_or_no.embeds.default.title',
+                loc,
+                question=question,
+            ),
             description=f'Result: {result}',
             color=Color.random(),
         )
@@ -149,6 +154,7 @@ class UtilityCog(commands.Cog):
         rolls=app_commands.locale_str('command.utility.parameters.rolls'),
     )
     async def roll(self, interaction: Interaction, sides: int = 6, rolls: int = 1):
+        loc = await self.bot.get_locale(interaction)
         if sides < 2 or rolls < 1:
             return await interaction.response.send_message(
                 'Sides must be at least 2 and rolls must be at least 1.',
@@ -176,7 +182,10 @@ class UtilityCog(commands.Cog):
 
         await interaction.followup.send(
             embed=Embed(
-                title='Dice Roll',
+                title=self.bot.internal_translator.T(
+                    'command.utility.roll.embeds.default.title',
+                    loc,
+                ),
                 description='\n'.join(description),
                 color=Color.random(),
             ),

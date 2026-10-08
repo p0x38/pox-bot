@@ -385,6 +385,7 @@ class UserCog(commands.Cog):
         interaction: Interaction,
         member: Member,
     ):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer()
 
         if not interaction.guild:
@@ -393,7 +394,13 @@ class UserCog(commands.Cog):
             )
 
         try:
-            embed = Embed(title=f'How long {member.name} has been on server?')
+            embed = Embed(
+                title=self.bot.internal_translator.T(
+                    'command.user.guild_duration.embeds.default.title',
+                    loc,
+                    user=member.name,
+                ),
+            )
             joined_date = member.joined_at
             if not joined_date:
                 raise RuntimeError('Welp')
@@ -883,8 +890,15 @@ class UserCog(commands.Cog):
     )
     @app_commands.guild_only()
     async def get_list_members(self, interaction: Interaction):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(thinking=True)
-        embed = Embed(title='Members in this server', description='')
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.user.total_members.embeds.default.title',
+                loc,
+            ),
+            description='',
+        )
 
         if interaction.guild:
             embed.description = ', '.join(
@@ -1004,6 +1018,7 @@ class UserCog(commands.Cog):
         interaction: Interaction,
         goal: int | None = None,
     ):
+        loc = await self.bot.get_locale(interaction)
         if interaction.guild is None:
             return await interaction.response.send_message(
                 'Object is not guild',
@@ -1012,7 +1027,12 @@ class UserCog(commands.Cog):
 
         member_count = len(interaction.guild.members)
 
-        embed = Embed(title='Number of remaining members to reach the desired value')
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.user.to_reachgoal.embeds.default.title',
+                loc,
+            ),
+        )
 
         await interaction.response.defer()
 
@@ -1058,6 +1078,7 @@ class UserCog(commands.Cog):
         member: Member,
         keyword: str,
     ):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(thinking=True)
         if not interaction.channel:
             return await interaction.followup.send(
@@ -1078,7 +1099,12 @@ class UserCog(commands.Cog):
                 await asyncio.sleep(0.5)
 
         embed = Embed(
-            title=f"First message by {member.display_name} containing '{keyword}'",
+            title=self.bot.internal_translator.T(
+                'command.user.find_first_message_contains.embeds.default.title',
+                loc,
+                user=member.display_name,
+                keyword=keyword,
+            ),
             description='',
         )
 
@@ -1127,6 +1153,7 @@ class UserCog(commands.Cog):
         member: Member,
         keyword: str,
     ):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(thinking=True)
         if interaction.channel is None:
             return await interaction.followup.send(
@@ -1152,7 +1179,12 @@ class UserCog(commands.Cog):
                     messages.append(msg)
 
         embed = Embed(
-            title=f"Messages by {member.display_name} containing '{keyword}'",
+            title=self.bot.internal_translator.T(
+                'command.user.search_messages.embeds.default.title',
+                loc,
+                user=member.display_name,
+                keyword=keyword,
+            ),
             description='',
         )
 
@@ -1196,6 +1228,7 @@ class UserCog(commands.Cog):
         ),
     )
     async def get_first_user_message(self, interaction: Interaction, member: Member):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(thinking=True)
         if interaction.channel is None or interaction.guild is None:
             return await interaction.followup.send(
@@ -1210,7 +1243,14 @@ class UserCog(commands.Cog):
                     first_message = msg
                     break
 
-        embed = Embed(title=f'First message by {member.display_name}', description='')
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.user.first_message.embeds.default.title',
+                loc,
+                user=member.display_name,
+            ),
+            description='',
+        )
 
         if first_message and first_message.guild:
             # TODO: change to format_discord_message
@@ -1248,6 +1288,7 @@ class UserCog(commands.Cog):
         ),
     )
     async def get_latest_user_message(self, interaction: Interaction, member: Member):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(thinking=True)
         if interaction.channel is None or interaction.guild is None:
             return await interaction.followup.send(
@@ -1262,7 +1303,14 @@ class UserCog(commands.Cog):
                     latest_message = msg
                     break
 
-        embed = Embed(title=f'Latest message by {member.display_name}', description='')
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.user.latest_message.embeds.default.title',
+                loc,
+                user=member.display_name,
+            ),
+            description='',
+        )
 
         if latest_message and latest_message.guild:
             # TODO: change to format_discord_message
@@ -1300,6 +1348,7 @@ class UserCog(commands.Cog):
         ),
     )
     async def get_random_user_message(self, interaction: Interaction, member: Member):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(thinking=True)
         if interaction.channel is None:
             return await interaction.followup.send(
@@ -1317,7 +1366,14 @@ class UserCog(commands.Cog):
                 ]
             )
 
-        embed = Embed(title=f'Random message by {member.display_name}', description='')
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.user.random_message.embeds.default.title',
+                loc,
+                user=member.display_name,
+            ),
+            description='',
+        )
 
         if user_messages:
             random_message = random.choice(user_messages)
@@ -1348,8 +1404,14 @@ class UserCog(commands.Cog):
     )
     @app_commands.guild_only()
     async def is_pepo(self, interaction: Interaction, member: Member):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(thinking=True)
-        e = Embed(title='Pepo Detector')
+        e = Embed(
+            title=self.bot.internal_translator.T(
+                'command.user.is_pepo.embeds.default.title',
+                loc,
+            ),
+        )
 
         if member.id == 1100132559851098163:
             e.description = f'Yes, <@{member.id}> is pepo.'
@@ -1365,8 +1427,15 @@ class UserCog(commands.Cog):
     )
     @app_commands.guild_only()
     async def get_user_hash(self, interaction: Interaction, member: Member):
+        loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(thinking=True)
-        e = Embed(title='User Hash Code', description=f'`{hash(member)}`')
+        e = Embed(
+            title=self.bot.internal_translator.T(
+                'command.user.hash_value.embeds.default.title',
+                loc,
+            ),
+            description=f'`{hash(member)}`',
+        )
         return await interaction.followup.send(embed=e)
 
 
