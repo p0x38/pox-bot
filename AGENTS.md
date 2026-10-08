@@ -24,6 +24,10 @@ Located at `file-structure.md` (illegularly updated)
 - Coverage goal: over 80%
 - Test File: `tests/*.py`
 
+## Internationalization / Localization
+- Make sure to be casual, and playful tone when translating (silly tone?)
+- Do NOT add the line break before the emoticons
+
 ## Git
 - Commit message: Follows Conventional Commits
 - Branches: Currently only `main`
