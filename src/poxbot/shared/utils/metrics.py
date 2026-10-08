@@ -86,7 +86,7 @@ class OTelGaugeProxy:
 
 class Metrics:
     def __init__(self, config: TraceConfig):
-        from ...infrastructure.logger import get_logger  # ruff: ignore[import-outside-top-level, unsorted-imports]
+        from ...infrastructure.logger import get_logger  # ruff: ignore[import-outside-top-level]
 
         self.logger = get_logger(__name__, prefix='TelemetryManager')
         self.config = config
