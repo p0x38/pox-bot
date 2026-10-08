@@ -1,6 +1,7 @@
 from .manager import GlobalChatModerator
 from .models import (
     ModerationAction,
+    ModerationReason,
     ModerationResult,
     ThreatCatalog,
     ThreatIndicator,
@@ -10,6 +11,7 @@ from .models import (
 __all__ = [
     'GlobalChatModerator',
     'ModerationAction',
+    'ModerationReason',
     'ModerationResult',
     'ThreatCatalog',
     'ThreatIndicator',

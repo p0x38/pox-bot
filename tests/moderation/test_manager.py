@@ -10,6 +10,7 @@ from urlextract import URLExtract
 from poxbot.features.moderation import (
     GlobalChatModerator,
     ModerationAction,
+    ModerationReason,
     ThreatCatalog,
 )
 from poxbot.features.moderation.manager import GlobalChatModerator as Moderator
@@ -96,6 +97,25 @@ def test_packaged_threat_catalog_is_valid_json():
     )
 
     ThreatCatalog.model_validate(json.loads(catalog_path.read_text(encoding='utf-8')))
+
+
+@pytest.mark.parametrize('locale', ['en', 'ja'])
+def test_global_chat_moderation_messages_cover_all_reason_codes(locale: str):
+    locale_path = (
+        Path(__file__).parents[2]
+        / 'src'
+        / 'poxbot'
+        / 'assets'
+        / 'locales'
+        / locale
+        / 'text.json'
+    )
+    translations = json.loads(locale_path.read_text(encoding='utf-8'))
+    global_chat = translations['moderation']['global_chat']
+
+    assert set(global_chat['reasons']) == {reason.value for reason in ModerationReason}
+    assert global_chat['blocked']
+    assert global_chat['review']
 
 
 def test_known_url_domain_blocks_subdomains():

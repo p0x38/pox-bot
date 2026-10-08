@@ -15,6 +15,7 @@ from ...persistence.models.pydantic.blacklisted_item import (
 from .models import (
     ModerationAction,
     ModerationEvidence,
+    ModerationReason,
     ModerationResult,
     ThreatCatalog,
     ThreatIndicator,
@@ -59,7 +60,7 @@ class GlobalChatModerator:
         if _INVITE_PATTERN.search(normalized):
             evidence.append(
                 ModerationEvidence(
-                    reason_code='discord_invite',
+                    reason_code=ModerationReason.DISCORD_INVITE,
                     description='Discord invite links are not allowed in global chat',
                 ),
             )
@@ -108,7 +109,7 @@ class GlobalChatModerator:
         for data in image_data:
             if len(data) > MAX_IMAGE_BYTES:
                 return ModerationResult.review(
-                    'attachment_size_limit',
+                    ModerationReason.ATTACHMENT_SIZE_LIMIT,
                     'Image exceeds the moderation size limit',
                 )
 
@@ -116,12 +117,12 @@ class GlobalChatModerator:
                 sha256, phash = self._hash_image(data)
             except (UnidentifiedImageError, OSError, Image.DecompressionBombError):
                 return ModerationResult.review(
-                    'image_decode_failed',
+                    ModerationReason.IMAGE_DECODE_FAILED,
                     'Image could not be safely decoded for moderation',
                 )
             except ValueError as error:
                 return ModerationResult.review(
-                    'image_not_supported',
+                    ModerationReason.IMAGE_NOT_SUPPORTED,
                     str(error),
                 )
 

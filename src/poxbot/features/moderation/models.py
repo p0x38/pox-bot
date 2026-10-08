@@ -121,6 +121,22 @@ class ModerationAction(StrEnum):
     REVIEW = 'review'
 
 
+class ModerationReason(StrEnum):
+    PROFANITY = 'profanity'
+    DISCORD_INVITE = 'discord_invite'
+    ATTACHMENT_SIZE_LIMIT = 'attachment_size_limit'
+    IMAGE_DECODE_FAILED = 'image_decode_failed'
+    IMAGE_NOT_SUPPORTED = 'image_not_supported'
+    ATTACHMENT_READ_FAILED = 'attachment_read_failed'
+    BLOCKED_DOMAIN = 'blocked_domain'
+    LOCAL_DOMAIN = 'local_domain'
+    IP_LOGGER = 'ip_logger'
+    URL_SHORTENERS = 'url_shorteners'
+    UNKNOWN = 'unknown'
+    GIVEAWAY_SCAM = 'giveaway_scam'
+    INDICATOR_MATCH = 'indicator_match'
+
+
 @dataclass(frozen=True)
 class ModerationEvidence:
     reason_code: str
@@ -138,7 +154,7 @@ class ModerationResult:
 
     @property
     def reason_codes(self) -> tuple[str, ...]:
-        return tuple(dict.fromkeys(item.reason_code for item in self.evidence))
+        return tuple(dict.fromkeys(str(item.reason_code) for item in self.evidence))
 
     @classmethod
     def allow(cls) -> 'ModerationResult':
@@ -153,6 +169,19 @@ class ModerationResult:
                     reason_code,
                     description,
                     action=ModerationAction.REVIEW,
+                ),
+            ),
+        )
+
+    @classmethod
+    def block(cls, reason_code: str, description: str) -> 'ModerationResult':
+        return cls(
+            action=ModerationAction.BLOCK,
+            evidence=(
+                ModerationEvidence(
+                    reason_code,
+                    description,
+                    action=ModerationAction.BLOCK,
                 ),
             ),
         )
