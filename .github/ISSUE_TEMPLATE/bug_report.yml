@@ -1,48 +1,73 @@
-name: Bug Report
-description: File a bug report.
+name: Bug report
+description: Report a reproducible problem with the bot.
 title: "[Bug]: "
-labels: ["bug", "triage"]
+labels: ["bug"]
 type: bug
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report!
-  - type: input
-    id: contact
-    attributes:
-      label: Contact Details
-      description: How can we get in touch with you if we need more info?
-      placeholder: ex. email@example.com
-    validations:
-      required: false
+        Thanks for reporting a problem. Please search existing issues first.
+        Never include bot tokens, passwords, private message content, or other secrets.
   - type: textarea
-    id: what-happened
+    id: steps
     attributes:
-      label: What happened?
-      description: Also tell us, what did you expect to happen?
-      placeholder: Tell us what you see!
-      value: "A bug happened!"
+      label: Steps to reproduce
+      description: Include the command or action and the smallest set of steps that reproduces the problem.
+      placeholder: |
+        1. Run ...
+        2. Select ...
+        3. See the error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead? Include exact error text if available, with secrets removed.
     validations:
       required: true
   - type: input
     id: version
     attributes:
-      label: Version
-      description: What version of our software are you running?
-      placeholder: "eg. v1.3.0, or git hash (#abcDEF0123)"
+      label: Bot version
+      description: Provide the release tag or commit hash.
+      placeholder: "v1.3.0 or commit hash"
+    validations:
+      required: true
+  - type: input
+    id: python-version
+    attributes:
+      label: Python version
+      placeholder: "For example, 3.12.13"
+    validations:
+      required: true
+  - type: input
+    id: operating-system
+    attributes:
+      label: Operating system
+      placeholder: "For example, Windows 11 or Ubuntu 24.04"
     validations:
       required: true
   - type: textarea
     id: logs
     attributes:
-      label: Relevant log output
-      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      label: Relevant logs
+      description: Paste relevant logs after removing tokens, credentials, private content, and personal data. You can attach screenshots in a comment after creating the issue.
       render: shell
-  - type: upload
-    id: screenshots
-    attributes:
-      label: Upload screenshots
-      description: If applicable, add screenshots to help explain your problem.
     validations:
       required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and removed sensitive information from this report.
+          required: true
