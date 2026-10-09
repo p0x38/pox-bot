@@ -1,7 +1,17 @@
 from unittest.mock import AsyncMock, MagicMock, PropertyMock, patch
 
 import pytest
-from discord import Intents, Interaction, Message, TextChannel
+from discord import (
+    HTTPException,
+    Intents,
+    Interaction,
+    InteractionType,
+    Message,
+    TextChannel,
+    app_commands,
+)
+from discord.ext import commands
+from sqlalchemy.exc import SQLAlchemyError
 
 from poxbot.application import ApplicationContext, PoxBot
 
@@ -79,6 +89,48 @@ async def test_try_return_error_when_response_not_done(bot):
     interaction.response.send_message.assert_called_once_with(
         content='An error occurred!',
     )
+
+
+@pytest.mark.asyncio
+async def test_on_command_error_logs_send_failure(bot, caplog):
+    ctx = MagicMock()
+    ctx.command = 'broken'
+    ctx.guild = None
+    ctx.reply = AsyncMock(
+        side_effect=HTTPException(MagicMock(status=500, reason='failed'), 'failed'),
+    )
+    bot.internal_translator.T.return_value = 'Something went wrong'
+
+    await bot.on_command_error(ctx, commands.CommandError('command failed'))
+
+    assert 'Could not send error embed for command broken' in caplog.text
+    assert '500 failed' in caplog.text
+
+
+@pytest.mark.asyncio
+async def test_tree_error_uses_safe_fallback_if_locale_and_translation_are_missing(bot):
+    bot.get_locale = AsyncMock(side_effect=SQLAlchemyError('database unavailable'))
+    bot.internal_translator.T.side_effect = lambda key, *_args, **_kwargs: key
+    bot.try_return_error = AsyncMock()
+
+    interaction = MagicMock(spec=Interaction)
+    interaction.type = InteractionType.application_command
+    interaction.command.qualified_name = 'test command'
+    interaction.user.mention = '<@123>'
+    interaction.locale = 'en-US'
+
+    await bot._on_tree_error(
+        interaction,
+        app_commands.CommandInvokeError(
+            MagicMock(),
+            RuntimeError('private traceback details'),
+        ),
+    )
+
+    sent_embed = bot.try_return_error.call_args.kwargs['embed']
+    assert sent_embed.title == 'Error'
+    assert 'Something went wrong' in sent_embed.description
+    assert 'private traceback details' not in sent_embed.description
 
 
 @pytest.mark.asyncio

@@ -24,6 +24,7 @@ from discord import (
 from discord.abc import Messageable
 from discord.ext import commands
 from pytz import UTC
+from sqlalchemy.exc import SQLAlchemyError
 
 from ..features.statistics import BotConstants, BotStatistics, GitInfo
 from ..features.text_transform.manager import TextTransformManager
@@ -208,7 +209,9 @@ class PoxBot(commands.AutoShardedBot):
                 )
             else:
                 self.logger.exception(
-                    'An unexpected error was occurred while syncing commands',
+                    'Failed to synchronize application commands; '
+                    'commands may be stale.',
+                    extra={'error_type': type(e).__name__},
                 )
 
     async def setup_hook(self) -> None:
@@ -286,24 +289,39 @@ class PoxBot(commands.AutoShardedBot):
         )
 
     async def on_command_error(self, ctx: commands.Context, e: commands.CommandError):
+        self.logger.error(
+            'Exception thrown while trying to process command: %s',
+            e,
+            exc_info=(type(e), e, e.__traceback__),
+            extra={'command': str(ctx.command)},
+        )
+
+        title_key = 'error.embeds.generic.title'
+        title = (
+            self.internal_translator.T(
+                title_key,
+                ctx.guild.preferred_locale.value if ctx.guild else 'en',
+            )
+            if self.internal_translator
+            else 'Error'
+        )
+        if title == title_key:
+            title = 'Error'
+
+        embed = Embed(
+            title=title,
+            timestamp=datetime.now(UTC),
+            color=Color.red(),
+        )
         try:
-            self.logger.error(
-                'Exception thrown while trying to process command: %s',
-                e,
-            )
-
-            embed = Embed(
-                title=self.internal_translator.T(
-                    'error.embeds.generic.title',
-                    (ctx.guild.preferred_locale.value if ctx.guild else 'en'),
-                ),
-                timestamp=datetime.now(UTC),
-                color=Color.red(),
-            )
-
             await ctx.reply(embed=embed)
-        except (HTTPException, Forbidden, TypeError, ValueError):
-            self.logger.exception('Could not send error embed: %s')
+        except HTTPException as send_error:
+            self.logger.exception(
+                'Could not send error embed for command %s: %s',
+                ctx.command,
+                send_error,
+                extra={'command': str(ctx.command)},
+            )
 
     def format_channel_info(self, channel: Messageable | None):
         formatted_channel_identity = ''
@@ -397,16 +415,24 @@ class PoxBot(commands.AutoShardedBot):
         interaction: Interaction,
         error: app_commands.AppCommandError,
     ):
-        loc = await self.get_locale(interaction)
-        error_name = error.__class__.__name__
-
         cmd_name = (
-            interaction.command.qualified_name if interaction.command else 'unknown'
+            interaction.command.qualified_name
+            if interaction.command
+            else 'unknown command'
         )
 
-        # key_templates = ["error.embeds_exceptions.{}", "error.exceptions.{}"]
-        # TODO: use this for more fallbacks
-        kwargs = {'e': str(error), 'mention': interaction.user.mention}
+        try:
+            loc = await self.get_locale(interaction)
+        except (SQLAlchemyError, TimeoutError):
+            self.logger.exception(
+                'Failed to resolve locale while handling /%s; using Discord locale',
+                cmd_name,
+                extra={'command': cmd_name, 'error_type': type(error).__name__},
+            )
+            loc = interaction.locale
+
+        error_name = error.__class__.__name__
+        kwargs = {'e': 'internal error', 'mention': interaction.user.mention}
 
         if isinstance(error, app_commands.CommandOnCooldown):
             kwargs['remaining'] = str(round(error.retry_after, 2))
@@ -419,28 +445,22 @@ class PoxBot(commands.AutoShardedBot):
         ):
             kwargs['permission'] = ', '.join(error.missing_permissions)
 
-        cmd_name = (
-            interaction.command.qualified_name
-            if interaction.command
-            else 'unknown command'
-        )
         if isinstance(
             error,
             (app_commands.CommandInvokeError, app_commands.TransformerError),
         ):
+            cause = (
+                error.original
+                if isinstance(error, app_commands.CommandInvokeError)
+                else error.__cause__ or error
+            )
             self.logger.error(
-                'An uncaught error was thrown while processing a application command!',
-                exc_info=error,
+                'An uncaught error was thrown while processing an application command.',
+                exc_info=(type(cause), cause, cause.__traceback__),
                 extra={
                     'command': cmd_name,
                     'error_type': error.__class__.__name__,
-                    'is_critical': isinstance(
-                        error,
-                        (
-                            app_commands.CommandInvokeError,
-                            app_commands.TransformerError,
-                        ),
-                    ),
+                    'is_critical': True,
                     'original_error_type': type(error.original).__name__
                     if isinstance(error, app_commands.CommandInvokeError)
                     else None,
@@ -460,7 +480,24 @@ class PoxBot(commands.AutoShardedBot):
         embed = None
         content = None
 
+        generic_title = 'Error'
+        generic_description = (
+            'Something went wrong while processing the command. Please try again.'
+        )
+
         if translator:
+            generic_title_key = 'error.embeds.generic.title'
+            generic_description_key = 'error.embeds.generic.description'
+            translated_generic_title = translator.T(generic_title_key, str(loc))
+            translated_generic_description = translator.T(
+                generic_description_key,
+                str(loc),
+            )
+            if translated_generic_title != generic_title_key:
+                generic_title = translated_generic_title
+            if translated_generic_description != generic_description_key:
+                generic_description = translated_generic_description
+
             embed_title_key = f'error.embed_exceptions.{target_error_name}.title'
             embed_desc_key = f'error.embed_exceptions.{target_error_name}.description'
 
@@ -470,14 +507,11 @@ class PoxBot(commands.AutoShardedBot):
             if title_res != embed_title_key or desc_res != embed_desc_key:
                 embed = Embed(
                     title=(
-                        title_res
-                        if title_res != embed_title_key
-                        else translator.T(
-                            'error.embeds.generic.title',
-                            str(loc),
-                        )
+                        title_res if title_res != embed_title_key else generic_title
                     ),
-                    description=(desc_res if desc_res != embed_desc_key else ''),
+                    description=(
+                        desc_res if desc_res != embed_desc_key else generic_description
+                    ),
                     color=Color.red(),
                     timestamp=datetime.now(UTC),
                 )
@@ -486,31 +520,36 @@ class PoxBot(commands.AutoShardedBot):
                 text_res = translator.T(text_key, str(loc), kwargs)
 
                 if text_res == text_key:
+                    fallback_text_key = 'error.exceptions.AppCommandError'
                     text_res = translator.T(
-                        'error.exceptions.AppCommandError',
+                        fallback_text_key,
                         str(loc),
                         kwargs,
                     )
 
-                content = text_res
-        else:
-            description = f'An error occurred while executing the command: `{error}`'
+                if text_res not in (text_key, 'error.exceptions.AppCommandError'):
+                    content = text_res
+
+        if embed is None and content is None:
             embed = Embed(
-                title=(
-                    translator.T('error.embeds.generic.title', str(loc))
-                    if translator
-                    else 'Error'
-                ),
-                description=description,
+                title=generic_title,
+                description=generic_description,
                 color=Color.red(),
                 timestamp=datetime.now(UTC),
             )
 
         if interaction.type == InteractionType.application_command:
-            if embed:
-                await self.try_return_error(interaction, embed=embed)
-            else:
-                await self.try_return_error(interaction, content=content)
+            try:
+                if embed:
+                    await self.try_return_error(interaction, embed=embed)
+                else:
+                    await self.try_return_error(interaction, content=content)
+            except HTTPException:
+                self.logger.exception(
+                    'Failed to send error response for /%s',
+                    cmd_name,
+                    extra={'command': cmd_name, 'error_type': error_name},
+                )
         elif interaction.type == InteractionType.autocomplete:
             self.logger.error(
                 'Error thrown while trying to resolve autocompletion: %s',
