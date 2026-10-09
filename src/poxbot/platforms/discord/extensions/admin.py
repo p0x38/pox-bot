@@ -234,11 +234,19 @@ class AdminOnlyCog(commands.Cog):
         name='leave_guild',
         description=app_commands.locale_str('command.admin.leave_guild.description'),
     )
-    async def leave_guild(self, interaction: Interaction, guild_id: int):
+    async def leave_guild(self, interaction: Interaction, query: str):
         await interaction.response.defer(ephemeral=True, thinking=True)
 
+        try:
+            guild_id = int(query)
+        except ValueError:
+            return await interaction.followup.send(
+                "Failed to parse query into integer",
+                ephemeral=True,
+            )
+
         guild_obj = self.bot.get_guild(guild_id)
-        
+
         if guild_obj:
             await guild_obj.leave()
             await interaction.followup.send(

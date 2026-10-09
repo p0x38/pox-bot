@@ -1,7 +1,5 @@
 import numpy as np
-import psutil
 from discord import Color, Embed, Interaction, app_commands
-from discord.abc import Messageable
 from discord.ext import commands
 
 from ....application import PoxBot
@@ -11,44 +9,6 @@ class UtilityCog(commands.Cog):
     def __init__(self, bot: PoxBot):
         self.bot = bot
         self.rng = np.random.default_rng()
-
-    @app_commands.command(
-        name='listapps',
-        description=app_commands.locale_str('command.utility.listapps.description'),
-    )
-    @app_commands.checks.cooldown(
-        1,
-        10.0,
-        key=lambda i: i.guild.id if i.guild else i.user.id,
-    )
-    async def list_all_opened_applications(self, interaction: Interaction):
-        if not interaction.guild:
-            return await interaction.response.send_message(
-                'This command must be used in a server.',
-            )
-
-        await interaction.response.defer()
-
-        paginator = commands.Paginator()
-        paginator.add_line(f'{"PID":<8} | {"Application Name":<30}')
-        paginator.add_line('-' * 45)
-
-        for proc in psutil.process_iter(['pid', 'name']):
-            try:
-                p_info = proc.info
-                paginator.add_line(f'{p_info["pid"]:<8} | {p_info["name"]:<30}')
-            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-                continue
-
-        for page in paginator.pages[:4]:
-            if (
-                isinstance(interaction.channel, Messageable)
-                and interaction.channel.permissions_for(
-                    interaction.guild.me,
-                ).send_messages
-            ):
-                await interaction.channel.send(page)
-        return None
 
     @app_commands.command(
         name='8ball',

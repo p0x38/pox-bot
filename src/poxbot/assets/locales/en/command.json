@@ -541,6 +541,9 @@
             "description": "Pick how global chat messages get delivered! :3",
             "parameters": {
                 "mode": "The delivery mode to use."
+            },
+            "texts": {
+                "success": "Successfully set delivery mode to '{mode}'! :3"
             }
         },
         "description": "A group for global chat! :3",
@@ -559,24 +562,24 @@
         },
         "review": {
             "choices": {
-                "approve": "Approve and relay globally",
-                "deny": "Deny and discard"
+                "approve": "Approve and relay globally :3",
+                "deny": "Deny and discard >:3"
             },
-            "description": "Approve or deny a held global-chat message.",
+            "description": "Approve or deny a held global-chat message! :3",
             "parameters": {
-                "decision": "Approve and relay the message, or deny it.",
-                "message_id": "The message ID shown by /globalchat pending."
+                "decision": "Approve and relay the message, or deny it, silly :3",
+                "message_id": "The message ID shown by /globalchat pending, ya know :3"
             },
             "responses": {
-                "already_reviewed": "Another moderator already reviewed this case.",
-                "approved": "Approved. The original message is being relayed globally.",
-                "denied": "Denied. The message will not be relayed.",
-                "failed": "Couldn't retrieve the held message. Please try again.",
-                "invalid_id": "That message ID is invalid.",
-                "message_changed": "The message changed after it was held, so it was marked stale and not relayed.",
-                "message_missing": "The held message no longer exists, so the case was marked stale.",
-                "not_pending": "No pending review case with that message ID was found in this server.",
-                "source_unavailable": "I can't access the channel containing that message."
+                "already_reviewed": "Another mod already handled this case, so this one's already taken :3",
+                "approved": "Approved! The original message is being relayed globally. :D",
+                "denied": "Denied. The message won't be relayed. >:3",
+                "failed": "Couldn't grab the held message. Please try again, maybe? :3",
+                "invalid_id": "That message ID looks invalid, buddy. :3",
+                "message_changed": "The message changed after it was held, so it was marked stale and not relayed. :3",
+                "message_missing": "The held message vanished, so the case was marked stale and left alone. :3",
+                "not_pending": "No pending review case with that message ID was found in this server. :3",
+                "source_unavailable": "I can't access the channel holding that message, so I can't do much here. :3"
             }
         },
         "setchannel": {
@@ -595,7 +598,7 @@
             "description": "Set up a channel for global chat! :3",
             "embeds": {
                 "default": {
-                    "description": "Global chat is all set up in {channel}! :3"
+                    "description": "Global chat is all set up at {channel}! :3"
                 }
             },
             "parameters": {

@@ -198,7 +198,7 @@ class GlobalChatCog(commands.Cog):
                         (x for x in self.blacklisted_domains if x == dummy_item), None
                     )
                     if actual_item:
-                        reason_names = ", ".join([
+                        reason_names = ', '.join([
                             (r[0] if isinstance(r, tuple) else r).value
                             for r in actual_item.reasons
                         ])
@@ -348,11 +348,7 @@ class GlobalChatCog(commands.Cog):
                 locale,
             )
 
-        action_key = (
-            'review'
-            if result.action == ModerationAction.REVIEW
-            else 'blocked'
-        )
+        action_key = 'review' if result.action == ModerationAction.REVIEW else 'blocked'
         separator = '、' if locale.lower().startswith('ja') else '; '
         return Embed(
             title=self.bot.internal_translator.T(
@@ -669,6 +665,7 @@ class GlobalChatCog(commands.Cog):
     group = app_commands.Group(
         name='globalchat',
         description=app_commands.locale_str('command.global_chat.description'),
+        guild_only=True,
     )
 
     @group.command(
@@ -707,7 +704,6 @@ class GlobalChatCog(commands.Cog):
                 channel=channel.mention,
             ),
         )
-        return None
 
     @group.command(
         name='delivery',
@@ -758,9 +754,12 @@ class GlobalChatCog(commands.Cog):
         await self.bot.database.guild.update_config(guild_id, config)
 
         await interaction.followup.send(
-            f'Global chat delivery mode set to {mode}.',
+            self.bot.internal_translator.T(
+                'command.global_chat.delivery.texts.success',
+                loc,
+                {'mode': mode.capitalize()},
+            )
         )
-        return None
 
     @group.command(
         name='silent',
