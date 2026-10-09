@@ -28,7 +28,6 @@ class FeedbackModal(ui.Modal):
         super().__init__(title='Feedback', timeout=None, custom_id='feedback-modal')
         self.bot = bot
         self.paginator = commands.Paginator()
-
         self.feedback = ui.TextInput(
             label='Give me a feedback to the bot.',
             style=TextStyle.long,
@@ -142,11 +141,20 @@ class DynamicInfoView(ui.View):
             style=ButtonStyle.link,
             url='https://github.com/p0x38/pox-bot',
         )
+        issue_tracker_button = ui.Button(
+            label=self.bot.internal_translator.T(
+                'modal.DynamicInfoView.buttons.issue_tracker_button.label',
+                locale,
+            ),
+            style=ButtonStyle.link,
+            url='https://github.com/p0x38/pox-bot/issues',
+        )
         self.feedback_button.label = self.bot.internal_translator.T(
             'modal.DynamicInfoView.buttons.suggest_button.label',
             locale,
         )
         self.add_item(url_button)
+        self.add_item(issue_tracker_button)
 
     @ui.select(min_values=1, max_values=1)
     async def select_callback(self, interaction: Interaction, select: Select):
