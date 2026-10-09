@@ -38,6 +38,7 @@
     },
     "embeds": {
         "generic": {
+            "description": "コマンドの処理中に問題が発生しました。もう一度お試しください。",
             "title": "エラーが発生しました"
         },
         "blacklist_not_configured": {

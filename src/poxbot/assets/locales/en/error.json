@@ -38,6 +38,7 @@
     },
     "embeds": {
         "generic": {
+            "description": "Something went wrong while processing the command. Please try again.",
             "title": "Something went wrong"
         },
         "blacklist_not_configured": {
