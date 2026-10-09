@@ -1,21 +1,27 @@
 # pox-bot
 
-[![Crowdin Sync](https://github.com/p0x38/pox-bot/actions/workflows/crowdin.yml/badge.svg)](https://github.com/p0x38/pox-bot/actions/workflows/crowdin.yml)
-
-> [!CAUTION]
-> There is large files that may consume your disk space.
-
 source for my bot called stupid bot
+
+## READ THIS before installing
+
+Please note that depending on the following optional dependencies, this program—or the libraries it uses—may consume a significant amount of disk space:
+
+- "cpu" and "gpu" ([PyTorch])
+- "piper" ([Piper TTS])
+- "ai" ([Ollama], [LM Studio], etc.)
+
+Also, the project usually uses AI since around July 2026, so do NOT scrape the project for training an AI model.
 
 ## System Requirements
 
 ### All platforms
 
-- `Python 3.12`
-- `uv`.
-- [`dependencies.`](pyproject.toml)
-- `PostgreSQL` (You can change it by manually modifying)
-- `ffmpeg`
+- [Python] (>=3.12,<3.14)
+- [uv]
+- [ffmpeg] (Optional now)
+- SQL engines that [SQLAlchemy] supports (currently [PostgreSQL] is most compatible with the project)
+
+All of the dependencies listed in [this file](pyproject.toml).
 
 ### ffmpeg
 
@@ -32,31 +38,46 @@ source for my bot called stupid bot
 
 ## Usage
 
-Make sure to activate virtualenv first.
+It is heavily RECOMMENDED to use venv for the project.
 
-Make sure to add `TOKEN` on environment file (.env).
-
-More `.env` related info: [here](.env-sample)
-
-Run this command: `uv run main.py`
+1. Install [Git] and [uv] if you don't have them
+2. Clone this repository: `git clone https://github.com/p0x38/pox-bot.git`
+3. Install dependencies: `uv sync --extra cpu --extra piper --extra ai --extra minecraft --extra audio` (You must not to exclude the `--extra` stuffs unless you don't really need, I haven't not yet fix the code to make the program work without them)
+4. Copy [.sample.env](.sample.env) into any file that contains `.env` and edit it with any program (Recommended: `.env`)
+5. Run the program using: `uv run poxbot run` or `poxbot run` if you have activated the venv stuff
+6. Maybe that's it
 
 If you want to update the packages (dependencies, not my bot): `uv sync --upgrade`
 
-> [!warning]
-> I'm not responsive for messing the project up.
+I'm not really responsive for messing the code up badly.
 
-## Disclaimer
+## Copyright
 
-I do not own the images & contents which is in `resources` directory.
+I do not own the images & contents which are in `/src/poxbot/assets` directory, and their copyrights belong to the original creator, or the subject.
 
-## Contribute
-
-You can contribute to my project, but you do not need to contribute to my project.
-
-## Copyright attribution
-
-You can attribute my project into your other projects:
+You can add a copyright into your own project:
 
 ```plain
-the bot uses pox-bot by NoteSwiper
+"pox-bot" by @p0x38
 ```
+
+You can use Markdown version too:
+
+```markdown
+[pox-bot](https://github.com/p0x38/pox-bot) by [@p0x38](https://github.com/p0x38)
+```
+
+## Contributing to the project
+
+You can check the guide for contributing to the project from [/docs/contributing/](/docs/contributing/) or [CONTRIBUTING.md](CONTRIBUTING.md).
+
+[PyTorch]: https://pytorch.org/
+[Piper TTS]: https://github.com/OHF-Voice/piper1-gpl
+[Ollama]: https://ollama.com/
+[LM Studio]: https://lmstudio.ai/
+[Python]: https://www.python.org/
+[uv]: https://docs.astral.sh/uv/
+[ffmpeg]: https://www.ffmpeg.org/
+[SQLAlchemy]: https://www.sqlalchemy.org/
+[PostgreSQL]: https://www.postgresql.org/
+[Git]: https://git-scm.com/
