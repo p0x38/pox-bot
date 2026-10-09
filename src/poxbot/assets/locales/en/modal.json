@@ -6,6 +6,9 @@
             },
             "url_button": {
                 "label": "Visit the GitHub repository"
+            },
+            "issue_tracker_button": {
+                "label": "Give me a report for a bug and features!"
             }
         },
         "data": {

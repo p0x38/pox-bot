@@ -1,11 +1,14 @@
 {
     "DynamicInfoView": {
         "buttons": {
+            "issue_tracker_button": {
+                "label": "バグや機能についてレポート"
+            },
             "suggest_button": {
-                "label": "提案を送信する"
+                "label": "提案を送信したいならばこのボタンを押してみて"
             },
             "url_button": {
-                "label": "GitHub リポジトリにアクセスする"
+                "label": "GitHub経由でソースコードを見たいならばこのボタンを押してみて"
             }
         },
         "data": {
@@ -17,7 +20,7 @@
                     "display": "現在の気分"
                 },
                 "muted": {
-                    "display": "ジムはミュートされていますか?"
+                    "display": "彼はミュートされていますか?"
                 },
                 "title": "ローカル脳データ"
             },
@@ -26,7 +29,7 @@
                     "display": "CPU 使用率 (合計)"
                 },
                 "cpu_own": {
-                    "display": "CPU使用率(プログラム)"
+                    "display": "CPU 使用率 (プログラム)"
                 },
                 "disk": {
                     "display": "ディスク使用量"
@@ -38,7 +41,7 @@
                     "display": "メモリ使用量 (合計)"
                 },
                 "ram_details": {
-                    "display": "メモリの詳細"
+                    "display": "詳細なメモリの情報"
                 },
                 "ram_own": {
                     "display": "メモリ使用量（プログラム）"
@@ -53,7 +56,7 @@
                     "display": "ボット開発者"
                 },
                 "signature": {
-                    "display": "サイン"
+                    "display": "署名"
                 },
                 "title": "身元",
                 "uptime": {
@@ -68,7 +71,7 @@
             },
             "stats": {
                 "cached_values": {
-                    "display": "キャッシュ"
+                    "display": "キャッシュされた出力"
                 },
                 "channels": {
                     "display": "チャンネル"

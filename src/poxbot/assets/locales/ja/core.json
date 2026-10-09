@@ -22,6 +22,6 @@
         "user_not_found": "そのユーザーが見つかりませんでした。"
     },
     "units": {
-        "seconds": "{カウント、複数、=1 {秒}、その他の {秒}}"
+        "seconds": "{count, plural, =1 {second} other {seconds}}"
     }
 }

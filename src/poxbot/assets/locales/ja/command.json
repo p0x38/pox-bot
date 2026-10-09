@@ -12,11 +12,11 @@
     },
     "admin": {
         "description": "ボットにあれこれ指示しちゃおう！ >:D",
-        "list_guilds": {
-            "description": "クエリに合うギルドをぴょこっと一覧で見せるよ！ :3"
-        },
         "leave_guild": {
             "description": "そのギルドから、わたしがささっと抜けちゃうよ！ :3"
+        },
+        "list_guilds": {
+            "description": "クエリに合うギルドをぴょこっと一覧で見せるよ！ :3"
         },
         "reboot": {
             "description": "キャッシュをお掃除するために、ボットを再起動するよ！ :3"
@@ -351,11 +351,11 @@
         }
     },
     "detect": {
-        "custom_member": {
-            "description": "メンバーが何かにどれだけ近づいているかをチェックします! :3"
-        },
         "custom2": {
             "description": "どれくらい高いか見てみましょう~:3"
+        },
+        "custom_member": {
+            "description": "メンバーが何かにどれだけ近づいているかをチェックします! :3"
         },
         "description": "物を発見する集団です！ >:D",
         "how_femboy": {
@@ -541,6 +541,9 @@
             "description": "グローバルチャットのメッセージ配信方法を選ぼう！ :3",
             "parameters": {
                 "mode": "使いたい配信モードだよ。"
+            },
+            "texts": {
+                "success": "'{mode}'に更新できたよ！ :3"
             }
         },
         "description": "グローバルチャットのためのグループです！ :3",
@@ -548,9 +551,9 @@
             "description": "モデレーターの確認待ちになっているグローバルチャットのメッセージを表示します。",
             "embeds": {
                 "default": {
-                    "title": "確認待ちのグローバルチャットメッセージ",
+                    "case": "[保留中のメッセージを開く]({message_link})\n理由: {reasons}",
                     "description": "/globalchat review とメッセージ ID を使って、承認または拒否してください。",
-                    "case": "[保留中のメッセージを開く]({message_link})\n理由: {reasons}"
+                    "title": "確認待ちのグローバルチャットメッセージ"
                 }
             },
             "responses": {
@@ -680,16 +683,16 @@
             }
         },
         "logs": {
+            "categories": {
+                "bans": "BAN",
+                "kicks": "キック",
+                "timeouts": "タイムアウト"
+            },
             "description": "キック、バン、タイムアウトの履歴を表示します。 3:",
             "embeds": {
                 "default": {
                     "title": "サーバー履歴: {category}"
                 }
-            },
-            "categories": {
-                "bans": "BAN",
-                "kicks": "キック",
-                "timeouts": "タイムアウト"
             }
         },
         "members_list": {
@@ -752,6 +755,11 @@
                     "casual-silly": "撫でてくれる誰か！ :3",
                     "formal": "撫でるユーザー/メンバー。"
                 }
+            },
+            "texts": {
+                "success": {
+                    "casual-silly": "{executor}が{target}をなでなでしたよ！ :3"
+                }
             }
         },
         "qrcode": {
@@ -767,6 +775,19 @@
         }
     },
     "info": {
+        "bot": {
+            "description": "私のボット情報をすべて取得します! :3",
+            "embeds": {
+                "default": {
+                    "description": "詳細を確認するには、以下のカテゴリを選択してください。 >:D",
+                    "footer": "実行中: {プラットフォーム} :3",
+                    "title": "ボット情報~"
+                }
+            },
+            "error": {
+                "forbidden": "これを行うには **チャンネルの管理** 権限が必要です。 3:"
+            }
+        },
         "commit_data": {
             "description": "最新の git コミットを表示します。 :3"
         },
@@ -810,19 +831,6 @@
                 "default": {
                     "title": "ポン！ \n({レイテンシ} ミリ秒) :D"
                 }
-            }
-        },
-        "bot": {
-            "description": "私のボット情報をすべて取得します! :3",
-            "embeds": {
-                "default": {
-                    "description": "詳細を確認するには、以下のカテゴリを選択してください。 >:D",
-                    "footer": "実行中: {プラットフォーム} :3",
-                    "title": "ボット情報~"
-                }
-            },
-            "error": {
-                "forbidden": "これを行うには **チャンネルの管理** 権限が必要です。 3:"
             }
         },
         "sync": {
@@ -909,6 +917,9 @@
         "message_count": {
             "description": "このチャンネルのメッセージを数えちゃおう！ :3"
         },
+        "placeholders": {
+            "not_text_channel": "テキストチャンネルではありません"
+        },
         "purge": {
             "description": "指定した数の最近のメッセージをお掃除！ >:D"
         },
@@ -922,9 +933,6 @@
                     "title": "検索結果"
                 }
             }
-        },
-        "placeholders": {
-            "not_text_channel": "テキストチャンネルではありません"
         },
         "send": {
             "description": "メッセージを送っちゃおう！ :3"
@@ -1087,7 +1095,10 @@
             }
         },
         "wordcloud": {
-            "description": "メッセージ履歴からワードクラウドを作っちゃおう！ :3"
+            "description": "メッセージ履歴からワードクラウドを作っちゃおう！ :3",
+            "wordcloud": {
+                "description": "メッセージ履歴のコンテンツを雲のようにさせるよ！ :3"
+            }
         }
     },
     "ticket": {

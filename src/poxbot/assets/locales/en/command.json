@@ -12,11 +12,11 @@
     },
     "admin": {
         "description": "Commands for bossing me around! >:D",
-        "list_guilds": {
-            "description": "Lists the matching guilds by the query. :3"
-        },
         "leave_guild": {
             "description": "Tries to leave the target guild. :3"
+        },
+        "list_guilds": {
+            "description": "Lists the matching guilds by the query. :3"
         },
         "reboot": {
             "description": "Reboot the bot to enforce cache clean."
@@ -351,11 +351,11 @@
         }
     },
     "detect": {
-        "custom_member": {
-            "description": "Checks how close a member is to something! :3"
-        },
         "custom2": {
             "description": "Let's see how high it is~ :3"
+        },
+        "custom_member": {
+            "description": "Checks how close a member is to something! :3"
         },
         "description": "A group for detecting stuff! >:D",
         "how_femboy": {
@@ -551,9 +551,9 @@
             "description": "List held global-chat messages waiting for moderator review.",
             "embeds": {
                 "default": {
-                    "title": "Pending global-chat reviews",
+                    "case": "[Open held message]({message_link})\nReason: {reasons}",
                     "description": "Approve or deny a case with /globalchat review using its message ID.",
-                    "case": "[Open held message]({message_link})\nReason: {reasons}"
+                    "title": "Pending global-chat reviews"
                 }
             },
             "responses": {
@@ -683,16 +683,16 @@
             }
         },
         "logs": {
+            "categories": {
+                "bans": "bans",
+                "kicks": "kicks",
+                "timeouts": "timeouts"
+            },
             "description": "Shows the history of kicks, bans, and timeouts! 3:",
             "embeds": {
                 "default": {
                     "title": "Guild history: {category}"
                 }
-            },
-            "categories": {
-                "bans": "bans",
-                "kicks": "kicks",
-                "timeouts": "timeouts"
             }
         },
         "members_list": {
@@ -739,6 +739,16 @@
                 "casual-silly": "Pats someone! :3",
                 "formal": "Pats someone."
             },
+            "embeds": {
+                "default": {
+                    "description": {
+                        "casual-silly": ""
+                    },
+                    "title": {
+                        "casual-silly": ""
+                    }
+                }
+            },
             "parameters": {
                 "member": {
                     "casual": "Someone to pat!",
@@ -765,6 +775,19 @@
         }
     },
     "info": {
+        "bot": {
+            "description": "Gets all my bot info! :3",
+            "embeds": {
+                "default": {
+                    "description": "Pick a category below to see the details! >:D",
+                    "footer": "Running on: {platform} :3",
+                    "title": "Bot Info~"
+                }
+            },
+            "error": {
+                "forbidden": "I need the **Manage Channels** permission to do that! 3:"
+            }
+        },
         "commit_data": {
             "description": "Shows my latest git commit! :3"
         },
@@ -808,19 +831,6 @@
                 "default": {
                     "title": "Pong! ({latency} ms) :D"
                 }
-            }
-        },
-        "bot": {
-            "description": "Gets all my bot info! :3",
-            "embeds": {
-                "default": {
-                    "description": "Pick a category below to see the details! >:D",
-                    "footer": "Running on: {platform} :3",
-                    "title": "Bot Info~"
-                }
-            },
-            "error": {
-                "forbidden": "I need the **Manage Channels** permission to do that! 3:"
             }
         },
         "sync": {
@@ -907,6 +917,9 @@
         "message_count": {
             "description": "Count the messages in this channel! :3"
         },
+        "placeholders": {
+            "not_text_channel": "Not a text channel"
+        },
         "purge": {
             "description": "Clear out a chosen number of recent messages! >:D"
         },
@@ -920,9 +933,6 @@
                     "title": "Search Results"
                 }
             }
-        },
-        "placeholders": {
-            "not_text_channel": "Not a text channel"
         },
         "send": {
             "description": "Send a message! :3"
@@ -1398,6 +1408,72 @@
                 "channel": "Channel to set leave message"
             }
         },
+        "message": {
+            "description": "",
+            "direct_message": {
+                "description": ""
+            },
+            "first_sent": {
+                "description": ""
+            },
+            "get_random_message": {
+                "description": ""
+            },
+            "last_sent": {
+                "description": ""
+            },
+            "mass_delete": {
+                "description": "",
+                "parameters": {
+                    "limit": ""
+                }
+            },
+            "message_count": {
+                "description": ""
+            },
+            "purge": {
+                "description": ""
+            },
+            "say": {
+                "description": ""
+            },
+            "search_for": {
+                "description": ""
+            },
+            "send": {
+                "description": ""
+            }
+        },
+        "role": {
+            "add_role": {
+                "description": ""
+            },
+            "delete_role": {
+                "description": ""
+            },
+            "description": "",
+            "edit_role": {
+                "description": ""
+            },
+            "give_role": {
+                "description": ""
+            },
+            "list": {
+                "description": ""
+            },
+            "list_users_in_role": {
+                "description": ""
+            },
+            "take_role": {
+                "description": ""
+            },
+            "user_roles": {
+                "description": ""
+            }
+        },
+        "settings": {
+            "description": ""
+        },
         "toggle": {
             "description": "Toggle the welcome message! :3",
             "embeds": {
@@ -1408,6 +1484,36 @@
             },
             "parameters": {
                 "enabled": "Enable welcome message? (yes/no)"
+            }
+        },
+        "utility": {
+            "coinflip": {
+                "description": ""
+            },
+            "listapps": {
+                "description": ""
+            },
+            "parameters": {
+                "coinflip_label": "",
+                "question": "",
+                "rolls": "",
+                "sides": ""
+            },
+            "roll": {
+                "description": "",
+                "embeds": {
+                    "default": {
+                        "title": ""
+                    }
+                }
+            },
+            "yes_or_no": {
+                "description": "",
+                "embeds": {
+                    "default": {
+                        "title": ""
+                    }
+                }
             }
         }
     }
