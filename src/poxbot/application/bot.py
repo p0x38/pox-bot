@@ -26,6 +26,7 @@ from discord.ext import commands
 from pytz import UTC
 from sqlalchemy.exc import SQLAlchemyError
 
+from ..features.earthquake.p2pquake import P2PQuakeManager
 from ..features.statistics import BotConstants, BotStatistics, GitInfo
 from ..features.text_transform.manager import TextTransformManager
 from ..infrastructure.logger import get_logger
@@ -160,6 +161,8 @@ class PoxBot(commands.AutoShardedBot):
         self.counter_manager = CounterManager(self)
         self.tasks: set[asyncio.Task] = set()
 
+        self.quake_manager = P2PQuakeManager(cache_size=100)
+
         self.tree.on_error = self._on_tree_error
 
     async def try_return_error(self, interaction: Interaction, **kwargs):
@@ -232,6 +235,8 @@ class PoxBot(commands.AutoShardedBot):
             await self.tree.set_translator(self.discord_translator)
         except TypeError:
             self.logger.exception('Failed to set command translator')
+
+        await self.quake_manager.start()
 
         await self.git_info.load()
         await self.resources.initialize()
@@ -392,6 +397,7 @@ class PoxBot(commands.AutoShardedBot):
 
         await self.database.close()
         await self.resources.close()
+        await self.quake_manager.close()
 
         return await super().close()
 

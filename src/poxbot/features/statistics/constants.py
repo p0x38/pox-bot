@@ -9,13 +9,7 @@ from ...persistence.models.pydantic.blacklisted_item import (
 class BotConstants:
     def __init__(self):
         self.max_servers: Final[int] = 90
-        self.exclude_extensions: Final[list[str]] = [
-            'chat',
-            'eew',
-            'log',
-            'others',
-            'websockets',
-        ]
+        self.exclude_extensions: Final[list[str]] = []
         self.scary_mode: bool = False
         self.whitelisted_domains: set[str] = {
             'klipy.co',
