@@ -223,6 +223,75 @@
     },
     "earthquake_reports": {
         "jma": {
+            "embed": {
+                "rows": {
+                    "title": "Recent earthquake information",
+                    "empty": "No events are available.",
+                    "page": "Page {page}/{pages} · {count} events",
+                    "earthquake": "Earthquake",
+                    "tsunami": "Tsunami forecast",
+                    "eew": "Emergency Earthquake Warning",
+                    "intensity": "Maximum intensity",
+                    "report_number": "Report",
+                    "cancelled": "Cancelled",
+                    "test": "Test"
+                },
+                "unknown": "Unknown",
+                "no_data": "No data is available.",
+                "earthquake": {
+                    "title": "Earthquake information",
+                    "max_intensity": "Maximum intensity",
+                    "magnitude": "Magnitude",
+                    "depth": "Depth",
+                    "epicenter": "Epicenter",
+                    "origin_time": "Origin time",
+                    "issue_time": "Report time",
+                    "correction": "Correction information",
+                    "domestic_tsunami": "Domestic tsunami",
+                    "foreign_tsunami": "Foreign tsunami",
+                    "observed_points": "Observed intensities",
+                    "more_points": "{count} more observation points omitted",
+                    "comments": "Additional information"
+                },
+                "tsunami": {
+                    "title": "Tsunami forecast",
+                    "cancelled_title": "Tsunami forecast cancelled",
+                    "cancelled_description": "This tsunami information has been cancelled.",
+                    "source": "Source",
+                    "issue_time": "Report time",
+                    "max_height": "Maximum tsunami height",
+                    "arrival_time": "Expected arrival",
+                    "immediate": "Expected to arrive immediately",
+                    "forecast_areas": "Forecast areas",
+                    "other_areas": "Other forecast areas",
+                    "more_areas": "{count} additional areas omitted"
+                },
+                "eew": {
+                    "title": "Emergency Earthquake Warning",
+                    "cancelled_title": "Emergency Earthquake Warning cancelled",
+                    "test_title": "Emergency Earthquake Warning (test)",
+                    "description": "An Emergency Earthquake Warning has been issued.",
+                    "cancelled_description": "This warning has been cancelled.",
+                    "test_description": "This is a test message.",
+                    "report_number": "Report number",
+                    "issue_time": "Report time",
+                    "epicenter": "Epicenter",
+                    "magnitude": "Magnitude",
+                    "depth": "Depth",
+                    "origin_time": "Origin time",
+                    "arrival_time": "Expected arrival of strong shaking",
+                    "predicted_intensity": "Estimated intensity",
+                    "estimated_arrival": "Estimated arrival",
+                    "kind": "Forecast method",
+                    "other_areas": "Other forecast areas",
+                    "more_areas": "{count} additional areas omitted",
+                    "kind_codes": {
+                        "10": "P-wave not yet arrived (estimated)",
+                        "11": "P-wave arrival estimated",
+                        "19": "PLUM method"
+                    }
+                }
+            },
             "issue_type": {
                 "ScalePrompt": "Intensity Report",
                 "Destination": "Epicenter Report",

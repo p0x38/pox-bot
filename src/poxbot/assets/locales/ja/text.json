@@ -147,6 +147,75 @@
     },
     "earthquake_reports": {
         "jma": {
+            "embed": {
+                "rows": {
+                    "title": "地震・津波情報",
+                    "empty": "表示できる情報はありません。",
+                    "page": "{page}/{pages} ページ・全 {count} 件",
+                    "earthquake": "地震情報",
+                    "tsunami": "津波予報",
+                    "eew": "緊急地震速報",
+                    "intensity": "最大震度",
+                    "report_number": "報数",
+                    "cancelled": "取消",
+                    "test": "テスト"
+                },
+                "unknown": "不明",
+                "no_data": "データがありません。",
+                "earthquake": {
+                    "title": "地震情報",
+                    "max_intensity": "最大震度",
+                    "magnitude": "マグニチュード",
+                    "depth": "震源の深さ",
+                    "epicenter": "震央",
+                    "origin_time": "発生時刻",
+                    "issue_time": "発表時刻",
+                    "correction": "訂正情報",
+                    "domestic_tsunami": "国内の津波情報",
+                    "foreign_tsunami": "海外の津波情報",
+                    "observed_points": "震度観測地点",
+                    "more_points": "ほか {count} 地点を省略",
+                    "comments": "付加情報"
+                },
+                "tsunami": {
+                    "title": "津波予報",
+                    "cancelled_title": "津波予報（取消）",
+                    "cancelled_description": "この津波情報は取り消されました。",
+                    "source": "発表元",
+                    "issue_time": "発表時刻",
+                    "max_height": "予想される津波の高さ",
+                    "arrival_time": "到達予想時刻",
+                    "immediate": "直ちに津波が来襲すると予測",
+                    "forecast_areas": "予報区",
+                    "other_areas": "その他の予報区",
+                    "more_areas": "ほか {count} 区域を省略"
+                },
+                "eew": {
+                    "title": "緊急地震速報（警報）",
+                    "cancelled_title": "緊急地震速報（取消）",
+                    "test_title": "緊急地震速報（テスト）",
+                    "description": "緊急地震速報が発表されました。",
+                    "cancelled_description": "この情報は取り消されました。",
+                    "test_description": "これはテスト情報です。",
+                    "report_number": "報数",
+                    "issue_time": "発表時刻",
+                    "epicenter": "震央",
+                    "magnitude": "マグニチュード",
+                    "depth": "震源の深さ",
+                    "origin_time": "発生時刻",
+                    "arrival_time": "主要動の到達予想時刻",
+                    "predicted_intensity": "予測震度",
+                    "estimated_arrival": "到達予想時刻",
+                    "kind": "予測方式",
+                    "other_areas": "その他の区域",
+                    "more_areas": "ほか {count} 区域を省略",
+                    "kind_codes": {
+                        "10": "主要動未到達と予測",
+                        "11": "主要動は既に到達と予測",
+                        "19": "PLUM法による予想"
+                    }
+                }
+            },
             "domestic_tsunami": {
                 "Checking": "現時点で、気象庁は津波警報の有無を確認しています。",
                 "NonEffective": "小さな海面変化が観察される可能性がありますが、津波による被害のおそれはありません。",
