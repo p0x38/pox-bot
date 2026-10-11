@@ -35,7 +35,7 @@ class BlacklistItem(BaseModel):
         cls, v: tuple[tuple[BlacklistReason, str], ...]
     ) -> tuple[tuple[BlacklistReason, str], ...]:
         if not v:
-            return ((BlacklistReason.NOT_SPECIFIED, "No reason provided"),)
+            return ((BlacklistReason.NOT_SPECIFIED, 'No reason provided'),)
         return v
 
     def __hash__(self) -> int:

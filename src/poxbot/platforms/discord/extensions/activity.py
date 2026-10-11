@@ -109,7 +109,7 @@ class MarkovStatusGenerator:
     def _is_word(cls, token: str) -> bool:
         if cls._EMOTICON_RE.fullmatch(token):
             return False
-        
+
         return any(character.isalnum() for character in token)
 
     def _tokenize(self, text: str) -> list[str]:
@@ -188,7 +188,7 @@ class MarkovStatusGenerator:
                 max_context = min(self.order, index)
 
                 for size in range(1, max_context + 1):
-                    context = tuple(tokens[index - size:index])
+                    context = tuple(tokens[index - size : index])
 
                     if any(self._is_word(token) for token in context):
                         self._seed_contexts.append(context)
@@ -294,10 +294,7 @@ class MarkovStatusGenerator:
                 no_repeat_ngram_size=no_repeat_ngram_size,
             )
 
-            if (
-                candidate.strip()
-                and candidate.casefold() not in self._source_texts
-            ):
+            if candidate.strip() and candidate.casefold() not in self._source_texts:
                 return candidate
 
         # A small corpus may not contain enough transitions for a novel result.
@@ -381,7 +378,7 @@ class MarkovStatusGenerator:
             history.append(next_token)
 
             if len(history) > self.order:
-                history = history[-self.order:]
+                history = history[-self.order :]
 
         return self._detokenize(generated)
 
@@ -400,10 +397,10 @@ class ActivityCog(commands.Cog):
 
         self.status_datasets: list[tuple[str, list[str], MarkovStatusGenerator]] = []
 
-        self.watching_chance: float = parse_probability("1/500")
-        self.cat_face_chance: float = parse_probability("1/3")
+        self.watching_chance: float = parse_probability('1/500')
+        self.cat_face_chance: float = parse_probability('1/3')
 
-        self.cat_faces = (":3", ">:3", "x3", "3:")
+        self.cat_faces = (':3', '>:3', 'x3', '3:')
 
     async def cog_load(self) -> None:
         self.status_datasets.clear()
@@ -539,7 +536,7 @@ class ActivityCog(commands.Cog):
             not any(face in chosen for face in self.cat_faces)
             and self.rng.random() < self.cat_face_chance
         ):
-            chosen = f"{chosen.rstrip()} {self.rng.choice(self.cat_faces)}"
+            chosen = f'{chosen.rstrip()} {self.rng.choice(self.cat_faces)}'
 
         return {
             'status': Status.online,

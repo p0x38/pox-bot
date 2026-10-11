@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from ..utils.metrics import Metrics
 
 
-class BaseDatabase(ABC):
+class BaseDatabase(ABC):  # ruff: ignore[abstract-base-class-without-abstract-method]
     """An abstract base class representing a database using SQLAlchemy.
 
     This class defines the core asynchronous interface and connection management
@@ -142,7 +142,7 @@ class BaseDatabase(ABC):
             type(self).__name__,
         )
 
-    async def on_load(self):
+    async def on_load(self):  # ruff: ignore[empty-method-without-abstract-decorator]
         """Provide a lifecycle hook executed during setup.
 
         Subclasses should override this method to perform initial tasks
@@ -295,10 +295,7 @@ class BaseDatabase(ABC):
     @classmethod
     async def dispose_engines(cls, logger: Any) -> None:
         engines = list(
-            {
-                id(engine): engine
-                for engine in cls._engines.values()
-            }.values()
+            {id(engine): engine for engine in cls._engines.values()}.values()
         )
 
         cls._engines.clear()

@@ -152,19 +152,18 @@ class Metrics:
         ] = {}
         self._dynamic_histograms: dict[str, Any] = {}
         self._prometheus_server_started = False
-        
+
     def start_server(self):
         if self._prometheus_server_started:
             return
 
         metrics_endpoint = (
-            self.config.otlp_metrics_endpoint
-            or self.config.opentelemetry_endpoint
+            self.config.otlp_metrics_endpoint or self.config.opentelemetry_endpoint
         )
 
         if metrics_endpoint:
             return
-        
+
         start_http_server(
             addr=self.config.prometheus_host,
             port=self.config.prometheus_server_port,

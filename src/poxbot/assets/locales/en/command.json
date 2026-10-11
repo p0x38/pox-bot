@@ -491,6 +491,15 @@
             }
         }
     },
+    "eew": {
+        "description": "View earthquake early warning reports.",
+        "retrieve": {
+            "description": "Retrieve recent earthquake events from the cache! :3",
+            "parameters": {
+                "codes": "Optional event codes to filter the results! :3"
+            }
+        }
+    },
     "fun": {
         "boop_member": {
             "description": "Boop someone right on the nose! :3"
@@ -936,6 +945,12 @@
         },
         "send": {
             "description": "Send a message! :3"
+        }
+    },
+    "midi": {
+        "description": "MIDI file utilities! :3",
+        "convert": {
+            "description": "Convert an uploaded MIDI file to MP3! :3"
         }
     },
     "minecraft": {

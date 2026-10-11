@@ -97,6 +97,53 @@ class TextToSpeechCog(commands.Cog):
             )
         return choices
 
+    async def pipertts_autocomplete(
+        self,
+        _interaction: Interaction,
+        current: str,
+    ) -> list[app_commands.Choice[str]]:
+        allowed_voices = self.bot.settings.piper_tts.allowed_voices
+
+        matched_voices = fuzzy_search_objects(
+            current,
+            allowed_voices,
+            lambda voice: [voice],
+        )
+
+        return [
+            app_commands.Choice(
+                name=voice,
+                value=voice,
+            )
+            for voice in matched_voices[:25]
+        ]
+
+    async def voice_autocomplete(
+        self,
+        interaction: Interaction,
+        current: str,
+    ) -> list[app_commands.Choice[str]]:
+        engine_value = getattr(interaction.namespace, 'engine', None)
+
+        try:
+            engine = TTSEngineType(engine_value)
+        except (TypeError, ValueError):
+            return []
+
+        if engine is TTSEngineType.PIPER_TTS:
+            return await self.pipertts_autocomplete(interaction, current)
+
+        if engine is TTSEngineType.GOOGLE_TTS:
+            return await self.googletts_autocomplete(interaction, current)
+
+        if engine is TTSEngineType.EDGE_TTS:
+            return await self.edgetts_autocomplete(interaction, current)
+
+        if engine is TTSEngineType.POCKET_TTS:
+            return await self.pockettts_autocomplete(interaction, current)
+
+        return []
+
     async def _generate_tts(
         self, interaction: Interaction, request_data: dict[str, Any]
     ):
@@ -105,6 +152,16 @@ class TextToSpeechCog(commands.Cog):
         with contextlib.suppress(Exception):
             await self.tts_manager.generate_speech(request_data)
 
+    @app_commands.command(
+        name='tts',
+        description=app_commands.locale_str('command.tts.description'),
+    )
+    @app_commands.autocomplete(voice=voice_autocomplete)
+    @app_commands.describe(
+        text=app_commands.locale_str('command.tts.parameters.text'),
+        engine=app_commands.locale_str('command.tts.parameters.engine'),
+        voice=app_commands.locale_str('command.tts.parameters.voice'),
+    )
     async def generate_tts(
         self,
         interaction: Interaction,

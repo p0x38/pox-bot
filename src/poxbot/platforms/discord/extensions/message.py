@@ -165,7 +165,9 @@ class MessageCog(commands.Cog):
 
     @group.command(
         name='direct_message',
-        description=app_commands.locale_str('command.message.direct_message.description'),
+        description=app_commands.locale_str(
+            'command.message.direct_message.description'
+        ),
     )
     @app_commands.checks.has_permissions(send_messages=True)
     @app_commands.guild_only()
@@ -317,7 +319,9 @@ class MessageCog(commands.Cog):
     @cached(60)
     @group.command(
         name='message_count',
-        description=app_commands.locale_str('command.message.message_count.description'),
+        description=app_commands.locale_str(
+            'command.message.message_count.description'
+        ),
     )
     @app_commands.guild_only()
     async def count_messages_in_channel(self, interaction: Interaction):

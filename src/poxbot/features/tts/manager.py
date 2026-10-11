@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-import orjson
-
 from ...infrastructure.logger import get_logger
 from ...persistence.models.pydantic.tts_model import TTSConfig
 from ...shared.enums.tts import TTSEngineType
@@ -49,14 +47,16 @@ class TTSManager:
         self.tts_config = TTSConfig.model_validate(raw_data)
         self.tts_models = self.tts_config.root
 
-        config_json = self.tts_config.model_dump_json()
-        debug_engines = {type_.name: str(eng) for type_, eng in self.engines.items()}
-        models_json = orjson.dumps(debug_engines).decode('utf-8')
+        voice_summary = {
+            engine_type.name: {
+                category: len(voices) for category, voices in engine_config.items()
+            }
+            for engine_type, engine_config in self.tts_models.items()
+        }
 
         self.logger.debug(
-            'tts_config: %s\n\ntts_models: %s',
-            config_json,
-            models_json,
+            'Loaded TTS voice counts: %s',
+            voice_summary,
         )
 
     async def cog_load(self) -> None:

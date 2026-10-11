@@ -11,8 +11,15 @@ BASE_ASSETS_PATH = Path(__file__).resolve().parent.parent.parent.parent / 'asset
 
 
 def resolve_voice_path(v: Path) -> Path:
+    value = str(v)
+
+    if value.startswith('assets:'):
+        relative_path = value.partition(':')[2].replace('\\', '/').lstrip('/')
+        return BASE_ASSETS_PATH / relative_path
+
     if not v.is_absolute():
         return BASE_ASSETS_PATH / v
+
     return v
 
 

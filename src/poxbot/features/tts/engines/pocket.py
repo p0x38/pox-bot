@@ -1,3 +1,4 @@
+import asyncio
 from datetime import timedelta
 from io import BytesIO
 from time import perf_counter
@@ -28,7 +29,9 @@ class PocketTTSEngine(BaseTTSEngine):
     async def initialize(self, manager: Any) -> None:
         self.logger.info('Loading Pocket-TTS models...')
         try:
-            self.pocket_tts_model = TTSModel.load_model()
+            self.pocket_tts_model = await asyncio.to_thread(
+                TTSModel.load_model,
+            )
             self.sample_rate = getattr(self.pocket_tts_model, 'sample_rate', 24000)
             self.status = 'loaded'
 

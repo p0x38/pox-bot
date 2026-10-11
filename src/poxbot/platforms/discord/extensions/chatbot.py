@@ -759,9 +759,7 @@ class ChatbotCog(commands.Cog):
 
                 except Exception as e:
                     locale = (
-                        message.guild.preferred_locale.value
-                        if message.guild
-                        else 'en'
+                        message.guild.preferred_locale.value if message.guild else 'en'
                     )
                     embed = Embed(
                         title=self.bot.internal_translator.T(

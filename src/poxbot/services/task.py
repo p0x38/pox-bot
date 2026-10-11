@@ -53,7 +53,7 @@ class TaskManager:
             ),
             extra=extra,
         )
-        
+
     def cancel(self, name: str) -> None:
         for task in tuple(self.tasks):
             if task.get_name() == name:

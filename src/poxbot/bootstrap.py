@@ -33,7 +33,7 @@ class Bootstrap:
         )
 
         system_logger = get_logger(__name__, prefix='System')
-        
+
         package_dir = Path(__file__).resolve().parent  # ruff: ignore[blocking-path-method-in-async-function]
         i18n = I18nManager(
             locales_path=package_dir / 'assets' / 'locales',

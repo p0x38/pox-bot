@@ -215,10 +215,10 @@ class AdminOnlyCog(commands.Cog):
         matched_guilds = self.find_guild_by_fuzzy(query)
 
         if matched_guilds:
-            lines = f"Matched guilds ({len(matched_guilds)}): \n"
+            lines = f'Matched guilds ({len(matched_guilds)}): \n'
 
             for guild in matched_guilds:
-                lines += f"- {guild.name} ({guild.id})\n"
+                lines += f'- {guild.name} ({guild.id})\n'
 
             await interaction.followup.send(
                 lines,
@@ -226,7 +226,7 @@ class AdminOnlyCog(commands.Cog):
             )
         else:
             await interaction.followup.send(
-                "No matching guilds are found.",
+                'No matching guilds are found.',
                 ephemeral=True,
             )
 
@@ -241,7 +241,7 @@ class AdminOnlyCog(commands.Cog):
             guild_id = int(query)
         except ValueError:
             return await interaction.followup.send(
-                "Failed to parse query into integer",
+                'Failed to parse query into integer',
                 ephemeral=True,
             )
 
@@ -250,7 +250,7 @@ class AdminOnlyCog(commands.Cog):
         if guild_obj:
             await guild_obj.leave()
             await interaction.followup.send(
-                "Successfully left the guild!",
+                'Successfully left the guild!',
                 ephemeral=True,
             )
         else:

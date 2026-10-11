@@ -1,11 +1,58 @@
+import re
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, Field, SecretStr, computed_field
+from pydantic import (
+    BaseModel,
+    Field,
+    SecretStr,
+    computed_field,
+    field_validator,
+    model_validator,
+)
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL
 
 from ..shared.utils.app_path import app_dir
+
+_PIPER_VOICE_ID_PATTERN = re.compile(
+    r'^[a-z]{2,3}_[A-Z]{2}-[A-Za-z0-9]+-[A-Za-z0-9_-]+$',
+)
+
+
+class PiperTTSConfig(BaseModel):
+    default_voice: str = 'en_US-ryan-high'
+    allowed_voices: list[str] = Field(
+        default_factory=lambda: ['en_US-ryan-high'],
+    )
+
+    @field_validator('allowed_voices')
+    @classmethod
+    def validate_allowed_voices(cls, voices: list[str]) -> list[str]:
+        voices = list(dict.fromkeys(voice.strip() for voice in voices))
+
+        if not voices:
+            raise ValueError('At least one Piper voice must be allowed.')
+
+        invalid_voices = [
+            voice for voice in voices if not _PIPER_VOICE_ID_PATTERN.fullmatch(voice)
+        ]
+
+        if invalid_voices:
+            raise ValueError(
+                f'Invalid Piper voice identifiers: {invalid_voices!r}',
+            )
+
+        return voices
+
+    @model_validator(mode='after')
+    def validate_default_voice(self) -> 'PiperTTSConfig':
+        if self.default_voice not in self.allowed_voices:
+            raise ValueError(
+                'The default Piper voice must be included in allowed_voices.',
+            )
+
+        return self
 
 
 class DatabaseConfig(BaseModel):
@@ -184,6 +231,7 @@ class BotSettings(BaseSettings):
     trace_config: TraceConfig = Field(default_factory=TraceConfig)
     logger: LoggerConfig = Field(default_factory=LoggerConfig)
     llm_config: LLMConfig = Field(default_factory=LLMConfig)
+    piper_tts: PiperTTSConfig = Field(default_factory=PiperTTSConfig)
 
     bot_name: str = 'TehBot'
     default_language: str = 'en'

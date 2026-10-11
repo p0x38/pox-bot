@@ -25,19 +25,19 @@ def parse_probability(
         ValueError: If the input is invalid or outside the allowed range.
     """
     if isinstance(value, bool):
-        raise ValueError("A boolean is not a valid probability.")
+        raise ValueError('A boolean is not a valid probability.')
 
     if isinstance(maxv, bool) or not math.isfinite(maxv) or maxv < 0:
-        raise ValueError("max must be a finite, non-negative number.")
+        raise ValueError('max must be a finite, non-negative number.')
 
     try:
         if isinstance(value, str):
             text = value.strip()
 
             if not text:
-                raise ValueError("Probability cannot be empty.")
+                raise ValueError('Probability cannot be empty.')
 
-            if text.endswith("%"):
+            if text.endswith('%'):
                 probability = float(
                     Fraction(text[:-1].strip()) / 100,
                 )
@@ -48,15 +48,12 @@ def parse_probability(
 
     except (ValueError, ZeroDivisionError, TypeError, OverflowError) as exc:
         raise ValueError(
-            f"Invalid probability: {value!r}",
+            f'Invalid probability: {value!r}',
         ) from exc
 
-    if (
-        not math.isfinite(probability)
-        or not 0.0 <= probability <= maxv
-    ):
+    if not math.isfinite(probability) or not 0.0 <= probability <= maxv:
         raise ValueError(
-            f"Probability must be between 0 and {maxv}: {value!r}",
+            f'Probability must be between 0 and {maxv}: {value!r}',
         )
 
     return probability

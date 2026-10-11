@@ -35,8 +35,8 @@ from pytz import timezone
 
 from ...infrastructure.logger.setup import get_logger
 
-API_BASE_URL = "https://api.p2pquake.net/v2"
-JST = timezone("Asia/Tokyo")
+API_BASE_URL = 'https://api.p2pquake.net/v2'
+JST = timezone('Asia/Tokyo')
 
 EventCode = Literal[551, 552, 556]
 DEFAULT_CODES: tuple[EventCode, ...] = (551, 552, 556)
@@ -49,11 +49,11 @@ def parse_p2p_datetime(value: Any) -> datetime:
         return value.astimezone(JST)
 
     if not isinstance(value, str):
-        raise ValueError(f"Expected a datetime string, got {type(value).__name__}")
+        raise ValueError(f'Expected a datetime string, got {type(value).__name__}')
 
     value = value.strip()
 
-    for fmt in ("%Y/%m/%d %H:%M:%S.%f", "%Y/%m/%d %H:%M:%S"):
+    for fmt in ('%Y/%m/%d %H:%M:%S.%f', '%Y/%m/%d %H:%M:%S'):
         try:
             parsed = datetime.strptime(value, fmt)  # ruff: ignore[call-datetime-strptime-without-zone]
             return JST.localize(parsed)
@@ -61,9 +61,9 @@ def parse_p2p_datetime(value: Any) -> datetime:
             pass
 
     try:
-        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
     except ValueError as exc:
-        raise ValueError(f"Unsupported timestamp: {value!r}") from exc
+        raise ValueError(f'Unsupported timestamp: {value!r}') from exc
 
     if parsed.tzinfo is None:
         return JST.localize(parsed)
@@ -76,13 +76,13 @@ P2PDateTime = Annotated[datetime, BeforeValidator(parse_p2p_datetime)]
 
 class P2PModel(BaseModel):
     model_config = ConfigDict(
-        extra="allow",
+        extra='allow',
         populate_by_name=True,
     )
 
 
 class P2PData(P2PModel):
-    id: str = Field(alias="_id")
+    id: str = Field(alias='_id')
     time: P2PDateTime
 
 
@@ -104,28 +104,28 @@ class QuakeHypocenter(P2PModel):
 class QuakeDetails(P2PModel):
     time: P2PDateTime
     hypocenter: QuakeHypocenter | None = None
-    max_scale: int | None = Field(default=None, alias="maxScale")
+    max_scale: int | None = Field(default=None, alias='maxScale')
     domestic_tsunami: str | None = Field(
         default=None,
-        alias="domesticTsunami",
+        alias='domesticTsunami',
     )
     foreign_tsunami: str | None = Field(
         default=None,
-        alias="foreignTsunami",
+        alias='foreignTsunami',
     )
 
 
 class QuakePoint(P2PModel):
     pref: str
     addr: str
-    is_area: bool = Field(alias="isArea")
+    is_area: bool = Field(alias='isArea')
     scale: float
 
 
 class QuakeComments(P2PModel):
     free_form_comment: str = Field(
-        default="",
-        alias="freeFormComment",
+        default='',
+        alias='freeFormComment',
     )
 
 
@@ -146,7 +146,7 @@ class TsunamiIssue(P2PModel):
 class TsunamiFirstHeight(P2PModel):
     arrival_time: P2PDateTime | None = Field(
         default=None,
-        alias="arrivalTime",
+        alias='arrivalTime',
     )
     condition: str | None = None
 
@@ -162,11 +162,11 @@ class TsunamiArea(P2PModel):
     name: str
     first_height: TsunamiFirstHeight | None = Field(
         default=None,
-        alias="firstHeight",
+        alias='firstHeight',
     )
     max_height: TsunamiMaxHeight | None = Field(
         default=None,
-        alias="maxHeight",
+        alias='maxHeight',
     )
 
 
@@ -179,7 +179,7 @@ class JMATsunami(P2PData):
 
 class EEWHypocenter(P2PModel):
     name: str | None = None
-    reduce_name: str | None = Field(default=None, alias="reduceName")
+    reduce_name: str | None = Field(default=None, alias='reduceName')
     latitude: float | None = None
     longitude: float | None = None
     depth: float | None = None
@@ -187,27 +187,27 @@ class EEWHypocenter(P2PModel):
 
 
 class EEWEarthquake(P2PModel):
-    origin_time: P2PDateTime = Field(alias="originTime")
-    arrival_time: P2PDateTime = Field(alias="arrivalTime")
+    origin_time: P2PDateTime = Field(alias='originTime')
+    arrival_time: P2PDateTime = Field(alias='arrivalTime')
     condition: str | None = None
     hypocenter: EEWHypocenter
 
 
 class EEWIssue(P2PModel):
     time: P2PDateTime
-    event_id: str = Field(alias="eventId")
+    event_id: str = Field(alias='eventId')
     serial: str
 
 
 class EEWArea(P2PModel):
     pref: str
     name: str
-    scale_from: float = Field(alias="scaleFrom")
-    scale_to: float = Field(alias="scaleTo")
-    kind_code: str | None = Field(default=None, alias="kindCode")
+    scale_from: float = Field(alias='scaleFrom')
+    scale_to: float = Field(alias='scaleTo')
+    kind_code: str | None = Field(default=None, alias='kindCode')
     arrival_time: P2PDateTime | None = Field(
         default=None,
-        alias="arrivalTime",
+        alias='arrivalTime',
     )
 
 
@@ -222,7 +222,7 @@ class EEW(P2PData):
 
 P2PEvent = Annotated[
     JMAQuake | JMATsunami | EEW,
-    Field(discriminator="code"),
+    Field(discriminator='code'),
 ]
 
 EVENT_ADAPTER = TypeAdapter(P2PEvent)
@@ -246,13 +246,13 @@ class P2PQuakeManager:
         cache_size: int = 100,
     ) -> None:
         if cache_size < 1:
-            raise ValueError("cache_size must be positive")
-        
-        self.logger = get_logger(__name__, prefix="P2PQuakeManager")
+            raise ValueError('cache_size must be positive')
+
+        self.logger = get_logger(__name__, prefix='P2PQuakeManager')
 
         self._session = session
         self._owns_session = session is None
-        self._base_url = base_url.rstrip("/")
+        self._base_url = base_url.rstrip('/')
         self._timeout = timeout or aiohttp.ClientTimeout(total=10)
 
         self._cache_size = cache_size
@@ -287,8 +287,7 @@ class P2PQuakeManager:
             raise
         except Exception:
             self.logger.exception(
-                "Failed to preload P2PQuake history; "
-                "continuing with WebSocket events."
+                'Failed to preload P2PQuake history; continuing with WebSocket events.'
             )
             return
 
@@ -296,21 +295,17 @@ class P2PQuakeManager:
             self._cache_event(event)
 
         self.logger.info(
-            "Preloaded %d P2PQuake events into cache.",
+            'Preloaded %d P2PQuake events into cache.',
             len(events),
         )
 
     def get_cached_events(
-            self,
-            *,
-            codes: tuple[int, ...] = (551, 552, 556),
-            limit: int | None = None,
+        self,
+        *,
+        codes: tuple[int, ...] = (551, 552, 556),
+        limit: int | None = None,
     ) -> list[P2PEvent]:
-        events = [
-            event
-            for event in self.cached_events
-            if event.code in codes
-        ]
+        events = [event for event in self.cached_events if event.code in codes]
 
         return events if limit is None else events[:limit]
 
@@ -328,14 +323,14 @@ class P2PQuakeManager:
         return True
 
     def _websocket_url(self) -> str:
-        base_url = self._base_url.rstrip("/")
+        base_url = self._base_url.rstrip('/')
 
-        if base_url.startswith("https://"):
-            base_url = "wss://" + base_url.removeprefix("https://")
-        elif base_url.startswith("http://"):
-            base_url = "ws://" + base_url.removeprefix("http://")
+        if base_url.startswith('https://'):
+            base_url = 'wss://' + base_url.removeprefix('https://')
+        elif base_url.startswith('http://'):
+            base_url = 'ws://' + base_url.removeprefix('http://')
 
-        return f"{base_url}/ws"
+        return f'{base_url}/ws'
 
     async def start(self) -> None:
         """Start the WebSocket consumer once."""
@@ -346,7 +341,7 @@ class P2PQuakeManager:
 
         self._ws_task = asyncio.create_task(
             self._listen_websocket(),
-            name="p2pquake-websocket",
+            name='p2pquake-websocket',
         )
 
     async def _listen_websocket(self) -> None:
@@ -366,7 +361,7 @@ class P2PQuakeManager:
                     heartbeat=25,
                     max_msg_size=1_048_576,
                 ) as websocket:
-                    self.logger.info("Connected to P2PQuake WebSocket.")
+                    self.logger.info('Connected to P2PQuake WebSocket.')
 
                     async for message in websocket:
                         if message.type == aiohttp.WSMsgType.TEXT:
@@ -374,14 +369,14 @@ class P2PQuakeManager:
                                 payload = json.loads(message.data)
                             except json.JSONDecodeError:
                                 self.logger.warning(
-                                    "Received invalid JSON from P2PQuake.",
+                                    'Received invalid JSON from P2PQuake.',
                                 )
                                 continue
 
                             if not isinstance(payload, dict):
                                 continue
 
-                            code = payload.get("code")
+                            code = payload.get('code')
                             if code not in accepted_codes:
                                 continue
 
@@ -391,13 +386,13 @@ class P2PQuakeManager:
                                 )
                             except ValidationError:
                                 self.logger.exception(
-                                    "Failed to validate P2PQuake event.",
+                                    'Failed to validate P2PQuake event.',
                                 )
                                 continue
 
                             if self._cache_event(event):
                                 self.logger.debug(
-                                    "Cached P2PQuake event %s (code=%s).",
+                                    'Cached P2PQuake event %s (code=%s).',
                                     event.id,
                                     event.code,
                                 )
@@ -405,24 +400,24 @@ class P2PQuakeManager:
                             delay = 1.0
                         elif message.type == aiohttp.WSMsgType.ERROR:
                             raise websocket.exception() or aiohttp.ClientError(
-                                "WebSocket connection failed.",
+                                'WebSocket connection failed.',
                             )
                         elif message.type in (
                             aiohttp.WSMsgType.CLOSE,
                             aiohttp.WSMsgType.CLOSED,
-                            aiohttp.WSMsgType.CLOSING
+                            aiohttp.WSMsgType.CLOSING,
                         ):
                             break
             except asyncio.CancelledError:
                 raise
             except (aiohttp.ClientError, TimeoutError, OSError):
                 self.logger.warning(
-                    "P2PQuake WebSocket disconnected.",
+                    'P2PQuake WebSocket disconnected.',
                     exc_info=True,
                 )
 
             self.logger.info(
-                "Reconnecting to P2PQuake in %.1f seconds.",
+                'Reconnecting to P2PQuake in %.1f seconds.',
                 delay,
             )
             await asyncio.sleep(delay)
@@ -439,24 +434,22 @@ class P2PQuakeManager:
         dedupe_cache_size: int = 4096,
     ) -> AsyncIterator[P2PEvent]:
         if not codes:
-            raise ValueError("At least one event code is required")
+            raise ValueError('At least one event code is required')
 
         if not set(codes).issubset({551, 552, 556}):
-            raise ValueError("Supported event codes are 551, 552, and 556")
+            raise ValueError('Supported event codes are 551, 552, and 556')
 
         if reconnect_initial_delay <= 0:
-            raise ValueError("Initial reconnect delay must be positive")
+            raise ValueError('Initial reconnect delay must be positive')
 
         if reconnect_max_delay < reconnect_initial_delay:
-            raise ValueError(
-                "Maximum reconnect delay must be >= initial delay"
-            )
+            raise ValueError('Maximum reconnect delay must be >= initial delay')
 
         if not 1 <= backfill_limit <= 100:
-            raise ValueError("backfill_limit must be between 1 and 100")
+            raise ValueError('backfill_limit must be between 1 and 100')
 
         if dedupe_cache_size < 1:
-            raise ValueError("dedupe_cache_size must be positive")
+            raise ValueError('dedupe_cache_size must be positive')
 
         accepted_codes = set(codes)
         seen_ids: OrderedDict[str, None] = OrderedDict()
@@ -493,8 +486,8 @@ class P2PQuakeManager:
                     TimeoutError,
                 ):
                     self.logger.warning(
-                        "Failed to retrieve P2PQuake history after "
-                        "a WebSocket disconnection.",
+                        'Failed to retrieve P2PQuake history after '
+                        'a WebSocket disconnection.',
                         exc_info=True,
                     )
                 else:
@@ -522,7 +515,7 @@ class P2PQuakeManager:
                                 payload = json.loads(message.data)
                             except json.JSONDecodeError:
                                 self.logger.warning(
-                                    "Received invalid JSON from P2PQuake."
+                                    'Received invalid JSON from P2PQuake.'
                                 )
                                 continue
 
@@ -530,7 +523,7 @@ class P2PQuakeManager:
                                 continue
 
                             try:
-                                code = int(payload.get("code", -1))
+                                code = int(payload.get('code', -1))
                             except (TypeError, ValueError):
                                 continue
 
@@ -543,7 +536,7 @@ class P2PQuakeManager:
                                 event = EVENT_ADAPTER.validate_python(payload)
                             except ValidationError:
                                 self.logger.warning(
-                                    "Invalid P2PQuake payload for code %s.",
+                                    'Invalid P2PQuake payload for code %s.',
                                     code,
                                     exc_info=True,
                                 )
@@ -551,7 +544,7 @@ class P2PQuakeManager:
 
                             if self._cache_event(event):
                                 self.logger.debug(
-                                    "Cached P2PQuake event %s (code=%s).",
+                                    'Cached P2PQuake event %s (code=%s).',
                                     event.id,
                                     event.code,
                                 )
@@ -561,9 +554,7 @@ class P2PQuakeManager:
                             if error is not None:
                                 raise error
 
-                            raise aiohttp.ClientError(
-                                "P2PQuake WebSocket failed"
-                            )
+                            raise aiohttp.ClientError('P2PQuake WebSocket failed')
 
                         elif message.type in (
                             aiohttp.WSMsgType.CLOSE,
@@ -577,7 +568,7 @@ class P2PQuakeManager:
 
             except (aiohttp.ClientError, TimeoutError, OSError):
                 self.logger.warning(
-                    "P2PQuake WebSocket disconnected; reconnecting.",
+                    'P2PQuake WebSocket disconnected; reconnecting.',
                     exc_info=True,
                 )
 
@@ -614,7 +605,7 @@ class P2PQuakeManager:
             task.cancel()
             with contextlib.suppress(asyncio.CancelledError):
                 await task
-        
+
         if self._owns_session and self._session is not None:
             await self._session.close()
             self._session = None
@@ -627,48 +618,43 @@ class P2PQuakeManager:
         offset: int = 0,
     ) -> list[P2PEvent]:
         if not 1 <= limit <= 100:
-            raise ValueError("limit must be between 1 and 100")
+            raise ValueError('limit must be between 1 and 100')
 
         if offset < 0:
-            raise ValueError("offset must be non-negative")
+            raise ValueError('offset must be non-negative')
 
         if not codes:
-            raise ValueError("At least one event code is required")
+            raise ValueError('At least one event code is required')
 
         if not set(codes).issubset({551, 552, 556}):
-            raise ValueError("Supported event codes are 551, 552, and 556")
+            raise ValueError('Supported event codes are 551, 552, and 556')
 
         session = await self._get_session()
 
         params: list[tuple[str, str | int]] = [
-            ("codes", code) for code in dict.fromkeys(codes)
+            ('codes', code) for code in dict.fromkeys(codes)
         ]
-        params.extend([
-            ("limit", limit),
-            ("offset", offset),
-        ])
+        params.extend(
+            [
+                ('limit', limit),
+                ('offset', offset),
+            ]
+        )
 
         async with session.get(
-            f"{self._base_url}/history",
+            f'{self._base_url}/history',
             params=params,
         ) as response:
             if response.status == 429:
-                raise P2PQuakeRateLimitError(
-                    "P2PQuake API rate limit exceeded"
-                )
+                raise P2PQuakeRateLimitError('P2PQuake API rate limit exceeded')
 
             response.raise_for_status()
             payload = await response.json()
 
         if not isinstance(payload, list):
-            raise P2PQuakeAPIError(
-                "Expected a JSON array from the history endpoint"
-            )
+            raise P2PQuakeAPIError('Expected a JSON array from the history endpoint')
 
-        return [
-            EVENT_ADAPTER.validate_python(item)
-            for item in payload
-        ]
+        return [EVENT_ADAPTER.validate_python(item) for item in payload]
 
     async def get_latest_event(
         self,

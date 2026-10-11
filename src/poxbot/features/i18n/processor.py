@@ -124,7 +124,7 @@ class I18nProcessor:
         await asyncio.gather(*tasks)
 
         self._preloaded = True
-        
+
         logger.info(
             'Processor: Preloaded %d languages with in-file tone block.',
             len(self.available_files),

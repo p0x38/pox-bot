@@ -491,6 +491,15 @@
             }
         }
     },
+    "eew": {
+        "description": "地震速報の情報を確認するよ！ :3",
+        "retrieve": {
+            "description": "キャッシュされた自身イベントを取得するよ！ :3",
+            "parameters": {
+                "codes": "絞り込むイベントコードを指定するよ（省略可）！ :3"
+            }
+        }
+    },
     "fun": {
         "boop_member": {
             "description": "誰かの鼻をブーブー！ :3"
@@ -937,6 +946,12 @@
         "send": {
             "description": "メッセージを送っちゃおう！ :3"
         }
+    },
+    "midi": {
+        "convert": {
+            "description": "アップロードしたMIDIファイルをMP3に変換するよ！ :3"
+        },
+        "description": "MIDIファイル関連のコマンドだよ！ :3"
     },
     "minecraft": {
         "description": "Minecraftのブロックな冒険コマンドだよ！ :3",

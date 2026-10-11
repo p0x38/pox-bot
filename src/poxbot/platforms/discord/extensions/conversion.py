@@ -67,11 +67,13 @@ class ConversionCog(commands.Cog):
             await interaction.followup.send(
                 f'{result.output}\n'
                 f'\n'
-                f'{self.bot.internal_translator.T(
-                    "messages.text_transform_completed",
-                    locale,
-                    {"elapsed_ms": result.metrics.elapsed_ms},
-                )}',
+                f'{
+                    self.bot.internal_translator.T(
+                        "messages.text_transform_completed",
+                        locale,
+                        {"elapsed_ms": result.metrics.elapsed_ms},
+                    )
+                }',
             )
 
     @cached(60)

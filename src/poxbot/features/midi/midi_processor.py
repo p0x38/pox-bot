@@ -13,21 +13,9 @@ import mido
 from pydub import AudioSegment
 from pydub.exceptions import CouldntEncodeError
 
-type MIDIInput = (
-    str
-    | os.PathLike[str]
-    | bytes
-    | bytearray
-    | memoryview
-    | BinaryIO
-)
+type MIDIInput = str | os.PathLike[str] | bytes | bytearray | memoryview | BinaryIO
 
-type MP3Output = (
-    str
-    | os.PathLike[str]
-    | BinaryIO
-    | None
-)
+type MP3Output = str | os.PathLike[str] | BinaryIO | None
 
 
 class MIDIProcessor:
@@ -36,13 +24,13 @@ class MIDIProcessor:
     DEFAULT_TEMPO = 500_000
 
     def __init__(
-            self,
-            soundfont: str | Path,
-            *,
-            sample_rate: int = 44100,
-            gain: float = 0.2,
-            bitrate: str = "192k",
-            fluidsynth_executable: str = "",
+        self,
+        soundfont: str | Path,
+        *,
+        sample_rate: int = 44100,
+        gain: float = 0.2,
+        bitrate: str = '192k',
+        fluidsynth_executable: str = '',
     ) -> None:
         self.soundfont = Path(soundfont).expanduser().resolve()
         self.sample_rate = sample_rate
@@ -51,21 +39,21 @@ class MIDIProcessor:
         self.fluidsynth_executable = fluidsynth_executable
 
         if not fluidsynth_executable.strip():
-            executable = shutil.which("fluidsynth")
+            executable = shutil.which('fluidsynth')
 
             if executable is None:
-                raise FileNotFoundError("FluidSynth was not found.")
+                raise FileNotFoundError('FluidSynth was not found.')
 
             self.fluidsynth_executable = executable
 
         if sample_rate <= 0:
-            raise ValueError("sample_rate must be positive.")
+            raise ValueError('sample_rate must be positive.')
 
         if gain < 0:
-            raise ValueError("gain cannot be negative.")
+            raise ValueError('gain cannot be negative.')
 
         if not bitrate:
-            raise ValueError("bitrate cannot be empty.")
+            raise ValueError('bitrate cannot be empty.')
 
     @staticmethod
     def _read_midi_bytes(source: MIDIInput) -> bytes:
@@ -77,7 +65,7 @@ class MIDIProcessor:
         if isinstance(source, (bytes, bytearray, memoryview)):
             return bytes(source)
 
-        getvalue = getattr(source, "getvalue", None)
+        getvalue = getattr(source, 'getvalue', None)
 
         if callable(getvalue):
             data = getvalue()
@@ -98,7 +86,7 @@ class MIDIProcessor:
                         source.seek(original_position)
 
         if not isinstance(data, (bytes, bytearray, memoryview)):
-            raise TypeError("MIDI input must contain binary data.")
+            raise TypeError('MIDI input must contain binary data.')
 
         return bytes(data)
 
@@ -111,17 +99,17 @@ class MIDIProcessor:
         try:
             midi = mido.MidiFile(file=io.BytesIO(data))
         except Exception as exc:
-            raise ValueError("Could not parse the MIDI input") from exc
+            raise ValueError('Could not parse the MIDI input') from exc
 
         if not midi.tracks:
-            raise ValueError("The MIDI file contains no tracks.")
+            raise ValueError('The MIDI file contains no tracks.')
 
         return midi
 
     @staticmethod
     def _get_track_name(track: mido.MidiTrack) -> str | None:
         for message in track:
-            if message.is_meta and message.type == "track_name":
+            if message.is_meta and message.type == 'track_name':
                 return message.name
 
         return None
@@ -138,8 +126,7 @@ class MIDIProcessor:
                 {
                     message.channel
                     for message in track
-                    if not message.is_meta
-                    and hasattr(message, "channel")
+                    if not message.is_meta and hasattr(message, 'channel')
                 }
             )
 
@@ -149,46 +136,42 @@ class MIDIProcessor:
             for message in track:
                 absolute_tick += message.time
 
-                if message.type == "program_change":
+                if message.type == 'program_change':
                     programs.append(
                         {
-                            "tick": absolute_tick,
-                            "channel": message.channel,
-                            "program": message.program,
+                            'tick': absolute_tick,
+                            'channel': message.channel,
+                            'program': message.program,
                         }
                     )
 
             note_on_count = sum(
-                message.type == "note_on" and message.velocity > 0
-                for message in track
+                message.type == 'note_on' and message.velocity > 0 for message in track
             )
 
             note_off_count = sum(
-                message.type == "note_off"
-                or (
-                    message.type == "note_on"
-                    and message.velocity == 0
-                )
+                message.type == 'note_off'
+                or (message.type == 'note_on' and message.velocity == 0)
                 for message in track
             )
 
             tracks.append(
                 {
-                    "index": index,
-                    "name": cls._get_track_name(track),
-                    "message_count": len(track),
-                    "note_on_count": note_on_count,
-                    "note_off_count": note_off_count,
-                    "channels": channels,
-                    "program_changes": programs,
+                    'index': index,
+                    'name': cls._get_track_name(track),
+                    'message_count': len(track),
+                    'note_on_count': note_on_count,
+                    'note_off_count': note_off_count,
+                    'channels': channels,
+                    'program_changes': programs,
                 }
             )
 
         return tracks
 
     def get_tracks(
-            self,
-            source: MIDIInput,
+        self,
+        source: MIDIInput,
     ) -> list[dict[str, Any]]:
         """Return a summary of every MIDI track."""
 
@@ -196,9 +179,9 @@ class MIDIProcessor:
         return self._summarize_tracks(midi)
 
     def get_track_events(
-            self,
-            source: MIDIInput,
-            track_index: int,
+        self,
+        source: MIDIInput,
+        track_index: int,
     ) -> list[dict[str, Any]]:
         """Return all events in a track with absolute tick positions."""
 
@@ -206,8 +189,8 @@ class MIDIProcessor:
 
         if not 0 <= track_index < len(midi.tracks):
             raise IndexError(
-                f"Track index {track_index} is out of range "
-                f"for {len(midi.tracks)} tracks."
+                f'Track index {track_index} is out of range '
+                f'for {len(midi.tracks)} tracks.'
             )
 
         events: list[dict[str, Any]] = []
@@ -217,15 +200,15 @@ class MIDIProcessor:
             absolute_tick += message.time
 
             details = message.dict()
-            delta_ticks = details.pop("time", 0)
-            message_type = details.pop("type")
+            delta_ticks = details.pop('time', 0)
+            message_type = details.pop('type')
 
             events.append(
                 {
-                    "track_index": track_index,
-                    "tick": absolute_tick,
-                    "delta_ticks": delta_ticks,
-                    "type": message_type,
+                    'track_index': track_index,
+                    'tick': absolute_tick,
+                    'delta_ticks': delta_ticks,
+                    'type': message_type,
                     **details,
                 }
             )
@@ -233,9 +216,9 @@ class MIDIProcessor:
         return events
 
     def get_note_events(
-            self,
-            source: MIDIInput,
-            track_index: int,
+        self,
+        source: MIDIInput,
+        track_index: int,
     ) -> list[dict[str, Any]]:
         """Return note-on and note-off events from a track."""
 
@@ -243,18 +226,18 @@ class MIDIProcessor:
         notes: list[dict[str, Any]] = []
 
         for event in events:
-            if event["type"] not in {"note_on", "note_off"}:
+            if event['type'] not in {'note_on', 'note_off'}:
                 continue
 
             event = event.copy()  # ruff: ignore[redefined-loop-name]
 
-            if event["type"] == "note_on" and event.get("velocity") == 0:
-                event["type"] = "note_off"
+            if event['type'] == 'note_on' and event.get('velocity') == 0:
+                event['type'] = 'note_off'
 
             notes.append(event)
 
         return notes
-    
+
     def get_instruments(
         self,
         source: MIDIInput,
@@ -274,16 +257,16 @@ class MIDIProcessor:
             for message in track:
                 absolute_tick += message.time
 
-                if message.type != "program_change":
+                if message.type != 'program_change':
                     continue
 
                 instruments.append(
                     {
-                        "track_index": track_index,
-                        "track_name": track_name,
-                        "tick": absolute_tick,
-                        "channel": message.channel,
-                        "program": message.program,
+                        'track_index': track_index,
+                        'track_name': track_name,
+                        'tick': absolute_tick,
+                        'channel': message.channel,
+                        'program': message.program,
                     }
                 )
 
@@ -335,18 +318,18 @@ class MIDIProcessor:
                     current_tempo,
                 )
 
-                if not message.is_meta or message.type != "set_tempo":
+                if not message.is_meta or message.type != 'set_tempo':
                     continue
 
                 change: dict[str, Any] = {
-                    "tick": absolute_tick,
-                    "time_seconds": elapsed_seconds,
-                    "tempo_us_per_beat": message.tempo,
-                    "bpm": mido.tempo2bpm(message.tempo),
+                    'tick': absolute_tick,
+                    'time_seconds': elapsed_seconds,
+                    'tempo_us_per_beat': message.tempo,
+                    'bpm': mido.tempo2bpm(message.tempo),
                 }
 
                 if track_index is not None:
-                    change["track_index"] = track_index
+                    change['track_index'] = track_index
 
                 changes.append(change)
                 current_tempo = message.tempo
@@ -383,19 +366,19 @@ class MIDIProcessor:
                     continue
 
                 details = message.dict()
-                details.pop("type", None)
-                details.pop("time", None)
+                details.pop('type', None)
+                details.pop('time', None)
 
                 events.append(
                     {
-                        "track_index": track_index,
-                        "tick": absolute_tick,
-                        "type": message.type,
+                        'track_index': track_index,
+                        'tick': absolute_tick,
+                        'type': message.type,
                         **details,
                     }
                 )
 
-        events.sort(key=lambda event: (event["tick"], event["track_index"]))
+        events.sort(key=lambda event: (event['tick'], event['track_index']))
         return events
 
     def get_time_signatures(
@@ -405,7 +388,7 @@ class MIDIProcessor:
         """Return time-signature events."""
 
         midi = self._load_midi(source)
-        return self._collect_meta_events(midi, {"time_signature"})
+        return self._collect_meta_events(midi, {'time_signature'})
 
     def get_key_signatures(
         self,
@@ -414,7 +397,7 @@ class MIDIProcessor:
         """Return key-signature events."""
 
         midi = self._load_midi(source)
-        return self._collect_meta_events(midi, {"key_signature"})
+        return self._collect_meta_events(midi, {'key_signature'})
 
     def get_markers(
         self,
@@ -423,7 +406,7 @@ class MIDIProcessor:
         """Return markers and cue markers."""
 
         midi = self._load_midi(source)
-        return self._collect_meta_events(midi, {"marker", "cue_marker"})
+        return self._collect_meta_events(midi, {'marker', 'cue_marker'})
 
     def get_lyrics(
         self,
@@ -432,7 +415,7 @@ class MIDIProcessor:
         """Return MIDI lyric events."""
 
         midi = self._load_midi(source)
-        return self._collect_meta_events(midi, {"lyrics"})
+        return self._collect_meta_events(midi, {'lyrics'})
 
     def get_text_events(
         self,
@@ -445,10 +428,10 @@ class MIDIProcessor:
         return self._collect_meta_events(
             midi,
             {
-                "text",
-                "copyright",
-                "track_name",
-                "instrument_name",
+                'text',
+                'copyright',
+                'track_name',
+                'instrument_name',
             },
         )
 
@@ -461,30 +444,24 @@ class MIDIProcessor:
         midi = self._load_midi(source)
 
         return {
-            "format_type": midi.type,
-            "ticks_per_beat": midi.ticks_per_beat,
-            "track_count": len(midi.tracks),
-            "duration_seconds": self._get_duration(midi),
-            "tracks": self._summarize_tracks(midi),
-            "instruments": self._collect_instruments(midi),
-            "tempo_changes": self._collect_tempo_changes(midi),
-            "time_signatures": self._collect_meta_events(
-                midi, {"time_signature"}
-            ),
-            "key_signatures": self._collect_meta_events(
-                midi, {"key_signature"}
-            ),
-            "markers": self._collect_meta_events(
-                midi, {"marker", "cue_marker"}
-            ),
-            "lyrics": self._collect_meta_events(midi, {"lyrics"}),
-            "text_events": self._collect_meta_events(
+            'format_type': midi.type,
+            'ticks_per_beat': midi.ticks_per_beat,
+            'track_count': len(midi.tracks),
+            'duration_seconds': self._get_duration(midi),
+            'tracks': self._summarize_tracks(midi),
+            'instruments': self._collect_instruments(midi),
+            'tempo_changes': self._collect_tempo_changes(midi),
+            'time_signatures': self._collect_meta_events(midi, {'time_signature'}),
+            'key_signatures': self._collect_meta_events(midi, {'key_signature'}),
+            'markers': self._collect_meta_events(midi, {'marker', 'cue_marker'}),
+            'lyrics': self._collect_meta_events(midi, {'lyrics'}),
+            'text_events': self._collect_meta_events(
                 midi,
                 {
-                    "text",
-                    "copyright",
-                    "track_name",
-                    "instrument_name",
+                    'text',
+                    'copyright',
+                    'track_name',
+                    'instrument_name',
                 },
             ),
         }
@@ -502,14 +479,14 @@ class MIDIProcessor:
             for message in track:
                 absolute_tick += message.time
 
-                if message.type == "program_change":
+                if message.type == 'program_change':
                     instruments.append(
                         {
-                            "track_index": track_index,
-                            "track_name": track_name,
-                            "tick": absolute_tick,
-                            "channel": message.channel,
-                            "program": message.program,
+                            'track_index': track_index,
+                            'track_name': track_name,
+                            'tick': absolute_tick,
+                            'channel': message.channel,
+                            'program': message.program,
                         }
                     )
 
@@ -552,61 +529,55 @@ class MIDIProcessor:
         elif isinstance(output, (str, os.PathLike)):
             destination = Path(output).expanduser().resolve()
 
-            if destination.suffix.lower() != ".mp3":
-                raise ValueError("The output file must have an .mp3 extension.")
+            if destination.suffix.lower() != '.mp3':
+                raise ValueError('The output file must have an .mp3 extension.')
 
             if isinstance(source, (str, os.PathLike)):
                 source_path = Path(source).expanduser().resolve()
 
                 if source_path == destination:
-                    raise ValueError(
-                        "Input and output paths must be different."
-                    )
+                    raise ValueError('Input and output paths must be different.')
 
             destination.parent.mkdir(parents=True, exist_ok=True)
 
-        elif callable(getattr(output, "write", None)):
+        elif callable(getattr(output, 'write', None)):
             output_stream = output
 
         else:
-            raise TypeError(
-                "output must be a path, writable binary stream, or None."
-            )
+            raise TypeError('output must be a path, writable binary stream, or None.')
 
         if not self.soundfont.is_file():
-            raise FileNotFoundError(
-                f"SoundFont file not found: {self.soundfont}"
-            )
+            raise FileNotFoundError(f'SoundFont file not found: {self.soundfont}')
 
         executable = shutil.which(self.fluidsynth_executable)
 
         if executable is None:
             raise FileNotFoundError(
-                "FluidSynth was not found. Install it or configure "
-                "fluidsynth_executable."
+                'FluidSynth was not found. Install it or configure '
+                'fluidsynth_executable.'
             )
 
         with tempfile.TemporaryDirectory(
-            prefix="midi_processor_"
+            prefix='midi_processor_'
         ) as temporary_directory:
             temporary_path = Path(temporary_directory)
 
-            midi_path = temporary_path / "input.mid"
-            wav_path = temporary_path / "rendered.wav"
-            mp3_path = temporary_path / "rendered.mp3"
+            midi_path = temporary_path / 'input.mid'
+            wav_path = temporary_path / 'rendered.wav'
+            mp3_path = temporary_path / 'rendered.mp3'
 
             midi_path.write_bytes(midi_data)
 
             command = [
                 executable,
-                "-ni",
-                "-g",
+                '-ni',
+                '-g',
                 str(self.gain),
-                "-r",
+                '-r',
                 str(self.sample_rate),
-                "-T",
-                "wav",
-                "-F",
+                '-T',
+                'wav',
+                '-F',
                 str(wav_path),
                 str(self.soundfont),
                 str(midi_path),
@@ -624,38 +595,36 @@ class MIDIProcessor:
                 )
             except subprocess.TimeoutExpired as exc:
                 raise RuntimeError(
-                    "FluidSynth timed out while rendering the MIDI file.",
+                    'FluidSynth timed out while rendering the MIDI file.',
                 ) from exc
             except subprocess.CalledProcessError as exc:
-                details = (exc.stderr or exc.stdout or "").strip()
+                details = (exc.stderr or exc.stdout or '').strip()
 
                 raise RuntimeError(
-                    "FluidSynth failed to render the MIDI file."
-                    + (f"\n{details}" if details else "")
+                    'FluidSynth failed to render the MIDI file.'
+                    + (f'\n{details}' if details else '')
                 ) from exc
 
             if not wav_path.is_file() or wav_path.stat().st_size == 0:
-                raise RuntimeError(
-                    "FluidSynth did not produce a valid WAV file."
-                )
+                raise RuntimeError('FluidSynth did not produce a valid WAV file.')
 
             try:
                 audio = AudioSegment.from_wav(str(wav_path))
                 encoded_file = audio.export(
                     str(mp3_path),
-                    format="mp3",
+                    format='mp3',
                     bitrate=self.bitrate,
                 )
                 encoded_file.close()
 
             except (FileNotFoundError, CouldntEncodeError) as exc:
                 raise RuntimeError(
-                    "MP3 encoding failed. Ensure FFmpeg is installed "
-                    "and accessible to pydub."
+                    'MP3 encoding failed. Ensure FFmpeg is installed '
+                    'and accessible to pydub.'
                 ) from exc
 
             if not mp3_path.is_file() or mp3_path.stat().st_size == 0:
-                raise RuntimeError("MP3 encoding produced no output.")
+                raise RuntimeError('MP3 encoding produced no output.')
 
             if destination is not None:
                 staging_path: Path | None = None
@@ -664,8 +633,8 @@ class MIDIProcessor:
                     # Stage in the destination directory so replacement
                     # happens on the same filesystem.
                     with tempfile.NamedTemporaryFile(
-                        prefix=f".{destination.stem}.",
-                        suffix=".mp3",
+                        prefix=f'.{destination.stem}.',
+                        suffix='.mp3',
                         dir=destination.parent,
                         delete=False,
                     ) as staging_file:

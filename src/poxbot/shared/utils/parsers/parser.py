@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from io import StringIO
 from typing import Any, ClassVar, TypeVar
 
-T = TypeVar("T")
+T = TypeVar('T')
 
 
 class Converter(ABC):
@@ -29,8 +29,8 @@ class FloatConverter(Converter):
 
 
 class BooleanConverter(Converter):
-    TRUE_VALUES: ClassVar[set] = {"true", "1", "yes", "on"}
-    FALSE_VALUES: ClassVar[set] = {"false", "0", "no", "off"}
+    TRUE_VALUES: ClassVar[set] = {'true', '1', 'yes', 'on'}
+    FALSE_VALUES: ClassVar[set] = {'false', '0', 'no', 'off'}
 
     def convert(self, value: Any) -> bool:
         if not isinstance(value, str):
@@ -44,7 +44,7 @@ class BooleanConverter(Converter):
         if normalized in self.FALSE_VALUES:
             return False
 
-        raise ValueError(f"Cannot convert {value!r} to bool")
+        raise ValueError(f'Cannot convert {value!r} to bool')
 
 
 class CollectionConverter(Converter):
@@ -90,8 +90,6 @@ class Parser:
         try:
             converter = cls._converters[output]
         except KeyError:
-            raise TypeError(
-                f"Unsupported output type: {output!r}"
-            ) from None
+            raise TypeError(f'Unsupported output type: {output!r}') from None
 
         return converter.convert(input_data)
