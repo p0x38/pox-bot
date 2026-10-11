@@ -149,10 +149,8 @@ class ExtensionManager:
         self._load_ext_ignore_file()
 
     def _load_ext_ignore_file(self) -> None:
-        ignore_file_path = Path('src/poxbot/assets/.ext-ignore')
-        self.extension_logger.debug(
-            'loading .ext-ignore from "%s"',
-            ignore_file_path.resolve(),
+        ignore_file_path = (
+            Path(__file__).resolve().parents[1] / 'assets' / '.ext-ignore'
         )
 
         if not ignore_file_path.is_file():
@@ -162,11 +160,12 @@ class ExtensionManager:
             )
             return
 
+        patterns_loaded = 0
+
         try:
             with ignore_file_path.open('r', encoding='utf-8') as f:
                 for line in f:
                     clean_line = line.strip()
-                    self.extension_logger.debug('ignore line=%r', clean_line)
 
                     if not clean_line or clean_line.startswith('#'):
                         continue
@@ -174,10 +173,18 @@ class ExtensionManager:
                     if not clean_line.replace('_', '').replace('-', '').isalnum():
                         continue
 
-                    self.extension_logger.debug('ignore pattern loaded: %s', clean_line)
                     self.excluded_extensions.add(clean_line)
-        except Exception as e:
-            self.extension_logger.exception('Failed to read .ext-ignore', exc_info=e)
+                    patterns_loaded += 1
+
+            self.extension_logger.debug(
+                'Loaded %d extension ignore patterns.',
+                patterns_loaded,
+            )
+        except Exception:
+            self.extension_logger.exception(
+                'Failed to read extension ignore file "%s".',
+                ignore_file_path,
+            )
 
     def should_ignore(self, extension_name: str) -> bool:
         return any(
@@ -189,7 +196,6 @@ class ExtensionManager:
         self,
         extension_name: str,
     ) -> bool:
-        self.extension_logger.debug('cogs_path resolved=%s', self.cogs_path.resolve())
         return extension_name in _wildcards
 
     def get_extension_path(
@@ -232,24 +238,29 @@ class ExtensionManager:
         options = options or ExtensionDiscoveryOptions()
 
         if self.is_wildcard(target):
+            candidate_files = [
+                path
+                for path in self.cogs_path.rglob('*.py')
+                if not path.name.startswith('_')
+                and path.stem != '__init__'
+                and '.ignore' not in path.name
+            ]
+
             available_in_folder = []
-            self.extension_logger.debug(
-                'FILES RAW: %s',
-                list(self.cogs_path.rglob('*.py')),
-            )
-            for f in self.cogs_path.rglob('*.py'):
-                if f.name.startswith('_'):
+
+            for path in candidate_files:
+                extension_name = path.stem
+
+                if self.should_ignore(extension_name):
                     continue
 
-                self.extension_logger.debug('FILE FOUND: %s', f)
-                if f.stem == '__init__' or '.ignore' in f.name:
-                    continue
-                ext_name = f.stem
-                self.extension_logger.debug('EXT STEM: %s', ext_name)
-                if self.should_ignore(ext_name):
-                    self.extension_logger.debug('IGNORED %s', ext_name)
-                    continue
-                available_in_folder.append(ext_name)
+                available_in_folder.append(extension_name)
+
+            self.extension_logger.debug(
+                'Discovered %d extension candidates; %d excluded by ignore patterns.',
+                len(available_in_folder),
+                len(candidate_files) - len(available_in_folder),
+            )
 
             if operation is ExtensionOperation.LOAD:
                 return available_in_folder
@@ -286,8 +297,16 @@ class ExtensionManager:
         self.extension_logger.debug('resolved module path=%s', module)
 
         actual_op: ExtensionCallable = operation
+
+        action = {
+            ExtensionOperation.LOAD: 'Loading',
+            ExtensionOperation.UNLOAD: 'Unloading',
+            ExtensionOperation.RELOAD: 'Reloading',
+        }[operation_type]
+
         self.extension_logger.info(
-            'Detected new extension "%s". Loading for the first time!',
+            '%s extension "%s".',
+            action,
             extension,
         )
 
@@ -326,8 +345,8 @@ class ExtensionManager:
                 operation=operation_type,
             )
 
-            self.extension_logger.exception(
-                'Failed to %s "%s": Extension already loaded',
+            self.extension_logger.debug(
+                'Skipping %s "%s": extension is already loaded.',
                 operation_type.verb,
                 extension,
             )
@@ -347,8 +366,8 @@ class ExtensionManager:
                 operation=operation_type,
             )
 
-            self.extension_logger.exception(
-                'Failed to %s "%s": Extension is not loaded',
+            self.extension_logger.debug(
+                'Skipped %s "%s": extension is not loaded.',
                 operation_type.verb,
                 extension,
             )
@@ -361,8 +380,8 @@ class ExtensionManager:
         except commands.ExtensionNotFound:
             elapsed = self._elapsed_ms(start)
 
-            self.extension_logger.exception(
-                'Failed to %s "%s": Extension does not exist',
+            self.extension_logger.warning(
+                'Failed to %s "%s": extension does not exist.',
                 operation_type.verb,
                 extension,
             )
