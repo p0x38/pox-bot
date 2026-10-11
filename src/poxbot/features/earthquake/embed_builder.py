@@ -16,7 +16,7 @@ from .p2pquake import (
 
 
 class P2PQuakeEmbedBuilder:
-    BASE_KEY = "earthquake_reports.jma"
+    BASE_KEY = "text.earthquake_reports.jma"
 
     MAX_ROWS_PER_EMBED = 20
     MAX_ROW_VALUE_LENGTH = 220
@@ -36,6 +36,9 @@ class P2PQuakeEmbedBuilder:
             kwargs,
         )
 
+    def _unknown(self) -> str:
+        return self.translator.T("text.unknown", self.locale)
+
     def _lookup(
         self,
         key: str,
@@ -44,11 +47,11 @@ class P2PQuakeEmbedBuilder:
         fallback: str | None = None,
     ) -> str:
         if value is None:
-            return fallback or self._t("text.embed.unknown")
+            return fallback if fallback is not None else self._unknown()
 
         raw = f"{value:g}" if isinstance(value, float) else str(value)
+        translation_key = f"{self.BASE_KEY}.{key}.{raw}"
 
-        translation_key = f"text.{self.BASE_KEY}.{key}.{raw}"
         translated = self.translator.T(translation_key, self.locale)
 
         if translated == translation_key:
@@ -58,19 +61,19 @@ class P2PQuakeEmbedBuilder:
 
     def _scale(self, value: int | float | None) -> str:
         if value is None or value < 0:
-            return self._t("embed.unknown")
+            return self._unknown()
 
         return self._lookup("point_intensity_scale", value)
 
     def _number(self, value: int | float | None) -> str:
         if value is None or value < 0:
-            return self._t("embed.unknown")
+            return self._unknown()
 
         return f"{value:g}"
 
     def _time(self, value: datetime | None) -> str:
         if value is None:
-            return self._t("embed.unknown")
+            return self._unknown()
 
         return value.strftime("%Y/%m/%d %H:%M:%S %Z")
 
@@ -82,7 +85,7 @@ class P2PQuakeEmbedBuilder:
         *,
         inline: bool = False,
     ) -> None:
-        value = value.strip() or self._t("embed.unknown")
+        value = value.strip() or self._unknown()
 
         if len(value) > 1024:
             value = value[:1021] + "..."
@@ -151,7 +154,7 @@ class P2PQuakeEmbedBuilder:
             self._lookup(
                 "earthquake_max_scale",
                 max_scale,
-                fallback=self._t("embed.unknown"),
+                fallback=self._unknown(),
             ),
             inline=True,
         )
@@ -168,7 +171,7 @@ class P2PQuakeEmbedBuilder:
             embed,
             "embed.earthquake.depth",
             f"{depth:g} km" if depth is not None and depth >= 0
-            else self._t("embed.unknown"),
+            else self._unknown(),
             inline=True,
         )
 
@@ -178,7 +181,7 @@ class P2PQuakeEmbedBuilder:
             (
                 hypocenter.name
                 if hypocenter and hypocenter.name
-                else self._t("embed.unknown")
+                else self._unknown()
             ),
         )
 
@@ -404,7 +407,7 @@ class P2PQuakeEmbedBuilder:
                 embed,
                 "embed.eew.epicenter",
                 hypocenter.reduce_name or hypocenter.name
-                or self._t("embed.unknown"),
+                or self._unknown(),
             )
 
             self._field(
@@ -419,7 +422,7 @@ class P2PQuakeEmbedBuilder:
                 embed,
                 "embed.eew.depth",
                 f"{depth:g} km" if depth is not None and depth >= 0
-                else self._t("embed.unknown"),
+                else self._unknown(),
                 inline=True,
             )
 
@@ -551,7 +554,7 @@ class P2PQuakeEmbedBuilder:
             )
 
         name = f"{timestamp} · {kind}"
-        value = " | ".join(parts) or self._t("embed.unknown")
+        value = " | ".join(parts) or self._unknown()
 
         if len(value) > self.MAX_ROW_VALUE_LENGTH:
             value = value[:self.MAX_ROW_VALUE_LENGTH - 3] + "..."

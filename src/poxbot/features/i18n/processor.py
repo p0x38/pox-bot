@@ -38,6 +38,7 @@ class I18nProcessor:
     def __init__(self, options: TranslatorOptions | None = None):
         self.options = options or TranslatorOptions()
         self.locales_path = self.options.base_path
+        self._preloaded = False
 
         self.translations: dict[str, dict[str, Any]] = {}
         self.metadata: dict[str, dict[str, Any]] = {}
@@ -103,7 +104,11 @@ class I18nProcessor:
             }
 
     async def preload_all(self):
+        if self._preloaded:
+            return
+
         tasks = []
+
         for locale in self.available_files:
             self.load_metadata(locale)
 
@@ -117,6 +122,9 @@ class I18nProcessor:
                     tasks.append(self._load_file_async(locale, namespace))
 
         await asyncio.gather(*tasks)
+
+        self._preloaded = True
+        
         logger.info(
             'Processor: Preloaded %d languages with in-file tone block.',
             len(self.available_files),

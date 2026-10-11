@@ -82,7 +82,7 @@ class P2PModel(BaseModel):
 
 
 class P2PData(P2PModel):
-    id: str
+    id: str = Field(alias="_id")
     time: P2PDateTime
 
 
@@ -600,14 +600,6 @@ class P2PQuakeManager:
         await self.close()
 
     async def _get_session(self) -> aiohttp.ClientSession:
-        if self._ws_task is not None:
-            self._ws_task.cancel()
-
-            with contextlib.suppress(asyncio.CancelledError):
-                await self._ws_task
-
-            self._ws_task = None
-
         if self._session is None or self._session.closed:
             self._session = aiohttp.ClientSession(timeout=self._timeout)
             self._owns_session = True
@@ -615,6 +607,14 @@ class P2PQuakeManager:
         return self._session
 
     async def close(self) -> None:
+        task = self._ws_task
+        self._ws_task = None
+
+        if task is not None and not task.done():
+            task.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await task
+        
         if self._owns_session and self._session is not None:
             await self._session.close()
             self._session = None
