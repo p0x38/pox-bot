@@ -172,6 +172,22 @@ class TextToSpeechCog(commands.Cog):
         loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(thinking=True)
 
+        if engine is TTSEngineType.PIPER_TTS:
+            selected_voice = voice or self.bot.settings.piper_tts.default_voice
+
+            status = self.bot.internal_translator.T(
+                'command.tts.texts.status.piper',
+                loc,
+                {'voice': selected_voice},
+            )
+        else:
+            status = self.bot.internal_translator.T(
+                'command.tts.texts.status.generating',
+                loc,
+            )
+
+        await interaction.edit_original_response(content=status)
+
         embed = Embed()
 
         def _assert_valid_result(res: Any) -> None:
@@ -201,7 +217,7 @@ class TextToSpeechCog(commands.Cog):
             chunk_count = result.metrics.chunk_count
 
             temp_tts = {
-                'tts_input': input,
+                'tts_input': text,
                 'tts_engine': str(engine.name),
                 'tts_voice': voice if voice else 'None',
             }
@@ -217,7 +233,11 @@ class TextToSpeechCog(commands.Cog):
             for name, value in temp_tts.items():
                 embed.add_field(name=name, value=value, inline=True)
 
-            await interaction.followup.send(embed=embed, file=file)
+            await interaction.edit_original_response(
+                content=None,
+                embed=embed,
+                attachments=[file],
+            )
         except Exception as e:
             self.bot.logger.exception('Unexpected exception raised')
             embed.color = Color.red()
@@ -227,7 +247,7 @@ class TextToSpeechCog(commands.Cog):
             )
             embed.description = str(e)
 
-            await interaction.followup.send(embed=embed)
+            await interaction.edit_original_response(content=None, embed=embed)
 
 
 async def setup(bot):

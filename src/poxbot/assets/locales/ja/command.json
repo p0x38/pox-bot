@@ -1131,6 +1131,12 @@
                 "title": "TTS変換:3"
             }
         },
+        "texts": {
+            "status": {
+                "generating": "音声を生成してるから、ちょっと待っててね！ :3",
+                "piper": "Piperの音声「{voice}」を準備してるから待っててね！ :3\n初回はダウンロードするのに数分ぐらいかかるから、大人しく待っててね！ :3"
+            }
+        },
         "google_translate": {
             "description": "Google翻訳からTTSを作ります！ :3"
         }

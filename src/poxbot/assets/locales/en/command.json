@@ -1131,6 +1131,12 @@
                 "title": "TTS Conversion :3"
             }
         },
+        "texts": {
+            "status": {
+                "generating": "Generating speech. Please wait...",
+                "piper": "Preparing Piper voice '{voice}'. The first download may take several minutes."
+            }
+        },
         "google_translate": {
             "description": "Makes TTS from Google Translate! :3"
         }
