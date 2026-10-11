@@ -25,8 +25,6 @@ from discord.ext import commands
 from pytz import UTC
 from sqlalchemy.exc import SQLAlchemyError
 
-from poxbot.application import shutdown, startup
-
 from ..features.earthquake.p2pquake import P2PQuakeManager
 from ..features.statistics import BotConstants, BotStatistics, GitInfo
 from ..features.text_transform.manager import TextTransformManager
@@ -45,6 +43,8 @@ from ..shared.utils.cache import Cache
 from ..shared.utils.metrics import get_or_create_metrics
 from ..shared.utils.perf_monitor import PerformanceMonitor
 from .context import ApplicationContext
+from .shutdown import shutdown
+from .startup import startup
 
 
 class PoxBot(commands.AutoShardedBot):
