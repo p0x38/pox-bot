@@ -3,7 +3,6 @@ import gc
 from datetime import datetime
 from pathlib import Path
 
-import nltk
 from discord import (
     Color,
     DMChannel,
@@ -26,6 +25,8 @@ from discord.ext import commands
 from pytz import UTC
 from sqlalchemy.exc import SQLAlchemyError
 
+from poxbot.application import shutdown, startup
+
 from ..features.earthquake.p2pquake import P2PQuakeManager
 from ..features.statistics import BotConstants, BotStatistics, GitInfo
 from ..features.text_transform.manager import TextTransformManager
@@ -41,7 +42,7 @@ from ..services import (
 )
 from ..services.counter import CounterManager
 from ..shared.utils.cache import Cache
-from ..shared.utils.metrics import Metrics
+from ..shared.utils.metrics import get_or_create_metrics
 from ..shared.utils.perf_monitor import PerformanceMonitor
 from .context import ApplicationContext
 
@@ -125,10 +126,11 @@ class PoxBot(commands.AutoShardedBot):
 
         self.base_path = kwargs.get('root_path')
 
-        if self.settings.trace_config.enabled:
-            self.metrics = Metrics(self.settings.trace_config)
-        else:
-            self.metrics = None
+        self.metrics = (
+            get_or_create_metrics(self.settings.trace_config)
+            if self.settings.trace_config.enabled
+            else None
+        )
 
         self.statistics = BotStatistics()
         self.database = DatabaseManager(
@@ -171,7 +173,7 @@ class PoxBot(commands.AutoShardedBot):
             return await interaction.followup.send(**kwargs)
         return await interaction.response.send_message(**kwargs)
 
-    async def load_extensions(self):
+    async def load_extensions(self) -> None:
         """Loads all extensions using ExtensionManager."""
         result = await self.extension_manager.load_extensions(self)
 
@@ -186,7 +188,7 @@ class PoxBot(commands.AutoShardedBot):
             },
         )
 
-    async def sync_commands(self):
+    async def sync_commands(self) -> None:
         """Custom method to sync application commands to Discord."""
         try:
             synced = await self.tree.sync()
@@ -218,37 +220,9 @@ class PoxBot(commands.AutoShardedBot):
                 )
 
     async def setup_hook(self) -> None:
-        def _download_nltk_data():
-            try:
-                nltk.data.find('tokenizers/punkt')
-                nltk.data.find('corpora/stopwords')
-            except LookupError:
-                nltk.download('punkt', quiet=True)
-                nltk.download('stopwords', quiet=True)
+        await startup(self)
 
-        await self.loop.run_in_executor(None, _download_nltk_data)
-
-        if hasattr(self, 'counter_manager'):
-            await self.counter_manager.load_async()
-
-        try:
-            await self.tree.set_translator(self.discord_translator)
-        except TypeError:
-            self.logger.exception('Failed to set command translator')
-
-        await self.quake_manager.start()
-
-        await self.git_info.load()
-        await self.resources.initialize()
-        await self.database.connect()
-        await self.load_extensions()
-        await self.sync_commands()
-
-        if self.metrics:
-            self.metrics.start_server()
-        self.logger.info('OpenTelemetry OTLP metrics pipeline has been initialized.')
-
-    async def on_ready(self):
+    async def on_ready(self) -> None:
         with start_span('bot.ready'):
             self.logger.info(
                 'Discord bot is ready to process!\nGuilds: (%s)',
@@ -262,7 +236,7 @@ class PoxBot(commands.AutoShardedBot):
         gc.collect()
         self.logger.debug('Successfully ran garbage collection')
 
-    async def on_message(self, message: Message):
+    async def on_message(self, message: Message) -> None:
         if message.author == self.user or message.mention_everyone:
             return
 
@@ -284,7 +258,7 @@ class PoxBot(commands.AutoShardedBot):
                 self.counter_manager.increment('total_prefix_commands_ran')
                 await self.process_commands(message)
 
-    async def on_command_completion(self, ctx: commands.Context):
+    async def on_command_completion(self, ctx: commands.Context) -> None:
         self.logger.info(
             '',
             extra={
@@ -366,6 +340,8 @@ class PoxBot(commands.AutoShardedBot):
         return formatted_channel_identity
 
     async def on_interaction(self, interaction: Interaction):
+        request_id = start_request()
+
         if (
             interaction.type == InteractionType.application_command
             and isinstance(interaction.command, app_commands.Command)
@@ -387,19 +363,16 @@ class PoxBot(commands.AutoShardedBot):
                     'channel': self.format_channel_info(interaction.channel),
                     'command_args': options,
                     'guild_id': getattr(interaction.guild, 'id', None),
+                    'request_id': request_id,
                 },
             )
             self.statistics.interaction_statistics.count(interaction.command_failed)
 
     async def close(self) -> None:
-        if hasattr(self, 'counter_manager'):
-            await self.counter_manager.save_async()
-
-        await self.database.close()
-        await self.resources.close()
-        await self.quake_manager.close()
-
-        return await super().close()
+        try:
+            await shutdown(self)
+        finally:
+            await super().close()
 
     async def reload_all_cogs(self):
         return await self.extension_manager.reload(self, '*')

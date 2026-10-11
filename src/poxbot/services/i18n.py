@@ -24,9 +24,6 @@ class I18nManager:
 
         self.logger.info('Initialized the manager.')
 
-    async def initialize(self):
-        await self.discord.load()
-
     def _load_lang_info(self):
         lang_file = self.locales_path / 'available_languages.json'
         try:

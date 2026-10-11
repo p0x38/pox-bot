@@ -33,9 +33,11 @@ class Bootstrap:
         )
 
         system_logger = get_logger(__name__, prefix='System')
-
-        i18n = I18nManager(locales_path='src/poxbot/assets/locales')
-        await i18n.initialize()
+        
+        package_dir = Path(__file__).resolve().parent  # ruff: ignore[blocking-path-method-in-async-function]
+        i18n = I18nManager(
+            locales_path=package_dir / 'assets' / 'locales',
+        )
 
         root = Path(__file__).resolve()  # ruff: ignore[blocking-path-method-in-async-function]
 
