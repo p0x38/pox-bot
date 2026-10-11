@@ -27,15 +27,14 @@ class PiperTTSEngine(BaseTTSEngine):
 
     async def initialize(self, manager: Any) -> None:
         voice_name = 'en_US-ryan-high'
-        voice_dir = manager.bot.resources.assets_path / 'voices'
 
-        model_path = voice_dir / f'{voice_name}.onnx'
-        config_path = model_path.with_prefix('.onnx.json')
+        model_path = self.voice_dir / f'{voice_name}.onnx'
+        config_path = model_path.with_suffix('.onnx.json')
 
         self.logger.info('Loading Piper TTS model...')
 
         try:
-            voice_dir.mkdir(parents=True, exist_ok=True)
+            self.voice_dir.mkdir(parents=True, exist_ok=True)
 
             if not model_path.is_file() or not config_path.is_file():
                 self.logger.info(
@@ -46,7 +45,7 @@ class PiperTTSEngine(BaseTTSEngine):
                 await asyncio.to_thread(
                     download_voice,
                     voice_name,
-                    voice_dir,
+                    self.voice_dir,
                 )
 
             if not model_path.is_file() or not config_path.is_file():
