@@ -5,12 +5,8 @@ request_id_var: ContextVar[str | None] = ContextVar('request_id', default=None)
 extension_var: ContextVar[str | None] = ContextVar('extension', default=None)
 
 
-def get_request_id() -> str:
-    rid = request_id_var.get()
-    if rid is None:
-        rid = uuid4().hex
-        request_id_var.set(rid)
-    return rid
+def get_request_id() -> str | None:
+    return request_id_var.get()
 
 
 def set_request_id(value: str | None = None) -> str:

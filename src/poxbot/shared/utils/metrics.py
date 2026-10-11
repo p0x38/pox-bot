@@ -151,13 +151,26 @@ class Metrics:
             tuple[int | float, dict[str, Any]],
         ] = {}
         self._dynamic_histograms: dict[str, Any] = {}
-
+        self._prometheus_server_started = False
+        
     def start_server(self):
-        if not self.config.otlp_traces_endpoint:
-            start_http_server(
-                addr=self.config.prometheus_host,
-                port=self.config.prometheus_server_port,
-            )
+        if self._prometheus_server_started:
+            return
+
+        metrics_endpoint = (
+            self.config.otlp_metrics_endpoint
+            or self.config.opentelemetry_endpoint
+        )
+
+        if metrics_endpoint:
+            return
+        
+        start_http_server(
+            addr=self.config.prometheus_host,
+            port=self.config.prometheus_server_port,
+        )
+
+        self._prometheus_server_started = True
 
         self.logger.info(
             'Prometheus metrics endpoint listening on http://%s:%d',
@@ -243,3 +256,15 @@ class Metrics:
             for key, value in attributes.items():
                 span.set_attribute(key, value)
             yield span
+
+
+_process_metrics: Metrics | None = None
+
+
+def get_or_create_metrics(config: TraceConfig) -> Metrics:
+    global _process_metrics  # ruff: ignore[global-statement]
+
+    if _process_metrics is None:
+        _process_metrics = Metrics(config)
+
+    return _process_metrics

@@ -17,6 +17,7 @@ def configure_logging(settings: BotSettings, *, log_widget: RichLog | None = Non
     logging.getLogger('requests').setLevel(logging.INFO)
     logging.getLogger('logging_loki').setLevel(logging.INFO)
     logging.getLogger('discord').setLevel(logging.INFO)
+    logging.getLogger('filelock').setLevel(logging.WARNING)
 
     if _configured:
         return

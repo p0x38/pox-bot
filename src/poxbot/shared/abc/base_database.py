@@ -1,4 +1,3 @@
-import contextlib
 import re
 from abc import ABC
 from collections.abc import AsyncGenerator
@@ -20,7 +19,7 @@ if TYPE_CHECKING:
     from ..utils.metrics import Metrics
 
 
-class BaseDatabase(ABC):  # ruff: ignore[abstract-base-class-without-abstract-method]
+class BaseDatabase(ABC):
     """An abstract base class representing a database using SQLAlchemy.
 
     This class defines the core asynchronous interface and connection management
@@ -124,12 +123,26 @@ class BaseDatabase(ABC):  # ruff: ignore[abstract-base-class-without-abstract-me
             return patched
         return dsn
 
+    @staticmethod
+    def _query_label(query: str) -> str:
+        match = re.match(
+            r'\s*(SELECT|INSERT|UPDATE|DELETE|MERGE|CREATE|ALTER|DROP|'
+            r'TRUNCATE|PRAGMA\WITH)\b',
+            query,
+            flags=re.IGNORECASE,
+        )
+
+        return match.group(1).upper() if match else 'OTHER'
+
     async def setup(self):
         """Run the initialization sequence by triggering lifecycle hooks."""
         await self.on_load()
-        self.logger.info('Setup sequence completed.')
+        self.logger.debug(
+            '%s setup sequence completed.',
+            type(self).__name__,
+        )
 
-    async def on_load(self):  # ruff: ignore[empty-method-without-abstract-decorator]
+    async def on_load(self):
         """Provide a lifecycle hook executed during setup.
 
         Subclasses should override this method to perform initial tasks
@@ -141,7 +154,10 @@ class BaseDatabase(ABC):  # ruff: ignore[abstract-base-class-without-abstract-me
         """Test the database connection by executing a trivial query."""
         async with self.engine.connect() as conn:
             await conn.execute(text('SELECT 1'))
-            self.logger.info('Database connection established successfully.')
+            self.logger.debug(
+                '%s database connection established successfully.',
+                type(self).__name__,
+            )
 
     async def execute_raw_file(self, file_path: str | StdPath):
         """Parse and execute a local raw SQL file inside a transaction.
@@ -179,7 +195,7 @@ class BaseDatabase(ABC):  # ruff: ignore[abstract-base-class-without-abstract-me
         Returns:
             A list of dictionary-like mappings representing the returned rows.
         """
-        query_label = query.strip().split('\n')[0][:40]
+        query_label = self._query_label(query)
         metrics_mgr: Metrics | None = getattr(self.bot, 'metrics', None)
 
         span_context = (
@@ -225,7 +241,7 @@ class BaseDatabase(ABC):  # ruff: ignore[abstract-base-class-without-abstract-me
             query: The raw SQL statement string to run.
             params: Optional dictionary containing query parameters.
         """
-        query_label = query.strip().split('\n')[0][:40]
+        query_label = self._query_label(query)
         metrics_mgr: Metrics | None = getattr(self.bot, 'metrics', None)
 
         span_context = (
@@ -276,13 +292,35 @@ class BaseDatabase(ABC):  # ruff: ignore[abstract-base-class-without-abstract-me
             finally:
                 await session.close()
 
-    async def close(self):
-        """Dispose of the database engine and release all connections."""
-        if not BaseDatabase._engines:
-            return
+    @classmethod
+    async def dispose_engines(cls, logger: Any) -> None:
+        engines = list(
+            {
+                id(engine): engine
+                for engine in cls._engines.values()
+            }.values()
+        )
 
-        for dsn, engine in list(BaseDatabase._engines.items()):
-            with contextlib.suppress(Exception):
+        cls._engines.clear()
+
+        disposed = 0
+        failed = 0
+
+        for engine in engines:
+            try:
                 await engine.dispose()
-                self.logger.info('Database engine disposed for DSN endpoint: "%s"', dsn)
-        BaseDatabase._engines.clear()
+            except Exception:
+                failed += 1
+                logger.exception('Failed to dispose database engine.')
+            else:
+                disposed += 1
+
+        logger.info(
+            'Disposed %d database engine(s); %d failed.',
+            disposed,
+            failed,
+        )
+
+    async def close(self):
+        """Dispose of shared database engines."""
+        await BaseDatabase.dispose_engines(self.logger)

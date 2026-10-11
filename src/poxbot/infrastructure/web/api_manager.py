@@ -10,6 +10,7 @@ class FastAPIManager:
         self.host = host
         self.port = port
         self.start_time = datetime.now(UTC)
+        self._server: uvicorn.Server | None = None
 
         self.app: FastAPI = FastAPI(title='my discord bot API')
         self.router = APIRouter()
@@ -38,5 +39,15 @@ class FastAPIManager:
             log_level='warning',
             loop='asyncio',
         )
+
         server = uvicorn.Server(config)
-        await server.serve()
+        self._server = server
+
+        try:
+            await server.serve()
+        finally:
+            self._server = None
+
+    async def stop_server(self) -> None:
+        if self._server is not None:
+            self._server.should_exit = True

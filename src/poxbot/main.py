@@ -21,6 +21,7 @@ async def main(bootstrap: Bootstrap):
 
     context.logger.info('Starting web api...')
     web_server_task = asyncio.create_task(context.fastapi_class.start_server())
+    await asyncio.sleep(0)
 
     try:
         while True:
@@ -42,9 +43,15 @@ async def main(bootstrap: Bootstrap):
             bot.context.logger.info('Bot instance will restart in 5 seconds...')
             await asyncio.sleep(5)
     finally:
-        web_server_task.cancel()
-        with contextlib.suppress(asyncio.CancelledError):
-            await web_server_task
+        try:
+            await context.fastapi_class.stop_server()
+
+            with contextlib.suppress(asyncio.CancelledError):
+                await web_server_task
+        except Exception:
+            context.logger.exception(
+                'Web API server failed during shutdown.',
+            )
 
         if dashboard_task is not None and dashboard is not None:
             dashboard.stop()

@@ -12,6 +12,7 @@ from ..persistence.database.settings import SettingsDatabase
 from ..persistence.database.stats import StatisticsDatabase
 from ..persistence.database.user import UserDatabase
 from ..services.i18n import I18nManager
+from ..shared.abc.base_database import BaseDatabase
 
 if TYPE_CHECKING:
     from ..application.bot import PoxBot
@@ -130,6 +131,12 @@ class DatabaseManager:
 
         init_duration = perf_counter() - start_time
 
+        self.bot.logger.info(
+            'Initialized %d database components in %.2f seconds.',
+            len(self.databases),
+            init_duration,
+        )
+
         if self.bot.metrics:
             self.bot.metrics.record_histogram(
                 name='bot_database_init_duration_seconds',
@@ -146,7 +153,7 @@ class DatabaseManager:
         if not self.loaded:
             return
 
-        await self._batch_call('close')
+        await BaseDatabase.dispose_engines(self.bot.logger)
 
         self.loaded = False
 
