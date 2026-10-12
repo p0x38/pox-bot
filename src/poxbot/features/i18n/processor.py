@@ -11,10 +11,10 @@ import icu
 import orjson
 from anyio import Path as AsyncPath
 
+from ...infrastructure.logger import get_logger
+
 if TYPE_CHECKING:
     from ...core.resources import ResourceManager as ResourcePathManager
-
-from ...infrastructure.logger import get_logger
 
 logger = get_logger(__name__, prefix='I18n', extension='i18n')
 
@@ -63,7 +63,8 @@ class I18nProcessor:
     def _get_path(self, language: str, namespace: str) -> str:
         if (
             self.resource_manager is not None
-            and self.options.directory_format == '{base_path}/{language}/{namespace}.json'
+            and self.options.directory_format
+            == '{base_path}/{language}/{namespace}.json'
         ):
             return str(
                 self.resource_manager.resolve_path(
