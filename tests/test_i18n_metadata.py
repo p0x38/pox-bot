@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+from poxbot.core.resources import FilesystemResolver, ResourceManager
 from poxbot.features.i18n.processor import I18nProcessor, TranslatorOptions
 from poxbot.services.i18n import I18nManager
 
@@ -86,7 +87,9 @@ def test_metadata_catalog_resolves_region_and_variant_codes(tmp_path: Path) -> N
 def test_i18n_manager_builds_options_from_shared_metadata(tmp_path: Path) -> None:
     locales_path = tmp_path / 'locales'
     _write_metadata(locales_path)
-    manager = I18nManager(locales_path)
+    resources = ResourceManager()
+    resources.register('assets', FilesystemResolver(locales_path.parent))
+    manager = I18nManager(locales_path, resource_manager=resources)
 
     assert set(manager.get_available_language_codes()) == {
         'en_US',
@@ -113,3 +116,63 @@ def test_legacy_language_code_normalizes_to_default_region(tmp_path: Path) -> No
     assert manager.normalize_language_code('ja') == 'ja_JP'
     assert manager.normalize_language_code('en_UWU') == 'en_UWU'
     assert manager.normalize_language_code('me_OW') == 'me_OW'
+
+
+
+def test_metadata_schema_version_must_be_supported(tmp_path: Path) -> None:
+    locales_path = tmp_path / 'locales'
+    locales_path.mkdir(parents=True)
+    (locales_path / 'metadata.json').write_text(
+        json.dumps(
+            {
+                'metadata': {
+                    'schema_version': 2,
+                    'languages': [],
+                },
+            },
+        ),
+        encoding='utf-8',
+    )
+
+    processor = I18nProcessor(TranslatorOptions(base_path=locales_path))
+
+    assert processor.load_metadata_catalog() == {}
+
+
+def test_duplicate_metadata_locale_ids_keep_first_entry(tmp_path: Path) -> None:
+    locales_path = tmp_path / 'locales'
+    locales_path.mkdir(parents=True)
+    (locales_path / 'metadata.json').write_text(
+        json.dumps(
+            {
+                'metadata': {
+                    'schema_version': 1,
+                    'languages': [
+                        {
+                            'code': 'en',
+                            'regions': [
+                                {
+                                    'code': 'US',
+                                    'default': True,
+                                },
+                            ],
+                            'custom_variants': [
+                                {
+                                    'code': 'alternate',
+                                    'locale_code': 'en_US',
+                                    'tone': 'alternate',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+        ),
+        encoding='utf-8',
+    )
+
+    processor = I18nProcessor(TranslatorOptions(base_path=locales_path))
+    entries = processor._metadata_locale_entries()
+
+    assert entries['en-us']['region']['code'] == 'US'
+    assert 'variant' not in entries['en-us']
