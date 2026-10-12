@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from .application import PoxBot
 from .application.context import ApplicationContext
 from .config.manager import ConfigManager
+from .core.resources import create_default_resource_manager
 from .infrastructure.logger import configure_logging, get_logger
 from .infrastructure.textual_dashboard import TextualDashboard
 from .infrastructure.web.api_manager import FastAPIManager
@@ -25,7 +26,10 @@ class Bootstrap:
         if self._context is not None:
             return self._context
 
-        settings = await ConfigManager.get_settings()
+        resource_manager = create_default_resource_manager()
+        settings = await ConfigManager.get_settings(
+            resource_manager=resource_manager,
+        )
         dashboard = TextualDashboard() if self.show_textual else None
 
         configure_logging(
@@ -35,12 +39,13 @@ class Bootstrap:
         system_logger = get_logger(__name__, prefix='System')
 
         package_dir = Path(__file__).resolve().parent  # ruff: ignore[blocking-path-method-in-async-function]
+        locales_path = resource_manager.resolve_path("assets:locales")
         i18n = I18nManager(
-            locales_path=package_dir / 'assets' / 'locales',
+            locales_path=locales_path,
+            resource_manager=resource_manager,
         )
 
         root = Path(__file__).resolve()  # ruff: ignore[blocking-path-method-in-async-function]
-
         fastapi_class = FastAPIManager(host='0.0.0.0', port=8000)
 
         self._context = ApplicationContext(
@@ -49,6 +54,7 @@ class Bootstrap:
             root_path=root.parent.parent,
             i18n=i18n,
             fastapi_class=fastapi_class,
+            resource_manager=resource_manager,
             dashboard=dashboard,
         )
         return self._context
