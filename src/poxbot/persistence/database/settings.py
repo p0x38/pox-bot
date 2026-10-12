@@ -30,13 +30,13 @@ class SettingsDatabase(BaseDatabase):
 
         cached = self.settings_cache.get(user_id)
         if cached and cached.locale:
-            return internal._normalize_locale(cached.locale)
+            return self.manager.normalize_language_code(cached.locale)
 
         settings = await self.get_settings(user_id)
         if settings.locale:
-            return internal._normalize_locale(settings.locale)
+            return self.manager.normalize_language_code(settings.locale)
 
-        return internal._normalize_locale(interaction.locale)
+        return self.manager.normalize_language_code(interaction.locale)
 
     async def get_settings(self, user_id: int, use_cache: bool = True) -> SettingsData:
         if use_cache:
