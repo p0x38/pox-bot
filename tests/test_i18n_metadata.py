@@ -118,7 +118,6 @@ def test_legacy_language_code_normalizes_to_default_region(tmp_path: Path) -> No
     assert manager.normalize_language_code('me_OW') == 'me_OW'
 
 
-
 def test_metadata_schema_version_must_be_supported(tmp_path: Path) -> None:
     locales_path = tmp_path / 'locales'
     locales_path.mkdir(parents=True)
@@ -176,3 +175,43 @@ def test_duplicate_metadata_locale_ids_keep_first_entry(tmp_path: Path) -> None:
 
     assert entries['en-us']['region']['code'] == 'US'
     assert 'variant' not in entries['en-us']
+
+
+
+def test_metadata_catalog_uses_resource_address(tmp_path: Path) -> None:
+    assets_path = tmp_path / 'assets'
+    locales_path = assets_path / 'locales'
+    locales_path.mkdir(parents=True)
+    (locales_path / 'metadata.json').write_text(
+        json.dumps(
+            {
+                'metadata': {
+                    'schema_version': 1,
+                    'languages': [{'code': 'ja'}],
+                },
+            },
+        ),
+        encoding='utf-8',
+    )
+
+    resources = ResourceManager()
+    resources.register('assets', FilesystemResolver(assets_path))
+    unrelated_path = tmp_path / 'unrelated-locales'
+    processor = I18nProcessor(
+        TranslatorOptions(base_path=unrelated_path),
+        resource_manager=resources,
+    )
+
+    catalog = processor.load_metadata_catalog()
+
+    assert [language['code'] for language in catalog['languages']] == ['ja']
+
+
+def test_metadata_catalog_rejects_non_object_json(tmp_path: Path) -> None:
+    locales_path = tmp_path / 'locales'
+    locales_path.mkdir(parents=True)
+    (locales_path / 'metadata.json').write_text('[]', encoding='utf-8')
+
+    processor = I18nProcessor(TranslatorOptions(base_path=locales_path))
+
+    assert processor.load_metadata_catalog() == {}
