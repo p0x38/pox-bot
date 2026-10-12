@@ -280,6 +280,48 @@ class I18nProcessor:
         tone = variant.get('tone') if isinstance(variant, dict) else None
         return tone if isinstance(tone, str) and tone else None
 
+    def normalize_preference_locale(self, locale_str: str | None) -> str:
+        """Return the stable metadata locale code used to store a preference."""
+        normalized = str(locale_str or '').strip().replace('_', '-').casefold()
+        entries = self._metadata_locale_entries()
+
+        if normalized in entries:
+            return str(entries[normalized]['locale_code'])
+
+        base_language = normalized.split('-', maxsplit=1)[0]
+        candidates = [
+            entry
+            for entry in entries.values()
+            if str(entry.get('base_language', '')).casefold() == base_language
+        ]
+
+        for entry in candidates:
+            region = entry.get('region')
+            if isinstance(region, dict) and region.get('default') is True:
+                return str(entry['locale_code'])
+
+        for entry in candidates:
+            if 'region' in entry:
+                return str(entry['locale_code'])
+
+        available = {
+            name.replace('_', '-').casefold(): name
+            for name in self.available_files
+        }
+        if normalized in available:
+            return available[normalized]
+
+        fallback = self.options.fallback_language
+        for entry in entries.values():
+            if (
+                str(entry.get('base_language', '')).casefold() == fallback.casefold()
+                and isinstance(entry.get('region'), dict)
+                and entry['region'].get('default') is True
+            ):
+                return str(entry['locale_code'])
+
+        return fallback
+
     def _normalize_locale(self, locale_str: str) -> str:
         if not locale_str:
             locale_str = self.options.fallback_language
