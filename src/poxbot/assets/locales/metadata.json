@@ -6,26 +6,35 @@
                 "code": "en",
                 "localized_friendly_name": {
                     "en_US": "English",
+                    "en_GB": "English",
                     "ja_JP": "英語"
                 },
                 "regions": [
                     {
                         "code": "US",
-                        "friendly_name": "United States"
+                        "friendly_name": "United States",
+                        "emoji": "🇺🇸"
                     },
                     {
                         "code": "GB",
-                        "friendly_name": "United Kingdom"
+                        "friendly_name": "United Kingdom",
+                        "emoji": "🇬🇧"
                     }
                 ],
                 "custom_variants": [
                     {
-                        "code": "lolcat",
-                        "friendly_name": "Lolcat"
+                        "code": "uwu",
+                        "locale_code": "en_UWU",
+                        "friendly_name": "Uwuified English",
+                        "emoji": "🐈",
+                        "tone": "uwu"
                     },
                     {
-                        "code": "uwu",
-                        "friendly_name": "UwU"
+                        "code": "lolcat",
+                        "locale_code": "me_OW",
+                        "friendly_name": "Lolcat",
+                        "emoji": "🐈",
+                        "tone": "lolcat"
                     }
                 ]
             },
@@ -38,7 +47,23 @@
                 "regions": [
                     {
                         "code": "JP",
-                        "friendly_name": "Japan"
+                        "friendly_name": "Japan",
+                        "emoji": "🇯🇵"
+                    }
+                ],
+                "custom_variants": []
+            },
+            {
+                "code": "es",
+                "localized_friendly_name": {
+                    "en_US": "Spanish",
+                    "ja_JP": "スペイン語"
+                },
+                "regions": [
+                    {
+                        "code": "ES",
+                        "friendly_name": "Spain",
+                        "emoji": "🇪🇸"
                     }
                 ],
                 "custom_variants": []
