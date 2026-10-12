@@ -12,10 +12,8 @@ from profanityfilter import ProfanityFilter
 from psutil import Process
 from urlextract import URLExtract
 
-from ..core.resources import (
-    ResourceManager as ResourcePathManager,
-    create_default_resource_manager,
-)
+from ..core.resources import ResourceManager as ResourcePathManager
+from ..core.resources import create_default_resource_manager
 from ..persistence.models.contributor import ContributorItem
 from ..shared.utils import Cache
 
@@ -166,7 +164,7 @@ class ResourceManager:
         )
 
         async with aiofiles.open(file_path, "wb") as file:
-            await file.write(pickle.dumps(data))  # ruff: ignore[suspicious-pickle-usage]
+            await file.write(pickle.dumps(data))
 
     async def load_with_pickle_async(self, *paths: str) -> Any:
         file_path = self._get_overlay_path(*paths)
