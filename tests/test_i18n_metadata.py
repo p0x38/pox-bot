@@ -177,7 +177,6 @@ def test_duplicate_metadata_locale_ids_keep_first_entry(tmp_path: Path) -> None:
     assert 'variant' not in entries['en-us']
 
 
-
 def test_metadata_catalog_uses_resource_address(tmp_path: Path) -> None:
     assets_path = tmp_path / 'assets'
     locales_path = assets_path / 'locales'
