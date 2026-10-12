@@ -1,0 +1,48 @@
+{
+    "metadata": {
+        "schema_version": 1,
+        "languages": [
+            {
+                "code": "en",
+                "localized_friendly_name": {
+                    "en_US": "English",
+                    "ja_JP": "英語"
+                },
+                "regions": [
+                    {
+                        "code": "US",
+                        "friendly_name": "United States"
+                    },
+                    {
+                        "code": "GB",
+                        "friendly_name": "United Kingdom"
+                    }
+                ],
+                "custom_variants": [
+                    {
+                        "code": "lolcat",
+                        "friendly_name": "Lolcat"
+                    },
+                    {
+                        "code": "uwu",
+                        "friendly_name": "UwU"
+                    }
+                ]
+            },
+            {
+                "code": "ja",
+                "localized_friendly_name": {
+                    "en_US": "Japanese",
+                    "ja_JP": "日本語"
+                },
+                "regions": [
+                    {
+                        "code": "JP",
+                        "friendly_name": "Japan"
+                    }
+                ],
+                "custom_variants": []
+            }
+        ]
+    }
+}

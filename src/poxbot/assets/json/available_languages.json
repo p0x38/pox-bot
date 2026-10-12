@@ -1,47 +1,27 @@
 [
     {
-        "code": "en",
+        "code": "en_US",
         "display": "English",
         "emoji": "🇺🇸"
     },
     {
-        "code": "en-uwu",
+        "code": "en_UWU",
         "display": "Uwuified English",
         "emoji": "🐈"
     },
     {
-        "code": "ja",
+        "code": "ja_JP",
         "display": "日本語",
         "emoji": "🇯🇵"
     },
     {
-        "code": "ru",
-        "display": "Русский",
-        "emoji": "🇷🇺"
-    },
-    {
-        "code": "tl",
-        "display": "Tagalog",
-        "emoji": "🇵🇭"
-    },
-    {
-        "code": "cat",
-        "display": "Meow",
+        "code": "me_OW",
+        "display": "Lolcat",
         "emoji": "🐈"
     },
     {
-        "code": "vi",
-        "display": "Tiếng Việt",
-        "emoji": "🇻🇳"
-    },
-    {
-        "code": "es",
+        "code": "es_ES",
         "display": "Español",
         "emoji": "🇪🇸"
-    },
-    {
-        "code": "ar",
-        "display": "العربية",
-        "emoji": "🇸🇦"
     }
 ]

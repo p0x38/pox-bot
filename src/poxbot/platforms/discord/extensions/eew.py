@@ -32,12 +32,16 @@ class EarthquakeCog(commands.Cog):
     ) -> None:
         locale = await self.bot.get_locale(interaction)
 
-        code_list = Parser.convert(codes, tuple) if codes else ()
-
-        events = self.bot.quake_manager.get_cached_events(
-            limit=16,
-            codes=code_list,
-        )
+        if codes:
+            code_list = tuple(
+                int(code) for code in Parser.convert(codes, tuple)
+            )
+            events = self.bot.quake_manager.get_cached_events(
+                limit=16,
+                codes=code_list,
+            )
+        else:
+            events = self.bot.quake_manager.get_cached_events(limit=16)
 
         builder = P2PQuakeEmbedBuilder(
             self.bot.internal_translator,
