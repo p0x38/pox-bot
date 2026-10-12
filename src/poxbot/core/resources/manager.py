@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from platformdirs import PlatformDirs
+
 from .address import ResourceAddress
 from .errors import (
     ResourcePathError,
@@ -132,8 +134,6 @@ def create_default_resource_manager(
         assets_path = package_root / "assets"
 
     if user_data_path is None:
-        from platformdirs import PlatformDirs
-
         user_data_path = PlatformDirs(
             appname="pox-bot",
             appauthor="p0x38",
