@@ -43,7 +43,7 @@ class LocalizedSettingsView(ui.View):
         if isinstance(selected_locale, list):
             selected_locale = selected_locale[0]
 
-        normalized = self.bot.internal_translator._normalize_locale(selected_locale)
+        normalized = self.bot.i18n_manager.normalize_language_code(selected_locale)
         self.data.locale = normalized
 
         await self.db.set_settings(self.user_id, self.data)
