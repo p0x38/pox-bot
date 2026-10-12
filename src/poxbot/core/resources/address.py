@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from .errors import ResourcePathError
 
 _SCHEME_PATTERN = re.compile(
-    r"[a-z][a-z0-9._+-]*,
+    r"[a-z][a-z0-9._+-]*",
     re.IGNORECASE | re.ASCII,
 )
 
