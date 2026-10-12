@@ -86,8 +86,7 @@ class PocketTTSEngine(BaseTTSEngine):
             raise NoAvailableModelError(TTSEngineType.POCKET_TTS)
 
         if speech_voice.startswith('assets:'):
-            relative_path = speech_voice.split(':', 1)[1].lstrip('/')
-            resolved_path = manager.bot.resources.get_asset_path(relative_path)
+            resolved_path = manager.bot.resource_paths.resolve_path(speech_voice)
             speech_voice = str(resolved_path)
 
         abuffer = BytesIO()
