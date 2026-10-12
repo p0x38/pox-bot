@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-import pickle
+import pickle  # ruff: ignore[suspicious-pickle-import]
 from pathlib import Path
 from typing import Any
 
@@ -158,7 +158,7 @@ class ResourceManager:
         )
 
         async with aiofiles.open(file_path, "wb") as file:
-            await file.write(pickle.dumps(data))
+            await file.write(pickle.dumps(data))  # ruff: ignore[suspicious-pickle-usage]
 
     async def load_with_pickle_async(self, *paths: str) -> Any:
         file_path = self._get_overlay_path(*paths)
@@ -166,4 +166,4 @@ class ResourceManager:
         async with aiofiles.open(file_path, "rb") as file:
             content = await file.read()
 
-        return pickle.loads(content)
+        return pickle.loads(content)  # ruff: ignore[suspicious-pickle-usage]
