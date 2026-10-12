@@ -16,7 +16,7 @@ class ResourceAddress:
     scheme: str
     parts: tuple[str, ...]
 
-    def __post_init(self) -> None:
+    def __post_init__(self) -> None:
         if not isinstance(self.scheme, str) or not _SCHEME_PATTERN.fullmatch(
             self.scheme,
         ):
@@ -53,7 +53,7 @@ class ResourceAddress:
             raise ResourcePathError(
                 "Resource address must be a string.",
             )
-        
+
         scheme, separator, path = value.partition(":")
 
         if not separator:
