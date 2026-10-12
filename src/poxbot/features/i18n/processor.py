@@ -89,7 +89,10 @@ class I18nProcessor:
             with meta_path.open('rb') as f:
                 data = orjson.loads(f.read())
 
-            catalog = data.get('metadata', data) if isinstance(data, dict) else {}
+            if not isinstance(data, dict):
+                raise ValueError('Metadata root must be a JSON object.')
+
+            catalog = data.get('metadata', data)
             if not isinstance(catalog, dict):
                 raise ValueError('Metadata root must be a JSON object.')
 
