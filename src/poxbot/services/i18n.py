@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 import orjson
 from discord import Locale, SelectOption
@@ -7,32 +8,61 @@ from ..features.i18n.processor import I18nProcessor, TranslatorOptions
 from ..features.i18n.translator import DiscordI18nTranslator, I18nTranslator
 from ..infrastructure.logger import get_logger
 
+if TYPE_CHECKING:
+    from ..core.resources import ResourceManager as ResourcePathManager
+
 
 class I18nManager:
-    def __init__(self, locales_path: str | Path):
+    def __init__(
+        self,
+        locales_path: str | Path,
+        *,
+        resource_manager: ResourcePathManager | None = None,
+    ):
         self.logger = get_logger(__name__, prefix='I18nManager')
         self.locales_path = Path(locales_path)
+        self.resource_manager = resource_manager
 
         self.processor = I18nProcessor(
-            TranslatorOptions(base_path=str(self.locales_path)),
+            TranslatorOptions(
+                base_path=self.locales_path,
+                resource_manager=resource_manager,
+            ),
         )
         self.internal = I18nTranslator(self.processor)
         self.discord = DiscordI18nTranslator(self.internal)
 
-        self.lang_info = {}
+        self.lang_info: dict[str, dict[str, Any]] = {}
         self._load_lang_info()
 
         self.logger.info('Initialized the manager.')
 
-    def _load_lang_info(self):
-        lang_file = self.locales_path / 'available_languages.json'
+    def _load_lang_info(self) -> None:
         try:
-            if lang_file.exists():
-                with lang_file.open(encoding='utf-8') as f:
-                    data = orjson.loads(f.read())
-                    self.lang_info = {item['code']: item for item in data}
-        except Exception as e:
-            self.logger.error('Failed to load available_languages.json: %s', e)
+            if self.resource_manager is not None:
+                address = "assets:locales/available_languages.json"
+                if not self.resource_manager.exists(address):
+                    return
+                content = self.resource_manager.read_bytes(address)
+                data = orjson.loads(content)
+            else:
+                lang_file = self.locales_path / 'available_languages.json'
+                if not lang_file.is_file():
+                    return
+                data = orjson.loads(lang_file.read_bytes())
+
+            if isinstance(data, list):
+                self.lang_info = {
+                    item['code']: item
+                    for item in data
+                    if isinstance(item, dict) and isinstance(item.get('code'), str)
+                }
+            else:
+                self.logger.warning(
+                    'available_languages.json must contain a JSON array.',
+                )
+        except Exception:
+            self.logger.exception('Failed to load available_languages.json')
 
     def T(
         self,
@@ -57,14 +87,12 @@ class I18nManager:
         return list(self.lang_info.keys())
 
     def get_select_options(self, current_locale: str) -> list[SelectOption]:
-        options = []
-        for code, info in self.lang_info.items():
-            options.append(
-                SelectOption(
-                    label=info.get('display', code.upper()),
-                    value=code,
-                    emoji=info.get('emoji', '🌐'),
-                    default=(code == current_locale),
-                ),
+        return [
+            SelectOption(
+                label=info.get('display', code.upper()),
+                value=code,
+                emoji=info.get('emoji', '🌐'),
+                default=(code == current_locale),
             )
-        return options
+            for code, info in self.lang_info.items()
+        ]
