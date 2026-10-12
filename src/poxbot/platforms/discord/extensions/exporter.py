@@ -8,8 +8,6 @@ from discord.ext import commands
 
 from poxbot.application import PoxBot
 from poxbot.infrastructure.logger import get_logger
-from poxbot.shared.utils import app_dir
-
 from ....shared.utils.formats import (
     context_to_intflag,
     installation_type_to_intflag,
@@ -171,11 +169,10 @@ class ExporterExtension(commands.Cog):
     def _save_to_file(self) -> Path:
         commands_list = self._generate_commands_json()
 
-        save_path = app_dir.user_data_path / self.filename
-
-        with save_path.open('w', encoding='utf-8') as f:
-            json.dump(commands_list, f, indent=4, ensure_ascii=False)
-
+        address = f'userdata:{self.filename}'
+        save_path = self.bot.resource_paths.resolve_path(address, write=True)
+        content = json.dumps(commands_list, indent=4, ensure_ascii=False)
+        self.bot.resource_paths.write_text(address, content, encoding='utf-8')
         return save_path
 
     @commands.Cog.listener()
