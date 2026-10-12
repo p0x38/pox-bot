@@ -16,7 +16,6 @@ from packaging.specifiers import SpecifierSet
 from piper import PiperVoice, SynthesisConfig
 
 from ....shared.abc.tts_engine import BaseTTSEngine
-from ....shared.utils.app_path import app_dir
 from ..models import TTSMetricsData, TTSProgressCallback, TTSRequest, TTSResult
 
 extras_require = {
@@ -86,12 +85,17 @@ class PiperTTSEngine(BaseTTSEngine):
     def __init__(self):
         super().__init__()
 
-        self.voice_dir = app_dir.user_data_path / 'voices' / 'piper'
+        self.voice_dir: Path | None = None
 
         self._voices: dict[str, PiperVoice] = {}
         self._voice_load_lock = asyncio.Lock()
 
     async def initialize(self, manager: Any) -> None:
+        self.voice_dir = manager.bot.resource_paths.resolve_path(
+            'userdata:voices/piper',
+            write=True,
+        )
+        self.voice_dir.mkdir(parents=True, exist_ok=True)
         self.logger.info(
             'Piper TTS initialized; voices will be loaded on demand.',
         )
@@ -180,15 +184,20 @@ class PiperTTSEngine(BaseTTSEngine):
                 'Choose an available voice from the command suggestions.',
             )
 
+        voice_dir = manager.bot.resource_paths.resolve_path(
+            'userdata:voices/piper',
+            write=True,
+        )
+        voice_dir.mkdir(parents=True, exist_ok=True)
+        self.voice_dir = voice_dir
+
         async with self._voice_load_lock:
             cached_voice = self._voices.get(voice_name)
             if cached_voice is not None:
                 return cached_voice
 
-            self.voice_dir.mkdir(parents=True, exist_ok=True)
-
-            model_path = self.voice_dir / f'{voice_name}.onnx'
-            config_path = self.voice_dir / f'{voice_name}.onnx.json'
+            model_path = voice_dir / f'{voice_name}.onnx'
+            config_path = voice_dir / f'{voice_name}.onnx.json'
 
             if not (
                 self._is_valid_file(model_path) and self._is_valid_file(config_path)
@@ -209,7 +218,7 @@ class PiperTTSEngine(BaseTTSEngine):
 
                 with tempfile.TemporaryDirectory(
                     prefix='.piper-download-',
-                    dir=self.voice_dir,
+                    dir=voice_dir,
                 ) as temp_dir:
                     temp_path = Path(temp_dir)
 
