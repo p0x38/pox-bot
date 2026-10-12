@@ -91,11 +91,12 @@ class PiperTTSEngine(BaseTTSEngine):
         self._voice_load_lock = asyncio.Lock()
 
     async def initialize(self, manager: Any) -> None:
-        self.voice_dir = manager.bot.resource_paths.resolve_path(
+        voice_dir = manager.bot.resource_paths.resolve_path(
             'userdata:voices/piper',
             write=True,
         )
-        self.voice_dir.mkdir(parents=True, exist_ok=True)
+        self.voice_dir = voice_dir
+        voice_dir.mkdir(parents=True, exist_ok=True)
         self.logger.info(
             'Piper TTS initialized; voices will be loaded on demand.',
         )
