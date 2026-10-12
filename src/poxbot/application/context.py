@@ -7,6 +7,7 @@ from pathlib import Path as StdPath
 from anyio import Path as AsyncPath
 
 from ..config.schema import BotSettings
+from ..core.resources import ResourceManager
 from ..infrastructure.textual_dashboard import TextualDashboard
 from ..infrastructure.web.api_manager import FastAPIManager
 from ..services.i18n import I18nManager
@@ -21,5 +22,6 @@ class ApplicationContext:
     root_path: StdPath | AsyncPath
 
     i18n: I18nManager
+    resource_manager: ResourceManager
     fastapi_class: FastAPIManager
     dashboard: TextualDashboard | None = None
