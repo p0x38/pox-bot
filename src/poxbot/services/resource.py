@@ -52,12 +52,20 @@ class ResourceManager:
             await self.session.close()
 
     @staticmethod
-    def _join_address_paths(*paths: str) -> str:
+    def _join_address_paths(*paths: str | os.PathLike[str]) -> str:
         if not paths:
             raise ValueError("At least one resource path component is required.")
-        if any(not isinstance(path, str) for path in paths):
-            raise TypeError("Resource path components must be strings.")
-        return "/".join(paths)
+
+        normalized: list[str] = []
+        for path in paths:
+            if isinstance(path, str):
+                normalized.append(path)
+            elif isinstance(path, os.PathLike):
+                normalized.append(Path(path).as_posix())
+            else:
+                raise TypeError("Resource path components must be strings or paths.")
+
+        return "/".join(normalized)
 
     def get_asset_path(self, *paths: str) -> Path:
         relative_path = self._join_address_paths(*paths)
