@@ -8,6 +8,7 @@ from discord.ext import commands
 
 from poxbot.application import PoxBot
 from poxbot.infrastructure.logger import get_logger
+
 from ....shared.utils.formats import (
     context_to_intflag,
     installation_type_to_intflag,
