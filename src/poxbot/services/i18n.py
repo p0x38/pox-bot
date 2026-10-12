@@ -59,7 +59,9 @@ class I18nManager:
                     if not isinstance(region_code, str) or not region_code:
                         continue
 
-                    locale_code = region.get('locale_code') or f'{base_language}_{region_code}'
+                    locale_code = region.get('locale_code')
+                    if not locale_code:
+                        locale_code = f'{base_language}_{region_code}'
                     self._add_language_info(
                         lang_info,
                         locale_code,
@@ -181,7 +183,9 @@ class I18nManager:
         candidates = [
             (code, info)
             for code, info in self.lang_info.items()
-            if self._normalize_code(str(info.get('base_language', code).split('_', maxsplit=1)[0]))
+            if self._normalize_code(
+                str(info.get('base_language', code)).split('_', maxsplit=1)[0],
+            )
             == base_language
         ]
 
@@ -200,7 +204,7 @@ class I18nManager:
         fallback_base = self._normalize_code(fallback).split('_', maxsplit=1)[0]
         for code, info in self.lang_info.items():
             base = self._normalize_code(
-                str(info.get('base_language', code).split('_', maxsplit=1)[0]),
+                str(info.get('base_language', code)).split('_', maxsplit=1)[0],
             )
             if base == fallback_base:
                 return code
