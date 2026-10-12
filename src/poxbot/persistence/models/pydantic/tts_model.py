@@ -5,20 +5,20 @@ from typing import Annotated
 
 from pydantic import AfterValidator, BaseModel, RootModel
 
+from ....core.resources import create_default_resource_manager
 from ....shared.enums.tts import TTSEngineType
 
-BASE_ASSETS_PATH = Path(__file__).resolve().parent.parent.parent.parent / 'assets'
+_RESOURCE_PATHS = create_default_resource_manager()
 
 
 def resolve_voice_path(v: Path) -> Path:
     value = str(v)
 
-    if value.startswith('assets:'):
-        relative_path = value.partition(':')[2].replace('\\', '/').lstrip('/')
-        return BASE_ASSETS_PATH / relative_path
+    if value.startswith("assets:"):
+        return _RESOURCE_PATHS.resolve_path(value)
 
     if not v.is_absolute():
-        return BASE_ASSETS_PATH / v
+        return _RESOURCE_PATHS.resolve_path(f"assets:{v.as_posix()}")
 
     return v
 
