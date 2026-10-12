@@ -9,6 +9,7 @@ import icu
 import orjson
 from anyio import Path as AsyncPath
 
+from ...core.resources import ResourceManager
 from ...infrastructure.logger import get_logger
 
 logger = get_logger(__name__, prefix='I18n', extension='i18n')
@@ -35,8 +36,14 @@ class TranslatorOptions:
 
 
 class I18nProcessor:
-    def __init__(self, options: TranslatorOptions | None = None):
+    def __init__(
+        self,
+        options: TranslatorOptions | None = None,
+        *,
+        resource_manager: ResourceManager | None = None,
+    ):
         self.options = options or TranslatorOptions()
+        self.resource_manager = resource_manager
         self.locales_path = self.options.base_path
         self._preloaded = False
 
@@ -68,7 +75,11 @@ class I18nProcessor:
             return self._metadata_catalog or {}
 
         self._metadata_catalog_loaded = True
-        meta_path = self.locales_path / 'metadata.json'
+        meta_path = (
+            self.resource_manager.resolve_path('assets:locales/metadata.json')
+            if self.resource_manager is not None
+            else self.locales_path / 'metadata.json'
+        )
 
         if not meta_path.is_file():
             self._metadata_catalog = {}
@@ -81,6 +92,16 @@ class I18nProcessor:
             catalog = data.get('metadata', data) if isinstance(data, dict) else {}
             if not isinstance(catalog, dict):
                 raise ValueError('Metadata root must be a JSON object.')
+
+            schema_version = catalog.get('schema_version', 1)
+            if (
+                isinstance(schema_version, bool)
+                or not isinstance(schema_version, int)
+                or schema_version != 1
+            ):
+                raise ValueError(
+                    f'Unsupported locale metadata schema version: {schema_version!r}.'
+                )
 
             languages = catalog.get('languages', [])
             if not isinstance(languages, list):
@@ -130,7 +151,13 @@ class I18nProcessor:
 
         # Keep supporting older per-locale metadata files during migration.
         if re.fullmatch(r'[A-Za-z0-9_-]+', str(language)):
-            meta_path = self.locales_path / str(language) / 'metadata.json'
+            meta_path = (
+                self.resource_manager.resolve_path(
+                    f'assets:locales/{language}/metadata.json',
+                )
+                if self.resource_manager is not None
+                else self.locales_path / str(language) / 'metadata.json'
+            )
             if meta_path.is_file():
                 try:
                     with meta_path.open('rb') as f:
@@ -242,7 +269,14 @@ class I18nProcessor:
                     if not isinstance(region_code, str) or not region_code:
                         continue
                     locale_code = region.get('locale_code') or f'{base_language}_{region_code}'
-                    entries[locale_code.replace('_', '-').casefold()] = {
+                    normalized_locale = locale_code.replace('_', '-').casefold()
+                    if normalized_locale in entries:
+                        logger.warning(
+                            'Ignoring duplicate locale metadata code %r.',
+                            locale_code,
+                        )
+                        continue
+                    entries[normalized_locale] = {
                         'locale_code': locale_code,
                         'base_language': base_language,
                         'metadata': language,
@@ -260,7 +294,14 @@ class I18nProcessor:
                     locale_code = variant.get('locale_code') or (
                         f'{base_language}_{variant_code.upper()}'
                     )
-                    entries[locale_code.replace('_', '-').casefold()] = {
+                    normalized_locale = locale_code.replace('_', '-').casefold()
+                    if normalized_locale in entries:
+                        logger.warning(
+                            'Ignoring duplicate locale metadata code %r.',
+                            locale_code,
+                        )
+                        continue
+                    entries[normalized_locale] = {
                         'locale_code': locale_code,
                         'base_language': base_language,
                         'metadata': language,
