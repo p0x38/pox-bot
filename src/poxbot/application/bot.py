@@ -145,16 +145,15 @@ class PoxBot(commands.AutoShardedBot):
         self.constants = BotConstants()
         self.git_info = GitInfo()
 
-        project_root = Path(__file__).resolve().parent.parent.parent
-
-        actual_cogs_dir = 'poxbot/platforms/discord/extensions'
         actual_package = 'poxbot.platforms.discord.extensions'
-
-        cogs_absolute_path = project_root / actual_cogs_dir
+        cogs_absolute_path = context.resource_manager.resolve_path(
+            'extensions:poxbot/platforms/discord/extensions',
+        )
         self.extension_manager = ExtensionManager(
             cogs_path=str(cogs_absolute_path),
             package=actual_package,
             excluded_extensions=self.constants.exclude_extensions,
+            resource_manager=context.resource_manager,
         )
 
         self.shared_cache = Cache(ttl=120)
