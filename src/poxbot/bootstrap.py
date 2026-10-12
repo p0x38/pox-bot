@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from .application import PoxBot
 from .application.context import ApplicationContext
 from .config.manager import ConfigManager
+from .core.resources import FilesystemResolver, ResourceManager
 from .infrastructure.logger import configure_logging, get_logger
 from .infrastructure.textual_dashboard import TextualDashboard
 from .infrastructure.web.api_manager import FastAPIManager
@@ -35,8 +36,17 @@ class Bootstrap:
         system_logger = get_logger(__name__, prefix='System')
 
         package_dir = Path(__file__).resolve().parent  # ruff: ignore[blocking-path-method-in-async-function]
+        resource_manager = ResourceManager()
+        resource_manager.register(
+            'assets',
+            FilesystemResolver(package_dir / 'assets'),
+        )
+        resource_manager.register(
+            'extensions',
+            FilesystemResolver(package_dir.parent),
+        )
         i18n = I18nManager(
-            locales_path=package_dir / 'assets' / 'locales',
+            locales_path=resource_manager.resolve_path('assets:locales'),
         )
 
         root = Path(__file__).resolve()  # ruff: ignore[blocking-path-method-in-async-function]
@@ -48,6 +58,7 @@ class Bootstrap:
             logger=system_logger,
             root_path=root.parent.parent,
             i18n=i18n,
+            resource_manager=resource_manager,
             fastapi_class=fastapi_class,
             dashboard=dashboard,
         )
