@@ -4,18 +4,26 @@ from typing import Any
 import orjson
 from discord import Locale, SelectOption
 
+from ..core.resources import ResourceManager
 from ..features.i18n.processor import I18nProcessor, TranslatorOptions
 from ..features.i18n.translator import DiscordI18nTranslator, I18nTranslator
 from ..infrastructure.logger import get_logger
 
 
 class I18nManager:
-    def __init__(self, locales_path: str | Path):
+    def __init__(
+        self,
+        locales_path: str | Path,
+        *,
+        resource_manager: ResourceManager | None = None,
+    ):
         self.logger = get_logger(__name__, prefix='I18nManager')
         self.locales_path = Path(locales_path)
+        self.resource_manager = resource_manager
 
         self.processor = I18nProcessor(
             TranslatorOptions(base_path=str(self.locales_path)),
+            resource_manager=resource_manager,
         )
         self.internal = I18nTranslator(self.processor)
         self.discord = DiscordI18nTranslator(self.internal)
