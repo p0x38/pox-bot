@@ -103,7 +103,7 @@ class SettingsCog(commands.Cog):
 
         if not self.bot.database.settings:
             embed.description = self.bot.internal_translator.T(
-                'error.embeds.no_connection',
+                'error.embeds.no_connection.description',
                 loc,
             )
             return await interaction.response.send_message(embed=embed)

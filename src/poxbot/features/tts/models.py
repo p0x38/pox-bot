@@ -1,12 +1,19 @@
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from datetime import timedelta
 from io import BytesIO
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PrivateAttr
+
+TTSProgressCallback = Callable[
+    [str, int, int],
+    Awaitable[None],
+]
 
 
 class TTSRequest(BaseModel):
+    _progress_callback: TTSProgressCallback | None = PrivateAttr(default=None)
     text: str = Field(..., min_length=1, description='Text to convert into audio')
     voice: str | None = Field(None, description='Voice name or Asset path to be used')
     engine_type: str = Field(..., description='The kind of TTS engine should to use')

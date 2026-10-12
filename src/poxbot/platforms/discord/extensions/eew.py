@@ -47,7 +47,7 @@ class EarthquakeCog(commands.Cog):
         if not events:
             await interaction.response.send_message(
                 self.bot.internal_translator.T(
-                    'earthquake_reports.jma.embed.rows.empty',
+                    'text.earthquake_reports.jma.embed.rows.empty',
                     locale,
                 ),
                 ephemeral=True,

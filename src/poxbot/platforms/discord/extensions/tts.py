@@ -1,6 +1,6 @@
 import contextlib
 from datetime import timedelta
-from time import time
+from time import monotonic, time
 from typing import Any
 
 from discord import (
@@ -194,9 +194,104 @@ class TextToSpeechCog(commands.Cog):
             if not res or not getattr(res, 'output', None):
                 raise EmptyInputError()
 
+        progress_callback = None
+
+        if engine is TTSEngineType.PIPER_TTS:
+            progress_state = {
+                'start_time': monotonic(),
+                'last_update': 0.0,
+                'last_percent': 0,
+                'last_bytes': 0,
+            }
+
+            async def on_piper_progress(
+                filename: str,
+                downloaded_bytes: int,
+                total_bytes: int,
+            ) -> None:
+                now = monotonic()
+                downloaded_mib = downloaded_bytes / (1024 * 1024)
+
+                elapsed = now - progress_state['start_time']
+
+                if (
+                    total_bytes > 0
+                    and downloaded_bytes >= 1024 * 1024
+                    and elapsed >= 2
+                ):
+                    bytes_per_second = downloaded_bytes / elapsed
+                    remaining_bytes = max(0, total_bytes - downloaded_bytes)
+                    remaining_seconds = remaining_bytes / bytes_per_second
+
+                    eta = str(timedelta(seconds=round(remaining_seconds)))
+                else:
+                    eta = self.bot.internal_translator.T(
+                        'command.tts.texts.status.eta_estimating',
+                        loc,
+                    )
+
+                if total_bytes > 0:
+                    percent = min(
+                        100,
+                        int(downloaded_bytes * 100 / total_bytes),
+                    )
+
+                    should_update = percent == 100 or (
+                        percent >= progress_state['last_percent'] + 5
+                        and now - progress_state['last_update'] >= 2
+                    )
+
+                    total_mib = total_bytes / (1024 * 1024)
+                    progress = (
+                        f'{percent}% ({downloaded_mib:.1f} / {total_mib:.1f} MiB)'
+                    )
+                else:
+                    percent = None
+                    should_update = (
+                        downloaded_bytes
+                        >= progress_state['last_bytes'] + 5 * 1024 * 1024
+                        and now - progress_state['last_update'] >= 2
+                    )
+                    progress = f'{downloaded_mib:.1f} MiB downloaded'
+
+                if not should_update:
+                    return
+
+                progress_state['last_update'] = now
+                progress_state['last_bytes'] = downloaded_bytes
+
+                if percent is not None:
+                    progress_state['last_percent'] = percent
+
+                progress_status = self.bot.internal_translator.T(
+                    'command.tts.texts.status.piper_download',
+                    loc,
+                    {
+                        'voice': voice or self.bot.settings.piper_tts.default_voice,
+                        'filename': filename,
+                        'progress': progress,
+                        'eta': eta,
+                    },
+                )
+
+                try:
+                    await interaction.edit_original_response(
+                        content=progress_status,
+                    )
+                except Exception:
+                    self.bot.logger.debug(
+                        'Failed to update Piper download progress message.',
+                        exc_info=True,
+                    )
+
+            progress_callback = on_piper_progress
+
         try:
             data = {'input': text, 'engine': engine, 'voice': voice}
-            result = await self.tts_manager.generate_speech(data)
+            result = await self.tts_manager.generate_speech(
+                data,
+                progress_callback=progress_callback,
+            )
 
             _assert_valid_result(result)
 

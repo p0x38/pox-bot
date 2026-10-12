@@ -61,13 +61,16 @@ class RobloxAPICog(commands.Cog):
     )
     @app_commands.choices(
         render_type=[
-            app_commands.Choice(name='Bust', value=AvatarThumbnailType.bust.value),
             app_commands.Choice(
-                name='Avatar',
+                name=app_commands.locale_str('command.roblox.avatar.parameters.bust'),
+                value=AvatarThumbnailType.bust.value,
+            ),
+            app_commands.Choice(
+                name=app_commands.locale_str('command.roblox.avatar.parameters.avatar'),
                 value=AvatarThumbnailType.full_body.value,
             ),
             app_commands.Choice(
-                name='Headshot',
+                name=app_commands.locale_str('command.roblox.avatar.parameters.headshot'),
                 value=AvatarThumbnailType.headshot.value,
             ),
         ],

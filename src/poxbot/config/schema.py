@@ -21,9 +21,19 @@ _PIPER_VOICE_ID_PATTERN = re.compile(
 
 
 class PiperTTSConfig(BaseModel):
-    default_voice: str = 'en_US-ryan-high'
+    default_voice: str = 'en_US-john-medium'
     allowed_voices: list[str] = Field(
-        default_factory=lambda: ['en_US-ryan-high'],
+        default_factory=lambda: [
+            'en_US-danny-low',
+            'en_US-hfc_male-medium',
+            'en_US-john-medium',
+            'en_US-lessac-medium',
+            'en_US-ljspeech-high',
+            'en_US-ryan-low',
+            'en_US-ryan-medium',
+            'en_US-ryan-high',
+            'ja_JP-hi_fi_captain-medium',
+        ],
     )
 
     @field_validator('allowed_voices')

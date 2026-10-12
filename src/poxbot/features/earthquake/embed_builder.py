@@ -38,6 +38,11 @@ class P2PQuakeEmbedBuilder:
     def _unknown(self) -> str:
         return self.translator.T('text.unknown', self.locale)
 
+    def _footer(self) -> str:
+        return self.translator.T(
+            'text.earthquake_reports.jma.embed.footer', self.locale
+        )
+
     def _lookup(
         self,
         key: str,
@@ -111,7 +116,7 @@ class P2PQuakeEmbedBuilder:
             color=color,
             timestamp=event.time,
         )
-        embed.set_footer(text=f'P2P地震情報 API • ID: {event.id}')
+        embed.set_footer(text=self._footer() + f' • ID: {event.id}')
         return embed
 
     def build(self, event: P2PEvent) -> Embed:

@@ -240,10 +240,22 @@ class GuildCog(commands.Cog):
     @app_commands.checks.has_permissions(administrator=True)
     @app_commands.choices(
         sort_by=[
-            Choice(name='ID', value='id'),
-            Choice(name='Username', value='username'),
-            Choice(name='Created at', value='created_at'),
-            Choice(name='Joined at', value='joined_at'),
+            Choice(
+                name=app_commands.locale_str('command.guild.listmembers.parameters.id'),
+                value='id',
+            ),
+            Choice(
+                name=app_commands.locale_str('command.guild.listmembers.parameters.username'),
+                value='username',
+            ),
+            Choice(
+                name=app_commands.locale_str('command.guild.listmembers.parameters.created_at'),
+                value='created_at',
+            ),
+            Choice(
+                name=app_commands.locale_str('command.guild.listmembers.parameters.joined_at'),
+                value='joined_at',
+            ),
         ],
     )
     async def list_all_realusers(
@@ -556,17 +568,15 @@ class GuildCog(commands.Cog):
                 loc,
                 guild_name=interaction.guild.name,
             ),
-            description='\n'.join(
-                [
-                    role.mention
-                    for role in sorted(
-                        interaction.guild.roles,
-                        key=lambda r: r.position,
-                        reverse=True,
-                    )
-                    if not role.managed and role.name != '@everyone'
-                ]
-            ),
+            description='\n'.join([
+                role.mention
+                for role in sorted(
+                    interaction.guild.roles,
+                    key=lambda r: r.position,
+                    reverse=True,
+                )
+                if not role.managed and role.name != '@everyone'
+            ]),
             color=Color.green(),
         )
 

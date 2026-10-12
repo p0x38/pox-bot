@@ -1303,16 +1303,16 @@ class ChatbotCog(commands.Cog):
     )
     @app_commands.guild_only()
     @app_commands.describe(
-        mode='The chatbot mode to use',
+        mode=app_commands.locale_str('command.chatbot.mode.parameters.mode'),
     )
     @app_commands.choices(
         mode=[
             app_commands.Choice(
-                name='AI',
+                name=app_commands.locale_str('command.chatbot.mode.parameters.ai'),
                 value='ai',
             ),
             app_commands.Choice(
-                name='Markov Chain',
+                name=app_commands.locale_str('command.chatbot.mode.parameters.markov'),
                 value='markov_chain',
             ),
         ],
@@ -1414,20 +1414,20 @@ class ChatbotCog(commands.Cog):
     )
     @app_commands.guild_only()
     @app_commands.describe(
-        scope='The Markov model scope to use',
+        scope=app_commands.locale_str('command.chatbot.scope.parameters.scope'),
     )
     @app_commands.choices(
         scope=[
             app_commands.Choice(
-                name='Global',
+                name=app_commands.locale_str('command.chatbot.scope.parameters.global'),
                 value='global',
             ),
             app_commands.Choice(
-                name='Server',
+                name=app_commands.locale_str('command.chatbot.scope.parameters.server'),
                 value='server',
             ),
             app_commands.Choice(
-                name='User',
+                name=app_commands.locale_str('command.chatbot.scope.parameters.user'),
                 value='user',
             ),
         ],

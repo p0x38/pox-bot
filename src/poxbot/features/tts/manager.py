@@ -14,7 +14,7 @@ from .engines.edge import EdgeTTSEngine
 from .engines.google import GoogleTTSEngine
 from .engines.piper import PiperTTSEngine
 from .engines.pocket import PocketTTSEngine
-from .models import TTSRequest, TTSResult
+from .models import TTSProgressCallback, TTSRequest, TTSResult
 
 if TYPE_CHECKING:
     from ...application import PoxBot
@@ -77,7 +77,12 @@ class TTSManager:
                     engine_type.name,
                 )
 
-    async def generate_speech(self, data: dict[str, Any]) -> TTSResult:
+    async def generate_speech(
+        self,
+        data: dict[str, Any],
+        *,
+        progress_callback: TTSProgressCallback | None = None,
+    ) -> TTSResult:
         if not data.get('input'):
             raise EmptyInputError()
 
@@ -102,6 +107,8 @@ class TTSManager:
             engine_type=engine_type.value,
             extra_options=data,
         )
+
+        request._progress_callback = progress_callback
 
         engine = self.engines[engine_type]
         return await engine.generate(request, self)
