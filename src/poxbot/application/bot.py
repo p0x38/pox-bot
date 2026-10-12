@@ -139,7 +139,8 @@ class PoxBot(commands.AutoShardedBot):
             translation_manager=self.i18n_manager,
         )
 
-        self.resources = ResourceManager()
+        self.resource_paths = context.resource_manager
+        self.resources = ResourceManager(resource_manager=self.resource_paths)
         self.runtime = RuntimeState()
         self.spam = AntiSpamManager(self.database)
         self.constants = BotConstants()
