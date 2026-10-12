@@ -29,10 +29,10 @@ class I18nTranslator:
         user_locale: str | None,
         interaction_locale: Locale,
     ) -> str:
-        if user_locale and user_locale in self.processor.available_files:
-            return user_locale
+        if user_locale:
+            return self.processor.normalize_preference_locale(user_locale)
 
-        return self._normalize_locale(interaction_locale)
+        return self.processor.normalize_preference_locale(str(interaction_locale))
 
     def get_user_locale(
         self,
@@ -40,9 +40,9 @@ class I18nTranslator:
         user_settings: Any = None,
     ) -> str:
         if user_settings and hasattr(user_settings, 'locale') and user_settings.locale:
-            return self._normalize_locale(user_settings.locale)
+            return self.processor.normalize_preference_locale(user_settings.locale)
 
-        return self._normalize_locale(interaction.locale)
+        return self.processor.normalize_preference_locale(str(interaction.locale))
 
     def translate_string(
         self, text: str | list[str], locale: str | Locale, **kwargs
