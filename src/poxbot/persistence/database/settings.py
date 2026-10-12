@@ -26,8 +26,6 @@ class SettingsDatabase(BaseDatabase):
 
     async def get_locale(self, interaction: Interaction) -> str:
         user_id = interaction.user.id
-        internal = self.manager.internal
-
         cached = self.settings_cache.get(user_id)
         if cached and cached.locale:
             return self.manager.normalize_language_code(cached.locale)
