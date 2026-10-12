@@ -5,113 +5,101 @@ import aiofiles
 import orjson
 from pydantic import ValidationError
 
+from ..core.resources import (
+    ResourceManager as ResourcePathManager,
+    create_default_resource_manager,
+)
 from .schema import BotSettings
 
 
 class ConfigManager:
-    """Manages the application configuration file lifecycle.
+    """Manage configuration loading, validation, and persistence."""
 
-    Handles asynchronous loading, parsing, validation, and saving of
-    the BotSettings schema using atomic file operations.
+    RESOURCE_ADDRESS = "userdata:config.json"
+    LEGACY_RESOURCE_ADDRESS = "assets:config.json"
 
-    Attributes:
-        path (Path): The absolute target path to the configuration file.
-        settings (BotSettings): The current validated in-memory settings instance.
-    """
-
-    def __init__(self, path: Path | None = None):
-        """Initialize the ConfigManager and resolves its file path.
-
-        Args:
-            path (Path, optional): Custom path to the config file. Defaults to None.
-        """
-        self.path = self._resolve_path(path)
+    def __init__(
+        self,
+        path: Path | None = None,
+        *,
+        resource_manager: ResourcePathManager | None = None,
+    ):
+        self.resource_manager = resource_manager or create_default_resource_manager()
+        self._uses_resource_address = path is None
+        self.path = (
+            self.resource_manager.resolve_path(self.RESOURCE_ADDRESS)
+            if path is None
+            else self._resolve_path(path)
+        )
         self.settings = BotSettings()
 
     def _resolve_path(self, path: Path | None = None) -> Path:
-        """Resolve a given path or provides the default fallback path.
-
-        Args:
-            path (Path, optional): The path to resolve. Defaults to None.
-
-        Returns:
-            Path: An absolute path pointing to the configuration script.
-        """
         if path is None:
-            path = Path(__file__).resolve().parent.parent / 'assets' / 'config.json'
-
-        return path.resolve()
+            return self.resource_manager.resolve_path(self.RESOURCE_ADDRESS)
+        return Path(path).expanduser().resolve()
 
     async def _load_settings(self, path: Path) -> BotSettings:
-        """Read and validates configuration data from the filesystem.
-
-        Args:
-            path (Path): The absolute path to read from
-
-        Returns:
-            BotSettings: The validated settings instance.
-
-        Raises:
-            RuntimeError: If JSON decoding or Pydantic validation fails.
-        """
         try:
-            async with aiofiles.open(path, 'rb') as f:
-                content = await f.read()
+            async with aiofiles.open(path, "rb") as file:
+                content = await file.read()
 
             data = await asyncio.to_thread(orjson.loads, content)
             return BotSettings.model_validate(data)
 
         except FileNotFoundError:
             return BotSettings()
-        except orjson.JSONDecodeError as e:
-            raise RuntimeError(f'Config file contains invalid JSON: {e}') from e
-        except ValidationError as e:
-            raise RuntimeError(f'Config validation constraints failed: {e}') from e
+        except orjson.JSONDecodeError as exc:
+            raise RuntimeError(f"Config file contains invalid JSON: {exc}") from exc
+        except ValidationError as exc:
+            raise RuntimeError(
+                f"Config validation constraints failed: {exc}",
+            ) from exc
 
     async def load(self) -> BotSettings:
-        """Load and updates the internal settings state from disk.
+        source_path = self.path
 
-        Returns:
-            BotSettings: The newly updated internal settings state.
-        """
-        self.settings = await self._load_settings(self.path)
+        if self._uses_resource_address and not source_path.is_file():
+            legacy_path = self.resource_manager.resolve_path(
+                self.LEGACY_RESOURCE_ADDRESS,
+            )
+            if legacy_path.is_file():
+                source_path = legacy_path
+
+        self.settings = await self._load_settings(source_path)
         return self.settings
 
     async def save(self) -> None:
-        """Serialize and writes the internal settings state back to disk.
-
-        Automatically creates missing parent directories if necessary.
-        """
+        if self._uses_resource_address:
+            self.path = self.resource_manager.resolve_path(
+                self.RESOURCE_ADDRESS,
+                write=True,
+            )
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
-        data = self.settings.model_dump()
+        if self._uses_resource_address:
+            self.path = self.resource_manager.resolve_path(
+                self.RESOURCE_ADDRESS,
+                write=True,
+            )
 
         content = await asyncio.to_thread(
             orjson.dumps,
-            data,
+            self.settings.model_dump(),
             option=orjson.OPT_INDENT_2,
         )
 
-        async with aiofiles.open(self.path, 'wb') as f:
-            await f.write(content)
+        async with aiofiles.open(self.path, "wb") as file:
+            await file.write(content)
 
     async def reload(self) -> BotSettings:
-        """Reload configuration parameters from disk to refresh local state.
-
-        Returns:
-            BotSettings: The reloaded application configuration.
-        """
         return await self.load()
 
     @classmethod
-    async def get_settings(cls, path: Path | None = None) -> BotSettings:
-        """Classmethod to setup manager initialization and loader at once.
-
-        Args:
-            path (Path, optional): Path to setup. Defaults to None.
-
-        Returns:
-            BotSettings: Validated BotSettings.
-        """
-        instance = cls(path)
+    async def get_settings(
+        cls,
+        path: Path | None = None,
+        *,
+        resource_manager: ResourcePathManager | None = None,
+    ) -> BotSettings:
+        instance = cls(path, resource_manager=resource_manager)
         return await instance.load()
