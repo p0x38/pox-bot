@@ -214,11 +214,7 @@ class TextToSpeechCog(commands.Cog):
 
                 elapsed = now - progress_state['start_time']
 
-                if (
-                    total_bytes > 0
-                    and downloaded_bytes >= 1024 * 1024
-                    and elapsed >= 2
-                ):
+                if total_bytes > 0 and downloaded_bytes >= 1024 * 1024 and elapsed >= 2:
                     bytes_per_second = downloaded_bytes / elapsed
                     remaining_bytes = max(0, total_bytes - downloaded_bytes)
                     remaining_seconds = remaining_bytes / bytes_per_second

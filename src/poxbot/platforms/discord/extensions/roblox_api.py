@@ -70,7 +70,9 @@ class RobloxAPICog(commands.Cog):
                 value=AvatarThumbnailType.full_body.value,
             ),
             app_commands.Choice(
-                name=app_commands.locale_str('command.roblox.avatar.parameters.headshot'),
+                name=app_commands.locale_str(
+                    'command.roblox.avatar.parameters.headshot'
+                ),
                 value=AvatarThumbnailType.headshot.value,
             ),
         ],

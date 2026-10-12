@@ -245,15 +245,21 @@ class GuildCog(commands.Cog):
                 value='id',
             ),
             Choice(
-                name=app_commands.locale_str('command.guild.listmembers.parameters.username'),
+                name=app_commands.locale_str(
+                    'command.guild.listmembers.parameters.username'
+                ),
                 value='username',
             ),
             Choice(
-                name=app_commands.locale_str('command.guild.listmembers.parameters.created_at'),
+                name=app_commands.locale_str(
+                    'command.guild.listmembers.parameters.created_at'
+                ),
                 value='created_at',
             ),
             Choice(
-                name=app_commands.locale_str('command.guild.listmembers.parameters.joined_at'),
+                name=app_commands.locale_str(
+                    'command.guild.listmembers.parameters.joined_at'
+                ),
                 value='joined_at',
             ),
         ],
@@ -568,15 +574,17 @@ class GuildCog(commands.Cog):
                 loc,
                 guild_name=interaction.guild.name,
             ),
-            description='\n'.join([
-                role.mention
-                for role in sorted(
-                    interaction.guild.roles,
-                    key=lambda r: r.position,
-                    reverse=True,
-                )
-                if not role.managed and role.name != '@everyone'
-            ]),
+            description='\n'.join(
+                [
+                    role.mention
+                    for role in sorted(
+                        interaction.guild.roles,
+                        key=lambda r: r.position,
+                        reverse=True,
+                    )
+                    if not role.managed and role.name != '@everyone'
+                ]
+            ),
             color=Color.green(),
         )
 
