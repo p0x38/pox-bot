@@ -2,7 +2,10 @@ import asyncio
 import os
 import re
 from pathlib import Path as StdPath
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from ...core.resources import ResourceManager as ResourcePathManager
 
 import aiofiles
 import icu
@@ -27,17 +30,20 @@ class TranslatorOptions:
         fallback_language: str = 'en',
         fallback_tone: str = 'casual-silly',
         directory_format: str = '{base_path}/{language}/{namespace}.json',
+        resource_manager: ResourcePathManager | None = None,
     ):
         self.base_path = StdPath(base_path).resolve()
         self.fallback_language = fallback_language
         self.fallback_tone = fallback_tone
         self.directory_format = directory_format
+        self.resource_manager = resource_manager
 
 
 class I18nProcessor:
     def __init__(self, options: TranslatorOptions | None = None):
         self.options = options or TranslatorOptions()
         self.locales_path = self.options.base_path
+        self.resource_manager = self.options.resource_manager
         self._preloaded = False
 
         self.translations: dict[str, dict[str, Any]] = {}
@@ -53,6 +59,16 @@ class I18nProcessor:
         self.batch_task: asyncio.Task | None = None
 
     def _get_path(self, language: str, namespace: str) -> str:
+        if (
+            self.resource_manager is not None
+            and self.options.directory_format == '{base_path}/{language}/{namespace}.json'
+        ):
+            return str(
+                self.resource_manager.resolve_path(
+                    f'assets:locales/{language}/{namespace}.json',
+                ),
+            )
+
         return self.options.directory_format.format(
             base_path=self.locales_path,
             language=language,
@@ -61,6 +77,20 @@ class I18nProcessor:
 
     def load_metadata(self, language: str) -> dict[str, Any]:
         if language in self.metadata:
+            return self.metadata[language]
+
+        if self.resource_manager is not None:
+            try:
+                address = f'assets:locales/{language}/metadata.json'
+                if self.resource_manager.exists(address):
+                    self.metadata[language] = orjson.loads(
+                        self.resource_manager.read_bytes(address),
+                    )
+                else:
+                    self.metadata[language] = {}
+            except Exception:
+                logger.exception('Failed to load metadata for %s', language)
+                self.metadata[language] = {}
             return self.metadata[language]
 
         meta_path = self.locales_path / language / 'metadata.json'
