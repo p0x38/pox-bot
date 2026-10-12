@@ -1,16 +1,18 @@
+from __future__ import annotations
+
 import asyncio
 import os
 import re
 from pathlib import Path as StdPath
 from typing import TYPE_CHECKING, Any
 
-if TYPE_CHECKING:
-    from ...core.resources import ResourceManager as ResourcePathManager
-
 import aiofiles
 import icu
 import orjson
 from anyio import Path as AsyncPath
+
+if TYPE_CHECKING:
+    from ...core.resources import ResourceManager as ResourcePathManager
 
 from ...infrastructure.logger import get_logger
 
