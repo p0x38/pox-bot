@@ -133,7 +133,10 @@ class I18nProcessor:
             catalog['languages'] = valid_languages
             self._metadata_catalog = catalog
         except (OSError, ValueError, TypeError):
-            logger.exception('Failed to load locale metadata catalog from %s', meta_path)
+            logger.exception(
+                'Failed to load locale metadata catalog from %s',
+                meta_path,
+            )
             self._metadata_catalog = {}
 
         return self._metadata_catalog
@@ -143,7 +146,12 @@ class I18nProcessor:
         if language in self.metadata:
             return self.metadata[language]
 
-        normalized = str(language).replace('_', '-').casefold().split('-', maxsplit=1)[0]
+        normalized = (
+            str(language)
+            .replace('_', '-')
+            .casefold()
+            .split('-', maxsplit=1)[0]
+        )
         catalog = self.load_metadata_catalog()
 
         for item in catalog.get('languages', []):
@@ -271,7 +279,9 @@ class I18nProcessor:
                     region_code = region.get('code')
                     if not isinstance(region_code, str) or not region_code:
                         continue
-                    locale_code = region.get('locale_code') or f'{base_language}_{region_code}'
+                    locale_code = region.get('locale_code')
+                    if not locale_code:
+                        locale_code = f'{base_language}_{region_code}'
                     normalized_locale = locale_code.replace('_', '-').casefold()
                     if normalized_locale in entries:
                         logger.warning(
