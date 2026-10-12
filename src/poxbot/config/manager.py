@@ -5,10 +5,8 @@ import aiofiles
 import orjson
 from pydantic import ValidationError
 
-from ..core.resources import (
-    ResourceManager as ResourcePathManager,
-    create_default_resource_manager,
-)
+from ..core.resources import ResourceManager as ResourcePathManager
+from ..core.resources import create_default_resource_manager
 from .schema import BotSettings
 
 
