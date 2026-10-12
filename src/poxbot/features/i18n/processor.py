@@ -44,6 +44,7 @@ class I18nProcessor:
         self.metadata: dict[str, dict[str, Any]] = {}
         self._metadata_catalog: dict[str, Any] | None = None
         self._metadata_catalog_loaded = False
+        self._metadata_locale_entries_cache: dict[str, dict[str, Any]] | None = None
         self.available_files: set[str] = set()
 
         self._key_cache: dict[str, list[str]] = {}
@@ -219,6 +220,9 @@ class I18nProcessor:
         return self.translations.get(language, {}).get(namespace, {})
 
     def _metadata_locale_entries(self) -> dict[str, dict[str, Any]]:
+        if self._metadata_locale_entries_cache is not None:
+            return self._metadata_locale_entries_cache
+
         entries: dict[str, dict[str, Any]] = {}
 
         for language in self.load_metadata_catalog().get('languages', []):
@@ -263,6 +267,7 @@ class I18nProcessor:
                         'variant': variant,
                     }
 
+        self._metadata_locale_entries_cache = entries
         return entries
 
     def get_locale_tone(self, locale_str: str) -> str | None:
