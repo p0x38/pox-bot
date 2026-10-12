@@ -218,11 +218,75 @@ class I18nProcessor:
     def _get_cached_translation(self, language: str, namespace: str) -> dict[str, Any]:
         return self.translations.get(language, {}).get(namespace, {})
 
+    def _metadata_locale_entries(self) -> dict[str, dict[str, Any]]:
+        entries: dict[str, dict[str, Any]] = {}
+
+        for language in self.load_metadata_catalog().get('languages', []):
+            if not isinstance(language, dict):
+                continue
+
+            base_language = language.get('code')
+            if not isinstance(base_language, str) or not base_language:
+                continue
+
+            regions = language.get('regions', [])
+            if isinstance(regions, list):
+                for region in regions:
+                    if not isinstance(region, dict):
+                        continue
+                    region_code = region.get('code')
+                    if not isinstance(region_code, str) or not region_code:
+                        continue
+                    locale_code = region.get('locale_code') or f'{base_language}_{region_code}'
+                    entries[locale_code.replace('_', '-').casefold()] = {
+                        'locale_code': locale_code,
+                        'base_language': base_language,
+                        'metadata': language,
+                        'region': region,
+                    }
+
+            variants = language.get('custom_variants', [])
+            if isinstance(variants, list):
+                for variant in variants:
+                    if not isinstance(variant, dict):
+                        continue
+                    variant_code = variant.get('code')
+                    if not isinstance(variant_code, str) or not variant_code:
+                        continue
+                    locale_code = variant.get('locale_code') or (
+                        f'{base_language}_{variant_code.upper()}'
+                    )
+                    entries[locale_code.replace('_', '-').casefold()] = {
+                        'locale_code': locale_code,
+                        'base_language': base_language,
+                        'metadata': language,
+                        'variant': variant,
+                    }
+
+        return entries
+
+    def get_locale_tone(self, locale_str: str) -> str | None:
+        normalized = str(locale_str).strip().replace('_', '-').casefold()
+        entry = self._metadata_locale_entries().get(normalized)
+        if not entry:
+            return None
+
+        variant = entry.get('variant')
+        tone = variant.get('tone') if isinstance(variant, dict) else None
+        return tone if isinstance(tone, str) and tone else None
+
     def _normalize_locale(self, locale_str: str) -> str:
         if not locale_str:
-            return self.options.fallback_language
+            locale_str = self.options.fallback_language
 
         norm = str(locale_str).strip().replace('_', '-').casefold()
+        entries = self._metadata_locale_entries()
+        entry = entries.get(norm)
+        if entry:
+            base_language = entry.get('base_language')
+            if base_language in self.available_files:
+                return base_language
+
         available = {
             name.replace('_', '-').casefold(): name
             for name in self.available_files
@@ -320,7 +384,11 @@ class I18nProcessor:
             Translated and formatted string.
         """
         lang = self._normalize_locale(locale_str)
-        target_tone = kwargs.get('tone') or self.options.fallback_tone
+        target_tone = (
+            kwargs.get('tone')
+            or self.get_locale_tone(locale_str)
+            or self.options.fallback_tone
+        )
 
         keys_to_try = key if isinstance(key, list) else [key]
         primary_key = keys_to_try[0]
