@@ -13,12 +13,14 @@
                     {
                         "code": "US",
                         "friendly_name": "United States",
-                        "emoji": "🇺🇸"
+                        "emoji": "🇺🇸",
+                        "default": true
                     },
                     {
                         "code": "GB",
                         "friendly_name": "United Kingdom",
-                        "emoji": "🇬🇧"
+                        "emoji": "🇬🇧",
+                        "default": false
                     }
                 ],
                 "custom_variants": [
@@ -48,7 +50,8 @@
                     {
                         "code": "JP",
                         "friendly_name": "Japan",
-                        "emoji": "🇯🇵"
+                        "emoji": "🇯🇵",
+                        "default": true
                     }
                 ],
                 "custom_variants": []
@@ -63,7 +66,8 @@
                     {
                         "code": "ES",
                         "friendly_name": "Spain",
-                        "emoji": "🇪🇸"
+                        "emoji": "🇪🇸",
+                        "default": true
                     }
                 ],
                 "custom_variants": []
