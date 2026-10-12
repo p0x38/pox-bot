@@ -22,20 +22,20 @@
             "description": "キャッシュをお掃除するために、ボットを再起動するよ！ :3"
         },
         "reload_cogs": {
-            "description": "すべての拡張機能をリロードし、スラッシュ コマンドを同期します。 >:D",
+            "description": "いったん考え直すよ！ >:D",
             "embeds": {
                 "error": {
-                    "description": "拡張機能をリロードしましたが、スラッシュ コマンドを同期しようとしているときに問題が発生しました... 3:",
-                    "title": "ああ、残念… 同期に失敗しました。 3:"
+                    "description": "考え直したけど、呪文を再記憶しようとしているときにちょっといろいろあって...ごめんね 3:",
+                    "title": "あーあ、残念。 3:"
                 },
                 "loading": {
-                    "description": "ちょっと待ってください。すべてをリロードしようとしています。 :3",
-                    "progress": "ちょっと待ってください、リロード中です！ \n\n現在ロード中: `{current_cog}`\n\n進捗状況: **{現在}/{合計}**\n\n成功: **{読み込み済み}** |\n失敗: **{失敗}**",
-                    "title": "リロード処理中... :3"
+                    "description": "待ってね、いったん整理させて！ :3",
+                    "progress": "待ってね、今考えなおしてるから！ \n\n現在の考え直し対象: `{current_cog}`\n\n進捗状況: **{現在}/{合計}**\n\n成功: **{読み込み済み}** |\n失敗: **{失敗}**",
+                    "title": "処理中... :3"
                 },
                 "success": {
-                    "description": "**{loaded}** 拡張機能が正常に更新されました。 >:D\n\n**{synced}** のスラッシュ コマンドをどこにでも同期しました。",
-                    "title": "リロードが正常に完了しました。 :D"
+                    "description": "**{loaded}** 個の記憶を考え直したよ！ >:D\n\nあと **{synced}** 個の呪文も再記憶したよ！",
+                    "title": "できた :D"
                 }
             },
             "errors": {
@@ -114,7 +114,12 @@
             }
         },
         "mode": {
-            "description": "チャットボットのモードを切り替えよう！ :3"
+            "description": "チャットボットのモードを切り替えよう！ :3",
+            "parameters": {
+                "ai": "AI",
+                "markov": "マルコフ連鎖",
+                "mode": "チャットボットのモード"
+            }
         },
         "perf": {
             "description": "私のハードウェアがどれだけ一生懸命働いているかを示しています。 :3",
@@ -132,7 +137,13 @@
             "description": "チャットボットとマルコフのデータをリフレッシュ！ >:D"
         },
         "scope": {
-            "description": "チャットボットが使うマルコフモデルを選ぼう！ :3"
+            "description": "チャットボットが使うマルコフモデルを選ぼう！ :3",
+            "parameters": {
+                "global": "グローバル",
+                "scope": "学習する範囲",
+                "server": "サーバー",
+                "user": "ユーザー"
+            }
         },
         "stats": {
             "description": "私のグローバルボット統計を表示します! :3"
@@ -425,7 +436,12 @@
         },
         "description": "あらゆるお金に関するグループです。 :3",
         "history": {
-            "description": "最近の取引を覗いてみてください~"
+            "description": "最近の取引を覗いてみてください~",
+            "embeds": {
+                "default": {
+                    "description": "この説明欄をどうするか、いまだに思考中です"
+                }
+            }
         },
         "inventory": {
             "description": "トランクの中のジャンクを全部見てみましょう！ :3",
@@ -678,6 +694,10 @@
                 "default": {
                     "title": "{guild_name} の情報"
                 }
+            },
+            "placeholders": {
+                "members": "{count} メンバー",
+                "no_description": "まだ説明はないぞ！ :3"
             }
         },
         "kickmembers": {
@@ -689,6 +709,12 @@
                 "default": {
                     "title": "{guild_name} のメンバー"
                 }
+            },
+            "parameters": {
+                "created_at": "ユーザーの作成日時をもとに",
+                "id": "ユーザーIDをもとに",
+                "joined_at": "ユーザーのサーバー参加日時をもとに",
+                "username": "ユーザー名をもとに"
             }
         },
         "logs": {
@@ -743,32 +769,18 @@
         },
         "description": "画像でいろいろ遊んじゃおう！ :3",
         "petpet": {
-            "description": {
-                "casual": "誰かを撫でてください！",
-                "casual-silly": "誰かを撫でてください！ :3",
-                "formal": "誰かをなでます。"
-            },
+            "description": "誰かを撫でてみよう！ :3",
             "embeds": {
                 "default": {
-                    "description": {
-                        "casual-silly": "{実行者} が {ターゲット} をなでます！ :3"
-                    },
-                    "title": {
-                        "casual-silly": "{執行者} が {ターゲット} を撫でました! :3"
-                    }
+                    "description": "{実行者} が {ターゲット} をなでたよ！ :3",
+                    "title": "{執行者} が {ターゲット} を撫でた! :3"
                 }
             },
             "parameters": {
-                "member": {
-                    "casual": "撫でてくれる誰か！",
-                    "casual-silly": "撫でてくれる誰か！ :3",
-                    "formal": "撫でるユーザー/メンバー。"
-                }
+                "member": "撫でる相手！ :3"
             },
             "texts": {
-                "success": {
-                    "casual-silly": "{executor}が{target}をなでなでしたよ！ :3"
-                }
+                "success": "{executor}が{target}をなでなでしたよ！ :3"
             }
         },
         "qrcode": {
@@ -1043,6 +1055,11 @@
                 "default": {
                     "title": "{username} の Roblox アバター! :3"
                 }
+            },
+            "parameters": {
+                "avatar": "全身（アバター）",
+                "bust": "上半身（バスト）",
+                "headshot": "頭（ヘッドショット）"
             }
         },
         "description": "すべての Roblox API のグループです。 :3",
@@ -1131,14 +1148,21 @@
                 "title": "TTS変換:3"
             }
         },
-        "texts": {
-            "status": {
-                "generating": "音声を生成してるから、ちょっと待っててね！ :3",
-                "piper": "Piperの音声「{voice}」を準備してるから待っててね！ :3\n初回はダウンロードするのに数分ぐらいかかるから、大人しく待っててね！ :3"
-            }
-        },
         "google_translate": {
             "description": "Google翻訳からTTSを作ります！ :3"
+        },
+        "parameters": {
+            "engine": "使用するエンジンだよ！ :3",
+            "text": "生成するテキストだよ！ :3",
+            "voice": "文章を聞こえるようにするための声色だよ！ :3"
+        },
+        "texts": {
+            "status": {
+                "eta_estimating": "…どれくらいかかるかはわからないけどおそらく数分ぐらい",
+                "generating": "ちょっと待っててね、今呪文を唱えてるから！ :3",
+                "piper": "「{voice}」というのを準備してるから待っててね！ :3\nこれには時間がかかるよ！ :3\n-# まあ、初回の時に限るけれどもね～ -ω-",
+                "piper_download": "ちょっと待ってね、「{voice}」というものを持ってくるから！ （{filename}）\n進捗率: {progress}\nあと{eta}には終わるよ！ :3"
+            }
         }
     },
     "user": {
@@ -1281,7 +1305,7 @@
             }
         },
         "set_profile": {
-            "description": "クールなコミュニティプロフィールを設定しましょう！ :3",
+            "description": "クールなコミュニティプロフィールを設定しよう！ :3",
             "embeds": {
                 "default": {
                     "description": "プロフィールを「{description}」に、ニックネームを「{nickname}」に設定してください。 :3",
@@ -1337,48 +1361,45 @@
     },
     "userphone": {
         "call": {
-            "description": "完全にランダムなサーバーを呼び出します。 :3",
+            "description": "適当なサーバーに発信するよ！ :3",
             "embeds": {
                 "paired": {
-                    "description": "別のサーバーとペアリングしました! >:D",
-                    "title": "ペアリングしました！ :D"
+                    "description": "別のサーバーとつながったよ！ >:D",
+                    "title": "お、繋がった！ :D"
                 },
                 "searching": {
-                    "description": "皆さんにとって楽しいサーバーを探しています... :3",
-                    "title": "通話できる楽しいサーバーを探しています..!"
+                    "description": "皆さんにとって楽しいサーバーを探してるよ... :3",
+                    "title": "サーバーを探してるよ..!"
                 },
                 "status": {
-                    "description": "通話できる楽しいサーバーを探しています... :3",
+                    "description": "通話できる楽しいサーバーを探してるよ... :3",
                     "title": "状態"
                 }
             }
         },
-        "description": "ユーザーフォン用のグループです！ :3",
+        "description": "糸電話用に作られた機能だよ！ :3",
         "hangup": {
-            "description": "現在の通話を終了します。 3:",
+            "description": "現在の通話を終了するよ！ 3:",
             "embeds": {
                 "default": {
-                    "description": "電話を切りました！ 3:",
-                    "title": "通話が終了しました！ 3:"
+                    "description": "通話を切ったよ！ 3:",
+                    "title": "通話を切ったよ！ 3:"
                 }
             }
         },
         "userphone": {
-            "description": "ユーザーフォンの設定を微調整します! :3",
+            "description": "糸電話の設定を微調整するよ! :3",
             "embeds": {
                 "default": {
-                    "description": "設定はすべて完了しました！ :3",
-                    "title": "正常に設定されました! :D"
+                    "description": "設定はすべて完了したよ！ :3",
+                    "title": "正常に設定されたよ！ :D"
                 }
             }
         }
     },
     "utility": {
         "coinflip": {
-            "description": "コインを投げて、表か裏か見てみよう！ :3"
-        },
-        "listapps": {
-            "description": "ボットのPCで今開いてるアプリを見てみよう！ :3"
+            "description": "僕にコインを投げさせて！ あなたはそれが表か裏か見て！ :3"
         },
         "parameters": {
             "coinflip_label": "コイントスに名前をつける？（お好みで！）",
@@ -1404,137 +1425,41 @@
         }
     },
     "welcome": {
-        "description": "ウェルカムメッセージのグループです。 :3",
+        "description": "メンバーの参加・脱退時にメッセージを残すために作られた機能だよ！ :3",
         "joinchannel": {
-            "description": "ウェルカムメッセージチャンネルを設定してください！ :3",
+            "description": "メンバーが参加してきたときにメッセージを残すチャンネルを設定できるよ！ :3",
             "embeds": {
                 "default": {
-                    "description": "ウェルカム メッセージ チャネルが {channel} に設定されました。 :3",
-                    "title": "ウェルカムメッセージチャンネルセット！ >:D"
+                    "description": "参加メッセージを残すチャンネルを {channel} に設定したよ！ :3",
+                    "title": "参加メッセージを残すチャンネルを設定したよ！ >:D"
                 }
             },
             "parameters": {
-                "channel": "ウェルカムメッセージを設定するチャンネル"
+                "channel": "メッセージを残すチャンネルを設定しよう！ :3"
             }
         },
         "leavechannel": {
-            "description": "残メッセージチャンネルを設定してください！ :3",
+            "description": "メンバーが脱退したときにメッセージを残すチャンネルを設定できるよ！ :3",
             "embeds": {
                 "default": {
-                    "description": "メッセージ チャネルは {channel} に設定したままにしてください。 :3",
-                    "title": "メッセージチャンネルを設定したままにしてください。 >:D"
+                    "description": "脱退メッセージを残すチャンネルを {channel} に設定したよ！ :3",
+                    "title": "脱退メッセージを残すチャンネルを設定したよ！ >:D"
                 }
             },
             "parameters": {
-                "channel": "メッセージを残すチャンネルを設定する"
+                "channel": "メッセージを残すチャンネルを設定しよう！ :3"
             }
-        },
-        "message": {
-            "description": "メッセージでいろいろ遊んじゃおう！ :3",
-            "direct_message": {
-                "description": "メンバーにこっそりDMを送ろう！ :3"
-            },
-            "first_sent": {
-                "description": "このチャンネルのいちばん最初のメッセージを発掘！ :3"
-            },
-            "get_random_message": {
-                "description": "このチャンネルからランダムにメッセージを選ぶよ！ :3"
-            },
-            "last_sent": {
-                "description": "このチャンネルの最新メッセージを掘り起こすよ！ :3"
-            },
-            "mass_delete": {
-                "description": "メッセージをまとめてお掃除！ >:D",
-                "parameters": {
-                    "limit": "何件お掃除する？"
-                }
-            },
-            "message_count": {
-                "description": "このチャンネルのメッセージを数えちゃおう！ :3"
-            },
-            "purge": {
-                "description": "指定した数の最近のメッセージをお掃除！ >:D"
-            },
-            "say": {
-                "description": "このチャンネルでボットに何か言わせちゃおう！ :3"
-            },
-            "search_for": {
-                "description": "このチャンネルのメッセージを探そう！ :3"
-            },
-            "send": {
-                "description": "メッセージを送っちゃおう！ :3"
-            }
-        },
-        "role": {
-            "add_role": {
-                "description": "新しいロールを追加しよう！ :3"
-            },
-            "delete_role": {
-                "description": "ロールをぽんっと削除！ :3"
-            },
-            "description": "ロールでいろいろ遊んじゃおう！ :3",
-            "edit_role": {
-                "description": "ロールの権限をちょこっと調整！ :3"
-            },
-            "give_role": {
-                "description": "メンバーにロールをプレゼント！ :3"
-            },
-            "list": {
-                "description": "ロール一覧を見てみよう！ :3"
-            },
-            "list_users_in_role": {
-                "description": "そのロールを持ってる人を見てみよう！ :3"
-            },
-            "take_role": {
-                "description": "メンバーからロールを取り上げちゃおう！ :3"
-            },
-            "user_roles": {
-                "description": "ユーザーが持ってるロールをチェック！ :3"
-            }
-        },
-        "settings": {
-            "description": "設定をちょっとのぞいてみよう！ :3"
         },
         "toggle": {
-            "description": "ウェルカムメッセージを切り替えてください。 :3",
+            "description": "ウェルカムメッセージを使うかどうかを指定できるよ！ :3",
             "embeds": {
                 "default": {
-                    "description": "ウェルカム メッセージが {toggle} になりました。 :3",
-                    "title": "ウェルカムメッセージが切り替わりました！ >:D"
+                    "description": "ウェルカムメッセージが {toggle} になったよ！ :3",
+                    "title": "ウェルカムメッセージを使うかどうかが切り替わったよ！ >:D"
                 }
             },
             "parameters": {
-                "enabled": "ウェルカムメッセージを有効にしますか? \n(はい/いいえ)"
-            }
-        },
-        "utility": {
-            "coinflip": {
-                "description": "コインを投げて、表か裏か見てみよう！ :3"
-            },
-            "listapps": {
-                "description": "ボットのPCで今開いてるアプリを見てみよう！ :3"
-            },
-            "parameters": {
-                "coinflip_label": "コイントスに名前をつける？（お好みで！）",
-                "question": "どんな質問に答えよう？",
-                "rolls": "サイコロを何回振る？",
-                "sides": "サイコロの面はいくつ？"
-            },
-            "roll": {
-                "description": "サイコロを振って運試し！ >:D",
-                "embeds": {
-                    "default": {
-                        "title": "サイコロの結果"
-                    }
-                }
-            },
-            "yes_or_no": {
-                "description": "質問してね！「はい」か「いいえ」で答えるよ :3",
-                "embeds": {
-                    "default": {
-                        "title": "質問: `{question}`"
-                    }
-                }
+                "enabled": "ウェルカムメッセージを使う？ \n(はい/いいえ)"
             }
         }
     }

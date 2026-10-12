@@ -13,34 +13,34 @@
     "admin": {
         "description": "Commands for bossing me around! >:D",
         "leave_guild": {
-            "description": "Tries to leave the target guild. :3"
+            "description": "I can try to leave specified one! >:D"
         },
         "list_guilds": {
-            "description": "Lists the matching guilds by the query. :3"
+            "description": "Lemme look what's the thing matching for you! :3"
         },
         "reboot": {
-            "description": "Reboot the bot to enforce cache clean."
+            "description": "I can try to reset myself! :3"
         },
         "reload_cogs": {
-            "description": "Reloads all my extensions and synchronizes the slash commands! >:D",
+            "description": "Let me brainwash, and  everything about my stuff! >:D",
             "embeds": {
                 "error": {
-                    "description": "I reloaded the extensions, but I have a problem while trying to sync slash commands... 3:",
-                    "title": "Oh no, synchronization failed! 3:"
+                    "description": "I tried my best, but I could not do some stuff... 3:",
+                    "title": "Whoops, I failed to brainwash my stuff"
                 },
                 "loading": {
-                    "description": "Gimme a sec, I'm trying to reload everything! :3",
-                    "progress": "Hang tight, I'm reloading stuff! \nCurrently loading: `{current_cog}`\nProgress: **{current}/{total}**\nSuccess: **{loaded}** | Failed: **{failed}**",
-                    "title": "Processing reload... :3"
+                    "description": "Gimme a sec, I'm trying to brainwash everything about my stuff! :3",
+                    "progress": "Hang tight, I've been brainwash the stuff! \nTarget: `{current_cog}`\nProgress: **{current}/{total}**\nSuccess: **{loaded}** | Failed: **{failed}**",
+                    "title": "Tryin' to brainwash... :3"
                 },
                 "success": {
-                    "description": "Successfully updated **{loaded}** extensions! >:D\nAnd synced **{synched}** slash commands everywhere!",
-                    "title": "Reload finished successfully! :D"
+                    "description": "Successfully brainwashed **{loaded}** stuffs! >:D\nAnd brainwashed **{synched}** phrases!",
+                    "title": "Successfully brainwashed myself! :D"
                 }
             },
             "errors": {
-                "forbidden": "I don't have the `application.commands` permissions in this server... 3:",
-                "generic": "Something weird went wrong while syncing commands! 3:",
+                "forbidden": "I don't have the `application.commands` permission in this server... 3:",
+                "generic": "Something weird stuff was happened while syncing commands! 3:",
                 "http_error": "Discord API is acting up! I couldn't reach the gateway. 3:",
                 "missing_id": "Critical error! My Application ID is missing somehow... 3:",
                 "sync_failure": "Sync failed! Some commands have wonky data. 3:",
@@ -114,7 +114,12 @@
             }
         },
         "mode": {
-            "description": "Give my chatbot a mode switch! :3"
+            "description": "Give my chatbot a mode switch! :3",
+            "parameters": {
+                "ai": "AI",
+                "markov": "Markov chain",
+                "mode": "The chatbot mode to use! :3"
+            }
         },
         "perf": {
             "description": "Shows how hard my hardware is working! :3",
@@ -132,7 +137,13 @@
             "description": "Give the chatbot and Markov runtime a refresh! >:D"
         },
         "scope": {
-            "description": "Pick which Markov model my chatbot uses! :3"
+            "description": "Pick which Markov model my chatbot uses! :3",
+            "parameters": {
+                "global": "Globally",
+                "scope": "The markov chain based model learning scope to use! :3",
+                "server": "Server-scoped",
+                "user": "User-scoped"
+            }
         },
         "stats": {
             "description": "Shows my global bot stats! :3"
@@ -425,7 +436,12 @@
         },
         "description": "A group for all the money stuff! :3",
         "history": {
-            "description": "Peek at your recent transactions~"
+            "description": "Peek at your recent transactions! :3",
+            "embeds": {
+                "default": {
+                    "description": "Thinking what to put here..."
+                }
+            }
         },
         "inventory": {
             "description": "See all the junk in your trunk! :3",
@@ -678,6 +694,10 @@
                 "default": {
                     "title": "Information for {guild_name}"
                 }
+            },
+            "placeholders": {
+                "members": "{count, plural, =0 {No members} one {one member!!!} other {# members}}",
+                "no_description": "No description is provided! :3"
             }
         },
         "kickmembers": {
@@ -689,6 +709,12 @@
                 "default": {
                     "title": "Members in {guild_name}"
                 }
+            },
+            "parameters": {
+                "created_at": "Sort by user creation date",
+                "id": "Sort by user ID",
+                "joined_at": "Sort by the join date",
+                "username": "Sort by user name"
             }
         },
         "logs": {
@@ -743,32 +769,18 @@
         },
         "description": "A group for image shenanigans! :3",
         "petpet": {
-            "description": {
-                "casual": "Pats someone!",
-                "casual-silly": "Pats someone! :3",
-                "formal": "Pats someone."
-            },
+            "description": "Pats someone! :3",
             "embeds": {
                 "default": {
-                    "description": {
-                        "casual-silly": ""
-                    },
-                    "title": {
-                        "casual-silly": ""
-                    }
+                    "description": "",
+                    "title": ""
                 }
             },
             "parameters": {
-                "member": {
-                    "casual": "Someone to pat!",
-                    "casual-silly": "Someone to pat! :3",
-                    "formal": "User/Member to pat."
-                }
+                "member": "Someone to pat! :3"
             },
             "texts": {
-                "success": {
-                    "casual-silly": "{executor} petted {target}! :3"
-                }
+                "success": "{executor} petted {target}! :3"
             }
         },
         "qrcode": {
@@ -1043,6 +1055,11 @@
                 "default": {
                     "title": "{username}'s Roblox Avatar! :3"
                 }
+            },
+            "parameters": {
+                "avatar": "Full avatar",
+                "bust": "Avatar bust",
+                "headshot": "Avatar headshot"
             }
         },
         "description": "A group for all the Roblox APIs! :3",
@@ -1131,10 +1148,17 @@
                 "title": "TTS Conversion :3"
             }
         },
+        "parameters": {
+            "text": "An input string to be synthesized! :3",
+            "engine": "Engine type to use! :3",
+            "voice": "A voice for making the text a hearable one! :3"
+        },
         "texts": {
             "status": {
-                "generating": "Generating speech. Please wait...",
-                "piper": "Preparing Piper voice '{voice}'. The first download may take several minutes."
+                "eta_estimating": "...yet i don't know how much time it takes",
+                "piper_download": "Wait there, I'm trying to grab a voice named '{voice}'! ({filename})\nProgress: {progress}\nI'll be done in {eta}! :3",
+                "generating": "I'm casting a spell! Just watch and see what happens! :3",
+                "piper": "Hang on there, I'm going to carry a thing named '{voice}'! :3\nThis takes a while! :3\n-# Only the first time you download the audio, though!"
             }
         },
         "google_translate": {
@@ -1375,13 +1399,10 @@
     },
     "utility": {
         "coinflip": {
-            "description": "Flip a coin and see what comes up! :3"
-        },
-        "listapps": {
-            "description": "Shows a list all of applications opened currently in Bot host PC. (Requested by mharyt_w)"
+            "description": "Let me flip the coin! :3"
         },
         "parameters": {
-            "coinflip_label": "A label for your coin flip, if you want one.",
+            "coinflip_label": "A title for your own coinflip session! :3",
             "question": "What should I answer?",
             "rolls": "How many times should I roll?",
             "sides": "How many sides should the die have?"
@@ -1429,72 +1450,6 @@
                 "channel": "Channel to set leave message"
             }
         },
-        "message": {
-            "description": "",
-            "direct_message": {
-                "description": ""
-            },
-            "first_sent": {
-                "description": ""
-            },
-            "get_random_message": {
-                "description": ""
-            },
-            "last_sent": {
-                "description": ""
-            },
-            "mass_delete": {
-                "description": "",
-                "parameters": {
-                    "limit": ""
-                }
-            },
-            "message_count": {
-                "description": ""
-            },
-            "purge": {
-                "description": ""
-            },
-            "say": {
-                "description": ""
-            },
-            "search_for": {
-                "description": ""
-            },
-            "send": {
-                "description": ""
-            }
-        },
-        "role": {
-            "add_role": {
-                "description": ""
-            },
-            "delete_role": {
-                "description": ""
-            },
-            "description": "",
-            "edit_role": {
-                "description": ""
-            },
-            "give_role": {
-                "description": ""
-            },
-            "list": {
-                "description": ""
-            },
-            "list_users_in_role": {
-                "description": ""
-            },
-            "take_role": {
-                "description": ""
-            },
-            "user_roles": {
-                "description": ""
-            }
-        },
-        "settings": {
-            "description": ""
-        },
         "toggle": {
             "description": "Toggle the welcome message! :3",
             "embeds": {
@@ -1505,36 +1460,6 @@
             },
             "parameters": {
                 "enabled": "Enable welcome message? (yes/no)"
-            }
-        },
-        "utility": {
-            "coinflip": {
-                "description": ""
-            },
-            "listapps": {
-                "description": ""
-            },
-            "parameters": {
-                "coinflip_label": "",
-                "question": "",
-                "rolls": "",
-                "sides": ""
-            },
-            "roll": {
-                "description": "",
-                "embeds": {
-                    "default": {
-                        "title": ""
-                    }
-                }
-            },
-            "yes_or_no": {
-                "description": "",
-                "embeds": {
-                    "default": {
-                        "title": ""
-                    }
-                }
             }
         }
     }

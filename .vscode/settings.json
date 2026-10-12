@@ -64,7 +64,7 @@
     "i18n-ally.extract.keyMaxLength": 0,
     "i18n-ally.extract.targetPickingStrategy": "most-similar-by-key",
     "i18n-ally.indent": 4,
-    "i18n-ally.keepFulfilled": true,
+    "i18n-ally.keepFulfilled": false,
     "i18n-ally.keystyle": "nested",
     "i18n-ally.localesPaths": [
         "src/poxbot/assets/locales"
@@ -72,9 +72,8 @@
     "i18n-ally.namespace": true,
     "i18n-ally.pathMatcher": "{locale}/{namespace}.{ext}",
     "i18n-ally.regex.usageMatch": [
-        "T\\(['\"](.*?)['\"]",
-        "(?:T|translate_string|locale_str)\\(\\s*['\\\"]([a-zA-Z0-9_]+\\.[^'\\\"]+)['\\\"]",
-        "(?:T|translate_string)\\(\\s*['\\\"]([^'\\\"]+)['\\\"]|locale_str\\([^\\)]*?key\\s*=\\s*['\\\"]([^'\\\"]+)['\\\"]"
+        "\\b(?:T|translate_string|locale_str)\\s*\\(\\s*['\"]([A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)+)['\"]",
+        "\\blocale_str\\s*\\([^)]*?\\bkey\\s*=\\s*['\"]([A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)+)['\"]"
     ],
     "i18n-ally.review.user.name": "p0x38",
     "i18n-ally.sortKeys": true,

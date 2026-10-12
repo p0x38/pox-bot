@@ -91,6 +91,11 @@
                 }
             }
         },
+        "embeds": {
+            "default": {
+                "title": "めっちゃおもろい情報ビューウｔｇ７ｃ８９えｔ２ｂｑｒ！!!!!!1！1 >:DDDD&YN(@YGD*2"
+            }
+        },
         "options": {
             "context": {
                 "label": "ローカル脳データ"
@@ -105,6 +110,7 @@
             "stats": {
                 "label": "統計"
             }
-        }
+        },
+        "placeholder": "んー、この :3"
     }
 }

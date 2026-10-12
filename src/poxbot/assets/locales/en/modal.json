@@ -1,5 +1,11 @@
 {
     "DynamicInfoView": {
+        "embeds": {
+            "default": {
+                "title": "DYNAMIC INFO VIEW!!1!!1 >:DDD"
+            }
+        },
+        "placeholder": "UwU :3",
         "buttons": {
             "suggest_button": {
                 "label": "Submit suggestions"
