@@ -1,7 +1,6 @@
 import asyncio
 import gc
 from datetime import datetime
-from pathlib import Path
 
 from discord import (
     Color,
