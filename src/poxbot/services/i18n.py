@@ -68,6 +68,7 @@ class I18nManager:
                             'emoji': region.get('emoji', '🌐'),
                             'base_language': base_language,
                             'region_code': region_code,
+                            'default': region.get('default', False),
                             'localized_friendly_name': localized_names,
                             'kind': 'region',
                         },
@@ -171,26 +172,37 @@ class I18nManager:
             if self._normalize_code(code) == normalized:
                 return code
 
+        preferred = self.processor.normalize_preference_locale(str(locale or ''))
+        for code in self.lang_info:
+            if self._normalize_code(code) == self._normalize_code(preferred):
+                return code
+
         base_language = normalized.split('_', maxsplit=1)[0]
         candidates = [
             (code, info)
             for code, info in self.lang_info.items()
-            if self._normalize_code(str(info.get('base_language', ''))) == base_language
+            if self._normalize_code(str(info.get('base_language', code).split('_', maxsplit=1)[0]))
+            == base_language
         ]
+
+        for code, info in candidates:
+            if info.get('kind') == 'region' and info.get('default') is True:
+                return code
+
+        for code, info in candidates:
+            if info.get('kind') == 'region':
+                return code
+
         if candidates:
-            for code, info in candidates:
-                if info.get('kind') == 'region' and str(info.get('region_code', '')).casefold() in {
-                    'us',
-                    'gb',
-                    'jp',
-                    'es',
-                }:
-                    return code
             return candidates[0][0]
 
         fallback = self.processor.options.fallback_language
+        fallback_base = self._normalize_code(fallback).split('_', maxsplit=1)[0]
         for code, info in self.lang_info.items():
-            if self._normalize_code(str(info.get('base_language', code))) == self._normalize_code(fallback):
+            base = self._normalize_code(
+                str(info.get('base_language', code).split('_', maxsplit=1)[0]),
+            )
+            if base == fallback_base:
                 return code
 
         return next(iter(self.lang_info), fallback)
