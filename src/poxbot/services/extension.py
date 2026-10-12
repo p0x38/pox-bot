@@ -9,6 +9,7 @@ from typing import ClassVar
 
 from discord.ext import commands
 
+from ..core.resources import ResourceManager
 from ..infrastructure.logger import get_logger
 from ..infrastructure.logger.tracing import start_span
 
@@ -130,12 +131,14 @@ class ExtensionManager:
         package: str = 'poxbot.platforms.discord.extensions',
         excluded_extensions: list[str] | None = None,
         platform: str = 'discord',
+        resource_manager: ResourceManager | None = None,
     ):
         self.extension_logger = get_logger(__name__, prefix='ExtensionManager')
 
         self.cogs_path = Path(cogs_path)
         self.package = package
         self.platform = platform.lower()
+        self.resource_manager = resource_manager
 
         self.excluded_extensions = set(excluded_extensions or [])
 
@@ -150,7 +153,9 @@ class ExtensionManager:
 
     def _load_ext_ignore_file(self) -> None:
         ignore_file_path = (
-            Path(__file__).resolve().parents[1] / 'assets' / '.ext-ignore'
+            self.resource_manager.resolve_path('assets:.ext-ignore')
+            if self.resource_manager is not None
+            else Path(__file__).resolve().parents[1] / 'assets' / '.ext-ignore'
         )
 
         if not ignore_file_path.is_file():
