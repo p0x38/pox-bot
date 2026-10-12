@@ -42,6 +42,8 @@ class I18nProcessor:
 
         self.translations: dict[str, dict[str, Any]] = {}
         self.metadata: dict[str, dict[str, Any]] = {}
+        self._metadata_catalog: dict[str, Any] | None = None
+        self._metadata_catalog_loaded = False
         self.available_files: set[str] = set()
 
         self._key_cache: dict[str, list[str]] = {}
@@ -59,21 +61,86 @@ class I18nProcessor:
             namespace=namespace,
         )
 
+    def load_metadata_catalog(self) -> dict[str, Any]:
+        """Load the shared locale metadata catalog."""
+        if self._metadata_catalog_loaded:
+            return self._metadata_catalog or {}
+
+        self._metadata_catalog_loaded = True
+        meta_path = self.locales_path / 'metadata.json'
+
+        if not meta_path.is_file():
+            self._metadata_catalog = {}
+            return self._metadata_catalog
+
+        try:
+            with meta_path.open('rb') as f:
+                data = orjson.loads(f.read())
+
+            catalog = data.get('metadata', data) if isinstance(data, dict) else {}
+            if not isinstance(catalog, dict):
+                raise ValueError('Metadata root must be a JSON object.')
+
+            languages = catalog.get('languages', [])
+            if not isinstance(languages, list):
+                raise ValueError("'metadata.languages' must be a JSON array.")
+
+            valid_languages = []
+            seen_codes: set[str] = set()
+            for item in languages:
+                if not isinstance(item, dict):
+                    logger.warning('Ignoring non-object entry in locale metadata.')
+                    continue
+
+                code = item.get('code')
+                if not isinstance(code, str) or not code.strip():
+                    logger.warning('Ignoring locale metadata entry without a code.')
+                    continue
+
+                normalized_code = code.casefold()
+                if normalized_code in seen_codes:
+                    logger.warning('Ignoring duplicate locale metadata code %r.', code)
+                    continue
+
+                seen_codes.add(normalized_code)
+                valid_languages.append(item)
+
+            catalog['languages'] = valid_languages
+            self._metadata_catalog = catalog
+        except (OSError, ValueError, TypeError):
+            logger.exception('Failed to load locale metadata catalog from %s', meta_path)
+            self._metadata_catalog = {}
+
+        return self._metadata_catalog
+
     def load_metadata(self, language: str) -> dict[str, Any]:
+        """Return metadata for a base language."""
         if language in self.metadata:
             return self.metadata[language]
 
-        meta_path = self.locales_path / language / 'metadata.json'
-        if meta_path.exists():
-            try:
-                with meta_path.open('rb') as f:
-                    self.metadata[language] = orjson.loads(f.read())
-            except Exception:
-                logger.exception('Failed to load metadata for %s', language)
-                self.metadata[language] = {}
-        else:
-            self.metadata[language] = {}
+        normalized = str(language).replace('_', '-').casefold().split('-', maxsplit=1)[0]
+        catalog = self.load_metadata_catalog()
 
+        for item in catalog.get('languages', []):
+            code = item.get('code')
+            if isinstance(code, str) and code.casefold() == normalized:
+                self.metadata[language] = item
+                return item
+
+        # Keep supporting older per-locale metadata files during migration.
+        if re.fullmatch(r'[A-Za-z0-9_-]+', str(language)):
+            meta_path = self.locales_path / str(language) / 'metadata.json'
+            if meta_path.is_file():
+                try:
+                    with meta_path.open('rb') as f:
+                        data = orjson.loads(f.read())
+                    if isinstance(data, dict):
+                        self.metadata[language] = data
+                        return data
+                except (OSError, ValueError, TypeError):
+                    logger.exception('Failed to load metadata for %s', language)
+
+        self.metadata[language] = {}
         return self.metadata[language]
 
     async def _flush_missing_keys(self):
@@ -155,15 +222,22 @@ class I18nProcessor:
         if not locale_str:
             return self.options.fallback_language
 
-        norm = locale_str.replace('_', '-').lower()
-        if norm in self.available_files:
-            return norm
+        norm = str(locale_str).strip().replace('_', '-').casefold()
+        available = {
+            name.replace('_', '-').casefold(): name
+            for name in self.available_files
+        }
 
-        base = norm.split('-')[0]
-        if base in self.available_files:
-            return base
+        if norm in available:
+            return available[norm]
 
-        return self.options.fallback_language
+        base = norm.split('-', maxsplit=1)[0]
+        if base in available:
+            return available[base]
+
+        fallback = self.options.fallback_language
+        normalized_fallback = fallback.replace('_', '-').casefold()
+        return available.get(normalized_fallback, fallback)
 
     def _resolve_key_with_tone(
         self,
