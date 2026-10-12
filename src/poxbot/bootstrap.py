@@ -47,6 +47,7 @@ class Bootstrap:
         )
         i18n = I18nManager(
             locales_path=resource_manager.resolve_path('assets:locales'),
+            resource_manager=resource_manager,
         )
 
         root = Path(__file__).resolve()  # ruff: ignore[blocking-path-method-in-async-function]
