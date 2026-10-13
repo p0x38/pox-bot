@@ -7,7 +7,8 @@
                 "localized_friendly_name": {
                     "en_US": "English",
                     "en_GB": "English",
-                    "ja_JP": "英語"
+                    "ja_JP": "英語",
+                    "es_ES": "Inglés"
                 },
                 "regions": [
                     {
@@ -18,7 +19,8 @@
                         "localized_friendly_name": {
                             "en_US": "United States",
                             "en_GB": "United States",
-                            "ja_JP": "アメリカ合衆国"
+                            "ja_JP": "アメリカ合衆国",
+                            "es_ES": "Estados Unidos"
                         }
                     },
                     {
@@ -29,7 +31,8 @@
                         "localized_friendly_name": {
                             "en_US": "United Kingdom",
                             "en_GB": "United Kingdom",
-                            "ja_JP": "イギリス"
+                            "ja_JP": "イギリス",
+                            "es_ES": "Reino Unido"
                         }
                     }
                 ],
@@ -54,7 +57,8 @@
                 "code": "ja",
                 "localized_friendly_name": {
                     "en_US": "Japanese",
-                    "ja_JP": "日本語"
+                    "ja_JP": "日本語",
+                    "es_ES": "Japonés"
                 },
                 "regions": [
                     {
@@ -65,7 +69,8 @@
                         "localized_friendly_name": {
                             "en_US": "Japan",
                             "en_GB": "Japan",
-                            "ja_JP": "日本"
+                            "ja_JP": "日本",
+                            "es_ES": "Japón"
                         }
                     }
                 ],
@@ -75,7 +80,8 @@
                 "code": "es",
                 "localized_friendly_name": {
                     "en_US": "Spanish",
-                    "ja_JP": "スペイン語"
+                    "ja_JP": "スペイン語",
+                    "es_ES": "Español"
                 },
                 "regions": [
                     {
@@ -86,7 +92,8 @@
                         "localized_friendly_name": {
                             "en_US": "Spain",
                             "en_GB": "Spain",
-                            "ja_JP": "スペイン"
+                            "ja_JP": "スペイン",
+                            "es_ES": "España"
                         }
                     }
                 ],
