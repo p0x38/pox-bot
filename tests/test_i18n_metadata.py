@@ -111,6 +111,13 @@ def test_i18n_manager_builds_options_from_shared_metadata(tmp_path: Path) -> Non
     assert by_english_code['en_GB'].label == 'English (United Kingdom)'
     assert by_english_code['ja_JP'].label == 'Japanese (Japan)'
     assert by_english_code['en_UWU'].label == 'Uwuified English'
+
+    spanish_options = manager.get_select_options('es_ES')
+    by_spanish_code = {option.value: option for option in spanish_options}
+    assert by_spanish_code['en_US'].label == 'Inglés (Estados Unidos)'
+    assert by_spanish_code['ja_JP'].label == 'Japonés (Japón)'
+    assert by_spanish_code['es_ES'].label == 'Español (España)'
+
     assert sum(option.default for option in options) == 1
 
 
