@@ -101,9 +101,16 @@ def test_i18n_manager_builds_options_from_shared_metadata(tmp_path: Path) -> Non
     options = manager.get_select_options('ja_JP')
     by_code = {option.value: option for option in options}
 
-    assert by_code['en_US'].label == '英語'
-    assert by_code['ja_JP'].label == '日本語'
+    assert by_code['en_US'].label == '英語 (アメリカ合衆国)'
+    assert by_code['ja_JP'].label == '日本語 (日本)'
     assert by_code['ja_JP'].default is True
+
+    english_options = manager.get_select_options('en_US')
+    by_english_code = {option.value: option for option in english_options}
+    assert by_english_code['en_US'].label == 'English (United States)'
+    assert by_english_code['en_GB'].label == 'English (United Kingdom)'
+    assert by_english_code['ja_JP'].label == 'Japanese (Japan)'
+    assert by_english_code['en_UWU'].label == 'Uwuified English'
     assert sum(option.default for option in options) == 1
 
 
