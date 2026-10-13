@@ -14,13 +14,23 @@
                         "code": "US",
                         "friendly_name": "United States",
                         "emoji": "🇺🇸",
-                        "default": true
+                        "default": true,
+                        "localized_friendly_name": {
+                            "en_US": "United States",
+                            "en_GB": "United States",
+                            "ja_JP": "アメリカ合衆国"
+                        }
                     },
                     {
                         "code": "GB",
                         "friendly_name": "United Kingdom",
                         "emoji": "🇬🇧",
-                        "default": false
+                        "default": false,
+                        "localized_friendly_name": {
+                            "en_US": "United Kingdom",
+                            "en_GB": "United Kingdom",
+                            "ja_JP": "イギリス"
+                        }
                     }
                 ],
                 "custom_variants": [
@@ -51,7 +61,12 @@
                         "code": "JP",
                         "friendly_name": "Japan",
                         "emoji": "🇯🇵",
-                        "default": true
+                        "default": true,
+                        "localized_friendly_name": {
+                            "en_US": "Japan",
+                            "en_GB": "Japan",
+                            "ja_JP": "日本"
+                        }
                     }
                 ],
                 "custom_variants": []
@@ -67,7 +82,12 @@
                         "code": "ES",
                         "friendly_name": "Spain",
                         "emoji": "🇪🇸",
-                        "default": true
+                        "default": true,
+                        "localized_friendly_name": {
+                            "en_US": "Spain",
+                            "en_GB": "Spain",
+                            "ja_JP": "スペイン"
+                        }
                     }
                 ],
                 "custom_variants": []
