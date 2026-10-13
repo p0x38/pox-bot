@@ -78,6 +78,13 @@ class I18nManager:
                             'emoji': region.get('emoji', '🌐'),
                             'base_language': base_language,
                             'region_code': region_code,
+                            'friendly_country_name': (
+                                region.get('friendly_name') or region_code
+                            ),
+                            'localized_country_name': region.get(
+                                'localized_friendly_name',
+                                {},
+                            ),
                             'default': region.get('default', False),
                             'localized_friendly_name': localized_names,
                             'kind': 'region',
@@ -219,10 +226,14 @@ class I18nManager:
 
         return next(iter(self.lang_info), fallback)
 
-    def _localized_display(self, info: dict[str, Any], current_locale: str) -> str:
-        localized_names = info.get('localized_friendly_name')
+    def _localized_name(
+        self,
+        localized_names: Any,
+        current_locale: str,
+        fallback: str,
+    ) -> str:
         if not isinstance(localized_names, dict) or not localized_names:
-            return str(info.get('display') or info.get('code') or 'Unknown')
+            return fallback
 
         normalized_current = self.normalize_language_code(current_locale)
         current_info = self.lang_info.get(normalized_current, {})
@@ -234,7 +245,7 @@ class I18nManager:
         normalized_names = {
             self._normalize_code(key): value
             for key, value in localized_names.items()
-            if isinstance(key, str) and isinstance(value, str)
+            if isinstance(key, str) and isinstance(value, str) and value
         }
         exact = normalized_names.get(self._normalize_code(normalized_current))
         if exact:
@@ -246,8 +257,16 @@ class I18nManager:
 
         return (
             normalized_names.get('en_us')
-            or next(iter(localized_names.values()))
-            or str(info.get('display') or info.get('code') or 'Unknown')
+            or next(iter(normalized_names.values()), None)
+            or fallback
+        )
+
+    def _localized_display(self, info: dict[str, Any], current_locale: str) -> str:
+        fallback = str(info.get('display') or info.get('code') or 'Unknown')
+        return self._localized_name(
+            info.get('localized_friendly_name'),
+            current_locale,
+            fallback,
         )
 
     def T(
@@ -278,6 +297,18 @@ class I18nManager:
 
         for code, info in self.lang_info.items():
             label = self._localized_display(info, selected_code)
+            if info.get('kind') == 'region':
+                country_name = self._localized_name(
+                    info.get('localized_country_name'),
+                    selected_code,
+                    str(
+                        info.get('friendly_country_name')
+                        or info.get('region_code')
+                        or 'Unknown'
+                    ),
+                )
+                label = f'{label} ({country_name})'
+
             emoji = info.get('emoji', '🌐')
             options.append(
                 SelectOption(
