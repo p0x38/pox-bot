@@ -24,6 +24,7 @@ from discord.ext import commands
 from pytz import UTC
 from sqlalchemy.exc import SQLAlchemyError
 
+from ..core.cache import Cache
 from ..features.earthquake.p2pquake import P2PQuakeManager
 from ..features.statistics import BotConstants, BotStatistics, GitInfo
 from ..features.text_transform.manager import TextTransformManager
@@ -38,7 +39,6 @@ from ..services import (
     RuntimeState,
 )
 from ..services.counter import CounterManager
-from ..shared.utils.cache import Cache
 from ..shared.utils.metrics import get_or_create_metrics
 from ..shared.utils.perf_monitor import PerformanceMonitor
 from .context import ApplicationContext
@@ -155,7 +155,10 @@ class PoxBot(commands.AutoShardedBot):
             resource_manager=context.resource_manager,
         )
 
-        self.shared_cache = Cache(ttl=120)
+        self.shared_cache = Cache(
+            ttl=120,
+            max_memory_entries=1024,
+        )
         self.perf_monitor = PerformanceMonitor(self)
         self.text_converter = TextTransformManager(self.metrics)
         self.counter_manager = CounterManager(self)

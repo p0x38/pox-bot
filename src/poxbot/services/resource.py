@@ -10,8 +10,8 @@ from profanityfilter import ProfanityFilter
 from psutil import Process
 from urlextract import URLExtract
 
+from ..core.cache import Cache
 from ..persistence.models.contributor import ContributorItem
-from ..shared.utils import Cache
 
 
 class ResourceManager:

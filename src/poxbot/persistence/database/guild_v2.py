@@ -4,9 +4,9 @@ from typing import TYPE_CHECKING
 from sqlalchemy import func, select, update
 from sqlalchemy.orm.attributes import flag_modified
 
+from ...core.cache import Cache
 from ...shared.bases import BaseDatabase
 from ...shared.bases.base_orm_model import Base
-from ...shared.utils import Cache
 from ..models.global_chat_moderation_orm import GlobalChatModerationCase
 from ..models.guild_settings_v2 import GuildConfigV2
 from ..models.guild_settings_v2_orm import ActiveTicket, GuildSettings

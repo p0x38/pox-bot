@@ -2,9 +2,9 @@ from typing import TYPE_CHECKING
 
 from discord import Interaction
 
+from ...core.cache import Cache
 from ...shared.bases import BaseDatabase
 from ...shared.bases.base_orm_model import Base
-from ...shared.utils import Cache
 from ..models.user_settings import SettingsData
 from ..models.user_settings_orm import UserPreference
 
