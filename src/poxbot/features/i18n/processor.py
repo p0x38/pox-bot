@@ -147,10 +147,7 @@ class I18nProcessor:
             return self.metadata[language]
 
         normalized = (
-            str(language)
-            .replace('_', '-')
-            .casefold()
-            .split('-', maxsplit=1)[0]
+            str(language).replace('_', '-').casefold().split('-', maxsplit=1)[0]
         )
         catalog = self.load_metadata_catalog()
 
@@ -359,8 +356,7 @@ class I18nProcessor:
                 return str(entry['locale_code'])
 
         available = {
-            name.replace('_', '-').casefold(): name
-            for name in self.available_files
+            name.replace('_', '-').casefold(): name for name in self.available_files
         }
         if normalized in available:
             return available[normalized]
@@ -389,8 +385,7 @@ class I18nProcessor:
                 return base_language
 
         available = {
-            name.replace('_', '-').casefold(): name
-            for name in self.available_files
+            name.replace('_', '-').casefold(): name for name in self.available_files
         }
 
         if norm in available:

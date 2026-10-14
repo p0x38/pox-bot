@@ -18,27 +18,56 @@ def _write_metadata(locales_path: Path) -> None:
                     'localized_friendly_name': {
                         'en_US': 'English',
                         'ja_JP': '英語',
+                        'es_ES': 'Inglés',
                     },
                     'regions': [
                         {
                             'code': 'US',
                             'friendly_name': 'United States',
+                            'localized_friendly_name': {
+                                'en_US': 'United States',
+                                'ja_JP': 'アメリカ合衆国',
+                                'es_ES': 'Estados Unidos',
+                            },
                             'emoji': '🇺🇸',
                             'default': True,
+                        },
+                        {
+                            'code': 'GB',
+                            'friendly_name': 'United Kingdom',
+                            'localized_friendly_name': {
+                                'en_US': 'United Kingdom',
+                                'ja_JP': 'イギリス',
+                                'es_ES': 'Reino Unido',
+                            },
+                            'emoji': '🇬🇧',
+                            'default': False,
                         },
                     ],
                     'custom_variants': [
                         {
                             'code': 'uwu',
-                            'locale_code': 'en_UWU',
+                            'locale_code': 'en-x-uwu',
                             'friendly_name': 'Uwuified English',
+                            'localized_friendly_name': {
+                                "en_US": "Uwuified English",
+                                "en_GB": "Uwuified English",
+                                "ja_JP": "カワイイ英語",
+                                "es_ES": "Gatglés"
+                            },
                             'emoji': '🐈',
                             'tone': 'uwu',
                         },
                         {
                             'code': 'lolcat',
-                            'locale_code': 'me_OW',
-                            'friendly_name': 'Lolcat',
+                            'locale_code': 'en-x-lolcat',
+                            'friendly_name': 'Lolcat English',
+                            'localized_friendly_name': {
+                                "en_US": "Lolcat English",
+                                "en_GB": "Lolcat English",
+                                "ja_JP": "猫英語",
+                                "es_ES": "Inglés estilo lolcat"
+                            },
                             'emoji': '🐈',
                             'tone': 'lolcat',
                         },
@@ -49,12 +78,40 @@ def _write_metadata(locales_path: Path) -> None:
                     'localized_friendly_name': {
                         'en_US': 'Japanese',
                         'ja_JP': '日本語',
+                        'es_ES': 'Japonés',
                     },
                     'regions': [
                         {
                             'code': 'JP',
                             'friendly_name': 'Japan',
+                            'localized_friendly_name': {
+                                'en_US': 'Japan',
+                                'ja_JP': '日本',
+                                'es_ES': 'Japón',
+                            },
                             'emoji': '🇯🇵',
+                            'default': True,
+                        },
+                    ],
+                    'custom_variants': [],
+                },
+                {
+                    'code': 'es',
+                    'localized_friendly_name': {
+                        'en_US': 'Spanish',
+                        'ja_JP': 'スペイン語',
+                        'es_ES': 'Español',
+                    },
+                    'regions': [
+                        {
+                            'code': 'ES',
+                            'friendly_name': 'Spain',
+                            'localized_friendly_name': {
+                                'en_US': 'Spain',
+                                'ja_JP': 'スペイン',
+                                'es_ES': 'España',
+                            },
+                            'emoji': '🇪🇸',
                             'default': True,
                         },
                     ],
@@ -79,9 +136,9 @@ def test_metadata_catalog_resolves_region_and_variant_codes(tmp_path: Path) -> N
     assert processor._normalize_locale('me_OW') == 'en'
     assert processor.normalize_preference_locale('en') == 'en_US'
     assert processor.normalize_preference_locale('ja') == 'ja_JP'
-    assert processor.normalize_preference_locale('en-uwu') == 'en_UWU'
-    assert processor.get_locale_tone('en_UWU') == 'uwu'
-    assert processor.get_locale_tone('me_OW') == 'lolcat'
+    assert processor.normalize_preference_locale('en-x-uwu') == 'en-x-uwu'
+    assert processor.get_locale_tone('en-x-uwu') == 'uwu'
+    assert processor.get_locale_tone('en-x-lolcat') == 'lolcat'
 
 
 def test_i18n_manager_builds_options_from_shared_metadata(tmp_path: Path) -> None:
@@ -93,9 +150,11 @@ def test_i18n_manager_builds_options_from_shared_metadata(tmp_path: Path) -> Non
 
     assert set(manager.get_available_language_codes()) == {
         'en_US',
-        'en_UWU',
-        'me_OW',
+        'en_GB',
+        'en-x-uwu',
+        'en-x-lolcat',
         'ja_JP',
+        'es_ES',
     }
 
     options = manager.get_select_options('ja_JP')
@@ -110,7 +169,7 @@ def test_i18n_manager_builds_options_from_shared_metadata(tmp_path: Path) -> Non
     assert by_english_code['en_US'].label == 'English (United States)'
     assert by_english_code['en_GB'].label == 'English (United Kingdom)'
     assert by_english_code['ja_JP'].label == 'Japanese (Japan)'
-    assert by_english_code['en_UWU'].label == 'Uwuified English'
+    assert by_english_code['en-x-uwu'].label == 'Uwuified English'
 
     spanish_options = manager.get_select_options('es_ES')
     by_spanish_code = {option.value: option for option in spanish_options}
@@ -128,8 +187,8 @@ def test_legacy_language_code_normalizes_to_default_region(tmp_path: Path) -> No
 
     assert manager.normalize_language_code('en') == 'en_US'
     assert manager.normalize_language_code('ja') == 'ja_JP'
-    assert manager.normalize_language_code('en_UWU') == 'en_UWU'
-    assert manager.normalize_language_code('me_OW') == 'me_OW'
+    assert manager.normalize_language_code('en-x-uwu') == 'en-x-uwu'
+    assert manager.normalize_language_code('en-x-lolcat') == 'en-x-lolcat'
 
 
 def test_metadata_schema_version_must_be_supported(tmp_path: Path) -> None:
