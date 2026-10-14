@@ -33,9 +33,7 @@ class EarthquakeCog(commands.Cog):
         locale = await self.bot.get_locale(interaction)
 
         if codes:
-            code_list = tuple(
-                int(code) for code in Parser.convert(codes, tuple)
-            )
+            code_list = tuple(int(code) for code in Parser.convert(codes, tuple))
             events = self.bot.quake_manager.get_cached_events(
                 limit=16,
                 codes=code_list,
