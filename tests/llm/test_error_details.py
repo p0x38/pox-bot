@@ -13,7 +13,7 @@ from typing import Any
 from unittest.mock import MagicMock
 
 # Add src to path to allow imports
-sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 
 from poxbot.features.ai.manager import LLMManager
 

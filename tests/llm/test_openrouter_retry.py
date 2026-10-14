@@ -10,7 +10,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 # Add src to path to allow imports
-sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 
 from poxbot.features.ai.providers.openrouter import OpenRouterStreamer
 from poxbot.features.ai.request_context import LLMRequestContext
