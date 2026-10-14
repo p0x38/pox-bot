@@ -90,7 +90,7 @@ class SmartChatbotTriggersCog(commands.Cog):
         if message.author.bot or not message.guild or not self.bot.user:
             return
 
-        if message.content.startswith(self.bot.settings.bot_prefix):
+        if message.content.startswith(self.bot.settings.bot_config.bot_prefix):
             return
 
         chatbot = self._get_chatbot()

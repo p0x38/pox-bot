@@ -385,7 +385,7 @@ class ChatbotCog(commands.Cog):
         if not content:
             return
 
-        if content.startswith(self.bot.settings.bot_prefix):
+        if content.startswith(self.bot.settings.bot_config.bot_prefix):
             return
 
         tokens = self.markov_tokenizer.tokenize(content)
@@ -880,7 +880,7 @@ class ChatbotCog(commands.Cog):
             return
 
         if message.content.startswith(
-            self.bot.settings.bot_prefix,
+            self.bot.settings.bot_config.bot_prefix,
         ):
             return
 
