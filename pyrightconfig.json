@@ -9,7 +9,8 @@
         "**/node_modules",
         "**/__pycache__",
         "**/.*",
-        ".venv"
+        ".venv",
+        "scripts",
     ],
     "typeCheckingMode": "standard",
     "venvPath": ".",
