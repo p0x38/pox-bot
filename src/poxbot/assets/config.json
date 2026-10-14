@@ -1,0 +1,54 @@
+{
+    "trace_config": {
+        "enabled": true,
+        "opentelemetry_endpoint": "http://127.0.0.1:4317",
+        "otlp_traces_endpoint": "127.0.0.1:4317",
+        "otlp_metrics_endpoint": "127.0.0.1:4319",
+        "loki_url": "http://127.0.0.1:3100/loki/api/v1/push",
+        "prometheus_host": "0.0.0.0",
+        "prometheus_server_port": 9090,
+        "insecure": true,
+        "sampling_ratio": 1.0,
+        "export_interval_ms": 15000,
+        "max_batch_size": 512
+    },
+    "logger": {
+        "enabled": true,
+        "level": "DEBUG",
+        "file_logging": {
+            "enabled": true,
+            "directory": "C:\\Users\\ryuuk\\AppData\\Local\\p0x38\\pox-bot\\Logs",
+            "encoding": "utf-8"
+        },
+        "console_logging": {
+            "enabled": true,
+            "rich_tracebacks": true,
+            "level": "INFO",
+            "markup": true
+        }
+    },
+    "llm_config": {
+        "provider_type": "openrouter",
+        "model_id": "openrouter/free"
+    },
+    "piper_tts": {
+        "default_voice": "en_US-john-medium",
+        "allowed_voices": [
+            "en_US-danny-low",
+            "en_US-hfc_male-medium",
+            "en_US-john-medium",
+            "en_US-lessac-medium",
+            "en_US-ljspeech-high",
+            "en_US-ryan-low",
+            "en_US-ryan-medium",
+            "en_US-ryan-high",
+            "ja_JP-hi_fi_captain-medium"
+        ]
+    },
+    "bot_config": {
+        "bot_name": "p0x38's bot",
+        "default_language": "en_US",
+        "bot_prefix": "pox/",
+        "environment": "dev"
+    }
+}

@@ -5,6 +5,7 @@ import aiofiles
 import orjson
 from pydantic import ValidationError
 
+from ..shared.utils.app_path import app_dir
 from .schema import BotSettings
 
 
@@ -15,16 +16,20 @@ class ConfigManager:
     the BotSettings schema using atomic file operations.
 
     Attributes:
-        path (Path): The absolute target path to the configuration file.
-        settings (BotSettings): The current validated in-memory settings instance.
+        path: The absolute target path to the configuration file.
+        settings: The current validated in-memory settings instance.
     """
 
     def __init__(self, path: Path | None = None):
         """Initialize the ConfigManager and resolves its file path.
 
         Args:
-            path (Path, optional): Custom path to the config file. Defaults to None.
+            path: Custom path to the config file. Defaults to None.
         """
+        self._uses_default_path = path is None
+        self._bundled_path = (
+            Path(__file__).resolve().parent.parent / 'assets' / 'config.json'
+        )
         self.path = self._resolve_path(path)
         self.settings = BotSettings()
 
@@ -32,21 +37,21 @@ class ConfigManager:
         """Resolve a given path or provides the default fallback path.
 
         Args:
-            path (Path, optional): The path to resolve. Defaults to None.
+            path: The path to resolve. Defaults to None.
 
         Returns:
             Path: An absolute path pointing to the configuration script.
         """
         if path is None:
-            path = Path(__file__).resolve().parent.parent / 'assets' / 'config.json'
+            path = app_dir.user_data_path / 'config.json'
 
-        return path.resolve()
+        return path.expanduser().resolve()
 
     async def _load_settings(self, path: Path) -> BotSettings:
         """Read and validates configuration data from the filesystem.
 
         Args:
-            path (Path): The absolute path to read from
+            path: The absolute path to read from
 
         Returns:
             BotSettings: The validated settings instance.
@@ -74,7 +79,13 @@ class ConfigManager:
         Returns:
             BotSettings: The newly updated internal settings state.
         """
-        self.settings = await self._load_settings(self.path)
+        if self.path.exists():
+            self.settings = await self._load_settings(self.path)
+        elif self._uses_default_path:
+            self.settings = await self._load_settings(self._bundled_path)
+        else:
+            self.settings = BotSettings()
+
         return self.settings
 
     async def save(self) -> None:
@@ -108,7 +119,7 @@ class ConfigManager:
         """Classmethod to setup manager initialization and loader at once.
 
         Args:
-            path (Path, optional): Path to setup. Defaults to None.
+            path: Path to setup. Defaults to None.
 
         Returns:
             BotSettings: Validated BotSettings.
