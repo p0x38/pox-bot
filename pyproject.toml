@@ -99,7 +99,7 @@ audio = [
 [dependency-groups]
 dev = [{ include-group = "vcs" }, "pyright>=1.1.411"]
 ci = [{ include-group = "lint" }, { include-group = "test" }]
-lint = ["ruff>=0.16.5"]
+lint = ["ruff>=0.17.0"]
 vcs = ["git-cliff>=2.13.1"]
 test = ["dpytest>=0.7.0", "pytest>=9.1.1", "pytest-asyncio>=1.4.0", "pytest-cov>=7.1.0"]
 
