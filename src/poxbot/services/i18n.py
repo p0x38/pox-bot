@@ -226,40 +226,77 @@ class I18nManager:
 
         return next(iter(self.lang_info), fallback)
 
-    def _localized_name(
-        self,
-        localized_names: Any,
-        current_locale: str,
-        fallback: str,
-    ) -> str:
-        if not isinstance(localized_names, dict) or not localized_names:
-            return fallback
+    def _get_fallback_candidates(self, locale: str) -> tuple[str, ...]:
+        locale_tag = str(locale or '').strip().replace('_', '-')
+        selected_code = self.normalize_language_code(locale_tag)
+        normalized_selected = self._normalize_code(selected_code)
 
-        normalized_current = self.normalize_language_code(current_locale)
-        current_info = self.lang_info.get(normalized_current, {})
-        current_base = str(
+        current_info = next(
+            (
+                info
+                for code, info in self.lang_info.items()
+                if self._normalize_code(code) == normalized_selected
+            ),
+            {},
+        )
+
+        base_language = str(
             current_info.get('base_language')
-            or normalized_current.split('_', maxsplit=1)[0]
+            or locale_tag.split('-', maxsplit=1)[0]
         ).casefold()
+
+        candidates = [selected_code]
+
+        is_variant = (
+            current_info.get('kind') == 'variant'
+            or '-x-' in locale_tag.casefold()
+        )
+
+        if is_variant:
+            default_region = next(
+                (
+                    code
+                    for code, info in self.lang_info.items()
+                    if info.get('kind') == 'region'
+                    and self._normalize_code(
+                        str(info.get('base_language', ''))
+                    ) == self._normalize_code(base_language)
+                    and info.get('default') is True
+                ),
+                None,
+            )
+
+            if default_region is not None:
+                candidates.append(default_region)
+
+        candidates.append(base_language)
+
+        return tuple(dict.fromkeys(candidates))
+
+    def _localized_name(
+            self,
+            localized_names: Any,
+            current_locale: str,
+            fallback: str,
+    ) -> str:
+        if not isinstance(localized_names, dict):
+            return fallback
 
         normalized_names = {
             self._normalize_code(key): value
             for key, value in localized_names.items()
-            if isinstance(key, str) and isinstance(value, str) and value
+            if isinstance(key, str)
+            and isinstance(value, str)
+            and value.strip()
         }
-        exact = normalized_names.get(self._normalize_code(normalized_current))
-        if exact:
-            return exact
 
-        for key, value in normalized_names.items():
-            if key.split('_', maxsplit=1)[0] == current_base:
+        for candidate in self._get_fallback_candidates(current_locale):
+            value = normalized_names.get(self._normalize_code(candidate))
+
+            if value:
                 return value
 
-        return (
-            normalized_names.get('en_us')
-            or next(iter(normalized_names.values()), None)
-            or fallback
-        )
+        return fallback
 
     def _localized_display(self, info: dict[str, Any], current_locale: str) -> str:
         fallback = str(info.get('display') or info.get('code') or 'Unknown')
