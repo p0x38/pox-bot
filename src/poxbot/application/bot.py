@@ -252,7 +252,7 @@ class PoxBot(commands.AutoShardedBot):
                 },
             )
 
-            if message.content.startswith(self.settings.bot_prefix):
+            if message.content.startswith(self.settings.bot_config.bot_prefix):
                 self.counter_manager.increment('total_prefix_commands_ran')
                 await self.process_commands(message)
 

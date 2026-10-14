@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 
+from .config.cli import check_environment, show_config, validate_config
 from .main import run
 from .version import __version__
 
@@ -32,7 +33,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     doctor_parser = subparsers.add_parser(
         'doctor',
-        help='Run diagnostics.',
+        help='Run diagnostics. (Not implemented)',
     )
     doctor_parser.set_defaults(func=lambda: print('Not implemented'))  # ruff: ignore[print]
 
@@ -43,17 +44,29 @@ def build_parser() -> argparse.ArgumentParser:
 
     config_sub = config_parser.add_subparsers(dest='config_command')
 
-    dump = config_sub.add_parser(
-        'dump',
-        help='Print configuration.',
+    show = config_sub.add_parser(
+        'show',
+        aliases=['dump'],
+        help='Print the current configuration.',
     )
-    dump.set_defaults(func=lambda: print('Not implemented'))  # ruff: ignore[print]
+    show.add_argument(
+        '--json',
+        action='store_true',
+        help='Output configuration as JSON.',
+    )
+    show.set_defaults(func=show_config)
 
     validate = config_sub.add_parser(
         'validate',
         help='Validate configuration.',
     )
-    validate.set_defaults(func=lambda: print('Not implemented.'))  # ruff: ignore[print]
+    validate.set_defaults(func=validate_config)
+
+    env_check = config_sub.add_parser(
+        'env_check',
+        help='Validate environment variables.'
+    )
+    env_check.set_defaults(func=check_environment)
 
     return parser
 

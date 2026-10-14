@@ -14,31 +14,28 @@ class ResourceManager:
         self._resolvers: dict[str, ResourceResolver] = {}
 
     def register(
-            self,
-            scheme: str,
-            resolver: ResourceResolver,
-            *,
-            replace: bool = False,
+        self,
+        scheme: str,
+        resolver: ResourceResolver,
+        *,
+        replace: bool = False,
     ) -> None:
         if not isinstance(scheme, str):
-            raise ValueError("Resource scheme must be a string.")
+            raise ValueError('Resource scheme must be a string.')
 
-        probe = ResourceAddress.parse(f"{scheme}:__probe__")
+        probe = ResourceAddress.parse(f'{scheme}:__probe__')
         normalized_scheme = probe.scheme
 
-        if (
-            normalized_scheme in self._resolvers
-            and not replace
-        ):
+        if normalized_scheme in self._resolvers and not replace:
             raise ResourceSchemeAlreadyRegisteredError(
-                f"Resource scheme {normalized_scheme!r} is already registered.",
+                f'Resource scheme {normalized_scheme!r} is already registered.',
             )
 
         self._resolvers[normalized_scheme] = resolver
 
     def _get_resolver(
-            self,
-            address: str,
+        self,
+        address: str,
     ) -> tuple[ResourceAddress, ResourceResolver]:
         parsed = ResourceAddress.parse(address)
 
@@ -46,16 +43,16 @@ class ResourceManager:
             resolver = self._resolvers[parsed.scheme]
         except KeyError:
             raise UnknownResourceSchemeError(
-                f"Unknown resource scheme: {parsed.scheme!r}",
+                f'Unknown resource scheme: {parsed.scheme!r}',
             ) from None
 
         return parsed, resolver
 
     def resolve_path(
-            self,
-            address: str,
-            *,
-            write: bool = False,
+        self,
+        address: str,
+        *,
+        write: bool = False,
     ) -> Path:
         parsed, resolver = self._get_resolver(address)
 
@@ -68,19 +65,19 @@ class ResourceManager:
         return self.resolve_path(address).read_bytes()
 
     def read_text(
-            self,
-            address: str,
-            *,
-            encoding: str = "utf-8",
+        self,
+        address: str,
+        *,
+        encoding: str = 'utf-8',
     ) -> str:
         return self.resolve_path(address).read_text(
             encoding=encoding,
         )
 
     def write_bytes(
-            self,
-            address: str,
-            data: bytes,
+        self,
+        address: str,
+        data: bytes,
     ) -> int:
         path = self.resolve_path(address, write=True)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -89,11 +86,11 @@ class ResourceManager:
         return path.write_bytes(data)
 
     def write_text(
-            self,
-            address: str,
-            data: str,
-            *,
-            encoding: str = "utf-8",
+        self,
+        address: str,
+        data: str,
+        *,
+        encoding: str = 'utf-8',
     ) -> int:
         path = self.resolve_path(address, write=True)
         path.parent.mkdir(parents=True, exist_ok=True)

@@ -10,10 +10,10 @@ class ResourceResolver(Protocol):
     """Resolve resource addresses to filesystem paths."""
 
     def resolve_path(
-            self,
-            address: ResourceAddress,
-            *,
-            write: bool = False,
+        self,
+        address: ResourceAddress,
+        *,
+        write: bool = False,
     ) -> Path:
         """Resolve an address while enforcing access and containment rules."""
         ...

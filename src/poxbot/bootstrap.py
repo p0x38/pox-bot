@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from discord import Intents
@@ -26,7 +27,11 @@ class Bootstrap:
         if self._context is not None:
             return self._context
 
-        settings = await ConfigManager.get_settings()
+        custom_config_path = os.environ.get('POXBOT_CONFIG_PATH')
+
+        settings = await ConfigManager.get_settings(
+            path=Path(custom_config_path) if custom_config_path else None,
+        )
         dashboard = TextualDashboard() if self.show_textual else None
 
         configure_logging(
@@ -71,7 +76,9 @@ class Bootstrap:
         return PoxBot(
             context=context,
             intents=Intents.all(),
-            command_prefix=commands.when_mentioned_or(context.settings.bot_prefix),
+            command_prefix=commands.when_mentioned_or(
+                context.settings.bot_config.bot_prefix
+            ),
         )
 
     @property
