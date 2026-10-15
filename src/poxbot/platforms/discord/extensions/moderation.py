@@ -181,12 +181,12 @@ class ModerationCog(commands.Cog):
         parent=group,
     )
     word_group = app_commands.Group(
-        name='blacklist',
+        name='word',
         description=app_commands.locale_str('command.moderation.blacklist.word.description'),
         parent=group,
     )
     user_group = app_commands.Group(
-        name='blacklist',
+        name='user',
         description=app_commands.locale_str('command.moderation.blacklist.user.description'),
         parent=group,
     )

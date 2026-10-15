@@ -26,6 +26,8 @@ class BotConstants:
             'soundcloud.com',
             'github.com',
             'reddit.com',
+            'cdn.discordapp.com',
+            'media.discordapp.net',
         }
         builtin_blacklisted_data = [
             {
