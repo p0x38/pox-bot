@@ -989,38 +989,41 @@
     },
     "moderation": {
         "blacklist": {
-            "add": {
-                "description": "悪い言葉をブラックリストに追加します。 >:D",
-                "embeds": {
-                    "default": {
-                        "description": "「{entry}」をタイプ「{type}」としてブラックリストに追加しました。ID「{id}」で検索可能です。 :3",
-                        "title": "単語がブラックリストに登録されました! >:D"
+            "description": "特定のアイテムを禁止できるよ！ :3",
+            "word": {
+                "add": {
+                    "description": "悪い言葉をブラックリストに追加します。 >:D",
+                    "embeds": {
+                        "default": {
+                            "description": "「{entry}」をタイプ「{type}」としてブラックリストに追加しました。ID「{id}」で検索可能です。 :3",
+                            "title": "単語がブラックリストに登録されました! >:D"
+                        }
                     }
-                }
-            },
-            "description": "ブラックリストのやつ！ :3",
-            "list": {
-                "description": "このサーバーでブロックされているすべての単語をリストします。 :3",
-                "embeds": {
-                    "default": {
-                        "footer": "さらに {remaining} 個のトリガーがここに隠れています! :3",
-                        "title": "このサーバーのブラックリストトリガー~"
-                    },
-                    "no_blacklist": {
-                        "description": "ここではブラックリストのトリガーが見つかりませんでした。 :3"
+                },
+                "description": "ブラックリストのやつ！ :3",
+                "list": {
+                    "description": "このサーバーでブロックされているすべての単語をリストします。 :3",
+                    "embeds": {
+                        "default": {
+                            "footer": "さらに {remaining} 個のトリガーがここに隠れています! :3",
+                            "title": "このサーバーのブラックリストトリガー~"
+                        },
+                        "no_blacklist": {
+                            "description": "ここではブラックリストのトリガーが見つかりませんでした。 :3"
+                        }
                     }
-                }
-            },
-            "remove": {
-                "description": "ブラックリストから単語を削除します。 :3",
-                "embeds": {
-                    "default": {
-                        "description": "ブラックリストから「{query}」に一致するものをすべて削除しました。 :3",
-                        "title": "クエリを削除しました。 :D"
-                    },
-                    "not_found": {
-                        "description": "ブラックリストに「{query}」に一致するものが見つかりませんでした... 3:",
-                        "title": "トリガーが見つかりません! 3:"
+                },
+                "remove": {
+                    "description": "ブラックリストから単語を削除します。 :3",
+                    "embeds": {
+                        "default": {
+                            "description": "ブラックリストから「{query}」に一致するものをすべて削除しました。 :3",
+                            "title": "クエリを削除しました。 :D"
+                        },
+                        "not_found": {
+                            "description": "ブラックリストに「{query}」に一致するものが見つかりませんでした... 3:",
+                            "title": "トリガーが見つかりません! 3:"
+                        }
                     }
                 }
             }

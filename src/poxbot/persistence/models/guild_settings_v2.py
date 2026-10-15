@@ -1,4 +1,3 @@
-import uuid
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from enum import Enum, IntEnum
@@ -42,33 +41,6 @@ class BlacklistEntryMatchType(IntEnum):
     whole_word = 3
 
 
-class UserBlacklistScopeType(IntEnum):
-    SERVER = 0
-    GLOBAL = 1
-    BOT = 2
-
-
-@dataclass
-class UserBlacklistEntry:
-    target_id: int
-    expires_at: float
-    scope: UserBlacklistScopeType = UserBlacklistScopeType.SERVER
-    reasons: list[str] = field(default_factory=list)
-    timestamp: float = field(default_factory=lambda: datetime.now(UTC).timestamp())
-    executed_by: int | None = 0
-
-
-@dataclass
-class BlacklistEntry:
-    trigger: str
-    id: str = field(default_factory=lambda: str(uuid.uuid4())[:8])
-    reason: str | None = None
-    type: BlacklistEntryMatchType = BlacklistEntryMatchType.default
-    case_insensitive: bool = True
-    executed_by: int | None = 0
-    timestamp: float = field(default_factory=lambda: datetime.now(UTC).timestamp())
-
-
 @dataclass
 class ReactionRoleEntry:
     message_id: int
@@ -84,7 +56,7 @@ class WelcomeData:
 
 @dataclass
 class WordFilter(BaseFilterData):
-    blacklists: list[BlacklistEntry] = field(default_factory=list)
+    pass
 
 
 @dataclass
@@ -95,7 +67,7 @@ class AntiSpamFilter(BaseFilterData):
 
 @dataclass
 class AntiJoinFilter(BaseFilterData):
-    blacklists: list[UserBlacklistEntry] = field(default_factory=list)
+    pass
 
 
 @dataclass
@@ -243,55 +215,14 @@ class GuildConfigV2:
         filter_map = {}
         if 'word' in sub_feats:
             wf = sub_feats['word']
-            bl = []
-            for b in wf.get('blacklists', []):
-                match_type_val = b.get('type', 0)
-                try:
-                    match_type = BlacklistEntryMatchType(match_type_val)
-                except ValueError:
-                    match_type = BlacklistEntryMatchType.default
-
-                bl.append(
-                    BlacklistEntry(
-                        trigger=b.get('trigger', ''),
-                        id=b.get('id', str(uuid.uuid4())[:8]),
-                        reason=b.get('reason'),
-                        type=match_type,
-                        case_insensitive=b.get('case_insensitive', True),
-                        executed_by=b.get('executed_by'),
-                        timestamp=b.get('timestamp', datetime.now(UTC).timestamp()),
-                    ),
-                )
             filter_map['word'] = WordFilter(
                 enabled=wf.get('enabled', False),
-                blacklists=bl,
             )
 
         if 'anti_join' in sub_feats:
             aj = sub_feats['anti_join']
-            blacklists = []
-
-            for entry in aj.get('blacklists', []):
-                scope_raw = entry.get('scope', UserBlacklistScopeType.SERVER)
-                try:
-                    scope = UserBlacklistScopeType(scope_raw)
-                except (TypeError, ValueError):
-                    scope = UserBlacklistScopeType.SERVER
-
-                blacklists.append(
-                    UserBlacklistEntry(
-                        target_id=entry['target_id'],
-                        expires_at=entry['expires_at'],
-                        scope=scope,
-                        reasons=entry.get('reasons', []),
-                        timestamp=entry.get('timestamp', datetime.now(UTC).timestamp()),
-                        executed_by=entry.get('executed_by', 0),
-                    ),
-                )
-
             filter_map['anti_join'] = AntiJoinFilter(
                 enabled=aj.get('enabled', False),
-                blacklists=blacklists,
             )
 
         if 'anti_spam' in sub_feats:

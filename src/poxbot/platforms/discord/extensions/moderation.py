@@ -1,23 +1,30 @@
 import re
 from datetime import datetime
 
-from discord import Color, Embed, Interaction, Member, Message, app_commands
+from discord import Color, Embed, Interaction, Member, Message, app_commands, utils
 from discord.ext import commands
 from pytz import UTC
 
 from ....application import PoxBot
 from ....persistence.models import (
     AntiSpamFilter,
-    BlacklistEntry,
     BlacklistEntryMatchType,
     WordFilter,
 )
+from ....persistence.models.orm.moderation import ModerationEntry
 
 
 class ModerationCog(commands.Cog):
     def __init__(self, bot: PoxBot):
         self.bot = bot
         self.user_message_timestamps: dict[int, list[float]] = {}
+
+    @staticmethod
+    def _match_type(entry: ModerationEntry) -> BlacklistEntryMatchType:
+        try:
+            return BlacklistEntryMatchType((entry.extras or {}).get('match_type', 0))
+        except (TypeError, ValueError):
+            return BlacklistEntryMatchType.default
 
     group = app_commands.Group(
         name='moderation',
@@ -27,6 +34,22 @@ class ModerationCog(commands.Cog):
         name='blacklist',
         description=app_commands.locale_str('command.moderation.blacklist.description'),
         parent=group,
+    )
+
+    word_blacklist = app_commands.Group(
+        name='word',
+        description=app_commands.locale_str(
+            'command.moderation.blacklist.word.description'
+        ),
+        parent=blacklist,
+    )
+
+    user_blacklist = app_commands.Group(
+        name='user',
+        description=app_commands.locale_str(
+            'command.moderation.blacklist.user.description'
+        ),
+        parent=blacklist,
     )
 
     @commands.Cog.listener()
@@ -54,20 +77,32 @@ class ModerationCog(commands.Cog):
         word_cfg = filtering.filters.get('word')
         if isinstance(word_cfg, WordFilter) and word_cfg.enabled:
             content = message.content
+            now = datetime.now(UTC).timestamp()
+            entries = await self.bot.database.guild.get_moderation_entries(
+                item_type='word',
+                item_scope=message.guild.id,
+            )
 
-            for entry in word_cfg.blacklists:
-                pattern = entry.trigger
-                flags = re.IGNORECASE if entry.case_insensitive else 0
+            for entry in entries:
+                if entry.expires_at is not None and entry.expires_at <= now:
+                    continue
+
+                pattern = entry.value
+                case_insensitive = bool(
+                    (entry.extras or {}).get('case_insensitive', True)
+                )
+                flags = re.IGNORECASE if case_insensitive else 0
+                match_type = self._match_type(entry)
                 detected = False
 
-                match entry.type:
+                match match_type:
                     case BlacklistEntryMatchType.regex:
                         if re.search(pattern, content, flags):
                             detected = True
                     case BlacklistEntryMatchType.exact:
                         detected = (
                             pattern.lower() == content.lower()
-                            if entry.case_insensitive
+                            if case_insensitive
                             else pattern == content
                         )
                     case BlacklistEntryMatchType.whole_word:
@@ -77,7 +112,7 @@ class ModerationCog(commands.Cog):
                     case _:
                         detected = (
                             pattern.lower() in content.lower()
-                            if entry.case_insensitive
+                            if case_insensitive
                             else pattern in content
                         )
 
@@ -106,10 +141,10 @@ class ModerationCog(commands.Cog):
                 except Exception:
                     self.bot.logger.exception('Failed to delete spam')
 
-    @blacklist.command(
+    @word_blacklist.command(
         name='add',
         description=app_commands.locale_str(
-            'command.moderation.blacklist.add.description',
+            'command.moderation.blacklist.word.add.description',
         ),
     )
     async def add_word(
@@ -153,12 +188,13 @@ class ModerationCog(commands.Cog):
 
         config = await self.bot.database.guild.get_config(interaction.guild.id)
 
-        word_filter = config.filtering.filters.get('word')
-        if not isinstance(word_filter, WordFilter):
-            word_filter = WordFilter(enabled=True)
-            config.filtering.filters['word'] = word_filter
+        normalized_trigger = trigger.lower()
+        entries = await self.bot.database.guild.get_moderation_entries(
+            item_type='word',
+            item_scope=interaction.guild.id,
+        )
 
-        if any(entry.trigger == trigger for entry in word_filter.blacklists):
+        if any(entry.value.lower() == normalized_trigger for entry in entries):
             embed.title = self.bot.internal_translator.T(
                 'error.embeds.confliction.title',
                 loc,
@@ -170,35 +206,47 @@ class ModerationCog(commands.Cog):
             )
             embed.timestamp = datetime.now(UTC)
             embed.color = Color.red()
+            return await interaction.followup.send(embed=embed)
 
-            return interaction.followup.send(embed=embed)
+        word_filter = config.filtering.filters.get('word')
+        if not isinstance(word_filter, WordFilter):
+            word_filter = WordFilter(enabled=True)
+            config.filtering.filters['word'] = word_filter
 
-        new_entry = BlacklistEntry(
-            trigger=trigger.lower(),
-            reason=reason,
-            executed_by=interaction.user.id,
-            timestamp=datetime.now(UTC).timestamp(),
+            await self.bot.database.guild.update_config(interaction.guild.id, config)
+
+        new_entry = await self.bot.database.guild.add_moderation_entry(
+            item_type='word',
+            value=trigger.lower() if case_insensitive else trigger,
+            item_scope=interaction.guild.id,
+            reasons=[reason] if reason else [],
+            moderator=interaction.user.id,
+            extras={
+                'match_type': int(match_type),
+                'case_insensitive': case_insensitive,
+            },
         )
-        word_filter.blacklists.append(new_entry)
-
-        await self.bot.database.guild.update_config(interaction.guild.id, config)
 
         embed.title = self.bot.internal_translator.T(
-            'command.moderation.blacklist.add.embeds.default.title',
+            'command.moderation.blacklist.word.add.embeds.default.title',
             loc,
         )
         embed.description = self.bot.internal_translator.T(
-            'command.moderation.blacklist.add.embeds.default.description',
+            'command.moderation.blacklist.word.add.embeds.default.description',
             loc,
-            {'entry': new_entry.trigger, 'id': new_entry.id, 'type': new_entry.type},
+            {
+                'entry': new_entry.value,
+                'id': str(new_entry.item_id)[:8],
+                'type': self._match_type(new_entry).name,
+            },
         )
 
         return await interaction.followup.send(embed=embed)
 
-    @blacklist.command(
+    @word_blacklist.command(
         name='remove',
         description=app_commands.locale_str(
-            'command.moderation.blacklist.remove.description',
+            'command.moderation.blacklist.word.remove.description',
         ),
     )
     async def remove_word(self, interaction: Interaction, query: str):
@@ -249,39 +297,38 @@ class ModerationCog(commands.Cog):
 
             return interaction.followup.send(embed=embed)
 
-        original_count = len(wf.blacklists)
-        wf.blacklists = [
-            e for e in wf.blacklists if e.id != query and e.trigger != query
-        ]
+        removed = await self.bot.database.guild.remove_moderation_entries(
+            item_type='word',
+            item_scope=interaction.guild.id,
+            query=query,
+        )
 
-        if len(wf.blacklists) < original_count:
-            await self.bot.database.guild.update_config(interaction.guild.id, config)
-
+        if removed:
             embed.title = self.bot.internal_translator.T(
-                'command.moderation.blacklist.remove.embeds.default.title',
+                'command.moderation.blacklist.word.remove.embeds.default.title',
                 loc,
             )
             embed.description = self.bot.internal_translator.T(
-                'command.moderation.blacklist.remove.embeds.default.description',
+                'command.moderation.blacklist.word.remove.embeds.default.description',
                 loc,
                 {'query': query},
             )
             return await interaction.followup.send(embed=embed)
         embed.title = self.bot.internal_translator.T(
-            'command.moderation.blacklist.remove.embeds.not_found.title',
+            'command.moderation.blacklist.word.remove.embeds.not_found.title',
             loc,
         )
         embed.description = self.bot.internal_translator.T(
-            'command.moderation.blacklist.remove.embeds.not_found.description',
+            'command.moderation.blacklist.word.remove.embeds.not_found.description',
             loc,
             {'query': query},
         )
         return await interaction.followup.send(embed=embed)
 
-    @blacklist.command(
+    @word_blacklist.command(
         name='list',
         description=app_commands.locale_str(
-            'command.moderation.blacklist.list.description',
+            'command.moderation.blacklist.word.list.description',
         ),
     )
     async def list_words(self, interaction: Interaction):
@@ -317,8 +364,13 @@ class ModerationCog(commands.Cog):
 
         config = await self.bot.database.guild.get_config(interaction.guild.id)
 
+        entries = await self.bot.database.guild.get_moderation_entries(
+            item_type='word',
+            item_scope=interaction.guild.id,
+        )
+
         wf = config.filtering.filters.get('word')
-        if not isinstance(wf, WordFilter) or not wf.blacklists:
+        if not isinstance(wf, WordFilter) or not entries:
             embed.title = self.bot.internal_translator.T(
                 'error.embeds.blacklist_not_configured.title',
                 loc,
@@ -333,31 +385,55 @@ class ModerationCog(commands.Cog):
             return await interaction.followup.send(embed=embed)
 
         embed.title = self.bot.internal_translator.T(
-            'command.moderation.blacklist.list.embeds.default.title',
+            'command.moderation.blacklist.word.list.embeds.default.title',
             loc,
         )
 
-        if len(wf.blacklists) != 0:
-            lines = [
-                f'`{e.id}`: **{e.trigger}** ({e.type.name})' for e in wf.blacklists[:20]
-            ]
-            embed.description = '\n'.join(lines)
-        else:
-            embed.description = self.bot.internal_translator.T(
-                'command.moderation.blacklist.list.embeds.no_blacklist.description',
-                loc,
-            )
+        lines = [
+            f'`{str(e.item_id)[:8]}`: **{e.value}** ({self._match_type(e).name})'
+            for e in entries[:20]
+        ]
+        embed.description = '\n'.join(lines)
 
-        if len(wf.blacklists) > 20:
+        if len(entries) > 20:
             embed.set_footer(
                 text=self.bot.internal_translator.T(
-                    'command.moderation.blacklist.list.embeds.default.footer',
+                    'command.moderation.blacklist.word.list.embeds.default.footer',
                     loc,
-                    {'remaining': len(wf.blacklists) - 20},
+                    {'remaining': len(entries) - 20},
                 ),
             )
 
         await interaction.followup.send(embed=embed)
+
+    @word_blacklist.command(
+        name='serverban',
+        description=app_commands.locale_str(
+            'command.moderation.user.serverban.description',
+        ),
+    )
+    async def add_user_item(
+        self,
+        interaction: Interaction,
+        user: Member,
+        until: app_commands.Timestamp,
+        reason: str | None,
+    ):
+        loc = await self.bot.get_locale(interaction, prefer_guild=True)
+        await interaction.response.defer()
+
+        now = utils.utcnow()
+        remaining = until - now
+
+        if remaining.total_seconds() <= 0:
+            await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'command.moderation.user.serverban.texts.already_passed',
+                    loc,
+                ),
+                ephemeral=True,
+            )
+            return
 
 
 async def setup(bot):

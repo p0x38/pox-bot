@@ -383,7 +383,15 @@ class PoxBot(commands.AutoShardedBot):
             datetime.now(UTC) - datetime.fromtimestamp(start_timestamp, tz=UTC)
         ).total_seconds()
 
-    async def get_locale(self, interaction: Interaction):
+    async def get_locale(
+        self,
+        interaction: Interaction,
+        *,
+        prefer_guild: bool = False,
+    ):
+        if prefer_guild and interaction.guild_locale:
+            return interaction.locale
+
         return (
             await self.database.settings.get_locale(interaction)
             if (hasattr(self, 'database') and self.database and self.database.settings)

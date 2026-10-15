@@ -10,9 +10,6 @@ from .guild_settings_v2 import (
     BaseFilterData as BaseFilterData,
 )
 from .guild_settings_v2 import (
-    BlacklistEntry as BlacklistEntry,
-)
-from .guild_settings_v2 import (
     BlacklistEntryMatchType as BlacklistEntryMatchType,
 )
 from .guild_settings_v2 import (

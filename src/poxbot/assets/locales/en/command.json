@@ -989,38 +989,41 @@
     },
     "moderation": {
         "blacklist": {
-            "add": {
-                "description": "Adds a bad word to the blacklist! >:D",
-                "embeds": {
-                    "default": {
-                        "description": "Added '{entry}' to the blacklist as type '{type}', searchable with ID '{id}'! :3",
-                        "title": "Word blacklisted! >:D"
+            "description": "You can ban specific items! :3",
+            "word": {
+                "add": {
+                    "description": "Adds a bad word to the blacklist! >:D",
+                    "embeds": {
+                        "default": {
+                            "description": "Added '{entry}' to the blacklist as type '{type}', searchable with ID '{id}'! :3",
+                            "title": "Word blacklisted! >:D"
+                        }
                     }
-                }
-            },
-            "description": "Blacklist stuff! :3",
-            "list": {
-                "description": "Lists all the blocked words in this server! :3",
-                "embeds": {
-                    "default": {
-                        "footer": "Plus {remaining} more triggers hiding here! :3",
-                        "title": "Blacklist triggers for this server~"
-                    },
-                    "no_blacklist": {
-                        "description": "Couldn't find any blacklist triggers here! :3"
+                },
+                "description": "Blacklist stuff! :3",
+                "list": {
+                    "description": "Lists all the blocked words in this server! :3",
+                    "embeds": {
+                        "default": {
+                            "footer": "Plus {remaining} more triggers hiding here! :3",
+                            "title": "Blacklist triggers for this server~"
+                        },
+                        "no_blacklist": {
+                            "description": "Couldn't find any blacklist triggers here! :3"
+                        }
                     }
-                }
-            },
-            "remove": {
-                "description": "Removes a word from the blacklist! :3",
-                "embeds": {
-                    "default": {
-                        "description": "Scrubbed everything matching '{query}' from the blacklist! :3",
-                        "title": "Removed queries! :D"
-                    },
-                    "not_found": {
-                        "description": "Couldn't find anything matching '{query}' in the blacklist... 3:",
-                        "title": "Triggers not found! 3:"
+                },
+                "remove": {
+                    "description": "Removes a word from the blacklist! :3",
+                    "embeds": {
+                        "default": {
+                            "description": "Scrubbed everything matching '{query}' from the blacklist! :3",
+                            "title": "Removed queries! :D"
+                        },
+                        "not_found": {
+                            "description": "Couldn't find anything matching '{query}' in the blacklist... 3:",
+                            "title": "Triggers not found! 3:"
+                        }
                     }
                 }
             }
