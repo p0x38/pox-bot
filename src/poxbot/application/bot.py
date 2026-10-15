@@ -41,6 +41,7 @@ from ..services import (
 from ..services.counter import CounterManager
 from ..shared.utils.metrics import get_or_create_metrics
 from ..shared.utils.perf_monitor import PerformanceMonitor
+from .command_tree import ModerationCommandTree
 from .context import ApplicationContext
 from .shutdown import shutdown
 from .startup import startup
@@ -111,6 +112,7 @@ class PoxBot(commands.AutoShardedBot):
             **kwargs: Arbitrary keyword arguments forwarded to the parent class.
                 Expected to optionally contain 'root_path'.
         """
+        kwargs.setdefault('tree_cls', ModerationCommandTree)
         super().__init__(*args, **kwargs)
         self.should_restart = False
         self.context = context
@@ -137,6 +139,8 @@ class PoxBot(commands.AutoShardedBot):
             dsn=self.settings.database_config.build_url(),
             translation_manager=self.i18n_manager,
         )
+
+        self.add_check(self._check_prefix_botban)
 
         self.resources = ResourceManager()
         self.runtime = RuntimeState()
@@ -167,6 +171,43 @@ class PoxBot(commands.AutoShardedBot):
         self.quake_manager = P2PQuakeManager(cache_size=100)
 
         self.tree.on_error = self._on_tree_error
+
+    async def is_bot_banned(self, user_id: int) -> bool:
+        database = self.database.guild
+        if database is None:
+            return False
+
+        now = datetime.now(UTC).timestamp()
+        entries = await database.get_moderation_entries(
+            item_type='user',
+            item_scope=-2,
+        )
+
+        return any(
+            entry.value == str(user_id)
+            and (
+                entry.expires_at is None
+                or entry.expires_at > now
+            )
+            for entry in entries
+        )
+
+    async def _check_prefix_botban(
+            self,
+            ctx: commands.Context,
+    ) -> bool:
+        if not await self.is_bot_banned(ctx.author.id):
+            return True
+
+        key = 'error.custom.user_restricted_from_using_commands'
+        locale = ctx.guild.preferred_locale.value if ctx.guild else 'en'
+        message = self.internal_translator.T(key, locale)
+
+        if message == key:
+            message = 'You are restricted from using this bot.'
+
+        await ctx.reply(message, mention_author=False)
+        return False
 
     async def try_return_error(self, interaction: Interaction, **kwargs):
         """Send a message with detection of response if already respond."""

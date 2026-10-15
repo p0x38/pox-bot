@@ -1026,6 +1026,35 @@
                         }
                     }
                 }
+            },
+            "user": {
+                "serverban": {
+                    "description": "Restrict a user from rejoining this server.",
+                    "texts": {
+                        "already_passed": "The expiry time must be in the future.",
+                        "already_banned": "That user already has an active restriction in this scope.",
+                        "success": "Restricted {user} until {until}.",
+                        "kick_failed": "The restriction was saved, but I could not remove the user from these servers: {guilds}."
+                    }
+                },
+                "globalban": {
+                    "description": "Restrict a user across all servers managed by this bot.",
+                    "texts": {
+                        "already_passed": "The expiry time must be in the future.",
+                        "already_banned": "That user already has an active restriction in this scope.",
+                        "success": "Restricted {user} until {until}.",
+                        "kick_failed": "The restriction was saved, but I could not remove the user from these servers: {guilds}."
+                    }
+                },
+                "botban": {
+                    "description": "Prevent a user from using this bot.",
+                    "texts": {
+                        "already_passed": "The expiry time must be in the future.",
+                        "already_banned": "That user already has an active restriction in this scope.",
+                        "success": "Restricted {user} until {until}.",
+                        "restricted": "You are restricted from using this bot."
+                    }
+                }
             }
         },
         "description": "Moderation tools! >:D",

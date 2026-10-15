@@ -20,7 +20,8 @@
         "tried_to_timeout_owner": "You definitely can't timeout the server owner! 3:<",
         "unknown_signature": "Unknown Signature! 3:",
         "unsupported_channel": "I don't support this kind of channel! :3",
-        "user_not_found": "Couldn't find that user... :3"
+        "user_not_found": "Couldn't find that user... :3",
+        "user_restricted_from_using_commands": "You're been restricted from using this bot! :3"
     },
     "embed_exceptions": {
         "MissingPermissions": {

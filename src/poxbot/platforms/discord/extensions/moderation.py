@@ -1,7 +1,17 @@
 import re
 from datetime import datetime
 
-from discord import Color, Embed, Interaction, Member, Message, app_commands, utils
+from discord import (
+    Color,
+    Embed,
+    Forbidden,
+    HTTPException,
+    Interaction,
+    Member,
+    Message,
+    app_commands,
+    utils,
+)
 from discord.ext import commands
 from pytz import UTC
 
@@ -12,6 +22,7 @@ from ....persistence.models import (
     WordFilter,
 )
 from ....persistence.models.orm.moderation import ModerationEntry
+from ..checks.is_owner import is_bot_owner
 
 
 class ModerationCog(commands.Cog):
@@ -26,6 +37,140 @@ class ModerationCog(commands.Cog):
         except (TypeError, ValueError):
             return BlacklistEntryMatchType.default
 
+    async def _add_user_restriction(
+        self,
+        interaction: Interaction,
+        user: Member,
+        *,
+        scope: int,
+        command_name: str,
+        until: app_commands.Timestamp | None,
+        reason: str | None,
+    ) -> None:
+        loc = await self.bot.get_locale(interaction, prefer_guild=True)
+        await interaction.response.defer(ephemeral=True)
+
+        database = self.bot.database.guild
+
+        if not database:
+            await interaction.followup.send(
+                embed=Embed(
+                    title=self.bot.internal_translator.T(
+                        'error.embeds.database_not_available.title',
+                        loc,
+                    ),
+                    description=self.bot.internal_translator.T(
+                        'error.embeds.database_not_available.description',
+                        loc,
+                    ),
+                    timestamp=datetime.now(UTC),
+                    color=Color.red(),
+                )
+            )
+            return
+
+        now = utils.utcnow()
+        if until is not None and until <= now:
+            await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    f'command.moderation.user.{command_name}.texts.already_passed',
+                    loc,
+                ),
+                ephemeral=True,
+            )
+            return
+
+        now_timestamp = now.timestamp()
+        expires_at = until.timestamp() if until is not None else None
+        target_id = str(user.id)
+
+        entries = await database.get_moderation_entries(
+            item_type='user',
+            item_scope=scope,
+        )
+
+        already_restricted = any(
+            entry.value == target_id
+            and (entry.expires_at is None or entry.expires_at > now_timestamp)
+            for entry in entries
+        )
+
+        if already_restricted:
+            await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    f'command.moderation.user.{command_name}.texts.already_banned',
+                    loc,
+                ),
+                ephemeral=True,
+            )
+            return
+
+        await database.add_moderation_entry(
+            item_type='user',
+            value=target_id,
+            item_scope=scope,
+            reasons=[reason] if reason else [],
+            expires_at=expires_at,
+            moderator=interaction.user.id,
+        )
+
+        kick_reason = (
+            f'{command_name}: {reason}' if reason else f'{command_name} restriction'
+        )
+        failed_guilds: list[str] = []
+
+        if scope != -2:
+            target_guilds = (
+                [interaction.guild]
+                if interaction.guild and scope == interaction.guild.id
+                else self.bot.guilds
+            )
+
+            for target_guild in target_guilds:
+                if target_guild is None:
+                    continue
+
+                target = (
+                    user
+                    if interaction.guild and target_guild.id == interaction.guild.id
+                    else target_guild.get_member(user.id)
+                )
+
+                if target is None:
+                    continue
+
+                try:
+                    await target.kick(reason=kick_reason)
+                except (Forbidden, HTTPException):
+                    failed_guilds.append(target_guild.name)
+                    self.bot.logger.exception(
+                        'Failed to kick restricted user %s from guild %s',
+                        user.id,
+                        target_guild.id,
+                    )
+
+        until_text = (
+            f'<t:{int(expires_at)}:F>' if expires_at is not None else 'permanently'
+        )
+
+        response = self.bot.internal_translator.T(
+            f'command.moderation.user.{command_name}.texts.success',
+            loc,
+            {
+                'user': user.mention,
+                'until': until_text,
+            },
+        )
+
+        if failed_guilds:
+            response += '\n' + self.bot.internal_translator.T(
+                f'command.moderation.user.{command_name}.texts.kick_failed',
+                loc,
+                {'guilds': ', '.join(failed_guilds)},
+            )
+
+        await interaction.followup.send(response, ephemeral=True)
+
     group = app_commands.Group(
         name='moderation',
         description=app_commands.locale_str('command.moderation.description'),
@@ -35,21 +180,15 @@ class ModerationCog(commands.Cog):
         description=app_commands.locale_str('command.moderation.blacklist.description'),
         parent=group,
     )
-
-    word_blacklist = app_commands.Group(
-        name='word',
-        description=app_commands.locale_str(
-            'command.moderation.blacklist.word.description'
-        ),
-        parent=blacklist,
+    word_group = app_commands.Group(
+        name='blacklist',
+        description=app_commands.locale_str('command.moderation.blacklist.word.description'),
+        parent=group,
     )
-
-    user_blacklist = app_commands.Group(
-        name='user',
-        description=app_commands.locale_str(
-            'command.moderation.blacklist.user.description'
-        ),
-        parent=blacklist,
+    user_group = app_commands.Group(
+        name='blacklist',
+        description=app_commands.locale_str('command.moderation.blacklist.user.description'),
+        parent=group,
     )
 
     @commands.Cog.listener()
@@ -141,8 +280,46 @@ class ModerationCog(commands.Cog):
                 except Exception:
                     self.bot.logger.exception('Failed to delete spam')
 
-    @word_blacklist.command(
-        name='add',
+    @commands.Cog.listener()
+    async def on_member_join(self, member: Member) -> None:
+        database = self.bot.database.guild
+        if database is None:
+            return
+
+        now = utils.utcnow().timestamp()
+        entries = await database.get_moderation_entries(
+            item_type='user',
+            item_scope=(member.guild.id, -1),
+        )
+
+        entry = next(
+            (
+                item
+                for item in entries
+                if item.value == str(member.id)
+                and (item.expires_at is None or item.expires_at > now)
+            ),
+            None,
+        )
+
+        if entry is None:
+            return
+
+        reason = '; '.join(entry.reasons) or 'Active join restriction'
+
+        try:
+            await member.kick(
+                reason=f'Active moderation restriction: {reason}',
+            )
+        except (Forbidden, HTTPException):
+            self.bot.logger.exception(
+                'Failed to enforce join restriction for user %s in guild %s',
+                member.id,
+                member.guild.id,
+            )
+
+    @word_group.command(
+        name='add_word',
         description=app_commands.locale_str(
             'command.moderation.blacklist.word.add.description',
         ),
@@ -243,8 +420,8 @@ class ModerationCog(commands.Cog):
 
         return await interaction.followup.send(embed=embed)
 
-    @word_blacklist.command(
-        name='remove',
+    @word_group.command(
+        name='remove_word',
         description=app_commands.locale_str(
             'command.moderation.blacklist.word.remove.description',
         ),
@@ -325,8 +502,8 @@ class ModerationCog(commands.Cog):
         )
         return await interaction.followup.send(embed=embed)
 
-    @word_blacklist.command(
-        name='list',
+    @word_group.command(
+        name='list_words',
         description=app_commands.locale_str(
             'command.moderation.blacklist.word.list.description',
         ),
@@ -406,34 +583,99 @@ class ModerationCog(commands.Cog):
 
         await interaction.followup.send(embed=embed)
 
-    @word_blacklist.command(
+    @user_group.command(
         name='serverban',
         description=app_commands.locale_str(
             'command.moderation.user.serverban.description',
         ),
     )
+    @app_commands.guild_only()
+    @app_commands.checks.has_permissions(ban_members=True)
+    @app_commands.checks.bot_has_permissions(kick_members=True)
     async def add_user_item(
         self,
         interaction: Interaction,
         user: Member,
-        until: app_commands.Timestamp,
-        reason: str | None,
-    ):
+        until: app_commands.Timestamp | None = None,
+        reason: str | None = None,
+    ) -> None:
         loc = await self.bot.get_locale(interaction, prefer_guild=True)
-        await interaction.response.defer()
 
-        now = utils.utcnow()
-        remaining = until - now
-
-        if remaining.total_seconds() <= 0:
-            await interaction.followup.send(
-                self.bot.internal_translator.T(
-                    'command.moderation.user.serverban.texts.already_passed',
-                    loc,
-                ),
-                ephemeral=True,
+        if not interaction.guild:
+            await interaction.response.send_message(
+                embed=Embed(
+                    title=self.bot.internal_translator.T(
+                        'error.embeds.guild_only.title',
+                        loc,
+                    ),
+                    description=self.bot.internal_translator.T(
+                        'error.embeds.guild_only.description',
+                        loc,
+                    ),
+                )
             )
             return
+        
+        await self._add_user_restriction(
+            interaction,
+            user,
+            scope=interaction.guild.id,
+            command_name='serverban',
+            until=until,
+            reason=reason,
+        )
+
+    @user_group.command(
+        name='globalban',
+        description=app_commands.locale_str(
+            'command.moderation.user.globalban.description',
+        ),
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_permissions(ban_members=True)
+    @app_commands.checks.bot_has_permissions(kick_members=True)
+    @is_bot_owner()
+    async def global_ban(
+        self,
+        interaction: Interaction,
+        user: Member,
+        until: app_commands.Timestamp | None = None,
+        reason: str | None = None,
+    ) -> None:
+        await self._add_user_restriction(
+            interaction,
+            user,
+            scope=-1,
+            command_name='globalban',
+            until=until,
+            reason=reason,
+        )
+
+    @user_group.command(
+        name='botban',
+        description=app_commands.locale_str(
+            'command.moderation.user.botban.description',
+        ),
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_permissions(ban_members=True)
+    @app_commands.checks.bot_has_permissions(kick_members=True)
+    @is_bot_owner()
+    async def bot_ban(
+        self,
+        interaction: Interaction,
+        user: Member,
+        until: app_commands.Timestamp | None = None,
+        reason: str | None = None,
+    ) -> None:
+        await self._add_user_restriction(
+            interaction,
+            user,
+            scope=-2,
+            command_name='botban',
+            until=until,
+            reason=reason,
+        )
 
 
 async def setup(bot):

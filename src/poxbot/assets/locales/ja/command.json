@@ -1026,6 +1026,35 @@
                         }
                     }
                 }
+            },
+            "user": {
+                "serverban": {
+                    "description": "このサーバーへの再参加を禁止します。",
+                    "texts": {
+                        "already_passed": "期限は未来の日時にしてください。",
+                        "already_banned": "このユーザーには、この範囲ですでに有効な制限があります。",
+                        "success": "{user} の制限を {until} まで登録しました。",
+                        "kick_failed": "制限は保存されましたが、次のサーバーからユーザーを退出させられませんでした: {guilds}"
+                    }
+                },
+                "globalban": {
+                    "description": "このボットが管理するすべてのサーバーでユーザーを制限します。",
+                    "texts": {
+                        "already_passed": "期限は未来の日時にしてください。",
+                        "already_banned": "このユーザーには、この範囲ですでに有効な制限があります。",
+                        "success": "{user} の制限を {until} まで登録しました。",
+                        "kick_failed": "制限は保存されましたが、次のサーバーからユーザーを退出させられませんでした: {guilds}"
+                    }
+                },
+                "botban": {
+                    "description": "このボットの利用をユーザー単位で制限します。",
+                    "texts": {
+                        "already_passed": "期限は未来の日時にしてください。",
+                        "already_banned": "このユーザーには、この範囲ですでに有効な制限があります。",
+                        "success": "{user} の制限を {until} まで登録しました。",
+                        "restricted": "このボットの利用は制限されています。"
+                    }
+                }
             }
         },
         "description": "モデレーションツール！ >:D",
