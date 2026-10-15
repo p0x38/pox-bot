@@ -42,6 +42,22 @@ class BlacklistEntryMatchType(IntEnum):
     whole_word = 3
 
 
+class UserBlacklistScopeType(IntEnum):
+    SERVER = 0
+    GLOBAL = 1
+    BOT = 2
+
+
+@dataclass
+class UserBlacklistEntry:
+    target_id: int
+    expires_at: float
+    scope: UserBlacklistScopeType = UserBlacklistScopeType.SERVER
+    reasons: list[str] = field(default_factory=list)
+    timestamp: float = field(default_factory=lambda: datetime.now(UTC).timestamp())
+    executed_by: int | None = 0
+
+
 @dataclass
 class BlacklistEntry:
     trigger: str
@@ -78,6 +94,11 @@ class AntiSpamFilter(BaseFilterData):
 
 
 @dataclass
+class AntiJoinFilter(BaseFilterData):
+    blacklists: list[UserBlacklistEntry] = field(default_factory=list)
+
+
+@dataclass
 class WelcomeConfig(BaseConfigData):
     channels: WelcomeChannels = field(default_factory=WelcomeChannels)
     data: WelcomeData = field(default_factory=WelcomeData)
@@ -92,7 +113,10 @@ class LevelingConfig(BaseConfigData):
 
 @dataclass
 class FilterConfig(BaseConfigData):
-    filters: dict[str, BaseFilterData | AntiSpamFilter | WordFilter] = field(
+    filters: dict[
+        str,
+        BaseFilterData | AntiSpamFilter | WordFilter | AntiJoinFilter,
+    ] = field(
         default_factory=dict,
     )
 
@@ -241,6 +265,33 @@ class GuildConfigV2:
             filter_map['word'] = WordFilter(
                 enabled=wf.get('enabled', False),
                 blacklists=bl,
+            )
+
+        if 'anti_join' in sub_feats:
+            aj = sub_feats['anti_join']
+            blacklists = []
+
+            for entry in aj.get('blacklists', []):
+                scope_raw = entry.get('scope', UserBlacklistScopeType.SERVER)
+                try:
+                    scope = UserBlacklistScopeType(scope_raw)
+                except (TypeError, ValueError):
+                    scope = UserBlacklistScopeType.SERVER
+
+                blacklists.append(
+                    UserBlacklistEntry(
+                        target_id=entry['target_id'],
+                        expires_at=entry['expires_at'],
+                        scope=scope,
+                        reasons=entry.get('reasons', []),
+                        timestamp=entry.get('timestamp', datetime.now(UTC).timestamp()),
+                        executed_by=entry.get('executed_by', 0),
+                    ),
+                )
+
+            filter_map['anti_join'] = AntiJoinFilter(
+                enabled=aj.get('enabled', False),
+                blacklists=blacklists,
             )
 
         if 'anti_spam' in sub_feats:
