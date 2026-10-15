@@ -52,7 +52,11 @@ class GlobalChatCog(commands.Cog):
         self.bot = bot
         self.logger = get_logger(__name__, prefix='GlobalChat')
         self.antispam_managers: dict[int, AntiSpamManager] = {}
-        self.whitelisted_domains = bot.constants.whitelisted_domains
+        self.whitelisted_domains = {
+            domain.strip().casefold().rstrip('.')
+            for domain in bot.constants.whitelisted_domains
+            if domain.strip()
+        }
         self.blacklisted_domains = bot.constants.blacklisted_domains
 
         self.moderator = GlobalChatModerator(
@@ -186,9 +190,20 @@ class GlobalChatCog(commands.Cog):
                 url, (start, end) = item
 
                 ext = tldextract.extract(url)
-                domain = f'{ext.domain}.{ext.suffix}'
 
-                if domain in self.whitelisted_domains:
+                hostname = '.'.join(
+                    part
+                    for part in (ext.subdomain, ext.domain, ext.suffix)
+                    if part
+                ).casefold().rstrip('.')
+
+                domain = f'{ext.domain}.{ext.suffix}'.casefold().rstrip('.')
+
+                if any(
+                    hostname == allowed_domain
+                    or hostname.endswith(f'.{allowed_domain}')
+                    for allowed_domain in self.whitelisted_domains
+                ):
                     continue
 
                 dummy_item = BlacklistItem({'value': domain})
