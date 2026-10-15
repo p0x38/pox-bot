@@ -1,9 +1,7 @@
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
-from uuid import UUID
 
 import orjson
-from discord import Member, User
 from sqlalchemy import bindparam, delete, func, select, text, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.attributes import flag_modified
@@ -473,11 +471,3 @@ class GuildSettingsDatabase(BaseDatabase):
             stmt = stmt.limit(1)
             result = await session.execute(stmt)
             return result.scalar_one_or_none()
-
-    async def ban_user(
-        self,
-        user: Member | User,
-        duration: timedelta,
-        reasons: list[str] | None = None,
-    ):
-        pass

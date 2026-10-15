@@ -109,7 +109,7 @@ class GlobalChatDeliveryType(IntEnum):
 class GlobalChatConfig(BaseConfigData):
     channel_id: int | None = None
     webhook_url: str | None = None
-    silent: bool = False
+    silent: bool = True
     message_delivery_type: GlobalChatDeliveryType = GlobalChatDeliveryType.bot
 
 
@@ -291,7 +291,7 @@ class GuildConfigV2:
             last_executor=gc.get('last_executor'),
             channel_id=gc.get('channel_id'),
             webhook_url=gc.get('webhook_url'),
-            silent=gc.get('silent', False),
+            silent=gc.get('silent', True),
             message_delivery_type=delivery_type,
         )
 

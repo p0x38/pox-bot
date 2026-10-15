@@ -110,13 +110,14 @@ def run_inspection() -> None:
                 and 'Transformer' in attr_name
                 and attr.__module__ == module_name
             ):
-                if not hasattr(attr, 'transform'):
+                transform = getattr(attr, 'transform', None)
+                if not callable(transform):
                     continue
 
                 try:
-                    sig = inspect.signature(attr.transform)
+                    sig = inspect.signature(transform)
                     params = sig.parameters
-                except Exception:  # ruff: ignore[try-except-continue]
+                except (TypeError, ValueError):
                     continue
 
                 found_any_param = False
