@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# ruff: file-ignore[print]
 from __future__ import annotations
 
 import ast

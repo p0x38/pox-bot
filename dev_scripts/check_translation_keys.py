@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import io
 import json
 import sys
 from collections import defaultdict
@@ -61,12 +62,18 @@ def static_strings(node: ast.expr) -> tuple[list[str], bool]:
         return [node.value], True
 
     if isinstance(node, ast.JoinedStr):
-        if all(
-            isinstance(value, ast.Constant) and isinstance(value.value, str)
-            for value in node.values
-        ):
-            return [''.join(value.value for value in node.values)], True
-        return [], False
+        values: list[str] = []
+
+        for value in node.values:
+            if not isinstance(value, ast.Constant) or not isinstance(
+                value.value,
+                str,
+            ):
+                return [], False
+
+            values.append(value.value)
+
+        return [''.join(values)], True
 
     if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
         left, left_static = static_strings(node.left)
@@ -251,7 +258,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    if hasattr(sys.stdout, 'reconfigure'):
+    if isinstance(sys.stdout, io.TextIOWrapper):
         sys.stdout.reconfigure(encoding='utf-8', errors='backslashreplace')
 
     scan_paths = args.paths or [default_source_dir]
@@ -340,7 +347,7 @@ def main() -> int:
 
     if missing_everywhere:
         print(f'\nMissing from every checked locale ({len(missing_everywhere)}):')
-        for key, _ in missing_everywhere.items():
+        for key in missing_everywhere:
             print(f'  {key} — used at {references_text(references[key], root)}')
 
     if missing_somewhere:
