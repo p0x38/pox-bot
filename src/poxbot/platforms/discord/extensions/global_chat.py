@@ -16,6 +16,8 @@ from discord import (
     Interaction,
     Message,
     NotFound,
+    RawBulkMessageDeleteEvent,
+    RawMessageDeleteEvent,
     TextChannel,
     Thread,
     Webhook,
@@ -80,6 +82,71 @@ class GlobalChatCog(commands.Cog):
                 description=description,
                 amount=1,
                 labels=labels,
+            )
+
+    async def _send_audit_log(
+        self,
+        guild_id: int,
+        *,
+        title: str,
+        description: str,
+        color: Color | None = None,
+        fields: dict[str, str] | None = None,
+        channel_id: int | None = None,
+    ) -> None:
+        database = self.bot.database.guild
+        try:
+            if channel_id is None:
+                if database is None:
+                    return
+
+                config = await database.get_config(guild_id)
+                if not config.logs.enabled:
+                    return
+
+                channel_id = config.logs.channel_id
+
+            if channel_id is None:
+                return
+
+            channel = self.bot.get_channel(channel_id)
+            if channel is None:
+                channel = await self.bot.fetch_channel(channel_id)
+
+            if not isinstance(channel, TextChannel):
+                self.logger.warning(
+                    'Global-chat audit channel %s is not a text channel',
+                    channel_id,
+                )
+                return
+
+            embed = Embed(
+                title=title,
+                description=description,
+                color=color or Color.blurple(),
+            )
+            for name, value in (fields or {}).items():
+                embed.add_field(name=name, value=value, inline=False)
+
+            await channel.send(
+                embed=embed,
+                allowed_mentions=AllowedMentions.none(),
+            )
+        except (Forbidden, NotFound) as error:
+            self.logger.warning(
+                'Could not send global-chat audit log for guild %s: %s',
+                guild_id,
+                error,
+            )
+        except HTTPException:
+            self.logger.exception(
+                'Failed to send global-chat audit log for guild %s',
+                guild_id,
+            )
+        except Exception:
+            self.logger.exception(
+                'Unexpected error while sending global-chat audit log for guild %s',
+                guild_id,
             )
 
     async def _get_or_create_webhook(self, channel: TextChannel) -> Webhook | None:
@@ -155,6 +222,120 @@ class GlobalChatCog(commands.Cog):
 
         await self.broadcast_global_message(message, config=config)
 
+    @commands.Cog.listener()
+    async def on_raw_message_delete(self, payload: RawMessageDeleteEvent) -> None:
+        if payload.guild_id is None:
+            return
+
+        await self._handle_global_chat_message_deletion(
+            payload.message_id,
+            origin_guild_id=payload.guild_id,
+        )
+
+    @commands.Cog.listener()
+    async def on_raw_bulk_message_delete(
+        self,
+        payload: RawBulkMessageDeleteEvent,
+    ) -> None:
+        if payload.guild_id is None:
+            return
+
+        for message_id in payload.message_ids:
+            await self._handle_global_chat_message_deletion(
+                message_id,
+                origin_guild_id=payload.guild_id,
+            )
+
+    async def _handle_global_chat_message_deletion(
+        self,
+        message_id: int,
+        *,
+        origin_guild_id: int,
+    ) -> None:
+        database = self.bot.database.guild
+        if database is None:
+            return
+
+        origin_message_id = await database.get_global_chat_origin_message_id(
+            message_id,
+        )
+        if origin_message_id is None or origin_message_id != message_id:
+            return
+
+        replicas: dict[int, tuple[int, int]] = await database.get_global_chat_replicas(
+            origin_message_id
+        )
+        deleted_count = 0
+        failed_count = 0
+        for replica_guild_id, (
+            replica_channel_id,
+            replica_message_id,
+        ) in replicas.items():
+            if replica_message_id == origin_message_id:
+                continue
+
+            channel = self.bot.get_channel(replica_channel_id)
+            if channel is None:
+                try:
+                    channel = await self.bot.fetch_channel(replica_channel_id)
+                except NotFound:
+                    continue
+                except Forbidden:
+                    self.logger.warning(
+                        'Cannot access global-chat replica channel %s',
+                        replica_channel_id,
+                    )
+                    continue
+                except HTTPException:
+                    self.logger.exception(
+                        'Failed to fetch global-chat replica channel %s',
+                        replica_channel_id,
+                    )
+                    continue
+
+            if not isinstance(channel, (TextChannel, Thread)):
+                continue
+
+            try:
+                await channel.get_partial_message(replica_message_id).delete()
+                deleted_count += 1
+            except NotFound:
+                pass
+            except Forbidden:
+                failed_count += 1
+                self.logger.warning(
+                    'Cannot delete global-chat replica message %s in channel %s',
+                    replica_message_id,
+                    replica_channel_id,
+                )
+                await self._send_audit_log(
+                    replica_guild_id,
+                    title='Global-chat replica deletion failed',
+                    description=(
+                        'The bot lacks permission to delete a mirrored message.'
+                    ),
+                    color=Color.red(),
+                    fields={'Origin message ID': str(origin_message_id)},
+                )
+            except HTTPException:
+                failed_count += 1
+                self.logger.exception(
+                    'Failed to delete global-chat replica message %s in channel %s',
+                    replica_message_id,
+                    replica_channel_id,
+                )
+                await self._send_audit_log(
+                    replica_guild_id,
+                    title='Global-chat replica deletion failed',
+                    description=(
+                        'Discord returned an error while deleting a mirrored message.'
+                    ),
+                    color=Color.red(),
+                    fields={'Origin message ID': str(origin_message_id)},
+                )
+
+        await database.delete_global_chat_message_references(origin_message_id)
+
     async def handle_spam(self, message: Message):
         try:
             await message.delete()
@@ -194,8 +375,7 @@ class GlobalChatCog(commands.Cog):
                 ext = tldextract.extract(url)
 
                 hostname = (
-                    '.'
-                    .join(
+                    '.'.join(
                         part for part in (ext.subdomain, ext.domain, ext.suffix) if part
                     )
                     .casefold()
@@ -218,10 +398,12 @@ class GlobalChatCog(commands.Cog):
                         (x for x in self.blacklisted_domains if x == dummy_item), None
                     )
                     if actual_item:
-                        reason_names = ', '.join([
-                            (r[0] if isinstance(r, tuple) else r).value
-                            for r in actual_item.reasons
-                        ])
+                        reason_names = ', '.join(
+                            [
+                                (r[0] if isinstance(r, tuple) else r).value
+                                for r in actual_item.reasons
+                            ]
+                        )
                         censor_replacement = f'[URL Blocked: {reason_names}]'
                         self.logger.warning('Blocked %s; %s', domain, reason_names)
                     else:
@@ -489,6 +671,28 @@ class GlobalChatCog(commands.Cog):
                         message_fingerprint=self._message_fingerprint(original),
                     )
                 await self._send_moderation_notice(original, moderation_result)
+                await self._send_audit_log(
+                    original_guild.id,
+                    title='Global chat moderation',
+                    description=(
+                        'A message was held for review.'
+                        if moderation_result.action == ModerationAction.REVIEW
+                        else 'A message was blocked by moderation.'
+                    ),
+                    color=(
+                        Color.orange()
+                        if moderation_result.action == ModerationAction.REVIEW
+                        else Color.red()
+                    ),
+                    fields={
+                        'Author ID': str(original.author.id),
+                        'Message': original.jump_url,
+                        'Action': moderation_result.action.name,
+                        'Reasons': (
+                            ', '.join(moderation_result.reason_codes) or 'Unknown'
+                        ),
+                    },
+                )
                 return
 
         profile = (
@@ -554,6 +758,29 @@ class GlobalChatCog(commands.Cog):
                 continue
             image_urls.append(attachment.url)
 
+        database = self.bot.database.guild
+        reply_replicas: dict[int, tuple[int, int]] = {}
+        reference = original.reference
+
+        if database:
+            if reference and reference.message_id:
+                parent_origin_message_id = (
+                    await database.get_global_chat_origin_message_id(
+                        reference.message_id,
+                    )
+                )
+                if parent_origin_message_id is not None:
+                    reply_replicas = await database.get_global_chat_replicas(
+                        parent_origin_message_id,
+                    )
+
+            await database.save_global_chat_message_reference(
+                origin_message_id=original.id,
+                replica_message_id=original.id,
+                replica_guild_id=original_guild.id,
+                replica_channel_id=original.channel.id,
+            )
+
         start_time = perf_counter()
         self._record_counter(
             name='bot_global_chat_messages_total',
@@ -585,10 +812,12 @@ class GlobalChatCog(commands.Cog):
                     for attachment in original.attachments:
                         if not attachment.content_type:
                             continue
-                        if not attachment.content_type.startswith((
-                            'image',
-                            'video',
-                        )):
+                        if not attachment.content_type.startswith(
+                            (
+                                'image',
+                                'video',
+                            )
+                        ):
                             continue
 
                         try:
@@ -600,12 +829,44 @@ class GlobalChatCog(commands.Cog):
                         except (HTTPException, Forbidden, NotFound):
                             continue
 
+                    sent_message: Message | None = None
                     try:
+                        permissions = channel.permissions_for(guild.me)
+                        reply_replica = reply_replicas.get(guild.id)
+                        reply_message_id = (
+                            reply_replica[1]
+                            if reply_replica is not None
+                            and reply_replica[0] == channel.id
+                            else None
+                        )
+
                         if (
+                            reply_message_id is not None
+                            and permissions.send_messages
+                            and permissions.read_message_history
+                        ):
+                            bot_kwargs = {
+                                'embed': embed,
+                                'silent': global_feat.silent,
+                                'allowed_mentions': (
+                                    AllowedMentions.none()
+                                    if global_feat.silent
+                                    else None
+                                ),
+                                'reference': channel.get_partial_message(
+                                    reply_message_id,
+                                ),
+                                'mention_author': False,
+                            }
+                            if files:
+                                bot_kwargs['files'] = files
+
+                            sent_message = await channel.send(**bot_kwargs)
+
+                        elif (
                             global_feat.message_delivery_type
                             == GlobalChatDeliveryType.webhook
                         ):
-                            permissions = channel.permissions_for(guild.me)
                             if not (
                                 permissions.send_messages
                                 and permissions.manage_webhooks
@@ -631,9 +892,8 @@ class GlobalChatCog(commands.Cog):
                             if files:
                                 webhook_kwargs['files'] = files
 
-                            await webhook.send(**webhook_kwargs)
+                            sent_message = await webhook.send(**webhook_kwargs)
                         else:
-                            permissions = channel.permissions_for(guild.me)
                             if not permissions.send_messages:
                                 continue
 
@@ -649,10 +909,41 @@ class GlobalChatCog(commands.Cog):
                             if files:
                                 bot_kwargs['files'] = files
 
-                            await channel.send(**bot_kwargs)
+                            sent_message = await channel.send(**bot_kwargs)
+
+                        if sent_message is not None and database:
+                            await database.save_global_chat_message_reference(
+                                origin_message_id=original.id,
+                                replica_message_id=sent_message.id,
+                                replica_guild_id=guild.id,
+                                replica_channel_id=channel.id,
+                            )
                     except NotFound:
                         self.webhook_cache.pop(channel.id, None)
+                        await self._send_audit_log(
+                            guild.id,
+                            title='Global-chat relay failed',
+                            description=(
+                                'The destination channel or webhook was not found.'
+                            ),
+                            color=Color.red(),
+                            fields={
+                                'Origin guild ID': str(original_guild.id),
+                                'Origin message ID': str(original.id),
+                            },
+                        )
                     except Forbidden:
+                        await self._send_audit_log(
+                            guild.id,
+                            title='Global-chat relay failed',
+                            description=(
+                                'The bot lacks permission to relay this message.'
+                            ),
+                            color=Color.red(),
+                            fields={
+                                'Origin message ID': str(original.id),
+                            },
+                        )
                         self._record_counter(
                             name='bot_global_chat_broadcast_errors_total',
                             description=(
@@ -665,6 +956,16 @@ class GlobalChatCog(commands.Cog):
                             },
                         )
                     except HTTPException as e:
+                        await self._send_audit_log(
+                            guild.id,
+                            title='Global-chat relay failed',
+                            description=f'Discord returned HTTP status {e.status}.',
+                            color=Color.red(),
+                            fields={
+                                'Origin guild ID': str(original_guild.id),
+                                'Origin message ID': str(original.id),
+                            },
+                        )
                         self._record_counter(
                             name='bot_global_chat_broadcast_errors_total',
                             description=(
@@ -733,6 +1034,12 @@ class GlobalChatCog(commands.Cog):
         config.global_chat.enabled = True
 
         await self.bot.database.guild.update_config(guild_id, config)
+        await self._send_audit_log(
+            guild_id,
+            title='Global chat configured',
+            description=f'The global-chat channel was set to {channel.mention}.',
+            fields={'Changed by user ID': str(interaction.user.id)},
+        )
 
         await interaction.followup.send(
             self.bot.internal_translator.T(
@@ -789,6 +1096,12 @@ class GlobalChatCog(commands.Cog):
         config.global_chat.message_delivery_type = delivery_type
 
         await self.bot.database.guild.update_config(guild_id, config)
+        await self._send_audit_log(
+            guild_id,
+            title='Global-chat delivery mode changed',
+            description=f'Delivery mode changed to {mode.lower()}.',
+            fields={'Changed by user ID': str(interaction.user.id)},
+        )
 
         await interaction.followup.send(
             self.bot.internal_translator.T(
@@ -830,6 +1143,12 @@ class GlobalChatCog(commands.Cog):
         config.global_chat.silent = value
 
         await self.bot.database.guild.update_config(guild_id, config)
+        await self._send_audit_log(
+            guild_id,
+            title='Global-chat silent mode changed',
+            description=f'Silent mode is now {"enabled" if value else "disabled"}.',
+            fields={'Changed by user ID': str(interaction.user.id)},
+        )
 
         status_text = self.bot.internal_translator.T(
             'text.boolean.true' if config.global_chat.silent else 'text.boolean.false',
@@ -876,6 +1195,15 @@ class GlobalChatCog(commands.Cog):
         config.global_chat.enabled = not current_status
 
         await self.bot.database.guild.update_config(guild_id, config)
+        await self._send_audit_log(
+            guild_id,
+            title='Global chat toggled',
+            description=(
+                f'Global chat is now '
+                f'{"enabled" if config.global_chat.enabled else "disabled"}.'
+            ),
+            fields={'Changed by user ID': str(interaction.user.id)},
+        )
 
         status_text = self.bot.internal_translator.T(
             'text.boolean.true' if config.global_chat.enabled else 'text.boolean.false',
@@ -949,6 +1277,15 @@ class GlobalChatCog(commands.Cog):
         embed.add_field(
             name='Silent mode',
             value='Enabled' if gc.silent else 'Disabled',
+            inline=False,
+        )
+        embed.add_field(
+            name='Server log channel',
+            value=(
+                f'<#{config.logs.channel_id}>'
+                if config.logs.enabled and config.logs.channel_id is not None
+                else 'Disabled'
+            ),
             inline=False,
         )
 
@@ -1143,6 +1480,14 @@ class GlobalChatCog(commands.Cog):
                 status='denied',
                 reviewer_id=interaction.user.id,
             )
+            if resolved:
+                await self._send_audit_log(
+                    guild_id,
+                    title='Global-chat message review denied',
+                    description=f'Message `{parsed_message_id}` was denied by review.',
+                    color=Color.red(),
+                    fields={'Reviewer ID': str(interaction.user.id)},
+                )
             response_key = 'denied' if resolved else 'already_reviewed'
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
@@ -1224,6 +1569,13 @@ class GlobalChatCog(commands.Cog):
             )
 
         await self.broadcast_global_message(original, approved=True)
+        await self._send_audit_log(
+            guild_id,
+            title='Global-chat message review approved',
+            description=f'Message `{parsed_message_id}` was approved and broadcast.',
+            color=Color.green(),
+            fields={'Reviewer ID': str(interaction.user.id)},
+        )
         return await interaction.followup.send(
             self.bot.internal_translator.T(
                 'command.global_chat.review.responses.approved',

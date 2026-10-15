@@ -119,6 +119,11 @@ class GlobalChatConfig(BaseConfigData):
 
 
 @dataclass
+class LogsConfig(BaseConfigData):
+    channel_id: int | None = None
+
+
+@dataclass
 class UserphoneConfig(BaseConfigData):
     channel_id: int | None = None
     status: PhoneStatus = PhoneStatus.idle
@@ -184,6 +189,14 @@ class GuildConfigV2:
         feat = self.features.get('global_chat')
         if not isinstance(feat, GlobalChatConfig):
             return GlobalChatConfig()
+        return feat
+
+    @property
+    def logs(self) -> LogsConfig:
+        feat = self.features.get('logs')
+        if not isinstance(feat, LogsConfig):
+            feat = LogsConfig()
+            self.features['logs'] = feat
         return feat
 
     @property
@@ -305,6 +318,18 @@ class GuildConfigV2:
             webhook_url=gc.get('webhook_url'),
             silent=gc.get('silent', True),
             message_delivery_type=delivery_type,
+        )
+
+        logs_raw = f.get('logs', {})
+        logs_channel_id = logs_raw.get('channel_id', gc.get('log_channel_id'))
+        parsed['logs'] = LogsConfig(
+            enabled=logs_raw.get('enabled', logs_channel_id is not None),
+            last_execution=logs_raw.get(
+                'last_execution',
+                datetime.now(UTC).timestamp(),
+            ),
+            last_executor=logs_raw.get('last_executor'),
+            channel_id=logs_channel_id,
         )
 
         chatbot_raw = f.get('chatbot', {})

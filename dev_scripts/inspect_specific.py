@@ -140,14 +140,16 @@ def run_inspection() -> None:
                     )
                     is_target = p_name in target_params
 
-                    table_rows.append((
-                        attr_name,
-                        p_name,
-                        type_str,
-                        default_val,
-                        is_target,
-                        exceptions_str,
-                    ))
+                    table_rows.append(
+                        (
+                            attr_name,
+                            p_name,
+                            type_str,
+                            default_val,
+                            is_target,
+                            exceptions_str,
+                        )
+                    )
                     found_any_param = True
 
                 for hidden_key in hidden_kwargs:
@@ -156,25 +158,29 @@ def run_inspection() -> None:
                         for row in table_rows
                     ):
                         is_target = hidden_key in target_params
-                        table_rows.append((
-                            attr_name,
-                            f'{hidden_key} (via get)',
-                            'Any (Dynamic)',
-                            'Dynamic',
-                            is_target,
-                            exceptions_str,
-                        ))
+                        table_rows.append(
+                            (
+                                attr_name,
+                                f'{hidden_key} (via get)',
+                                'Any (Dynamic)',
+                                'Dynamic',
+                                is_target,
+                                exceptions_str,
+                            )
+                        )
                         found_any_param = True
 
                 if not found_any_param:
-                    table_rows.append((
-                        attr_name,
-                        'None',
-                        'None',
-                        'None',
-                        False,
-                        exceptions_str,
-                    ))
+                    table_rows.append(
+                        (
+                            attr_name,
+                            'None',
+                            'None',
+                            'None',
+                            False,
+                            exceptions_str,
+                        )
+                    )
 
     elapsed_ms = (time.perf_counter() - start_time) * 1000
     width = get_terminal_width()

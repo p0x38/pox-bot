@@ -63,8 +63,7 @@ def build_parser() -> argparse.ArgumentParser:
     validate.set_defaults(func=validate_config)
 
     env_check = config_sub.add_parser(
-        'env_check',
-        help='Validate environment variables.'
+        'env_check', help='Validate environment variables.'
     )
     env_check.set_defaults(func=check_environment)
 

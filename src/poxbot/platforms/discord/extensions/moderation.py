@@ -182,12 +182,16 @@ class ModerationCog(commands.Cog):
     )
     word_group = app_commands.Group(
         name='word',
-        description=app_commands.locale_str('command.moderation.blacklist.word.description'),
+        description=app_commands.locale_str(
+            'command.moderation.blacklist.word.description'
+        ),
         parent=group,
     )
     user_group = app_commands.Group(
         name='user',
-        description=app_commands.locale_str('command.moderation.blacklist.user.description'),
+        description=app_commands.locale_str(
+            'command.moderation.blacklist.user.description'
+        ),
         parent=group,
     )
 
@@ -615,7 +619,7 @@ class ModerationCog(commands.Cog):
                 )
             )
             return
-        
+
         await self._add_user_restriction(
             interaction,
             user,

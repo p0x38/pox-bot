@@ -50,10 +50,10 @@ def _write_metadata(locales_path: Path) -> None:
                             'locale_code': 'en-x-uwu',
                             'friendly_name': 'Uwuified English',
                             'localized_friendly_name': {
-                                "en_US": "Uwuified English",
-                                "en_GB": "Uwuified English",
-                                "ja_JP": "カワイイ英語",
-                                "es_ES": "Gatglés"
+                                'en_US': 'Uwuified English',
+                                'en_GB': 'Uwuified English',
+                                'ja_JP': 'カワイイ英語',
+                                'es_ES': 'Gatglés',
                             },
                             'emoji': '🐈',
                             'tone': 'uwu',
@@ -63,10 +63,10 @@ def _write_metadata(locales_path: Path) -> None:
                             'locale_code': 'en-x-lolcat',
                             'friendly_name': 'Lolcat English',
                             'localized_friendly_name': {
-                                "en_US": "Lolcat English",
-                                "en_GB": "Lolcat English",
-                                "ja_JP": "猫英語",
-                                "es_ES": "Inglés estilo lolcat"
+                                'en_US': 'Lolcat English',
+                                'en_GB': 'Lolcat English',
+                                'ja_JP': '猫英語',
+                                'es_ES': 'Inglés estilo lolcat',
                             },
                             'emoji': '🐈',
                             'tone': 'lolcat',

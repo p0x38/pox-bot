@@ -185,16 +185,13 @@ class PoxBot(commands.AutoShardedBot):
 
         return any(
             entry.value == str(user_id)
-            and (
-                entry.expires_at is None
-                or entry.expires_at > now
-            )
+            and (entry.expires_at is None or entry.expires_at > now)
             for entry in entries
         )
 
     async def _check_prefix_botban(
-            self,
-            ctx: commands.Context,
+        self,
+        ctx: commands.Context,
     ) -> bool:
         if not await self.is_bot_banned(ctx.author.id):
             return True

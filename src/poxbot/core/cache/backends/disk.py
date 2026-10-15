@@ -79,20 +79,13 @@ class DiskBackend:
             ):
                 raise ValueError('Invalid expiration timestamp')
 
-            if (
-                isinstance(priority, bool)
-                or not isinstance(priority, int)
-            ):
+            if isinstance(priority, bool) or not isinstance(priority, int):
                 raise ValueError('Invalid cache priority')
 
             return CacheEntry(
                 value=record['value'],
                 stored_at=float(stored_at),
-                expires_at=(
-                    float(expires_at)
-                    if expires_at is not None
-                    else None
-                ),
+                expires_at=(float(expires_at) if expires_at is not None else None),
                 priority=priority,
             )
 
@@ -137,4 +130,3 @@ class DiskBackend:
     def clear(self) -> None:
         for path in self.directory.glob('*.cache'):
             self._discard(path)
-            

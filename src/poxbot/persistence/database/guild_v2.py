@@ -12,6 +12,7 @@ from ...shared.bases.base_orm_model import Base
 from ..models.global_chat_moderation_orm import GlobalChatModerationCase
 from ..models.guild_settings_v2 import GuildConfigV2
 from ..models.guild_settings_v2_orm import ActiveTicket, GuildSettings
+from ..models.orm.global_chat_message_reference import GlobalChatMessageReference
 from ..models.orm.moderation import ModerationEntry
 
 if TYPE_CHECKING:
@@ -448,6 +449,89 @@ class GuildSettingsDatabase(BaseDatabase):
             )
             result = await session.execute(statement)
             return result.scalar_one_or_none() is not None
+
+    async def save_global_chat_message_reference(
+        self,
+        *,
+        origin_message_id: int,
+        replica_message_id: int,
+        replica_guild_id: int,
+        replica_channel_id: int,
+    ) -> None:
+        async with self.async_session() as session, session.begin():
+            record = await session.scalar(
+                select(GlobalChatMessageReference).where(
+                    GlobalChatMessageReference.origin_message_id == origin_message_id,
+                    GlobalChatMessageReference.replica_guild_id == replica_guild_id,
+                ),
+            )
+
+            if record is not None:
+                record.replica_message_id = replica_message_id
+                record.replica_channel_id = replica_channel_id
+                return
+
+            record = await session.get(
+                GlobalChatMessageReference,
+                replica_message_id,
+            )
+
+            if record is not None:
+                record.origin_message_id = origin_message_id
+                record.replica_guild_id = replica_guild_id
+                record.replica_channel_id = replica_channel_id
+                return
+
+            session.add(
+                GlobalChatMessageReference(
+                    origin_message_id=origin_message_id,
+                    replica_message_id=replica_message_id,
+                    replica_guild_id=replica_guild_id,
+                    replica_channel_id=replica_channel_id,
+                ),
+            )
+
+    async def get_global_chat_origin_message_id(
+        self,
+        replica_message_id: int,
+    ) -> int | None:
+        async with self.async_session() as session:
+            result = await session.execute(
+                select(GlobalChatMessageReference.origin_message_id).where(
+                    GlobalChatMessageReference.replica_message_id == replica_message_id
+                ),
+            )
+            return result.scalar_one_or_none()
+
+    async def get_global_chat_replicas(
+        self,
+        origin_message_id: int,
+    ) -> dict[int, tuple[int, int]]:
+        async with self.async_session() as session:
+            result = await session.execute(
+                select(
+                    GlobalChatMessageReference.replica_guild_id,
+                    GlobalChatMessageReference.replica_channel_id,
+                    GlobalChatMessageReference.replica_message_id,
+                ).where(
+                    GlobalChatMessageReference.origin_message_id == origin_message_id
+                ),
+            )
+            return {
+                guild_id: (channel_id, message_id)
+                for guild_id, channel_id, message_id in result.all()
+            }
+
+    async def delete_global_chat_message_references(
+        self,
+        origin_message_id: int,
+    ) -> None:
+        async with self.async_session() as session, session.begin():
+            await session.execute(
+                delete(GlobalChatMessageReference).where(
+                    GlobalChatMessageReference.origin_message_id == origin_message_id,
+                ),
+            )
 
     async def find_random_partner(self, requester_guild_id: int) -> int | None:
         async with self.async_session() as session, session.begin():

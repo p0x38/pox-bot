@@ -241,15 +241,13 @@ class I18nManager:
         )
 
         base_language = str(
-            current_info.get('base_language')
-            or locale_tag.split('-', maxsplit=1)[0]
+            current_info.get('base_language') or locale_tag.split('-', maxsplit=1)[0]
         ).casefold()
 
         candidates = [selected_code]
 
         is_variant = (
-            current_info.get('kind') == 'variant'
-            or '-x-' in locale_tag.casefold()
+            current_info.get('kind') == 'variant' or '-x-' in locale_tag.casefold()
         )
 
         if is_variant:
@@ -258,9 +256,8 @@ class I18nManager:
                     code
                     for code, info in self.lang_info.items()
                     if info.get('kind') == 'region'
-                    and self._normalize_code(
-                        str(info.get('base_language', ''))
-                    ) == self._normalize_code(base_language)
+                    and self._normalize_code(str(info.get('base_language', '')))
+                    == self._normalize_code(base_language)
                     and info.get('default') is True
                 ),
                 None,
@@ -274,10 +271,10 @@ class I18nManager:
         return tuple(dict.fromkeys(candidates))
 
     def _localized_name(
-            self,
-            localized_names: Any,
-            current_locale: str,
-            fallback: str,
+        self,
+        localized_names: Any,
+        current_locale: str,
+        fallback: str,
     ) -> str:
         if not isinstance(localized_names, dict):
             return fallback
@@ -285,9 +282,7 @@ class I18nManager:
         normalized_names = {
             self._normalize_code(key): value
             for key, value in localized_names.items()
-            if isinstance(key, str)
-            and isinstance(value, str)
-            and value.strip()
+            if isinstance(key, str) and isinstance(value, str) and value.strip()
         }
 
         for candidate in self._get_fallback_candidates(current_locale):

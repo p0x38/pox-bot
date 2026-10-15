@@ -95,4 +95,3 @@ def test_clear_removes_disk_entries(tmp_path: Path) -> None:
         assert cache.get('first') is None
         assert cache.get('second') is None
         assert cache.get_count() == 0
-        

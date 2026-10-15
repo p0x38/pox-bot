@@ -11,9 +11,7 @@ class MemoryBackend:
             raise ValueError('max_entries must be positive')
 
         self._max_entries = max_entries
-        self._entries: OrderedDict[CacheKey, CacheEntry] = (
-            OrderedDict()
-        )
+        self._entries: OrderedDict[CacheKey, CacheEntry] = OrderedDict()
         self._lock = RLock()
 
     def get_entry(self, key: CacheKey) -> CacheEntry | None:
@@ -44,4 +42,3 @@ class MemoryBackend:
     def snapshot(self) -> list[tuple[CacheKey, CacheEntry]]:
         with self._lock:
             return list(self._entries.items())
-        

@@ -47,9 +47,7 @@ class Cache:
         self._lock = RLock()
         self._closed = False
 
-        self._temporary_directory: (
-            tempfile.TemporaryDirectory[str] | None
-        ) = None
+        self._temporary_directory: tempfile.TemporaryDirectory[str] | None = None
         self.directory: Path | None = None
 
         root: Path | None
@@ -170,9 +168,7 @@ class Cache:
             value=value,
             stored_at=stored_at,
             expires_at=(
-                stored_at + effective_ttl
-                if effective_ttl is not None
-                else None
+                stored_at + effective_ttl if effective_ttl is not None else None
             ),
             priority=priority,
         )
@@ -296,4 +292,3 @@ class Cache:
 
     def __exit__(self, *args: object) -> None:
         self.close()
-        

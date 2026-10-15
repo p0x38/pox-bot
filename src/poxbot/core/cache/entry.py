@@ -10,8 +10,4 @@ class CacheEntry:
     priority: int = 0
 
     def is_expired(self) -> bool:
-        return (
-            self.expires_at is not None
-            and time.time() >= self.expires_at
-        )
-    
+        return self.expires_at is not None and time.time() >= self.expires_at

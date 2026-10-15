@@ -8,11 +8,7 @@ class ModerationCommandTree(app_commands.CommandTree):
         if checker is None or not await checker(interaction.user.id):
             return True
 
-        translator = getattr(
-            interaction.client,
-            'internal_translator',
-            None
-        )
+        translator = getattr(interaction.client, 'internal_translator', None)
         key = 'error.custom.user_restricted_from_using_commands'
 
         message = (
@@ -22,7 +18,7 @@ class ModerationCommandTree(app_commands.CommandTree):
         )
 
         if message == key:
-            message = "You are restricted from using this bot."
+            message = 'You are restricted from using this bot.'
 
         await interaction.response.send_message(
             message,
