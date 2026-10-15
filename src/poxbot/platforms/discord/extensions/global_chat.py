@@ -40,6 +40,8 @@ from ....infrastructure.logger import get_logger
 from ....persistence.models.guild_settings_v2 import (
     AntiSpamFilter,
     GlobalChatDeliveryType,
+    GuildConfigV2,
+    ProfanityFilter,
 )
 from ....persistence.models.pydantic.blacklisted_item import (
     BlacklistItem,
@@ -151,7 +153,7 @@ class GlobalChatCog(commands.Cog):
                 await self.handle_spam(message)
                 return
 
-        await self.broadcast_global_message(message)
+        await self.broadcast_global_message(message, config=config)
 
     async def handle_spam(self, message: Message):
         try:
@@ -191,11 +193,14 @@ class GlobalChatCog(commands.Cog):
 
                 ext = tldextract.extract(url)
 
-                hostname = '.'.join(
-                    part
-                    for part in (ext.subdomain, ext.domain, ext.suffix)
-                    if part
-                ).casefold().rstrip('.')
+                hostname = (
+                    '.'
+                    .join(
+                        part for part in (ext.subdomain, ext.domain, ext.suffix) if part
+                    )
+                    .casefold()
+                    .rstrip('.')
+                )
 
                 domain = f'{ext.domain}.{ext.suffix}'.casefold().rstrip('.')
 
@@ -213,12 +218,10 @@ class GlobalChatCog(commands.Cog):
                         (x for x in self.blacklisted_domains if x == dummy_item), None
                     )
                     if actual_item:
-                        reason_names = ', '.join(
-                            [
-                                (r[0] if isinstance(r, tuple) else r).value
-                                for r in actual_item.reasons
-                            ]
-                        )
+                        reason_names = ', '.join([
+                            (r[0] if isinstance(r, tuple) else r).value
+                            for r in actual_item.reasons
+                        ])
                         censor_replacement = f'[URL Blocked: {reason_names}]'
                         self.logger.warning('Blocked %s; %s', domain, reason_names)
                     else:
@@ -261,18 +264,34 @@ class GlobalChatCog(commands.Cog):
             {'categories': combined},
         )
 
-    async def moderate_message(self, message: Message) -> ModerationResult:
+    async def moderate_message(
+        self,
+        message: Message,
+        *,
+        config: GuildConfigV2 | None = None,
+    ) -> ModerationResult:
         text_result = self.moderator.moderate_text(message.content)
-        if message.guild and self.bot.resources.profanity_filter.is_profane(
-            normalize_text(message.content),
-        ):
-            text_result = combine_results(
-                text_result,
-                ModerationResult.block(
-                    ModerationReason.PROFANITY,
-                    'Message contains profanity',
-                ),
-            )
+        if config and config.filtering.enabled:
+            sub_feats = config.filtering.filters
+
+            profanity = sub_feats.get('profanity')
+
+            if (
+                profanity
+                and profanity.enabled
+                and isinstance(profanity, GuildConfigV2)
+                and message.guild
+                and self.bot.resources.profanity_filter.is_profane(
+                    normalize_text(message.content),
+                )
+            ):
+                text_result = combine_results(
+                    text_result,
+                    ModerationResult.block(
+                        ModerationReason.PROFANITY,
+                        'Message contains profanity',
+                    ),
+                )
 
         if text_result.action == ModerationAction.BLOCK:
             return text_result
@@ -434,6 +453,7 @@ class GlobalChatCog(commands.Cog):
         self,
         original: Message,
         *,
+        config: GuildConfigV2 | None = None,
         approved: bool = False,
     ):
         if not original.guild:
@@ -441,7 +461,7 @@ class GlobalChatCog(commands.Cog):
         original_guild = original.guild
 
         if not approved:
-            moderation_result = await self.moderate_message(original)
+            moderation_result = await self.moderate_message(original, config=config)
             if moderation_result.action != ModerationAction.ALLOW:
                 self._record_counter(
                     name='bot_global_chat_messages_total',
@@ -565,12 +585,10 @@ class GlobalChatCog(commands.Cog):
                     for attachment in original.attachments:
                         if not attachment.content_type:
                             continue
-                        if not attachment.content_type.startswith(
-                            (
-                                'image',
-                                'video',
-                            )
-                        ):
+                        if not attachment.content_type.startswith((
+                            'image',
+                            'video',
+                        )):
                             continue
 
                         try:
@@ -950,6 +968,24 @@ class GlobalChatCog(commands.Cog):
                             'per': antispam.window_length,
                             'count': antispam.messages_per_window,
                         },
+                    ),
+                    inline=False,
+                )
+
+            profanity = filtering.filters.get('profanity')
+            if (
+                profanity
+                and profanity.enabled
+                and isinstance(profanity, ProfanityFilter)
+            ):
+                embed.add_field(
+                    name=self.bot.internal_translator.T(
+                        'label.global_chat_profanity_filter',
+                        loc,
+                    ),
+                    value=self.bot.internal_translator.T(
+                        'command.global_chat.status.labels.profanity_filter',
+                        loc,
                     ),
                     inline=False,
                 )

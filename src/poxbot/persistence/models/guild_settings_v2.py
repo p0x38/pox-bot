@@ -71,6 +71,11 @@ class AntiJoinFilter(BaseFilterData):
 
 
 @dataclass
+class ProfanityFilter(BaseFilterData):
+    use_in_globalchat: bool = True
+
+
+@dataclass
 class WelcomeConfig(BaseConfigData):
     channels: WelcomeChannels = field(default_factory=WelcomeChannels)
     data: WelcomeData = field(default_factory=WelcomeData)
@@ -227,6 +232,13 @@ class GuildConfigV2:
 
         if 'anti_spam' in sub_feats:
             filter_map['anti_spam'] = AntiSpamFilter(**sub_feats['anti_spam'])
+
+        if 'profanity' in sub_feats:
+            pf = sub_feats['profanity']
+            filter_map['profanity'] = ProfanityFilter(
+                enabled=pf.get('enabled', False),
+                use_in_globalchat=pf.get('global_chat', True),
+            )
 
         parsed['filtering'] = FilterConfig(
             enabled=filt_raw.get('enabled', False),
