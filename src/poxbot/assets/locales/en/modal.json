@@ -17,7 +17,12 @@
                 "label": "Give me a report for a bug and features!"
             }
         },
+        "disclaimer": {
+            "title": "Development Notice",
+            "description": "This bot is still under development and may behave unreliably. Its behavior and features can change at the developer's discretion, so it is not guaranteed to work correctly at all times."
+        },
         "data": {
+            "placeholder": "Choose a category below to display its information.",
             "context": {
                 "memory": {
                     "display": "Context Usage"

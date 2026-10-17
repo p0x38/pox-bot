@@ -95,12 +95,58 @@ class FeedbackModal(ui.Modal):
             )
 
 
-class DynamicInfoView(ui.View):
-    def __init__(self, cog: 'InfoCog', bot: PoxBot, locale: Locale | str):
+class DynamicInfoView(ui.LayoutView):
+    info_container = ui.Container(accent_color=Color.orange())
+    stats_container = ui.Container(accent_color=Color.blue())
+    selected_row = ui.ActionRow()
+    buttons_row = ui.ActionRow()
+
+    def __init__(
+        self,
+        cog: 'InfoCog',
+        bot: PoxBot,
+        locale: Locale | str,
+        *,
+        title: str,
+        description: str,
+        footer: str,
+    ):
         super().__init__(timeout=120)
+
         self.cog = cog
         self.bot = bot
         self.locale = locale
+
+        translator = bot.internal_translator.T
+
+        disclaimer_title = translator(
+            'modal.DynamicInfoView.disclaimer.title',
+            locale,
+        )
+
+        disclaimer_description = translator(
+            'modal.DynamicInfoView.disclaimer.description',
+            locale,
+        )
+
+        self.info_container.add_item(
+            ui.TextDisplay(f'## {title}\n{description}'),
+        )
+        self.info_container.add_item(ui.Separator())
+        self.info_container.add_item(
+            ui.TextDisplay(
+                f'### {disclaimer_title}\n{disclaimer_description}',
+            ),
+        )
+        self.info_container.add_item(ui.Separator())
+        self.info_container.add_item(
+            ui.TextDisplay(f'-# {footer}'),
+        )
+
+        self.data_display = ui.TextDisplay(
+            '',
+        )
+        self.stats_container.add_item(self.data_display)
 
         self.select_callback.options = [
             SelectOption(
@@ -153,36 +199,41 @@ class DynamicInfoView(ui.View):
             'modal.DynamicInfoView.buttons.suggest_button.label',
             locale,
         )
-        self.add_item(url_button)
-        self.add_item(issue_tracker_button)
 
-    @ui.select(min_values=1, max_values=1)
-    async def select_callback(self, interaction: Interaction, select: Select):
+        self.buttons_row.add_item(url_button)
+        self.buttons_row.add_item(issue_tracker_button)
+
+    @selected_row.select(min_values=1, max_values=1)
+    async def select_callback(
+        self,
+        interaction: Interaction,
+        select: Select,
+    ):
         await interaction.response.defer()
-        category = select.values[0]
 
+        category = select.values[0]
         stats_data = await self.get_stats_data(interaction)
         category_data = stats_data.get(category)
 
         if not category_data:
             return
 
-        embed = Embed(
-            title=category_data['title'],
-            color=Color.blue(),
-            timestamp=datetime.now(UTC),
-        )
+        lines = [f'## {category_data["title"]}']
+
         for field_info in category_data['fields'].values():
-            embed.add_field(
-                name=field_info['display'],
-                value=field_info['value'],
-                inline=True,
-            )
+            lines.append(f'**{field_info["display"]}**')
+            lines.append(str(field_info['value']))
 
-        await interaction.edit_original_response(embed=embed, view=self)
+        self.data_display.content = '\n\n'.join(lines)
 
-    @ui.button(style=ButtonStyle.primary)
-    async def feedback_button(self, interaction: Interaction, _button: ui.Button):
+        await interaction.edit_original_response(view=self)
+
+    @buttons_row.button(style=ButtonStyle.primary)
+    async def feedback_button(
+        self,
+        interaction: Interaction,
+        _button: ui.Button,
+    ):
         await interaction.response.send_modal(FeedbackModal(self.bot))
 
     async def get_stats_data(self, interaction: Interaction):
@@ -418,36 +469,33 @@ class InfoCog(commands.Cog):
     )
     async def retrieve_bot_information(self, interaction: Interaction):
         await interaction.response.defer(thinking=True)
-        loc = (
-            await self.bot.database.settings.get_locale(interaction)
-            if (
-                hasattr(self.bot, 'database')
-                and self.bot.database
-                and self.bot.database.settings
-            )
-            else interaction.locale
+
+        loc = await self.bot.get_locale(interaction)
+
+        title = self.bot.internal_translator.T(
+            'command.info.bot.embeds.default.title',
+            loc,
+        )
+        description = self.bot.internal_translator.T(
+            'command.info.bot.embeds.default.description',
+            loc,
+        )
+        footer = self.bot.internal_translator.T(
+            'command.info.bot.embeds.default.footer',
+            loc,
+            {'platform': platform.system()},
         )
 
-        view = DynamicInfoView(self, self.bot, loc)
-        e = Embed(
-            title=self.bot.internal_translator.T(
-                'command.info.bot.embeds.default.title',
-                loc,
-            ),
-            description=self.bot.internal_translator.T(
-                'command.info.bot.embeds.default.description',
-                loc,
-            ),
-        )
-        e.set_footer(
-            text=self.bot.internal_translator.T(
-                'command.info.bot.embeds.default.footer',
-                loc,
-                {'platform': platform.system()},
-            ),
+        view = DynamicInfoView(
+            self,
+            self.bot,
+            loc,
+            title=title,
+            description=description,
+            footer=footer,
         )
 
-        await interaction.followup.send(embed=e, view=view)
+        await interaction.followup.send(view=view)
 
     @group.command(
         name='ping',
