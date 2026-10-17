@@ -259,7 +259,11 @@ class P2PQuakeManager:
         self._session = session
         self._owns_session = session is None
         self._base_url = base_url.rstrip('/')
-        self._timeout = timeout or aiohttp.ClientTimeout(total=10)
+        self._timeout = timeout or aiohttp.ClientTimeout(
+            total=30,
+            connect=15,
+            sock_connect=10,
+        )
 
         self._cache_size = cache_size
         self._events: OrderedDict[str, P2PEvent] = OrderedDict()
@@ -416,9 +420,11 @@ class P2PQuakeManager:
                             break
             except asyncio.CancelledError:
                 raise
-            except (aiohttp.ClientError, TimeoutError, OSError):
+            except (aiohttp.ClientError, TimeoutError, OSError) as exc:
                 self.logger.warning(
-                    'P2PQuake WebSocket disconnected.',
+                    'P2PQuake WebSocket disconnected (%s): %s',
+                    type(exc).__name__,
+                    exc,
                     exc_info=True,
                 )
 
@@ -640,12 +646,10 @@ class P2PQuakeManager:
         params: list[tuple[str, str | int]] = [
             ('codes', code) for code in dict.fromkeys(codes)
         ]
-        params.extend(
-            [
-                ('limit', limit),
-                ('offset', offset),
-            ]
-        )
+        params.extend([
+            ('limit', limit),
+            ('offset', offset),
+        ])
 
         async with session.get(
             f'{self._base_url}/history',
