@@ -144,7 +144,10 @@ class DynamicInfoView(ui.LayoutView):
         )
 
         self.data_display = ui.TextDisplay(
-            '',
+            self.bot.internal_translator.T(
+                'modal.DynamicInfoView.data.placeholder',
+                locale,
+            )
         )
         self.stats_container.add_item(self.data_display)
 
