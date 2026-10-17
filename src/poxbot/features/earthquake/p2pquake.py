@@ -646,10 +646,12 @@ class P2PQuakeManager:
         params: list[tuple[str, str | int]] = [
             ('codes', code) for code in dict.fromkeys(codes)
         ]
-        params.extend([
-            ('limit', limit),
-            ('offset', offset),
-        ])
+        params.extend(
+            [
+                ('limit', limit),
+                ('offset', offset),
+            ]
+        )
 
         async with session.get(
             f'{self._base_url}/history',

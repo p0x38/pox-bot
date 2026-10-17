@@ -3,6 +3,7 @@ import hashlib
 import json
 import re
 import unicodedata
+from datetime import datetime
 from time import perf_counter
 from typing import Literal
 
@@ -14,6 +15,7 @@ from discord import (
     Forbidden,
     HTTPException,
     Interaction,
+    Member,
     Message,
     NotFound,
     RawBulkMessageDeleteEvent,
@@ -24,6 +26,7 @@ from discord import (
     app_commands,
 )
 from discord.ext import commands
+from pytz import UTC
 
 from ....application import PoxBot
 from ....features.moderation import (
@@ -184,6 +187,25 @@ class GlobalChatCog(commands.Cog):
             or not global_chat.enabled
             or message.channel.id != global_chat.channel_id
         ):
+            return
+
+        restrictions = await db_manager.guild.get_moderation_entries(
+            item_type='user',
+            item_scope=(message.guild.id, -1, -2),
+        )
+
+        now = datetime.now(UTC).timestamp()
+        restriction = next(
+            (
+                entry
+                for entry in restrictions
+                if entry.value == str(message.author.id)
+                and (entry.expires_at is None or entry.expires_at > now)
+            ),
+            None,
+        )
+
+        if restriction is not None:
             return
 
         filtering = config.filtering
@@ -461,7 +483,7 @@ class GlobalChatCog(commands.Cog):
             if (
                 profanity
                 and profanity.enabled
-                and isinstance(profanity, GuildConfigV2)
+                and isinstance(profanity, ProfanityFilter)
                 and message.guild
                 and self.bot.resources.profanity_filter.is_profane(
                     normalize_text(message.content),
@@ -643,57 +665,72 @@ class GlobalChatCog(commands.Cog):
         original_guild = original.guild
 
         if not approved:
-            moderation_result = await self.moderate_message(original, config=config)
-            if moderation_result.action != ModerationAction.ALLOW:
-                self._record_counter(
-                    name='bot_global_chat_messages_total',
-                    description=(
-                        'Total count of messages sent to the global chat system'
-                    ),
-                    labels={'guild_id': str(original_guild.id), 'status': 'filtered'},
+            is_whitelisted = (
+                config is not None
+                and original.author.id in config.global_chat.whitelisted_user_ids
+            )
+
+            if not approved and not is_whitelisted:
+                moderation_result = await self.moderate_message(
+                    original,
+                    config=config,
                 )
-                self.logger.warning(
-                    'Held global chat message %s in guild %s for moderation: %s',
-                    original.id,
-                    original_guild.id,
-                    ', '.join(moderation_result.reason_codes),
-                )
-                if (
-                    moderation_result.action == ModerationAction.REVIEW
-                    and self.bot.database.guild
-                ):
-                    await self.bot.database.guild.create_global_chat_moderation_case(
-                        message_id=original.id,
-                        guild_id=original_guild.id,
-                        channel_id=original.channel.id,
-                        author_id=original.author.id,
-                        reason_codes=list(moderation_result.reason_codes),
-                        message_fingerprint=self._message_fingerprint(original),
-                    )
-                await self._send_moderation_notice(original, moderation_result)
-                await self._send_audit_log(
-                    original_guild.id,
-                    title='Global chat moderation',
-                    description=(
-                        'A message was held for review.'
-                        if moderation_result.action == ModerationAction.REVIEW
-                        else 'A message was blocked by moderation.'
-                    ),
-                    color=(
-                        Color.orange()
-                        if moderation_result.action == ModerationAction.REVIEW
-                        else Color.red()
-                    ),
-                    fields={
-                        'Author ID': str(original.author.id),
-                        'Message': original.jump_url,
-                        'Action': moderation_result.action.name,
-                        'Reasons': (
-                            ', '.join(moderation_result.reason_codes) or 'Unknown'
+
+                if moderation_result.action != ModerationAction.ALLOW:
+                    self._record_counter(
+                        name='bot_global_chat_messages_total',
+                        description=(
+                            'Total count of messages sent to the global chat system'
                         ),
-                    },
-                )
-                return
+                        labels={
+                            'guild_id': str(original_guild.id),
+                            'status': 'filtered',
+                        },
+                    )
+                    self.logger.warning(
+                        'Held global chat message %s in guild %s for moderation: %s',
+                        original.id,
+                        original_guild.id,
+                        ', '.join(moderation_result.reason_codes),
+                    )
+                    if (
+                        moderation_result.action == ModerationAction.REVIEW
+                        and self.bot.database.guild
+                    ):
+                        await (
+                            self.bot.database.guild.create_global_chat_moderation_case(
+                                message_id=original.id,
+                                guild_id=original_guild.id,
+                                channel_id=original.channel.id,
+                                author_id=original.author.id,
+                                reason_codes=list(moderation_result.reason_codes),
+                                message_fingerprint=self._message_fingerprint(original),
+                            )
+                        )
+                    await self._send_moderation_notice(original, moderation_result)
+                    await self._send_audit_log(
+                        original_guild.id,
+                        title='Global chat moderation',
+                        description=(
+                            'A message was held for review.'
+                            if moderation_result.action == ModerationAction.REVIEW
+                            else 'A message was blocked by moderation.'
+                        ),
+                        color=(
+                            Color.orange()
+                            if moderation_result.action == ModerationAction.REVIEW
+                            else Color.red()
+                        ),
+                        fields={
+                            'Author ID': str(original.author.id),
+                            'Message': original.jump_url,
+                            'Action': moderation_result.action.name,
+                            'Reasons': (
+                                ', '.join(moderation_result.reason_codes) or 'Unknown'
+                            ),
+                        },
+                    )
+                    return
 
         profile = (
             await self.bot.database.user.get_full_profile(original.author.id)
@@ -1581,6 +1618,192 @@ class GlobalChatCog(commands.Cog):
                 'command.global_chat.review.responses.approved',
                 loc,
             ),
+        )
+
+    @group.command(
+        name='whitelist',
+        description=app_commands.locale_str(
+            'command.global_chat.whitelist.description'
+        ),
+    )
+    @app_commands.describe(
+        user=app_commands.locale_str('command.global_chat.whitelist.parameters.user')
+    )
+    @app_commands.checks.has_permissions(manage_guild=True)
+    async def globalchat_whitelist(
+        self,
+        interaction: Interaction,
+        user: Member,
+    ) -> None:
+        loc = await self.bot.get_locale(interaction)
+        await interaction.response.defer(ephemeral=True)
+
+        database = self.bot.database.guild
+        guild = interaction.guild
+
+        if not guild or not database:
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'error.embeds.database_not_available.description',
+                    loc,
+                ),
+            )
+
+        config = await database.get_config(guild.id)
+        global_chat = config.global_chat
+
+        if user.id in global_chat.whitelisted_user_ids:
+            await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'command.global_chat.whitelist.texts.already_whitelisted',
+                    loc,
+                    {'mention': user.mention},
+                ),
+                ephemeral=True,
+            )
+            return  # ruff: ignore[implicit-return-value]
+
+        global_chat.whitelisted_user_ids.append(user.id)
+        global_chat.whitelisted_user_ids.sort()
+        config.features['global_chat'] = global_chat
+
+        await database.update_config(guild.id, config)
+
+        await self._send_audit_log(
+            guild.id,
+            title='Global-chat whitelist updated',
+            description='A member was added to the moderation whitelist.',
+            color=Color.green(),
+            fields={
+                'Member': f'{user} ({user.id})',
+                'Changed by': (f'{interaction.user} ({interaction.user.id})'),
+            },
+        )
+
+        await interaction.followup.send(
+            self.bot.internal_translator.T(
+                'command.global_chat.whitelist.texts.whitelisted',
+                loc,
+                {'mention': user.mention},
+            ),
+            ephemeral=True,
+        )
+
+    @group.command(
+        name='unwhitelist',
+        description=app_commands.locale_str(
+            'command.global_chat.unwhitelist.description'
+        ),
+    )
+    @app_commands.describe(
+        user=app_commands.locale_str('command.global_chat.unwhitelist.parameters.user')
+    )
+    @app_commands.checks.has_permissions(manage_guild=True)
+    async def globalchat_unwhitelist(
+        self,
+        interaction: Interaction,
+        user: Member,
+    ) -> None:
+        loc = await self.bot.get_locale(interaction)
+        await interaction.response.defer(ephemeral=True)
+
+        database = self.bot.database.guild
+        guild = interaction.guild
+
+        if not guild or not database:
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'error.embeds.database_not_available.description',
+                    loc,
+                ),
+            )
+
+        config = await database.get_config(guild.id)
+        global_chat = config.global_chat
+
+        if user.id in global_chat.whitelisted_user_ids:
+            await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'command.global_chat.unwhitelist.texts.not_whitelisted',
+                    loc,
+                    {'mention': user.mention},
+                ),
+                ephemeral=True,
+            )
+            return  # ruff: ignore[implicit-return-value]
+
+        global_chat.whitelisted_user_ids.remove(user.id)
+        config.features['global_chat'] = global_chat
+
+        await database.update_config(guild.id, config)
+
+        await self._send_audit_log(
+            guild.id,
+            title='Global-chat whitelist updated',
+            description='A member was removed from the moderation whitelist.',
+            color=Color.orange(),
+            fields={
+                'Member': f'{user} ({user.id})',
+                'Changed by': (f'{interaction.user} ({interaction.user.id})'),
+            },
+        )
+
+        await interaction.followup.send(
+            self.bot.internal_translator.T(
+                'command.global_chat.unwhitelist.texts.unwhitelisted',
+                loc,
+                {'mention': user.mention},
+            ),
+            ephemeral=True,
+        )
+
+    @group.command(
+        name='whitelist_list',
+        description=app_commands.locale_str(
+            'command.global_chat.whitelist_list.description'
+        ),
+    )
+    @app_commands.checks.has_permissions(manage_guild=True)
+    async def globalchat_whitelist_list(
+        self,
+        interaction: Interaction,
+    ) -> None:
+        loc = await self.bot.get_locale(interaction)
+        await interaction.response.defer(ephemeral=True)
+
+        database = self.bot.database.guild
+        guild = interaction.guild
+
+        if not guild or not database:
+            return await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    'error.embeds.database_not_available.description',
+                    loc,
+                ),
+            )
+
+        config = await database.get_config(guild.id)
+        user_ids = sorted(config.global_chat.whitelisted_user_ids)
+
+        embed = Embed(
+            title=self.bot.internal_translator.T(
+                'command.global_chat.whitelist_list.embeds.default.title',
+                loc,
+            ),
+            description=(
+                '\n'.join(f'<@{user_id}> (`{user_id}`)' for user_id in user_ids)
+                if user_ids
+                else self.bot.internal_translator.T(
+                    'command.global_chat.whitelist_list.embeds.default.description',
+                    loc,
+                )
+            ),
+            color=Color.blurple(),
+        )
+
+        await interaction.followup.send(
+            embed=embed,
+            ephemeral=True,
         )
 
 

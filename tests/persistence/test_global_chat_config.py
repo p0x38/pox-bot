@@ -29,3 +29,24 @@ def test_global_chat_config_round_trip_preserves_settings():
     assert global_chat.webhook_url == 'https://example.com/webhook'
     assert global_chat.message_delivery_type == GlobalChatDeliveryType.webhook
     assert global_chat.silent is True
+
+
+def test_global_chat_whitelist_round_trip() -> None:
+    config = GuildConfigV2.from_dict(
+        {
+            'version': 4,
+            'features': {
+                'global_chat': {
+                    'enabled': True,
+                    'channel_id': 123,
+                    'whitelisted_user_ids': [111, 222],
+                },
+            },
+        },
+    )
+
+    assert config.global_chat.whitelisted_user_ids == [111, 222]
+
+    restored = GuildConfigV2.from_dict(config.to_dict())
+
+    assert restored.global_chat.whitelisted_user_ids == [111, 222]

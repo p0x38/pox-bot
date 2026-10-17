@@ -650,7 +650,8 @@
                 }
             },
             "labels": {
-                "anti_spam": "Anti-spam is on! You can send up to {count} messages per {per} :3"
+                "anti_spam": "Anti-spam is on! You can send up to {count} messages per {per} :3",
+                "profanity_filter": "Profanity filter is enabled"
             }
         },
         "texts": {
@@ -667,6 +668,35 @@
             },
             "parameters": {
                 "enabled": "Turn global chat on? (yes/no)"
+            }
+        },
+        "whitelist": {
+            "description": "Exempt a member from global-chat content moderation.",
+            "parameters": {
+                "user": "Member to whitelist."
+            },
+            "texts": {
+                "already_whitelisted": "{mention} is already whitelisted.",
+                "whitelisted": "{mention} is now whitelisted from global-chat content moderation."
+            }
+        },
+        "unwhitelist": {
+            "description": "Remove a member from the global-chat whitelist.",
+            "parameters": {
+                "user": "Member to remove from the whitelist."
+            },
+            "texts": {
+                "not_whitelisted": "{mention} is not whitelisted.",
+                "unwhitelisted": "{mention} was removed from the global-chat whitelist."
+            }
+        },
+        "whitelist_list": {
+            "description": "List members exempt from global-chat content moderation.",
+            "embeds": {
+                "default": {
+                    "title": "Global-chat moderation whitelist",
+                    "description": "No members are whitelisted."
+                }
             }
         }
     },

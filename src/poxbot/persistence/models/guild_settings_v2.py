@@ -116,6 +116,7 @@ class GlobalChatConfig(BaseConfigData):
     webhook_url: str | None = None
     silent: bool = True
     message_delivery_type: GlobalChatDeliveryType = GlobalChatDeliveryType.bot
+    whitelisted_user_ids: list[int] = field(default_factory=list)
 
 
 @dataclass
@@ -318,6 +319,11 @@ class GuildConfigV2:
             webhook_url=gc.get('webhook_url'),
             silent=gc.get('silent', True),
             message_delivery_type=delivery_type,
+            whitelisted_user_ids=[
+                int(user_id)
+                for user_id in (gc.get('whitelisted_user_ids') or [])
+                if str(user_id).isdigit()
+            ],
         )
 
         logs_raw = f.get('logs', {})

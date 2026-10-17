@@ -58,5 +58,6 @@
     "user_roles": "ロール",
     "user_stats": "ユーザー統計",
     "user_status": "ステータス",
+    "global_chat_profanity_filter": "Profanity filter",
     "user_wallet": "BOT通貨の残高"
 }
