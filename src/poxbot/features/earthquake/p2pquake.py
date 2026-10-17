@@ -30,6 +30,7 @@ from pydantic import (
     Field,
     TypeAdapter,
     ValidationError,
+    field_validator,
 )
 from pytz import timezone
 
@@ -218,6 +219,11 @@ class EEW(P2PData):
     issue: EEWIssue
     cancelled: bool
     areas: list[EEWArea] = Field(default_factory=list)
+
+    @field_validator('areas', mode='before')
+    @classmethod
+    def normalize_areas(cls, value: Any) -> Any:
+        return [] if value is None else value
 
 
 P2PEvent = Annotated[
