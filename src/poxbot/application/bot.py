@@ -264,8 +264,11 @@ class PoxBot(commands.AutoShardedBot):
     async def on_ready(self) -> None:
         with start_span('bot.ready'):
             self.logger.info(
-                'Discord bot is ready to process!\nGuilds: (%s)',
-                ', '.join([g.name for g in self.guilds]),
+                'Discord bot is ready to process!',
+            )
+            self.logger.info(
+                'Guilds:\n%s',
+                '\n'.join([f'"{g.name}"' for g in self.guilds]),
                 extra={
                     'guilds': len(self.guilds),
                     'users': sum(g.member_count or 0 for g in self.guilds),
