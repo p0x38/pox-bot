@@ -269,11 +269,19 @@ class PoxBot(commands.AutoShardedBot):
 
             guilds = sorted(
                 self.guilds,
-                key=lambda g: g.id,
+                key=lambda g: (
+                    g.me.joined_at.timestamp()
+                    if g.me
+                    and g.me.joined_at
+                    else g.id
+                ),
             )
             self.logger.info(
                 '### Guilds ###\n%s',
-                '\n'.join([f'{g.id}: "{g.name}"' for g in guilds]),
+                '\n'.join([
+                    f'{g.id}: "{g.name}" (Joined at {g.me.joined_at})'
+                    for g in guilds
+                ]),
                 extra={
                     'guilds': len(guilds),
                     'users': sum(g.member_count or 0 for g in guilds),
