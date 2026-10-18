@@ -1,5 +1,8 @@
+import asyncio
+from collections import defaultdict
+from collections.abc import Callable
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeVar
 
 import orjson
 from sqlalchemy import bindparam, delete, func, select, text, update
@@ -19,11 +22,17 @@ if TYPE_CHECKING:
     from ...application.bot import PoxBot
 
 
+_MutationResult = TypeVar('_MutationResult')
+
+
 class GuildSettingsDatabase(BaseDatabase):
     def __init__(self, bot: 'PoxBot', dsn: str):
         super().__init__(bot, dsn)
         self._cache = Cache(ttl=500)
         self._moderation_entries_cache = Cache(ttl=5)
+        self._config_locks: defaultdict[int, asyncio.Lock] = defaultdict(
+            asyncio.Lock,
+        )
 
     async def on_load(self):
         async with self.engine.begin() as conn:
@@ -555,3 +564,37 @@ class GuildSettingsDatabase(BaseDatabase):
             stmt = stmt.limit(1)
             result = await session.execute(stmt)
             return result.scalar_one_or_none()
+
+    async def mutate_config(
+        self,
+        guild_id: int,
+        mutation: Callable[
+            [GuildConfigV2],
+            tuple[_MutationResult, str | None],
+        ],
+    ) -> tuple[GuildConfigV2, _MutationResult, str | None]:
+        async with self._config_locks[guild_id]:
+            async with self.async_session() as session, session.begin():
+                db_record = await session.get(
+                    GuildSettings,
+                    guild_id,
+                    with_for_update=True,
+                )
+
+                if db_record is None:
+                    db_record = GuildSettings(
+                        guild_id=guild_id,
+                        config=GuildConfigV2(),
+                    )
+                    session.add(db_record)
+                    await session.flush()
+
+            config = db_record.config
+            result, message = mutation(config)
+
+            db_record.config = config
+            flag_modified(db_record, 'config')
+
+        self._cache.set(guild_id, config)
+
+        return config, result, message

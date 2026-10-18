@@ -52,6 +52,7 @@ from ....persistence.models.pydantic.blacklisted_item import (
     BlacklistItem,
 )
 from ....services.spam import AntiSpamManager
+from ..checks.is_owner import is_bot_owner
 
 
 class GlobalChatCog(commands.Cog):
@@ -1055,7 +1056,9 @@ class GlobalChatCog(commands.Cog):
         loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(ephemeral=True)
 
-        if not interaction.guild or not self.bot.database.guild:
+        database = self.bot.database.guild
+
+        if not interaction.guild or not database:
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
                     'error.embeds.database_not_available.description',
@@ -1065,12 +1068,13 @@ class GlobalChatCog(commands.Cog):
 
         guild_id = interaction.guild.id
 
-        config = await self.bot.database.guild.get_config(guild_id)
+        def configure(config: GuildConfigV2) -> tuple[bool, str | None]:
+            config.global_chat.channel_id = channel.id
+            config.global_chat.enabled = True
 
-        config.global_chat.channel_id = channel.id
-        config.global_chat.enabled = True
+            return True, None
 
-        await self.bot.database.guild.update_config(guild_id, config)
+        await database.mutate_config(guild_id, configure)
         await self._send_audit_log(
             guild_id,
             title='Global chat configured',
@@ -1106,7 +1110,9 @@ class GlobalChatCog(commands.Cog):
         loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(ephemeral=True)
 
-        if not interaction.guild or not self.bot.database.guild:
+        database = self.bot.database.guild
+
+        if not interaction.guild or not database:
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
                     'error.embeds.database_not_available.description',
@@ -1115,24 +1121,31 @@ class GlobalChatCog(commands.Cog):
             )
 
         guild_id = interaction.guild.id
-        config = await self.bot.database.guild.get_config(guild_id)
 
-        if not config.global_chat.channel_id:
+        def mutation(config: GuildConfigV2) -> tuple[bool, str | None]:
+            global_chat = config.global_chat
+
+            if not global_chat.enabled:
+                return False, "not_configured"
+
+            delivery_type = (
+                GlobalChatDeliveryType.webhook
+                if mode.lower() == 'webhook'
+                else GlobalChatDeliveryType.bot
+            )
+            config.global_chat.message_delivery_type = delivery_type
+            return True, None
+
+        _, updated, message = await database.mutate_config(guild_id, mutation)
+
+        if not updated and message == "not_configured":
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
                     'error.embeds.feature_not_available.description',
                     loc,
                 ),
             )
-
-        delivery_type = (
-            GlobalChatDeliveryType.webhook
-            if mode.lower() == 'webhook'
-            else GlobalChatDeliveryType.bot
-        )
-        config.global_chat.message_delivery_type = delivery_type
-
-        await self.bot.database.guild.update_config(guild_id, config)
+        
         await self._send_audit_log(
             guild_id,
             title='Global-chat delivery mode changed',
@@ -1158,7 +1171,10 @@ class GlobalChatCog(commands.Cog):
     async def globalchat_set_silent(self, interaction: Interaction, value: bool):
         loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(ephemeral=True)
-        if not interaction.guild or not self.bot.database.guild:
+
+        database = self.bot.database.guild
+
+        if not interaction.guild or not database:
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
                     'error.embeds.database_not_available.description',
@@ -1167,19 +1183,26 @@ class GlobalChatCog(commands.Cog):
             )
 
         guild_id = interaction.guild.id
-        config = await self.bot.database.guild.get_config(guild_id)
 
-        if not config.global_chat.channel_id:
+        def mutation(config: GuildConfigV2) -> tuple[bool, str | None]:
+            global_chat = config.global_chat
+
+            if not global_chat.enabled:
+                return False, "not_configured"
+            
+            config.global_chat.silent = value
+            return True, None
+
+        config, updated, message = await database.mutate_config(guild_id, mutation)
+
+        if not updated and message == "not_configured":
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
                     'error.embeds.feature_not_available.description',
                     loc,
                 ),
             )
-
-        config.global_chat.silent = value
-
-        await self.bot.database.guild.update_config(guild_id, config)
+        
         await self._send_audit_log(
             guild_id,
             title='Global-chat silent mode changed',
@@ -1209,7 +1232,9 @@ class GlobalChatCog(commands.Cog):
         loc = await self.bot.get_locale(interaction)
         await interaction.response.defer(ephemeral=True)
 
-        if not interaction.guild or not self.bot.database.guild:
+        database = self.bot.database.guild
+
+        if not interaction.guild or not database:
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
                     'error.embeds.database_not_available.description',
@@ -1218,20 +1243,26 @@ class GlobalChatCog(commands.Cog):
             )
 
         guild_id = interaction.guild.id
-        config = await self.bot.database.guild.get_config(guild_id)
 
-        if not config.global_chat.channel_id:
+        def toggle(config: GuildConfigV2) -> tuple[bool, str | None]:
+            global_chat = config.global_chat
+
+            if not global_chat.channel_id:
+                return False, "not_configured"
+
+            global_chat.enabled = not global_chat.enabled
+            return True, None
+
+        config, toggled, message = await database.mutate_config(guild_id, toggle)
+
+        if not toggled and message == "not_configured":
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
                     'error.embeds.feature_not_available.description',
                     loc,
                 ),
             )
-
-        current_status = config.global_chat.enabled
-        config.global_chat.enabled = not current_status
-
-        await self.bot.database.guild.update_config(guild_id, config)
+        
         await self._send_audit_log(
             guild_id,
             title='Global chat toggled',
@@ -1630,6 +1661,7 @@ class GlobalChatCog(commands.Cog):
         user=app_commands.locale_str('command.global_chat.whitelist.parameters.user')
     )
     @app_commands.checks.has_permissions(manage_guild=True)
+    @is_bot_owner()
     async def globalchat_whitelist(
         self,
         interaction: Interaction,
@@ -1648,11 +1680,23 @@ class GlobalChatCog(commands.Cog):
                     loc,
                 ),
             )
+        
+        guild_id = guild.id
 
-        config = await database.get_config(guild.id)
-        global_chat = config.global_chat
+        def mutation(config: GuildConfigV2) -> tuple[bool, str | None]:
+            global_chat = config.global_chat
 
-        if user.id in global_chat.whitelisted_user_ids:
+            if user.id in global_chat.whitelisted_user_ids:
+                return False, "no_change"
+
+            global_chat.whitelisted_user_ids.append(user.id)
+            global_chat.whitelisted_user_ids.sort()
+
+            return True, None
+
+        _, updated, message = await database.mutate_config(guild_id, mutation)
+
+        if not updated and message == "no_change":
             await interaction.followup.send(
                 self.bot.internal_translator.T(
                     'command.global_chat.whitelist.texts.already_whitelisted',
@@ -1662,12 +1706,6 @@ class GlobalChatCog(commands.Cog):
                 ephemeral=True,
             )
             return  # ruff: ignore[implicit-return-value]
-
-        global_chat.whitelisted_user_ids.append(user.id)
-        global_chat.whitelisted_user_ids.sort()
-        config.features['global_chat'] = global_chat
-
-        await database.update_config(guild.id, config)
 
         await self._send_audit_log(
             guild.id,
@@ -1718,10 +1756,24 @@ class GlobalChatCog(commands.Cog):
                 ),
             )
 
-        config = await database.get_config(guild.id)
-        global_chat = config.global_chat
+        guild_id = guild.id
 
-        if user.id in global_chat.whitelisted_user_ids:
+        def mutate(config: GuildConfigV2) -> tuple[bool, str | None]:
+            global_chat = config.global_chat
+
+            if user.id not in global_chat.whitelisted_user_ids:
+                return False, "no_change"
+
+            global_chat.whitelisted_user_ids.remove(user.id)
+
+            return True, None
+
+        _, updated, message = await database.mutate_config(
+            guild_id,
+            mutate,
+        )
+
+        if not updated and message == "no_change":
             await interaction.followup.send(
                 self.bot.internal_translator.T(
                     'command.global_chat.unwhitelist.texts.not_whitelisted',
@@ -1731,11 +1783,6 @@ class GlobalChatCog(commands.Cog):
                 ephemeral=True,
             )
             return  # ruff: ignore[implicit-return-value]
-
-        global_chat.whitelisted_user_ids.remove(user.id)
-        config.features['global_chat'] = global_chat
-
-        await database.update_config(guild.id, config)
 
         await self._send_audit_log(
             guild.id,

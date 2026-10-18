@@ -33,7 +33,11 @@ from ....features.markov.model import (
 )
 from ....features.markov.storage import MarkovDatabase
 from ....features.markov.tokenizer import MarkovTokenizer
-from ....persistence.models.guild_settings_v2 import ChatbotMethodType, MarkovModelScope
+from ....persistence.models.guild_settings_v2 import (
+    ChatbotMethodType,
+    GuildConfigV2,
+    MarkovModelScope,
+)
 from ....services.ai import LLMManager
 from ....shared.utils.app_path import app_dir
 
@@ -1330,34 +1334,27 @@ class ChatbotCog(commands.Cog):
             )
             return
 
-        config = await self.database.get_config(
-            interaction.guild.id,
-        )
-
-        chatbot = config.chatbot
-
         new_mode = ChatbotMethodType[mode.value]
 
-        if chatbot.type == new_mode:
+        def change_mode(
+            config: GuildConfigV2,
+        ) -> tuple[bool, str | None]:
+            if config.chatbot.type == new_mode:
+                return False, 'already_configured'
+
+            config.chatbot.type = new_mode
+            return True, None
+
+        _, _, message = await self.database.mutate_config(
+            interaction.guild.id,
+            change_mode,
+        )
+        if message == 'already_configured':
             await interaction.response.send_message(
                 f'Chatbot mode is already `{mode.name}`.',
                 ephemeral=True,
             )
             return
-
-        chatbot.type = new_mode
-
-        # TODO: Replace this with your actual config persistence method.
-        #
-        # Example:
-        # await self.database.save_config(
-        #     interaction.guild.id,
-        #     config,
-        # )
-        await self.database.update_config(
-            interaction.guild.id,
-            config,
-        )
 
         await interaction.response.send_message(
             f'Chatbot mode changed to `{mode.name}`.',
@@ -1385,19 +1382,18 @@ class ChatbotCog(commands.Cog):
             )
             return
 
-        config = await self.database.get_config(
+        def toggle_chatbot(
+            config: GuildConfigV2,
+        ) -> tuple[bool, str | None]:
+            config.chatbot.enabled = not config.chatbot.enabled
+            return config.chatbot.enabled, None
+
+        _, enabled, _ = await self.database.mutate_config(
             interaction.guild.id,
+            toggle_chatbot,
         )
 
-        chatbot = config.chatbot
-        chatbot.enabled = not chatbot.enabled
-
-        await self.database.update_config(
-            interaction.guild.id,
-            config,
-        )
-
-        state = 'enabled' if chatbot.enabled else 'disabled'
+        state = 'enabled' if enabled else 'disabled'
 
         await interaction.response.send_message(
             f'Chatbot has been **{state}**.',
@@ -1444,35 +1440,31 @@ class ChatbotCog(commands.Cog):
                 ephemeral=True,
             )
             return
-
-        config = await self.database.get_config(
-            interaction.guild.id,
-        )
-
-        chatbot = config.chatbot
         new_scope = MarkovModelScope(scope.value)
 
-        if chatbot.markov_scope == new_scope:
+        def change_scope(
+            config: GuildConfigV2,
+        ) -> tuple[bool, str | None]:
+            if config.chatbot.markov_scope == new_scope:
+                return False, 'already_configured'
+
+            config.chatbot.markov_scope = new_scope
+            return True, None
+
+        updated_config, _, message = await self.database.mutate_config(
+            interaction.guild.id,
+            change_scope,
+        )
+        if message == 'already_configured':
             await interaction.response.send_message(
                 f'Markov model scope is already `{scope.name}`.',
                 ephemeral=True,
             )
             return
 
-        chatbot.markov_scope = new_scope
-
         self.bot.logger.debug(
             'Updating chatbot scope: %s',
-            chatbot.markov_scope.value,
-        )
-
-        await self.database.update_config(
-            interaction.guild.id,
-            config,
-        )
-
-        updated_config = await self.database.get_config(
-            interaction.guild.id,
+            new_scope.value,
         )
 
         self.bot.logger.debug(

@@ -194,12 +194,18 @@ class GuildLogsCog(commands.Cog):
 
         guild_id = interaction.guild.id
         database = self.bot.database.guild
-        config = await database.get_config(guild_id)
-        config.logs.channel_id = channel.id
-        config.logs.enabled = True
-        config.logs.last_executor = interaction.user.id
-        config.logs.last_execution = datetime.now(UTC).timestamp()
-        await database.update_config(guild_id, config)
+        execution_time = datetime.now(UTC).timestamp()
+
+        def configure_logs(
+            config: GuildConfigV2,
+        ) -> tuple[bool, str | None]:
+            config.logs.channel_id = channel.id
+            config.logs.enabled = True
+            config.logs.last_executor = interaction.user.id
+            config.logs.last_execution = execution_time
+            return True, None
+
+        await database.mutate_config(guild_id, configure_logs)
 
         embed = Embed(
             title='Server audit logging configured',
@@ -234,29 +240,34 @@ class GuildLogsCog(commands.Cog):
 
         guild_id = interaction.guild.id
         database = self.bot.database.guild
-        config = await database.get_config(guild_id)
-        old_channel_id = config.logs.channel_id
+        channel = await self._resolve_log_channel(guild_id)
 
-        if old_channel_id is not None and config.logs.enabled:
-            channel = await self._resolve_log_channel(guild_id)
-            if channel is not None:
-                embed = Embed(
-                    title='Server audit logging disabled',
-                    description='A server manager disabled audit logging.',
-                    color=Color.dark_grey(),
-                    timestamp=datetime.now(UTC),
-                )
-                embed.add_field(
-                    name='Changed by',
-                    value=f'{interaction.user} (`{interaction.user.id}`)',
-                    inline=False,
-                )
-                await self._send_embed(channel, embed)
+        if channel is not None:
+            embed = Embed(
+                title='Server audit logging disabled',
+                description='A server manager disabled audit logging.',
+                color=Color.dark_grey(),
+                timestamp=datetime.now(UTC),
+            )
+            embed.add_field(
+                name='Changed by',
+                value=f'{interaction.user} (`{interaction.user.id}`)',
+                inline=False,
+            )
+            await self._send_embed(channel, embed)
 
-        config.logs.enabled = False
-        config.logs.last_executor = interaction.user.id
-        config.logs.last_execution = datetime.now(UTC).timestamp()
-        await database.update_config(guild_id, config)
+        execution_time = datetime.now(UTC).timestamp()
+
+        def disable_logs(
+                config: GuildConfigV2,
+        ) -> tuple[bool, str | None]:
+            config.logs.enabled = False
+            config.logs.last_executor = interaction.user.id
+            config.logs.last_execution = execution_time
+            return True, None
+
+        await database.mutate_config(guild_id, disable_logs)
+        
         await interaction.followup.send(
             'Server-wide audit logging is disabled.',
             ephemeral=True,
@@ -327,19 +338,15 @@ class GuildLogsCog(commands.Cog):
             ('Channel', f'<#{payload.channel_id}>'),
         ]
         if message is not None:
-            fields.extend(
-                [
-                    ('Author', f'{message.author} (`{message.author.id}`)'),
-                    ('Content', self._clip(message.content)),
-                ]
-            )
+            fields.extend([
+                ('Author', f'{message.author} (`{message.author.id}`)'),
+                ('Content', self._clip(message.content)),
+            ])
         else:
-            fields.append(
-                (
-                    'Content',
-                    'The message was not cached; content is unavailable.',
-                )
-            )
+            fields.append((
+                'Content',
+                'The message was not cached; content is unavailable.',
+            ))
 
         await self.log_event(
             guild,
@@ -500,12 +507,10 @@ class GuildLogsCog(commands.Cog):
         before_topic = getattr(before, 'topic', None)
         after_topic = getattr(after, 'topic', None)
         if before_topic != after_topic:
-            changes.extend(
-                [
-                    ('Topic before', self._clip(before_topic)),
-                    ('Topic after', self._clip(after_topic)),
-                ]
-            )
+            changes.extend([
+                ('Topic before', self._clip(before_topic)),
+                ('Topic after', self._clip(after_topic)),
+            ])
         if not changes:
             return
         await self.log_event(
@@ -542,19 +547,15 @@ class GuildLogsCog(commands.Cog):
         if before.name != after.name:
             changes.extend([('Name before', before.name), ('Name after', after.name)])
         if before.permissions != after.permissions:
-            changes.extend(
-                [
-                    ('Permissions before', str(before.permissions.value)),
-                    ('Permissions after', str(after.permissions.value)),
-                ]
-            )
+            changes.extend([
+                ('Permissions before', str(before.permissions.value)),
+                ('Permissions after', str(after.permissions.value)),
+            ])
         if before.color != after.color:
-            changes.extend(
-                [
-                    ('Color before', str(before.color)),
-                    ('Color after', str(after.color)),
-                ]
-            )
+            changes.extend([
+                ('Color before', str(before.color)),
+                ('Color after', str(after.color)),
+            ])
         if not changes:
             return
         await self.log_event(

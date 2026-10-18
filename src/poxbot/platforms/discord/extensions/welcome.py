@@ -6,6 +6,7 @@ from pytz import UTC
 
 from ....application import PoxBot
 from ....persistence.models import WelcomeChannels, WelcomeConfig
+from ....persistence.models.guild_settings_v2 import GuildConfigV2
 
 
 class WelcomeCog(commands.Cog):
@@ -168,7 +169,9 @@ class WelcomeCog(commands.Cog):
             )
             return await interaction.followup.send(embed=embed)
 
-        if not self.bot.database.guild:
+        database = self.bot.database.guild
+
+        if database is None:
             embed.title = self.bot.internal_translator.T(
                 'error.embeds.database_not_available.title',
                 loc,
@@ -180,18 +183,22 @@ class WelcomeCog(commands.Cog):
             return await interaction.followup.send(embed=embed)
 
         guild_id = interaction.guild.id
-        guild_settings = await self.bot.database.guild.get_config(guild_id)
 
-        if (
-            guild_settings.features
-            and 'welcome' in guild_settings.features
-            and isinstance(guild_settings.features['welcome'], WelcomeConfig)
-        ):
-            guild_settings.features['welcome'].enabled = enabled
-        else:
-            guild_settings.features['welcome'] = WelcomeConfig(enabled=enabled)
+        def update_welcome(
+                config: GuildConfigV2,
+        ) -> tuple[bool, str | None]:
+            if (
+                config.features
+                and 'welcome' in config.features
+                and isinstance(config.features['welcome'], WelcomeConfig)
+            ):
+                config.features['welcome'].enabled = enabled
+            else:
+                config.features['welcome'] = WelcomeConfig(enabled=enabled)
 
-        await self.bot.database.guild.update_config(guild_id, guild_settings)
+            return True, None
+
+        await database.mutate_config(guild_id, update_welcome)
 
         embed.title = self.bot.internal_translator.T(
             'command.welcome.toggle.embeds.default.title',
@@ -231,7 +238,9 @@ class WelcomeCog(commands.Cog):
             )
             return await interaction.followup.send(embed=embed)
 
-        if not self.bot.database.guild:
+        database = self.bot.database.guild
+
+        if database is None:
             embed.title = self.bot.internal_translator.T(
                 'error.embeds.database_not_available.title',
                 loc,
@@ -243,20 +252,24 @@ class WelcomeCog(commands.Cog):
             return await interaction.followup.send(embed=embed)
 
         guild_id = interaction.guild.id
-        guild_settings = await self.bot.database.guild.get_config(guild_id)
 
-        if (
-            guild_settings.features
-            and 'welcome' in guild_settings.features
-            and isinstance(guild_settings.features['welcome'], WelcomeConfig)
-        ):
-            guild_settings.features['welcome'].channels.join = channel.id
-        else:
-            guild_settings.features['welcome'] = WelcomeConfig(
-                channels=WelcomeChannels(join=channel.id),
-            )
+        def set_join_channel(
+                config: GuildConfigV2,
+        ) -> tuple[bool, str | None]:
+            if (
+                config.features
+                and 'welcome' in config.features
+                and isinstance(config.features['welcome'], WelcomeConfig)
+            ):
+                config.features['welcome'].channels.join = channel.id
+            else:
+                config.features['welcome'] = WelcomeConfig(
+                    channels=WelcomeChannels(join=channel.id),
+                )
 
-        await self.bot.database.guild.update_config(guild_id, guild_settings)
+            return True, None
+
+        await database.mutate_config(guild_id, set_join_channel)
 
         embed.title = self.bot.internal_translator.T(
             'command.welcome.joinchannel.embeds.default.title',
@@ -296,7 +309,9 @@ class WelcomeCog(commands.Cog):
             )
             return await interaction.followup.send(embed=embed)
 
-        if not self.bot.database.guild:
+        database = self.bot.database.guild
+
+        if database is None:
             embed.title = self.bot.internal_translator.T(
                 'error.embeds.database_not_available.title',
                 loc,
@@ -308,20 +323,24 @@ class WelcomeCog(commands.Cog):
             return await interaction.followup.send(embed=embed)
 
         guild_id = interaction.guild.id
-        guild_settings = await self.bot.database.guild.get_config(guild_id)
 
-        if (
-            guild_settings.features
-            and 'welcome' in guild_settings.features
-            and isinstance(guild_settings.features['welcome'], WelcomeConfig)
-        ):
-            guild_settings.features['welcome'].channels.leave = channel.id
-        else:
-            guild_settings.features['welcome'] = WelcomeConfig(
-                channels=WelcomeChannels(join=channel.id),
-            )
+        def set_leave_channel(
+                config: GuildConfigV2,
+        ) -> tuple[bool, str | None]:
+            if (
+                config.features
+                and 'welcome' in config.features
+                and isinstance(config.features['welcome'], WelcomeConfig)
+            ):
+                config.features['welcome'].channels.leave = channel.id
+            else:
+                config.features['welcome'] = WelcomeConfig(
+                    channels=WelcomeChannels(leave=channel.id),
+                )
 
-        await self.bot.database.guild.update_config(guild_id, guild_settings)
+            return True, None
+
+        await database.mutate_config(guild_id, set_leave_channel)
 
         embed.title = self.bot.internal_translator.T(
             'command.welcome.leavechannel.embeds.default.title',

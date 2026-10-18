@@ -21,6 +21,7 @@ from ....persistence.models import (
     BlacklistEntryMatchType,
     WordFilter,
 )
+from ....persistence.models.guild_settings_v2 import GuildConfigV2
 from ....persistence.models.orm.moderation import ModerationEntry
 from ..checks.is_owner import is_bot_owner
 
@@ -367,8 +368,6 @@ class ModerationCog(commands.Cog):
 
             return interaction.followup.send(embed=embed)
 
-        config = await self.bot.database.guild.get_config(interaction.guild.id)
-
         normalized_trigger = trigger.lower()
         entries = await self.bot.database.guild.get_moderation_entries(
             item_type='word',
@@ -389,12 +388,19 @@ class ModerationCog(commands.Cog):
             embed.color = Color.red()
             return await interaction.followup.send(embed=embed)
 
-        word_filter = config.filtering.filters.get('word')
-        if not isinstance(word_filter, WordFilter):
-            word_filter = WordFilter(enabled=True)
-            config.filtering.filters['word'] = word_filter
+        def ensure_word_filter(
+                config: GuildConfigV2,
+        ) -> tuple[bool, str | None]:
+            if isinstance(config.filtering.filters.get('word'), WordFilter):
+                return False, None
 
-            await self.bot.database.guild.update_config(interaction.guild.id, config)
+            config.filtering.filters['word'] = WordFilter(enabled=True)
+            return True, None
+
+        await self.bot.database.guild.mutate_config(
+            interaction.guild.id,
+            ensure_word_filter,
+        )
 
         new_entry = await self.bot.database.guild.add_moderation_entry(
             item_type='word',
