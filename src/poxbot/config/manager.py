@@ -1,5 +1,6 @@
 import asyncio
 from pathlib import Path
+from typing import Any
 
 import aiofiles
 import orjson
@@ -7,6 +8,23 @@ from pydantic import ValidationError
 
 from ..shared.utils.app_path import app_dir
 from .schema import BotSettings
+
+
+def _merge_config(defaults: dict[str, Any], user: dict[str, Any]) -> dict[str, Any]:
+    """Merge user configuration over bundled defaults recursively."""
+    merged = defaults.copy()
+
+    for key, value in user.items():
+        if key not in defaults:
+            merged[key] = value
+        elif isinstance(defaults[key], dict) and isinstance(value, dict):
+            merged[key] = _merge_config(defaults[key], value)
+        elif value is None or not value or value == []:
+            continue
+        else:
+            merged[key] = value
+
+    return merged
 
 
 class ConfigManager:
@@ -64,6 +82,24 @@ class ConfigManager:
                 content = await f.read()
 
             data = await asyncio.to_thread(orjson.loads, content)
+
+            if not isinstance(data, dict):
+                raise RuntimeError("Config file must contain a JSON object.")
+
+            if path != self._bundled_path:
+                async with aiofiles.open(self._bundled_path, "rb") as f:
+                    default_content = await f.read()
+
+                defaults = await asyncio.to_thread(
+                    orjson.loads,
+                    default_content,
+                )
+
+                if not isinstance(defaults, dict):
+                    raise RuntimeError("Default config must contain a JSON object.")
+
+                data = _merge_config(defaults, data)
+
             return BotSettings.model_validate(data)
 
         except FileNotFoundError:

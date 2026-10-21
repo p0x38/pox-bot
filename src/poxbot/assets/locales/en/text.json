@@ -144,7 +144,7 @@
             "domestic_tsunami": {
                 "Checking": "JMA has been checking for tsunami warnings.",
                 "None": "No tsunami warnings are reported.",
-                "NonEffective": "No tsunami expected, although small sea level changes may be observed.",
+                "NonEffective": "No tsunami expected, although slight sea-level changes may be observed.",
                 "Unknown": "The tsunami warnings are not available to show.",
                 "Warning": "Tsunami warning has been issued.",
                 "Watch": "Tsunami watch has been issued."
@@ -179,10 +179,10 @@
                 },
                 "eew": {
                     "arrival_time": "Expected arrival of strong shaking",
-                    "cancelled_description": "This warning has been cancelled.",
-                    "cancelled_title": "Emergency Earthquake Warning cancelled",
+                    "cancelled_description": "JMA has cancelled the EEW.",
+                    "cancelled_title": "Emergency Earthquake Warning (cancelled)",
                     "depth": "Depth",
-                    "description": "An Emergency Earthquake Warning has been issued.",
+                    "description": "An earthquake has just occurred. Stay calm and secure your personal safety.",
                     "epicenter": "Epicenter",
                     "estimated_arrival": "Estimated arrival",
                     "issue_time": "Report time",
@@ -199,10 +199,10 @@
                     "predicted_intensity": "Estimated intensity",
                     "report_number": "Report number",
                     "test_description": "This is a test message.",
-                    "test_title": "Emergency Earthquake Warning (test)",
-                    "title": "Emergency Earthquake Warning"
+                    "test_title": "Earthquake Early Warning (test)",
+                    "title": "Earthquake Early Warning"
                 },
-                "footer": "📢 Japan Meteorological Agency • 🔗 P2P地震情報",
+                "footer": "📢 Issued by the Japan Meteorological Agency (JMA) • 🔗 P2P地震情報",
                 "no_data": "No data is available.",
                 "rows": {
                     "cancelled": "Cancelled",
@@ -217,13 +217,13 @@
                     "tsunami": "Tsunami forecast"
                 },
                 "tsunami": {
-                    "arrival_time": "Expected arrival",
+                    "arrival_time": "Estimated initial tsunami arrival time",
                     "cancelled_description": "This tsunami information has been cancelled.",
                     "cancelled_title": "Tsunami forecast cancelled",
                     "forecast_areas": "Forecast areas",
                     "immediate": "Expected to arrive immediately",
                     "issue_time": "Report time",
-                    "max_height": "Maximum tsunami height",
+                    "max_height": "Estimated maximum tsunami height",
                     "more_areas": "{count} additional areas omitted",
                     "other_areas": "Other forecast areas",
                     "source": "Source",
@@ -272,14 +272,21 @@
             },
             "tsunami_first_height_conditions": {
                 "ただちに津波来襲と予測": "The tsunami is expected to arrive immediately",
-                "津波到達中と推測": "The tsunami is presumed to be arriving",
-                "第１波の到達を確認": "The arrival of the first wave has been confirmed"
+                "津波到達中と推測": "Tsunami arrival expected",
+                "第１波の到達を確認": "Arrival of initial tsunami confirmed"
             },
             "tsunami_grade": {
                 "MajorWarning": "Major Tsunami Warning",
                 "Unknown": "Unknown grade",
                 "Warning": "Tsunami Warning",
                 "Watch": "Tsunami Advisory"
+            },
+            "tsunami_grade_updates": {
+                "descriptions": {
+                    "downgrade": "The warning on %s was downgraded to %s.",
+                    "upgrade": "The warning on %s was upgraded to %s.",
+                    "lift": "The warning on %s was lifted."
+                }
             }
         }
     },
