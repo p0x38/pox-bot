@@ -510,8 +510,6 @@ class GlobalChatCog(commands.Cog):
                         not attachment.content_type
                         or not attachment.content_type.startswith((
                             'image/',
-                            'video/',
-                            'audio/',
                         ))
                     ):
                         continue
@@ -857,6 +855,7 @@ class GlobalChatCog(commands.Cog):
                         if not attachment.content_type.startswith((
                             'image',
                             'video',
+                            'audio',
                         )):
                             continue
 
