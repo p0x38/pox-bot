@@ -121,29 +121,15 @@ class ModerationCog(commands.Cog):
         )
         failed_guilds: list[str] = []
 
-        if scope != -2:
-            target_guilds = (
-                [interaction.guild]
-                if interaction.guild and scope == interaction.guild.id
-                else self.bot.guilds
+        if command_name == 'serverban' and interaction.guild is not None:
+            target_guild = interaction.guild
+            target = (
+                user
+                if isinstance(user, Member)
+                else target_guild.get_member(user.id)
             )
 
-            for target_guild in target_guilds:
-                if target_guild is None:
-                    continue
-
-                target = target_guild.get_member(user.id)
-                if (
-                    target is None
-                    and isinstance(user, Member)
-                    and interaction.guild is not None
-                    and target_guild.id == interaction.guild.id
-                ):
-                    target = user
-
-                if target is None:
-                    continue
-
+            if target is not None:
                 try:
                     await target.kick(reason=kick_reason)
                 except (Forbidden, HTTPException):
@@ -298,7 +284,7 @@ class ModerationCog(commands.Cog):
         now = utils.utcnow().timestamp()
         entries = await database.get_moderation_entries(
             item_type='user',
-            item_scope=(member.guild.id, -1),
+            item_scope=member.guild.id,
         )
 
         entry = next(

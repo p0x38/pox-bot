@@ -398,7 +398,8 @@ class GlobalChatCog(commands.Cog):
                 ext = tldextract.extract(url)
 
                 hostname = (
-                    '.'.join(
+                    '.'
+                    .join(
                         part for part in (ext.subdomain, ext.domain, ext.suffix) if part
                     )
                     .casefold()
@@ -421,12 +422,10 @@ class GlobalChatCog(commands.Cog):
                         (x for x in self.blacklisted_domains if x == dummy_item), None
                     )
                     if actual_item:
-                        reason_names = ', '.join(
-                            [
-                                (r[0] if isinstance(r, tuple) else r).value
-                                for r in actual_item.reasons
-                            ]
-                        )
+                        reason_names = ', '.join([
+                            (r[0] if isinstance(r, tuple) else r).value
+                            for r in actual_item.reasons
+                        ])
                         censor_replacement = f'[URL Blocked: {reason_names}]'
                         self.logger.warning('Blocked %s; %s', domain, reason_names)
                     else:
@@ -509,7 +508,11 @@ class GlobalChatCog(commands.Cog):
                 for attachment in message.attachments:
                     if (
                         not attachment.content_type
-                        or not attachment.content_type.startswith('image/')
+                        or not attachment.content_type.startswith((
+                            'image/',
+                            'video/',
+                            'audio/',
+                        ))
                     ):
                         continue
 
@@ -851,12 +854,10 @@ class GlobalChatCog(commands.Cog):
                     for attachment in original.attachments:
                         if not attachment.content_type:
                             continue
-                        if not attachment.content_type.startswith(
-                            (
-                                'image',
-                                'video',
-                            )
-                        ):
+                        if not attachment.content_type.startswith((
+                            'image',
+                            'video',
+                        )):
                             continue
 
                         try:
