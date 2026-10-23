@@ -316,7 +316,7 @@ class GuildConfigV2:
         )
 
         gc = f.get('global_chat', {})
-        delivery_type_raw = gc.get('message_delivery_type', gc.get('delivery_type', 0))
+        delivery_type_raw = gc.get('message_delivery_type', gc.get('delivery_type', 1))
         try:
             delivery_type = GlobalChatDeliveryType(delivery_type_raw)
         except ValueError:
@@ -327,7 +327,7 @@ class GuildConfigV2:
                 else:
                     delivery_type = GlobalChatDeliveryType.bot
             else:
-                delivery_type = GlobalChatDeliveryType.bot
+                delivery_type = GlobalChatDeliveryType.webhook
 
         parsed['global_chat'] = GlobalChatConfig(
             enabled=gc.get('enabled', False),

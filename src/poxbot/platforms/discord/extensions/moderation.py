@@ -9,6 +9,7 @@ from discord import (
     Interaction,
     Member,
     Message,
+    User,
     app_commands,
     utils,
 )
@@ -41,7 +42,7 @@ class ModerationCog(commands.Cog):
     async def _add_user_restriction(
         self,
         interaction: Interaction,
-        user: Member,
+        user: User | Member,
         *,
         scope: int,
         command_name: str,
@@ -131,11 +132,14 @@ class ModerationCog(commands.Cog):
                 if target_guild is None:
                     continue
 
-                target = (
-                    user
-                    if interaction.guild and target_guild.id == interaction.guild.id
-                    else target_guild.get_member(user.id)
-                )
+                target = target_guild.get_member(user.id)
+                if (
+                    target is None
+                    and isinstance(user, Member)
+                    and interaction.guild is not None
+                    and target_guild.id == interaction.guild.id
+                ):
+                    target = user
 
                 if target is None:
                     continue
@@ -653,7 +657,7 @@ class ModerationCog(commands.Cog):
     async def global_ban(
         self,
         interaction: Interaction,
-        user: Member,
+        user: User,
         until: app_commands.Timestamp | None = None,
         reason: str | None = None,
     ) -> None:
@@ -679,7 +683,7 @@ class ModerationCog(commands.Cog):
     async def bot_ban(
         self,
         interaction: Interaction,
-        user: Member,
+        user: User,
         until: app_commands.Timestamp | None = None,
         reason: str | None = None,
     ) -> None:
