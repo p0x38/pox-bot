@@ -389,12 +389,17 @@ class ModerationCog(commands.Cog):
             return await interaction.followup.send(embed=embed)
 
         def ensure_word_filter(
-                config: GuildConfigV2,
+            config: GuildConfigV2,
         ) -> tuple[bool, str | None]:
-            if isinstance(config.filtering.filters.get('word'), WordFilter):
-                return False, None
+            filtering = config.filtering
+            filtering.enabled = True
 
-            config.filtering.filters['word'] = WordFilter(enabled=True)
+            word_filter = filtering.filters.get('word')
+            if isinstance(word_filter, WordFilter):
+                word_filter.enabled = True
+                return True, None
+
+            filtering.filters['word'] = WordFilter(enabled=True)
             return True, None
 
         await self.bot.database.guild.mutate_config(

@@ -485,6 +485,7 @@ class GlobalChatCog(commands.Cog):
                 profanity
                 and profanity.enabled
                 and isinstance(profanity, ProfanityFilter)
+                and profanity.use_in_globalchat
                 and message.guild
                 and self.bot.resources.profanity_filter.is_profane(
                     normalize_text(message.content),
@@ -1126,7 +1127,7 @@ class GlobalChatCog(commands.Cog):
             global_chat = config.global_chat
 
             if not global_chat.enabled:
-                return False, "not_configured"
+                return False, 'not_configured'
 
             delivery_type = (
                 GlobalChatDeliveryType.webhook
@@ -1138,14 +1139,14 @@ class GlobalChatCog(commands.Cog):
 
         _, updated, message = await database.mutate_config(guild_id, mutation)
 
-        if not updated and message == "not_configured":
+        if not updated and message == 'not_configured':
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
                     'error.embeds.feature_not_available.description',
                     loc,
                 ),
             )
-        
+
         await self._send_audit_log(
             guild_id,
             title='Global-chat delivery mode changed',
@@ -1188,21 +1189,21 @@ class GlobalChatCog(commands.Cog):
             global_chat = config.global_chat
 
             if not global_chat.enabled:
-                return False, "not_configured"
-            
+                return False, 'not_configured'
+
             config.global_chat.silent = value
             return True, None
 
         config, updated, message = await database.mutate_config(guild_id, mutation)
 
-        if not updated and message == "not_configured":
+        if not updated and message == 'not_configured':
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
                     'error.embeds.feature_not_available.description',
                     loc,
                 ),
             )
-        
+
         await self._send_audit_log(
             guild_id,
             title='Global-chat silent mode changed',
@@ -1248,21 +1249,21 @@ class GlobalChatCog(commands.Cog):
             global_chat = config.global_chat
 
             if not global_chat.channel_id:
-                return False, "not_configured"
+                return False, 'not_configured'
 
             global_chat.enabled = not global_chat.enabled
             return True, None
 
         config, toggled, message = await database.mutate_config(guild_id, toggle)
 
-        if not toggled and message == "not_configured":
+        if not toggled and message == 'not_configured':
             return await interaction.followup.send(
                 self.bot.internal_translator.T(
                     'error.embeds.feature_not_available.description',
                     loc,
                 ),
             )
-        
+
         await self._send_audit_log(
             guild_id,
             title='Global chat toggled',
@@ -1680,14 +1681,14 @@ class GlobalChatCog(commands.Cog):
                     loc,
                 ),
             )
-        
+
         guild_id = guild.id
 
         def mutation(config: GuildConfigV2) -> tuple[bool, str | None]:
             global_chat = config.global_chat
 
             if user.id in global_chat.whitelisted_user_ids:
-                return False, "no_change"
+                return False, 'no_change'
 
             global_chat.whitelisted_user_ids.append(user.id)
             global_chat.whitelisted_user_ids.sort()
@@ -1696,7 +1697,7 @@ class GlobalChatCog(commands.Cog):
 
         _, updated, message = await database.mutate_config(guild_id, mutation)
 
-        if not updated and message == "no_change":
+        if not updated and message == 'no_change':
             await interaction.followup.send(
                 self.bot.internal_translator.T(
                     'command.global_chat.whitelist.texts.already_whitelisted',
@@ -1762,7 +1763,7 @@ class GlobalChatCog(commands.Cog):
             global_chat = config.global_chat
 
             if user.id not in global_chat.whitelisted_user_ids:
-                return False, "no_change"
+                return False, 'no_change'
 
             global_chat.whitelisted_user_ids.remove(user.id)
 
@@ -1773,7 +1774,7 @@ class GlobalChatCog(commands.Cog):
             mutate,
         )
 
-        if not updated and message == "no_change":
+        if not updated and message == 'no_change':
             await interaction.followup.send(
                 self.bot.internal_translator.T(
                     'command.global_chat.unwhitelist.texts.not_whitelisted',

@@ -5,7 +5,7 @@ from discord.ext import commands
 from pytz import UTC
 
 from ....application import PoxBot
-from ....persistence.models import WelcomeChannels, WelcomeConfig
+from ....persistence.models import WelcomeConfig
 from ....persistence.models.guild_settings_v2 import GuildConfigV2
 
 
@@ -185,17 +185,9 @@ class WelcomeCog(commands.Cog):
         guild_id = interaction.guild.id
 
         def update_welcome(
-                config: GuildConfigV2,
+            config: GuildConfigV2,
         ) -> tuple[bool, str | None]:
-            if (
-                config.features
-                and 'welcome' in config.features
-                and isinstance(config.features['welcome'], WelcomeConfig)
-            ):
-                config.features['welcome'].enabled = enabled
-            else:
-                config.features['welcome'] = WelcomeConfig(enabled=enabled)
-
+            config.welcome.enabled = enabled
             return True, None
 
         await database.mutate_config(guild_id, update_welcome)
@@ -254,19 +246,9 @@ class WelcomeCog(commands.Cog):
         guild_id = interaction.guild.id
 
         def set_join_channel(
-                config: GuildConfigV2,
+            config: GuildConfigV2,
         ) -> tuple[bool, str | None]:
-            if (
-                config.features
-                and 'welcome' in config.features
-                and isinstance(config.features['welcome'], WelcomeConfig)
-            ):
-                config.features['welcome'].channels.join = channel.id
-            else:
-                config.features['welcome'] = WelcomeConfig(
-                    channels=WelcomeChannels(join=channel.id),
-                )
-
+            config.welcome.channels.join = channel.id
             return True, None
 
         await database.mutate_config(guild_id, set_join_channel)
@@ -325,19 +307,9 @@ class WelcomeCog(commands.Cog):
         guild_id = interaction.guild.id
 
         def set_leave_channel(
-                config: GuildConfigV2,
+            config: GuildConfigV2,
         ) -> tuple[bool, str | None]:
-            if (
-                config.features
-                and 'welcome' in config.features
-                and isinstance(config.features['welcome'], WelcomeConfig)
-            ):
-                config.features['welcome'].channels.leave = channel.id
-            else:
-                config.features['welcome'] = WelcomeConfig(
-                    channels=WelcomeChannels(leave=channel.id),
-                )
-
+            config.welcome.channels.leave = channel.id
             return True, None
 
         await database.mutate_config(guild_id, set_leave_channel)

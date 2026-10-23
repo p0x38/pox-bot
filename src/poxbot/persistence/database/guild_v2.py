@@ -589,12 +589,12 @@ class GuildSettingsDatabase(BaseDatabase):
                     session.add(db_record)
                     await session.flush()
 
-            config = db_record.config
-            result, message = mutation(config)
+                config = db_record.config
+                result, message = mutation(config)
 
-            db_record.config = config
-            flag_modified(db_record, 'config')
+                db_record.config = config
+                flag_modified(db_record, 'config')
 
-        self._cache.set(guild_id, config)
+            self._cache.set(guild_id, config)
 
-        return config, result, message
+            return config, result, message

@@ -84,10 +84,10 @@ class ConfigManager:
             data = await asyncio.to_thread(orjson.loads, content)
 
             if not isinstance(data, dict):
-                raise RuntimeError("Config file must contain a JSON object.")
+                raise RuntimeError('Config file must contain a JSON object.')
 
             if path != self._bundled_path:
-                async with aiofiles.open(self._bundled_path, "rb") as f:
+                async with aiofiles.open(self._bundled_path, 'rb') as f:
                     default_content = await f.read()
 
                 defaults = await asyncio.to_thread(
@@ -96,7 +96,7 @@ class ConfigManager:
                 )
 
                 if not isinstance(defaults, dict):
-                    raise RuntimeError("Default config must contain a JSON object.")
+                    raise RuntimeError('Default config must contain a JSON object.')
 
                 data = _merge_config(defaults, data)
 

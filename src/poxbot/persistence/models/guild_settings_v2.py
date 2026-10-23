@@ -92,7 +92,7 @@ class LevelingConfig(BaseConfigData):
 class FilterConfig(BaseConfigData):
     filters: dict[
         str,
-        BaseFilterData | AntiSpamFilter | WordFilter | AntiJoinFilter,
+        BaseFilterData | AntiSpamFilter | WordFilter | AntiJoinFilter | ProfanityFilter,
     ] = field(
         default_factory=dict,
     )
@@ -161,35 +161,47 @@ class GuildConfigV2:
     def filtering(self) -> FilterConfig:
         feat = self.features.get('filtering')
         if not isinstance(feat, FilterConfig):
-            return FilterConfig()
+            feat = FilterConfig()
+
+            self.features['filtering'] = feat
         return feat
 
     @property
     def leveling(self) -> LevelingConfig:
         feat = self.features.get('leveling')
         if not isinstance(feat, LevelingConfig):
-            return LevelingConfig()
+            feat = LevelingConfig()
+
+            self.features['leveling'] = feat
         return feat
 
     @property
     def welcome(self) -> WelcomeConfig:
         feat = self.features.get('welcome_channel')
         if not isinstance(feat, WelcomeConfig):
-            return WelcomeConfig()
+            feat = WelcomeConfig()
+
+            self.features['welcome_channel'] = feat
         return feat
 
     @property
     def tickets(self) -> TicketConfig:
         feat = self.features.get('ticket_system')
         if not isinstance(feat, TicketConfig):
-            return TicketConfig()
+            feat = TicketConfig()
+
+            self.features['ticket_system'] = feat
         return feat
 
     @property
     def global_chat(self) -> GlobalChatConfig:
         feat = self.features.get('global_chat')
+
         if not isinstance(feat, GlobalChatConfig):
-            return GlobalChatConfig()
+            feat = GlobalChatConfig()
+
+            self.features['global_chat'] = feat
+
         return feat
 
     @property
@@ -204,14 +216,18 @@ class GuildConfigV2:
     def userphone(self) -> UserphoneConfig:
         feat = self.features.get('userphone')
         if not isinstance(feat, UserphoneConfig):
-            return UserphoneConfig()
+            feat = UserphoneConfig()
+
+            self.features['userphone'] = feat
         return feat
 
     @property
     def chatbot(self) -> ChatbotConfig:
         feat = self.features.get('chatbot')
         if not isinstance(feat, ChatbotConfig):
-            return ChatbotConfig()
+            feat = ChatbotConfig()
+
+            self.features['chatbot'] = feat
         return feat
 
     @classmethod
@@ -219,7 +235,7 @@ class GuildConfigV2:
         f = data.get('features', {})
         parsed = {}
 
-        w = f.get('welcome_channel', {})
+        w = f.get('welcome_channel', f.get('welcome', {}))
         parsed['welcome_channel'] = WelcomeConfig(
             enabled=w.get('enabled', False),
             last_execution=w.get('last_execution', datetime.now(UTC).timestamp()),
@@ -251,7 +267,9 @@ class GuildConfigV2:
             pf = sub_feats['profanity']
             filter_map['profanity'] = ProfanityFilter(
                 enabled=pf.get('enabled', False),
-                use_in_globalchat=pf.get('global_chat', True),
+                use_in_globalchat=pf.get(
+                    'use_in_globalchat', pf.get('global_chat', True)
+                ),
             )
 
         parsed['filtering'] = FilterConfig(
@@ -381,7 +399,14 @@ class GuildConfigV2:
             markov_max_tokens=chatbot_raw.get('markov_max_tokens', 50),
         )
 
-        return cls(version=data.get('version', 4), features=parsed)
+        return cls(
+            version=data.get('version', 4),
+            reaction_roles=[
+                ReactionRoleEntry(**entry)
+                for entry in (data.get('reaction_roles') or [])
+            ],
+            features=parsed,
+        )
 
     def to_dict(self) -> dict:
         return asdict(self)

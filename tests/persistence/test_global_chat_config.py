@@ -50,3 +50,15 @@ def test_global_chat_whitelist_round_trip() -> None:
     restored = GuildConfigV2.from_dict(config.to_dict())
 
     assert restored.global_chat.whitelisted_user_ids == [111, 222]
+
+
+def test_global_chat_config_persists_when_feature_is_missing():
+    config = GuildConfigV2()
+
+    config.global_chat.channel_id = 123
+    config.global_chat.enabled = True
+
+    restored = GuildConfigV2.from_dict(config.to_dict())
+
+    assert restored.global_chat.enabled is True
+    assert restored.global_chat.channel_id == 123

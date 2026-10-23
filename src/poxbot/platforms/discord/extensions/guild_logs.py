@@ -259,7 +259,7 @@ class GuildLogsCog(commands.Cog):
         execution_time = datetime.now(UTC).timestamp()
 
         def disable_logs(
-                config: GuildConfigV2,
+            config: GuildConfigV2,
         ) -> tuple[bool, str | None]:
             config.logs.enabled = False
             config.logs.last_executor = interaction.user.id
@@ -267,7 +267,7 @@ class GuildLogsCog(commands.Cog):
             return True, None
 
         await database.mutate_config(guild_id, disable_logs)
-        
+
         await interaction.followup.send(
             'Server-wide audit logging is disabled.',
             ephemeral=True,
@@ -338,15 +338,19 @@ class GuildLogsCog(commands.Cog):
             ('Channel', f'<#{payload.channel_id}>'),
         ]
         if message is not None:
-            fields.extend([
-                ('Author', f'{message.author} (`{message.author.id}`)'),
-                ('Content', self._clip(message.content)),
-            ])
+            fields.extend(
+                [
+                    ('Author', f'{message.author} (`{message.author.id}`)'),
+                    ('Content', self._clip(message.content)),
+                ]
+            )
         else:
-            fields.append((
-                'Content',
-                'The message was not cached; content is unavailable.',
-            ))
+            fields.append(
+                (
+                    'Content',
+                    'The message was not cached; content is unavailable.',
+                )
+            )
 
         await self.log_event(
             guild,
@@ -507,10 +511,12 @@ class GuildLogsCog(commands.Cog):
         before_topic = getattr(before, 'topic', None)
         after_topic = getattr(after, 'topic', None)
         if before_topic != after_topic:
-            changes.extend([
-                ('Topic before', self._clip(before_topic)),
-                ('Topic after', self._clip(after_topic)),
-            ])
+            changes.extend(
+                [
+                    ('Topic before', self._clip(before_topic)),
+                    ('Topic after', self._clip(after_topic)),
+                ]
+            )
         if not changes:
             return
         await self.log_event(
@@ -547,15 +553,19 @@ class GuildLogsCog(commands.Cog):
         if before.name != after.name:
             changes.extend([('Name before', before.name), ('Name after', after.name)])
         if before.permissions != after.permissions:
-            changes.extend([
-                ('Permissions before', str(before.permissions.value)),
-                ('Permissions after', str(after.permissions.value)),
-            ])
+            changes.extend(
+                [
+                    ('Permissions before', str(before.permissions.value)),
+                    ('Permissions after', str(after.permissions.value)),
+                ]
+            )
         if before.color != after.color:
-            changes.extend([
-                ('Color before', str(before.color)),
-                ('Color after', str(after.color)),
-            ])
+            changes.extend(
+                [
+                    ('Color before', str(before.color)),
+                    ('Color after', str(after.color)),
+                ]
+            )
         if not changes:
             return
         await self.log_event(
