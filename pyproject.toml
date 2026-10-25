@@ -110,6 +110,9 @@ poxbot = "poxbot.__main__:main"
 managed = true
 default-groups = "all"
 conflicts = [[{ extra = "cpu" }, { extra = "gpu" }]]
+override-dependencies = [
+    "PyNaCl>=1.6.2,<1.7",
+]
 
 [tool.uv.sources]
 pyicu = [
