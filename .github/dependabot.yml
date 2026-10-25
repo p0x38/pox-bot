@@ -5,9 +5,18 @@
 
 version: 2
 
+registries:
+  pygent-gitlab:
+    type: python-index
+    url: https://gitlab.com/api/v4/projects/86082729/packages/pypi/simple
+    username: ${{ secrets.PYGENT_GITLAB_USERNAME }}
+    password: ${{ secrets.PYGENT_GITLAB_TOKEN }}
+
 updates:
     - package-ecosystem: "uv"
       directory: "/"
+      registries:
+        - pygent-gitlab
       schedule:
           interval: "weekly"
 
