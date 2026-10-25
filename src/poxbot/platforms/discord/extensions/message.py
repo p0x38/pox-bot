@@ -1,5 +1,6 @@
 import random
 import textwrap
+from collections import Counter
 
 import discord
 from aiocache import cached
@@ -112,56 +113,84 @@ class MessageCog(commands.Cog):
             raise
 
     @group.command(
-        name='mass_delete',
-        description=app_commands.locale_str('command.message.mass_delete.description'),
+        name='purge',
+        description=app_commands.locale_str(
+            'command.message.purge.description',
+        ),
     )
     @app_commands.describe(
-        limit=app_commands.locale_str('command.message.mass_delete.parameters.limit'),
-    )
-    @app_commands.checks.has_permissions(manage_channels=True, manage_messages=True)
-    @app_commands.guild_only()
-    async def mass_delete_messages(
-        self,
-        interaction: Interaction,
-        limit: int | None = 100,
-    ):
-        await interaction.response.defer()
-
-        if limit is None:
-            limit = 100
-
-        def check_messages(m):
-            return m != interaction.message
-
-        if isinstance(interaction.channel, discord.TextChannel):
-            while True:
-                deleted = await interaction.channel.purge(
-                    limit=limit,
-                    check=check_messages,
-                )
-                if len(deleted) < limit:
-                    break
-
-            await interaction.followup.send(f'Deleted {limit} messages.')
-
-    @group.command(
-        name='purge',
-        description=app_commands.locale_str('command.message.purge.description'),
+        limit=app_commands.locale_str(
+            "command.message.purge.parameters.limit",
+        ),
+        all_messages=app_commands.locale_str(
+            "command.message.purge.parameters.all_messages",
+        ),
     )
     @app_commands.checks.has_permissions(manage_messages=True)
     @app_commands.guild_only()
-    async def purge_messages(self, interaction: Interaction, limit: int | None = 100):
-        await interaction.response.defer()
+    async def purge_messages(
+        self,
+        interaction: Interaction,
+        limit: app_commands.Range[int, 1, 100] = 100,
+        all_messages: bool = False,
+    ):
+        channel = interaction.channel
 
-        def check_messages(m):
-            return not interaction.message
-
-        if isinstance(interaction.channel, discord.TextChannel):
-            deleted = await interaction.channel.purge(
-                limit=limit if limit is not None else 100,
-                check=check_messages,
+        if not isinstance(channel, discord.TextChannel):
+            await interaction.response.send_message(
+                "This command can only be used in a text channel.",
+                ephemeral=True,
             )
-            await interaction.followup.send(f'Purged {len(deleted)} messages.')
+            return
+
+        if all_messages and not interaction.permissions.manage_channels:
+            await interaction.response.send_message(
+                "You need the Manage Channels permissions to purge "
+                "the entire channel.",
+                ephemeral=True,
+            )
+            return
+
+        await interaction.response.defer()
+        response_message = await interaction.original_response()
+
+        deleted = await channel.purge(
+            limit=None if all_messages else limit,
+            before=response_message,
+        )
+
+        response = f"Deleted {len(deleted)} messages."
+
+        if all_messages and deleted:
+            user_counts = Counter(
+                message.author.name for message in deleted
+            )
+
+            breakdown = "\n".join(
+                f"- {user}: {count}"
+                for user, count in user_counts.items()
+            )
+
+            response = f"{response}\n\n{breakdown}"
+
+        chunks: list[str] = []
+        current_chunk = ""
+
+        for line in response.splitlines():
+            if len(current_chunk) + len(line) + 1 > 1900:
+                if current_chunk:
+                    chunks.append(current_chunk)
+                current_chunk = line
+            else:
+                current_chunk = (
+                    f"{current_chunk}\n{line}" if current_chunk else line
+                )
+
+        if current_chunk:
+            chunks.append(current_chunk)
+
+        for chunk in chunks:
+            await interaction.followup.send(chunk)
 
     @group.command(
         name='direct_message',
@@ -351,9 +380,9 @@ class MessageCog(commands.Cog):
         messages = []
 
         if isinstance(interaction.channel, discord.TextChannel):
-            messages.extend(
-                [message async for message in interaction.channel.history(limit=1000)]
-            )
+            messages.extend([
+                message async for message in interaction.channel.history(limit=1000)
+            ])
 
         embed = Embed(
             title=self.bot.internal_translator.T(
