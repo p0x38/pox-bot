@@ -3178,7 +3178,7 @@ requires-dist = [
     { name = "panda", specifier = ">=0.3.1" },
     { name = "pet-pet-gif-fork", git = "https://github.com/p0x38/pet-pet-gif-fork.git" },
     { name = "pg8000", specifier = ">=1.31.5" },
-    { name = "pillow", specifier = ">=12.2.0,<13.0" },
+    { name = "pillow", specifier = ">=12.2.0,<14.0" },
     { name = "piper-tts", marker = "extra == 'piper'", specifier = ">=1.7.0" },
     { name = "pocket-tts", specifier = ">=3.0.2" },
     { name = "profanityfilter", specifier = ">=2.1.0" },
