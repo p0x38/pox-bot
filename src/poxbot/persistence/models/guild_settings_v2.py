@@ -71,6 +71,11 @@ class AntiJoinFilter(BaseFilterData):
 
 
 @dataclass
+class AntiMessageFilter(BaseFilterData):
+    blocked_user_ids: list[int] = field(default_factory=list)
+
+
+@dataclass
 class ProfanityFilter(BaseFilterData):
     use_in_globalchat: bool = True
 
@@ -92,7 +97,12 @@ class LevelingConfig(BaseConfigData):
 class FilterConfig(BaseConfigData):
     filters: dict[
         str,
-        BaseFilterData | AntiSpamFilter | WordFilter | AntiJoinFilter | ProfanityFilter,
+        BaseFilterData
+        | AntiSpamFilter
+        | WordFilter
+        | AntiJoinFilter
+        | ProfanityFilter
+        | AntiMessageFilter,
     ] = field(
         default_factory=dict,
     )
@@ -270,6 +280,13 @@ class GuildConfigV2:
                 use_in_globalchat=pf.get(
                     'use_in_globalchat', pf.get('global_chat', True)
                 ),
+            )
+
+        if 'anti_message' in sub_feats:
+            am = sub_feats['anti_message']
+            filter_map['anti_message'] = AntiMessageFilter(
+                enabled=am.get('enabled', False),
+                blocked_user_ids=am.get('blocked_user_ids', []),
             )
 
         parsed['filtering'] = FilterConfig(

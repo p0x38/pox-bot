@@ -9,6 +9,7 @@ from discord import (
     Interaction,
     Member,
     Message,
+    NotFound,
     User,
     app_commands,
     utils,
@@ -22,7 +23,11 @@ from ....persistence.models import (
     BlacklistEntryMatchType,
     WordFilter,
 )
-from ....persistence.models.guild_settings_v2 import GuildConfigV2
+from ....persistence.models.guild_settings_v2 import (
+    AntiMessageFilter,
+    GuildConfigV2,
+    ProfanityFilter,
+)
 from ....persistence.models.orm.moderation import ModerationEntry
 from ..checks.is_owner import is_bot_owner
 
@@ -252,6 +257,22 @@ class ModerationCog(commands.Cog):
                     await message.delete()
                     return
 
+        message_cfg = filtering.filters.get('anti_message')
+        if (
+            isinstance(message_cfg, AntiMessageFilter)
+            and message_cfg.enabled
+            and any(
+                user_id == message.author.id for user_id in message_cfg.blocked_user_ids
+            )
+        ):
+            try:
+                await message.delete()
+            except (Forbidden, NotFound, HTTPException):
+                self.bot.logger.exception(
+                    '[AntiSpam] Failed to delete message %s',
+                    message.id,
+                )
+
         spam_cfg = filtering.filters.get('anti_spam')
         if isinstance(spam_cfg, AntiSpamFilter) and spam_cfg.enabled:
             user_id = message.author.id
@@ -311,6 +332,315 @@ class ModerationCog(commands.Cog):
                 member.guild.id,
             )
 
+    @blacklist.command(
+        name='block_user_messages',
+        description=app_commands.locale_str(
+            'command.moderation.blacklist.block_user.messages.description',
+        ),
+    )
+    async def block_user_from_messaging(
+        self,
+        interaction: Interaction,
+        user: Member,
+    ) -> None:
+        loc = await self.bot.get_locale(interaction)
+        database = self.bot.database.guild
+
+        await interaction.response.defer()
+
+        if interaction.guild is None:
+            await interaction.followup.send(
+                embed=Embed(
+                    title=self.bot.internal_translator.T(
+                        'error.embeds.guild_only.title',
+                        loc,
+                    ),
+                    description=self.bot.internal_translator.T(
+                        'error.embeds.guild_only.description',
+                        loc,
+                    ),
+                    timestamp=datetime.now(UTC),
+                    color=Color.red(),
+                )
+            )
+            return
+
+        if database is None:
+            await interaction.followup.send(
+                embed=Embed(
+                    title=self.bot.internal_translator.T(
+                        'error.embeds.database_not_available.title',
+                        loc,
+                    ),
+                    description=self.bot.internal_translator.T(
+                        'error.embeds.database_not_available.description',
+                        loc,
+                    ),
+                    timestamp=datetime.now(UTC),
+                    color=Color.red(),
+                )
+            )
+            return
+
+        def mutate(
+            config: GuildConfigV2,
+        ) -> tuple[bool, str | None]:
+            anti_message = config.filtering.filters.get('anti_message')
+
+            if not isinstance(anti_message, AntiMessageFilter):
+                return False, 'not_configured'
+
+            if not anti_message.enabled:
+                return False, 'not_configured'
+
+            if user.id in anti_message.blocked_user_ids:
+                return False, 'already_blocked'
+
+            anti_message.blocked_user_ids.append(user.id)
+            return True, None
+
+        _, success, message = await database.mutate_config(
+            interaction.guild.id,
+            mutate,
+        )
+
+        if not success:
+            # Replace these keys with the corresponding keys in your locale files.
+            await interaction.followup.send(
+                embed=Embed(
+                    title=self.bot.internal_translator.T(
+                        'command.moderation.blacklist.block_user.messages.error.title',
+                        loc,
+                    ),
+                    description=self.bot.internal_translator.T(
+                        (
+                            'command.moderation.blacklist.block_user.messages.'
+                            f'{message or "not_configured"}'
+                        ),
+                        loc,
+                    ),
+                    timestamp=datetime.now(UTC),
+                    color=Color.red(),
+                )
+            )
+            return
+
+        await interaction.followup.send(
+            embed=Embed(
+                title=self.bot.internal_translator.T(
+                    'command.moderation.blacklist.block_user.messages.success.title',
+                    loc,
+                ),
+                description=self.bot.internal_translator.T(
+                    'command.moderation.blacklist.block_user.messages.success.description',
+                    loc,
+                ),
+                timestamp=datetime.now(UTC),
+                color=Color.green(),
+            )
+        )
+
+    @blacklist.command(
+        name='unblock_user_messages',
+        description=app_commands.locale_str(
+            'command.moderation.blacklist.unblock_user.messages.description',
+        ),
+    )
+    async def unblock_user_from_messaging(
+        self,
+        interaction: Interaction,
+        user: Member,
+    ) -> None:
+        loc = await self.bot.get_locale(interaction)
+        database = self.bot.database.guild
+
+        await interaction.response.defer(ephemeral=True)
+
+        if interaction.guild is None:
+            await interaction.followup.send(
+                embed=Embed(
+                    title=self.bot.internal_translator.T(
+                        'error.embeds.guild_only.title', loc
+                    ),
+                    description=self.bot.internal_translator.T(
+                        'error.embeds.guild_only.description', loc
+                    ),
+                    timestamp=datetime.now(UTC),
+                    color=Color.red(),
+                )
+            )
+            return
+
+        if database is None:
+            await interaction.followup.send(
+                embed=Embed(
+                    title=self.bot.internal_translator.T(
+                        'error.embeds.database_not_available.title', loc
+                    ),
+                    description=self.bot.internal_translator.T(
+                        'error.embeds.database_not_available.description', loc
+                    ),
+                    timestamp=datetime.now(UTC),
+                    color=Color.red(),
+                )
+            )
+            return
+
+        def mutate(
+            config: GuildConfigV2,
+        ) -> tuple[bool, str | None]:
+            anti_message = config.filtering.filters.get('anti_message')
+            if not isinstance(anti_message, AntiMessageFilter):
+                return False, 'not_configured'
+
+            if user.id not in anti_message.blocked_user_ids:
+                return False, 'not_blocked'
+
+            anti_message.blocked_user_ids.remove(user.id)
+            return True, None
+
+        _, success, reason = await database.mutate_config(
+            interaction.guild.id,
+            mutate,
+        )
+
+        if not success:
+            await interaction.followup.send(
+                embed=Embed(
+                    title=self.bot.internal_translator.T(
+                        'command.moderation.blacklist.unblock_user.messages.error.title',
+                        loc,
+                    ),
+                    description=self.bot.internal_translator.T(
+                        (
+                            'command.moderation.blacklist.unblock_user.messages.'
+                            f'{reason or "not_configured"}'
+                        ),
+                        loc,
+                    ),
+                    timestamp=datetime.now(UTC),
+                    color=Color.red(),
+                )
+            )
+            return
+
+        await interaction.followup.send(
+            embed=Embed(
+                title=self.bot.internal_translator.T(
+                    'command.moderation.blacklist.unblock_user.messages.success.title',
+                    loc,
+                ),
+                description=self.bot.internal_translator.T(
+                    'command.moderation.blacklist.unblock_user.messages.success.description',
+                    loc,
+                    {'user': user.mention},
+                ),
+                timestamp=datetime.now(UTC),
+                color=Color.green(),
+            )
+        )
+
+    @group.command(
+        name='toggle_global_chat_swear_filter',
+        description=app_commands.locale_str(
+            'command.moderation.toggle_global_chat_swear_filter.description',
+        ),
+    )
+    async def toggle_global_chat_swear_filter(
+        self,
+        interaction: Interaction,
+    ) -> None:
+        loc = await self.bot.get_locale(interaction, prefer_guild=True)
+        await interaction.response.defer(ephemeral=True)
+    
+        if interaction.guild is None:
+            await interaction.followup.send(
+                embed=Embed(
+                    title=self.bot.internal_translator.T(
+                        'error.embeds.guild_only.title', loc
+                    ),
+                    description=self.bot.internal_translator.T(
+                        'error.embeds.guild_only.description', loc
+                    ),
+                    timestamp=datetime.now(UTC),
+                    color=Color.red(),
+                )
+            )
+            return
+    
+        database = self.bot.database.guild
+        if database is None:
+            await interaction.followup.send(
+                embed=Embed(
+                    title=self.bot.internal_translator.T(
+                        'error.embeds.database_not_available.title', loc
+                    ),
+                    description=self.bot.internal_translator.T(
+                        'error.embeds.database_not_available.description', loc
+                    ),
+                    timestamp=datetime.now(UTC),
+                    color=Color.red(),
+                )
+            )
+            return
+    
+        def mutate(
+            config: GuildConfigV2,
+        ) -> tuple[bool, str | None]:
+            filtering = config.filtering
+            profanity = filtering.filters.get('profanity')
+    
+            if not isinstance(profanity, ProfanityFilter):
+                return False, 'not_configured'
+    
+            if not filtering.enabled or not profanity.enabled:
+                return False, 'not_configured'
+    
+            profanity.use_in_globalchat = not profanity.use_in_globalchat
+            return True, (
+                'enabled' if profanity.use_in_globalchat else 'disabled'
+            )
+    
+        _, success, status = await database.mutate_config(
+            interaction.guild.id,
+            mutate,
+        )
+    
+        if not success:
+            await interaction.followup.send(
+                embed=Embed(
+                    title=self.bot.internal_translator.T(
+                        'command.moderation.toggle_global_chat_swear_filter.error.title',
+                        loc,
+                    ),
+                    description=self.bot.internal_translator.T(
+                        'command.moderation.toggle_global_chat_swear_filter.error.not_configured',
+                        loc,
+                    ),
+                    timestamp=datetime.now(UTC),
+                    color=Color.red(),
+                )
+            )
+            return
+    
+        await interaction.followup.send(
+            embed=Embed(
+                title=self.bot.internal_translator.T(
+                    'command.moderation.toggle_global_chat_swear_filter.success.title',
+                    loc,
+                ),
+                description=self.bot.internal_translator.T(
+                    (
+                        'command.moderation.toggle_global_chat_swear_filter.'
+                        f'{status}'
+                    ),
+                    loc,
+                ),
+                timestamp=datetime.now(UTC),
+                color=Color.green(),
+            )
+        )
+    
     @word_group.command(
         name='add_word',
         description=app_commands.locale_str(
