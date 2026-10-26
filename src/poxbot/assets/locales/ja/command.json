@@ -1523,6 +1523,70 @@
             "parameters": {
                 "enabled": "ウェルカムメッセージを使う？ \n(はい/いいえ)"
             }
+        },
+        "set_join_message": {
+            "description": "参加時のカスタムメッセージを設定・リセットするよ！",
+            "embeds": {
+                "default": {
+                    "title": "参加メッセージを更新したよ！",
+                    "description": "カスタム参加メッセージを保存したよ！"
+                },
+                "reset": {
+                    "title": "参加メッセージをリセットしたよ！",
+                    "description": "通常のウェルカム埋め込みメッセージに戻したよ！"
+                }
+            },
+            "parameters": {
+                "template": "メッセージのテンプレート。省略するとリセットするよ！"
+            }
+        },
+        "set_leave_message": {
+            "description": "脱退時のカスタムメッセージを設定・リセットするよ！",
+            "embeds": {
+                "default": {
+                    "title": "脱退メッセージを更新したよ！",
+                    "description": "カスタム脱退メッセージを保存したよ！"
+                },
+                "reset": {
+                    "title": "脱退メッセージをリセットしたよ！",
+                    "description": "通常の脱退埋め込みメッセージに戻したよ！"
+                }
+            },
+            "parameters": {
+                "template": "メッセージのテンプレート。省略するとリセットするよ！"
+            }
+        },
+        "template": {
+            "embeds": {
+                "invalid": {
+                    "title": "メッセージテンプレートが正しくないよ！",
+                    "description": "{error}"
+                }
+            }
+        },
+        "test": {
+            "description": "参加・脱退メッセージをテスト送信するよ！",
+            "embeds": {
+                "sent": {
+                    "title": "テストメッセージを送信したよ！",
+                    "description": "{channel} にテストメッセージを送信したよ！"
+                },
+                "no_channel": {
+                    "title": "チャンネルが設定されていないよ！",
+                    "description": "テストする前に参加または脱退チャンネルを設定してね！"
+                },
+                "channel_unavailable": {
+                    "title": "チャンネルを利用できないよ！",
+                    "description": "設定されたテキストチャンネルが見つからないか、アクセスできないよ。チャンネルと権限を確認してね！"
+                },
+                "failed": {
+                    "title": "テスト送信に失敗したよ！",
+                    "description": "テストメッセージを送信できなかったよ。設定されたチャンネルの権限を確認してね！"
+                }
+            },
+            "parameters": {
+                "message_type": "参加メッセージと脱退メッセージのどちらをテストするか選んでね！"
+            }
         }
     }
 }

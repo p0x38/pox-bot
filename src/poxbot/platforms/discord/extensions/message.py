@@ -120,10 +120,10 @@ class MessageCog(commands.Cog):
     )
     @app_commands.describe(
         limit=app_commands.locale_str(
-            "command.message.purge.parameters.limit",
+            'command.message.purge.parameters.limit',
         ),
         all_messages=app_commands.locale_str(
-            "command.message.purge.parameters.all_messages",
+            'command.message.purge.parameters.all_messages',
         ),
     )
     @app_commands.checks.has_permissions(manage_messages=True)
@@ -138,15 +138,14 @@ class MessageCog(commands.Cog):
 
         if not isinstance(channel, discord.TextChannel):
             await interaction.response.send_message(
-                "This command can only be used in a text channel.",
+                'This command can only be used in a text channel.',
                 ephemeral=True,
             )
             return
 
         if all_messages and not interaction.permissions.manage_channels:
             await interaction.response.send_message(
-                "You need the Manage Channels permissions to purge "
-                "the entire channel.",
+                'You need the Manage Channels permissions to purge the entire channel.',
                 ephemeral=True,
             )
             return
@@ -159,22 +158,19 @@ class MessageCog(commands.Cog):
             before=response_message,
         )
 
-        response = f"Deleted {len(deleted)} messages."
+        response = f'Deleted {len(deleted)} messages.'
 
         if all_messages and deleted:
-            user_counts = Counter(
-                message.author.name for message in deleted
+            user_counts = Counter(message.author.name for message in deleted)
+
+            breakdown = '\n'.join(
+                f'- {user}: {count}' for user, count in user_counts.items()
             )
 
-            breakdown = "\n".join(
-                f"- {user}: {count}"
-                for user, count in user_counts.items()
-            )
-
-            response = f"{response}\n\n{breakdown}"
+            response = f'{response}\n\n{breakdown}'
 
         chunks: list[str] = []
-        current_chunk = ""
+        current_chunk = ''
 
         for line in response.splitlines():
             if len(current_chunk) + len(line) + 1 > 1900:
@@ -182,9 +178,7 @@ class MessageCog(commands.Cog):
                     chunks.append(current_chunk)
                 current_chunk = line
             else:
-                current_chunk = (
-                    f"{current_chunk}\n{line}" if current_chunk else line
-                )
+                current_chunk = f'{current_chunk}\n{line}' if current_chunk else line
 
         if current_chunk:
             chunks.append(current_chunk)
@@ -380,9 +374,9 @@ class MessageCog(commands.Cog):
         messages = []
 
         if isinstance(interaction.channel, discord.TextChannel):
-            messages.extend([
-                message async for message in interaction.channel.history(limit=1000)
-            ])
+            messages.extend(
+                [message async for message in interaction.channel.history(limit=1000)]
+            )
 
         embed = Embed(
             title=self.bot.internal_translator.T(

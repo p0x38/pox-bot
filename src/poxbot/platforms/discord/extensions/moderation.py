@@ -124,9 +124,7 @@ class ModerationCog(commands.Cog):
         if command_name == 'serverban' and interaction.guild is not None:
             target_guild = interaction.guild
             target = (
-                user
-                if isinstance(user, Member)
-                else target_guild.get_member(user.id)
+                user if isinstance(user, Member) else target_guild.get_member(user.id)
             )
 
             if target is not None:

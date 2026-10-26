@@ -1523,6 +1523,70 @@
             "parameters": {
                 "enabled": "Enable welcome message? (yes/no)"
             }
+        },
+        "set_join_message": {
+            "description": "Set or reset the custom join message.",
+            "embeds": {
+                "default": {
+                    "title": "Join message updated!",
+                    "description": "Your custom join message has been saved."
+                },
+                "reset": {
+                    "title": "Join message reset!",
+                    "description": "The default welcome embed will be used again."
+                }
+            },
+            "parameters": {
+                "template": "Template text. Omit this argument to reset the message."
+            }
+        },
+        "set_leave_message": {
+            "description": "Set or reset the custom leave message.",
+            "embeds": {
+                "default": {
+                    "title": "Leave message updated!",
+                    "description": "Your custom leave message has been saved."
+                },
+                "reset": {
+                    "title": "Leave message reset!",
+                    "description": "The default leave embed will be used again."
+                }
+            },
+            "parameters": {
+                "template": "Template text. Omit this argument to reset the message."
+            }
+        },
+        "template": {
+            "embeds": {
+                "invalid": {
+                    "title": "Invalid message template",
+                    "description": "{error}"
+                }
+            }
+        },
+        "test": {
+            "description": "Send a test join or leave message to the configured channel.",
+            "embeds": {
+                "sent": {
+                    "title": "Test message sent!",
+                    "description": "The test message was sent to {channel}."
+                },
+                "no_channel": {
+                    "title": "No channel configured",
+                    "description": "Configure a join or leave channel before testing."
+                },
+                "channel_unavailable": {
+                    "title": "Channel unavailable",
+                    "description": "I couldn't find an accessible text channel. Check the configured channel and my permissions."
+                },
+                "failed": {
+                    "title": "Test message failed",
+                    "description": "I couldn't send the test message. Check my permissions in the configured channel."
+                }
+            },
+            "parameters": {
+                "message_type": "Choose whether to test the join or leave message."
+            }
         }
     }
 }
