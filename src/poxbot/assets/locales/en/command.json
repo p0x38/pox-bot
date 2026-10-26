@@ -1085,6 +1085,34 @@
                         "restricted": "You are restricted from using this bot."
                     }
                 }
+            },
+            "block_user": {
+                "messages": {
+                    "description": "Blocks a member's messages in this server.",
+                    "error": {
+                        "title": "Unable to block member",
+                        "not_configured": "The anti-message filter is not configured or enabled for this server.",
+                        "already_blocked": "That member is already blocked."
+                    },
+                    "success": {
+                        "title": "Messages blocked",
+                        "description": "That member's messages will be deleted."
+                    }
+                }
+            },
+            "unblock_user": {
+                "messages": {
+                    "description": "Allows a previously blocked member to send messages again.",
+                    "error": {
+                        "title": "Unable to unblock member",
+                        "not_configured": "The anti-message filter is not configured or enabled for this server.",
+                        "not_blocked": "That member is not currently blocked."
+                    },
+                    "success": {
+                        "title": "Messages unblocked",
+                        "description": "That member can send messages again."
+                    }
+                }
             }
         },
         "description": "Moderation tools! >:D",
@@ -1103,6 +1131,18 @@
                     "description": "On or Off! :3"
                 }
             }
+        },
+        "toggle_global_chat_swear_filter": {
+            "description": "Toggles profanity filtering for global chat.",
+            "error": {
+                "title": "Unable to update filter",
+                "not_configured": "The anti-message filter is not configured or enabled for this server."
+            },
+            "success": {
+                "title": "Global-chat profanity filter"
+            },
+            "enabled": "Profanity filtering is enabled for global chat.",
+            "disabled": "Profanity filtering is disabled for global chat."
         }
     },
     "rating": {
