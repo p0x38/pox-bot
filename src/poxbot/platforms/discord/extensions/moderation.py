@@ -346,7 +346,7 @@ class ModerationCog(commands.Cog):
         loc = await self.bot.get_locale(interaction)
         database = self.bot.database.guild
 
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)
 
         if interaction.guild is None:
             await interaction.followup.send(
