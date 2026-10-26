@@ -261,17 +261,17 @@ class ModerationCog(commands.Cog):
         if (
             isinstance(message_cfg, AntiMessageFilter)
             and message_cfg.enabled
-            and any(
-                user_id == message.author.id for user_id in message_cfg.blocked_user_ids
-            )
+            and message.author.id in message_cfg.blocked_user_ids
         ):
             try:
                 await message.delete()
             except (Forbidden, NotFound, HTTPException):
                 self.bot.logger.exception(
-                    '[AntiSpam] Failed to delete message %s',
+                    '[AntiMessage] Failed to delete message %s',
                     message.id,
                 )
+            else:
+                return
 
         spam_cfg = filtering.filters.get('anti_spam')
         if isinstance(spam_cfg, AntiSpamFilter) and spam_cfg.enabled:
