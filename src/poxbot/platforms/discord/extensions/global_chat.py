@@ -43,6 +43,7 @@ from ....features.moderation.manager import (
 from ....features.moderation.normalization import normalize_text
 from ....infrastructure.logger import get_logger
 from ....persistence.models.guild_settings_v2 import (
+    AntiMessageFilter,
     AntiSpamFilter,
     GlobalChatDeliveryType,
     GuildConfigV2,
@@ -187,6 +188,16 @@ class GlobalChatCog(commands.Cog):
             not global_chat
             or not global_chat.enabled
             or message.channel.id != global_chat.channel_id
+        ):
+            return
+
+        filtering = config.filtering
+        anti_message_setting = filtering.filters.get('anti_message')
+        if (
+            filtering.enabled
+            and isinstance(anti_message_setting, AntiMessageFilter)
+            and anti_message_setting.enabled
+            and message.author.id in anti_message_setting.blocked_user_ids
         ):
             return
 
