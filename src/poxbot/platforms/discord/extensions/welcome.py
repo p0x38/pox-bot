@@ -113,7 +113,7 @@ class WelcomeCog(commands.Cog):
             channel_id = welcome.channels.join
             template = welcome.data.welcome_message
 
-        if not channel_id:
+        if not channel_id or channel_id == 0:
             return
 
         channel = self.bot.get_channel(channel_id)
@@ -386,12 +386,12 @@ class WelcomeCog(commands.Cog):
     async def set_leavechannel(
         self,
         interaction: Interaction,
-        channel: TextChannel,
+        channel: TextChannel | None = None,
     ):
         def mutation(
             config: GuildConfigV2,
         ) -> tuple[bool, str | None]:
-            config.welcome.channels.leave = channel.id
+            config.welcome.channels.leave = channel.id if channel else 0
             return True, None
 
         await self.update_welcome_setting(
@@ -399,7 +399,7 @@ class WelcomeCog(commands.Cog):
             mutation,
             title_key='command.welcome.leavechannel.embeds.default.title',
             description_key=('command.welcome.leavechannel.embeds.default.description'),
-            description_args={'channel': channel.mention},
+            description_args={'channel': channel.mention if channel else "None"},
         )
 
     @group.command(
