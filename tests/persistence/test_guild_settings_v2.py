@@ -1,4 +1,5 @@
 from poxbot.persistence.models.guild_settings_v2 import (
+    AntiMessageFilter,
     GuildConfigV2,
     ProfanityFilter,
     ReactionRoleEntry,
@@ -95,3 +96,50 @@ def test_reaction_roles_round_trip() -> None:
     restored = GuildConfigV2.from_dict(config.to_dict())
 
     assert restored.reaction_roles == [entry]
+
+
+def test_anti_message_filter_round_trip_and_normalizes_user_ids() -> None:
+    config = GuildConfigV2.from_dict(
+        {
+            'features': {
+                'filtering': {
+                    'enabled': True,
+                    'filters': {
+                        'anti_message': {
+                            'enabled': True,
+                            'blocked_user_ids': [123, '456', 'invalid', -1, True],
+                        },
+                    },
+                },
+            },
+        },
+    )
+
+    anti_message = config.filtering.filters['anti_message']
+    assert isinstance(anti_message, AntiMessageFilter)
+    assert anti_message.enabled is True
+    assert anti_message.blocked_user_ids == [123, 456]
+
+    restored = GuildConfigV2.from_dict(config.to_dict())
+    restored_filter = restored.filtering.filters['anti_message']
+    assert isinstance(restored_filter, AntiMessageFilter)
+    assert restored_filter.blocked_user_ids == [123, 456]
+
+
+def test_anti_message_filter_defaults_to_empty_blocklist() -> None:
+    config = GuildConfigV2.from_dict(
+        {
+            'features': {
+                'filtering': {
+                    'filters': {
+                        'anti_message': {'enabled': False},
+                    },
+                },
+            },
+        },
+    )
+
+    anti_message = config.filtering.filters['anti_message']
+    assert isinstance(anti_message, AntiMessageFilter)
+    assert anti_message.enabled is False
+    assert anti_message.blocked_user_ids == []
