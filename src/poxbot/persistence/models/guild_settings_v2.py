@@ -284,9 +284,23 @@ class GuildConfigV2:
 
         if 'anti_message' in sub_feats:
             am = sub_feats['anti_message']
+            raw_blocked_user_ids = am.get('blocked_user_ids', [])
+            if not isinstance(raw_blocked_user_ids, list):
+                raw_blocked_user_ids = []
+
+            blocked_user_ids = [
+                int(user_id)
+                for user_id in raw_blocked_user_ids
+                if (
+                    isinstance(user_id, int)
+                    and not isinstance(user_id, bool)
+                    and user_id > 0
+                )
+                or (isinstance(user_id, str) and user_id.isdecimal())
+            ]
             filter_map['anti_message'] = AntiMessageFilter(
                 enabled=am.get('enabled', False),
-                blocked_user_ids=am.get('blocked_user_ids', []),
+                blocked_user_ids=sorted(set(blocked_user_ids)),
             )
 
         parsed['filtering'] = FilterConfig(
