@@ -1136,7 +1136,7 @@
             "description": "Toggles profanity filtering for global chat.",
             "error": {
                 "title": "Unable to update filter",
-                "not_configured": "The anti-message filter is not configured or enabled for this server."
+                "not_configured": "The profanity filter is not configured or enabled for this server."
             },
             "success": {
                 "title": "Global-chat profanity filter"
