@@ -296,7 +296,11 @@ class GuildConfigV2:
                     and not isinstance(user_id, bool)
                     and user_id > 0
                 )
-                or (isinstance(user_id, str) and user_id.isdecimal())
+                or (
+                    isinstance(user_id, str)
+                    and user_id.isdecimal()
+                    and int(user_id) > 0
+                )
             ]
             filter_map['anti_message'] = AntiMessageFilter(
                 enabled=am.get('enabled', False),
