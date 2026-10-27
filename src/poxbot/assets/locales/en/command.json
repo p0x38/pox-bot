@@ -1,6 +1,6 @@
 {
     "8ball": {
-        "description": "Gives you a totally random magic 8-ball answer! :3",
+        "description": "Gives you a magic 8-ball answer! :3",
         "embeds": {
             "default": {
                 "title": "The magic 8-ball says...\n{question}!"
@@ -822,6 +822,57 @@
             "parameters": {
                 "text": "What should the QR code say?",
                 "theme": "Pick a color theme."
+            }
+        }
+    },
+        "help": {
+        "description": "Browse available slash commands.",
+        "title": "pox-bot Help Center",
+        "subtitle": "Browse available slash commands by category.",
+        "overview": "Welcome! Choose a category to explore its commands.",
+        "overview_stats": "{total} commands across {categories} categories.",
+        "select_placeholder": "Select a command category...",
+        "category_option_description": "{count} command(s)",
+        "category_command_count": "{count} command(s)",
+        "empty_category": "No commands are available in this category.",
+        "no_description": "No description provided.",
+        "pagination": "Page {current} of {total}",
+        "previous": "Previous",
+        "next": "Next",
+        "home": "Home",
+        "not_yours": "This help menu belongs to another user.",
+        "previous_categories": "Previous categories...",
+        "next_categories": "More categories...",
+        "categories": {
+            "admin": "Administration",
+            "channel": "Channels",
+            "chatbot": "Chatbot",
+            "contributors": "Contributors",
+            "conversion": "Conversion",
+            "economy": "Economy",
+            "eew": "Earthquake Early Warning",
+            "general": "General",
+            "globalchat": "Global Chat",
+            "guild": "Server",
+            "image": "Images",
+            "info": "Information",
+            "logs": "Logs",
+            "message": "Messages",
+            "midi": "MIDI",
+            "minecraft": "Minecraft",
+            "moderation": "Moderation",
+            "roblox": "Roblox",
+            "role": "Roles",
+            "stats": "Statistics",
+            "user": "User",
+            "user_global": "Global User",
+            "welcome": "Welcome"
+        },
+        "subgroups": {
+            "moderation": {
+                "blacklist": "Blacklist",
+                "word": "Word filter",
+                "user": "User restrictions"
             }
         }
     },

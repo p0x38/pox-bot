@@ -793,6 +793,57 @@
             }
         }
     },
+    "help": {
+        "description": "スラッシュコマンドの一覧を表示するよ！ :3",
+        "title": "pox-bot ヘルプセンター",
+        "subtitle": "カテゴリを選んで、利用できるコマンドを確認してね！ :3",
+        "overview": "カテゴリを選んで、コマンドを確認してね！ :3",
+        "overview_stats": "{categories} 個のカテゴリに {total} 個のコマンドがあるよ！",
+        "select_placeholder": "コマンドのカテゴリを選んでね...",
+        "category_option_description": "{count} 個のコマンド",
+        "category_command_count": "{count} 個のコマンド",
+        "empty_category": "このカテゴリにはコマンドがないよ。",
+        "no_description": "説明はまだないよ。",
+        "pagination": "{current}/{total} ページ",
+        "previous": "前へ",
+        "next": "次へ",
+        "home": "ホーム",
+        "not_yours": "このヘルプメニューは別のユーザーのものだよ！",
+        "previous_categories": "前のカテゴリ...",
+        "next_categories": "ほかのカテゴリ...",
+        "categories": {
+            "admin": "管理",
+            "channel": "チャンネル",
+            "chatbot": "チャットボット",
+            "contributors": "貢献者",
+            "conversion": "変換",
+            "economy": "経済",
+            "eew": "緊急地震速報",
+            "general": "一般",
+            "globalchat": "グローバルチャット",
+            "guild": "サーバー",
+            "image": "画像",
+            "info": "情報",
+            "logs": "ログ",
+            "message": "メッセージ",
+            "midi": "MIDI",
+            "minecraft": "Minecraft",
+            "moderation": "モデレーション",
+            "roblox": "Roblox",
+            "role": "ロール",
+            "stats": "統計",
+            "user": "ユーザー",
+            "user_global": "グローバルユーザー",
+            "welcome": "ウェルカム"
+        },
+        "subgroups": {
+            "moderation": {
+                "blacklist": "ブラックリスト",
+                "word": "ワードフィルター",
+                "user": "ユーザー制限"
+            }
+        }
+    },
     "image": {
         "asset": {
             "description": "画像アセットを取ってくるよ！ :3"
