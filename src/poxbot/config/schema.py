@@ -231,7 +231,7 @@ class LLMConfig(BaseModel):
 
 
 class BotCustomConfig(BaseModel):
-    """_summary_
+    """A config model for bot itself.
 
     Attributes:
         bot_name: The displayed identifier name of the system bot client.

@@ -1261,6 +1261,28 @@
         "description": "設定をちょっとのぞいてみよう！ :3"
     },
     "stats": {
+        "activity": {
+            "description": "日ごとのXP活動をグラフで表示します。",
+            "parameters": {
+                "days": "集計する直近の日数（7〜90日）"
+            },
+            "chart": {
+                "title": "日別XP活動",
+                "date": "日付（UTC）",
+                "messages": "XP対象メッセージ数",
+                "characters": "XP対象文字数",
+                "xp": "獲得XP"
+            },
+            "embeds": {
+                "default": {
+                    "title": "日別アクティビティ",
+                    "period": "直近{days}日間：{start}〜{end}（UTC）"
+                }
+            },
+            "errors": {
+                "failed": "グラフの生成に失敗しました。Botのログを確認してください。"
+            }
+        },
         "active_pattern": {
             "description": "メッセージがいつ盛り上がってるか見てみよう！ :3",
             "parameters": {

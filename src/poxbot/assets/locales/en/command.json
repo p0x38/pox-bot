@@ -825,7 +825,7 @@
             }
         }
     },
-        "help": {
+    "help": {
         "description": "Browse available slash commands.",
         "title": "pox-bot Help Center",
         "subtitle": "Browse available slash commands by category.",
@@ -1283,6 +1283,28 @@
             "description": "Turn message history into a word cloud! :3",
             "wordcloud": {
                 "description": "Turn message history into a word cloud! :3"
+            }
+        },
+        "activity": {
+            "description": "Graph daily XP activity.",
+            "parameters": {
+                "days": "Number of recent days to include, from 7 to 90."
+            },
+            "chart": {
+                "title": "Daily XP Activity",
+                "date": "Date (UTC)",
+                "messages": "XP-counted messages",
+                "characters": "XP-eligible characters",
+                "xp": "XP gained"
+            },
+            "embeds": {
+                "default": {
+                    "title": "Daily Activity",
+                    "period": "Last {days} days: {start} to {end} (UTC)"
+                }
+            },
+            "errors": {
+                "failed": "I couldn't generate the activity graph. Check the bot logs."
             }
         }
     },

@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import date, datetime
 
-from sqlalchemy import BigInteger, func
+from sqlalchemy import BigInteger, Date, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from ...shared.bases import Base
@@ -22,3 +22,37 @@ class MessageCache(Base):
     author_id: Mapped[int] = mapped_column(BigInteger)
     content: Mapped[str] = mapped_column()
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+
+class DailyUserActivity(Base):
+    __tablename__ = "daily_user_activity"
+
+    user_id: Mapped[int] = mapped_column(
+        BigInteger,
+        primary_key=True,
+    )
+    guild_id: Mapped[int] = mapped_column(
+        BigInteger,
+        primary_key=True,
+    )
+    activity_date: Mapped[date] = mapped_column(
+        Date,
+        primary_key=True,
+    )
+
+    message_count: Mapped[int] = mapped_column(
+        BigInteger,
+        default=0,
+        nullable=False,
+    )
+    character_count: Mapped[int] = mapped_column(
+        BigInteger,
+        default=0,
+        nullable=False,
+    )
+    xp_gained: Mapped[int] = mapped_column(
+        BigInteger,
+        default=0,
+        nullable=False,
+    )
+    

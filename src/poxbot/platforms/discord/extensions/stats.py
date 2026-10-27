@@ -1,6 +1,7 @@
+import asyncio
 import pathlib
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from io import BytesIO
 
 import matplotlib.pyplot as plt
@@ -8,6 +9,8 @@ from discord import Color, Embed, File, Interaction, Member, Message, app_comman
 from discord.ext import commands
 from janome.tokenizer import Tokenizer
 from matplotlib import use
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+from matplotlib.figure import Figure
 from nltk.stem.snowball import stopwords
 from nltk.tokenize import word_tokenize
 from pytz import UTC
@@ -51,6 +54,7 @@ class StatsCog(commands.Cog):
             xp_process_result = await self.bot.database.stats.add_xp(
                 user_id=message.author.id,
                 count=text_length,
+                guild_id=message.guild.id if message.guild else 0,
             )
 
             if xp_process_result.get('leveled_up') and message.guild:
@@ -473,6 +477,193 @@ class StatsCog(commands.Cog):
 
         except Exception as e:
             await interaction.followup.send(f'error: `{e}`')
+
+    @group.command(
+        name="activity",
+        description=app_commands.locale_str(
+            "command.stats.activity.description",
+        ),
+    )
+    @app_commands.describe(
+        days=app_commands.locale_str(
+            "command.stats.activity.parameters.days",
+        ),
+    )
+    async def activity_command(
+        self,
+        interaction: Interaction,
+        days: app_commands.Range[int, 7, 90] = 30,
+    ):
+        loc = await self.bot.get_locale(interaction)
+
+        await interaction.response.defer(thinking=True)
+
+        if self.db is None:
+            return await interaction.followup.send(
+                embed=Embed(
+                    title=self.bot.internal_translator.T(
+                        "error.embeds.database_not_available.title",
+                        loc,
+                    ),
+                    description=self.bot.internal_translator.T(
+                        "error.embeds.database_not_available.description",
+                        loc,
+                    ),
+                    color=Color.red(),
+                    timestamp=datetime.now(UTC),
+                ),
+            )
+
+        end_date = datetime.now(UTC).date()
+        start_date = end_date - timedelta(days=days - 1)
+
+        try:
+            rows = await self.db.get_daily_activity(
+                start_date=start_date,
+                end_date=end_date,
+                guild_id=interaction.guild_id or 0,
+            )
+
+            if not rows:
+                return await interaction.followup.send(
+                    embed=Embed(
+                        title=self.bot.internal_translator.T(
+                            "error.embeds.data_not_found.title",
+                            loc,
+                        ),
+                        description=self.bot.internal_translator.T(
+                            "error.embeds.data_not_found.description",
+                            loc,
+                        ),
+                        color=Color.orange(),
+                        timestamp=datetime.now(UTC),
+                    ),
+                )
+
+            # Include days with no activity so the graph has a continuous timeline.
+            dates = [
+                start_date + timedelta(days=offset)
+                for offset in range(days)
+            ]
+            daily_by_date = {
+                row["date"]: row
+                for row in rows
+            }
+
+            messages = [
+                int(daily_by_date.get(day, {}).get("messages") or 0)
+                for day in dates
+            ]
+            characters = [
+                int(daily_by_date.get(day, {}).get("characters") or 0)
+                for day in dates
+            ]
+            xp_gained = [
+                int(daily_by_date.get(day, {}).get("xp") or 0)
+                for day in dates
+            ]
+
+            message_label = self.bot.internal_translator.T(
+                "command.stats.activity.chart.messages",
+                loc,
+            )
+            character_label = self.bot.internal_translator.T(
+                "command.stats.activity.chart.characters",
+                loc,
+            )
+            xp_label = self.bot.internal_translator.T(
+                "command.stats.activity.chart.xp",
+                loc,
+            )
+
+            def generate_chart() -> BytesIO:
+                figure = Figure(figsize=(10, 7), constrained_layout=True)
+                FigureCanvasAgg(figure)
+                axes = figure.subplots(3, 1, sharex=True)
+
+                series = (
+                    (messages, message_label),
+                    (characters, character_label),
+                    (xp_gained, xp_label),
+                )
+
+                for axis, (values, label) in zip(axes, series, strict=True):
+                    axis.plot(
+                        dates,
+                        values,
+                        marker="o",
+                        markersize=3,
+                        linewidth=1.8,
+                    )
+                    axis.set_ylabel(label)
+                    axis.grid(axis="y", linestyle="--", alpha=0.35)
+
+                axes[0].set_title(
+                    self.bot.internal_translator.T(
+                        "command.stats.activity.chart.title",
+                        loc,
+                    ),
+                )
+
+                tick_step = max(1, days // 10)
+                tick_dates = dates[::tick_step]
+
+                axes[-1].set_xticks(tick_dates)
+                axes[-1].set_xticklabels(
+                    [day.strftime("%m-%d") for day in tick_dates],
+                    rotation=35,
+                    ha="right",
+                )
+                axes[-1].set_xlabel(
+                    self.bot.internal_translator.T(
+                        "command.stats.activity.chart.date",
+                        loc,
+                    ),
+                )
+
+                buffer = BytesIO()
+                figure.savefig(buffer, format="png", dpi=150)
+                buffer.seek(0)
+                return buffer
+
+            image_buffer = await asyncio.to_thread(generate_chart)
+
+            embed = Embed(
+                title=self.bot.internal_translator.T(
+                    "command.stats.activity.embeds.default.title",
+                    loc,
+                ),
+                description=self.bot.internal_translator.T(
+                    "command.stats.activity.embeds.default.period",
+                    loc,
+                ).format(
+                    days=days,
+                    start=start_date.isoformat(),
+                    end=end_date.isoformat(),
+                ),
+                color=Color.blurple(),
+                timestamp=datetime.now(UTC),
+            )
+            embed.set_image(url="attachment://daily_activity.png")
+
+            await interaction.followup.send(
+                embed=embed,
+                file=File(
+                    fp=image_buffer,
+                    filename="daily_activity.png",
+                ),
+            )
+
+        except Exception:
+            self.bot.logger.exception(
+                "Failed to generate the daily activity graph",
+            )
+            await interaction.followup.send(
+                self.bot.internal_translator.T(
+                    "command.stats.activity.errors.failed",
+                    loc,
+                ),
+            )
 
 
 async def setup(bot):
