@@ -19,6 +19,7 @@ import json
 from collections import OrderedDict
 from collections.abc import AsyncIterator, Sequence
 from datetime import datetime
+from time import monotonic
 from types import TracebackType
 from typing import Annotated, Any, Literal, Self
 
@@ -362,6 +363,45 @@ class P2PQuakeManager:
         max_delay = 30.0
         url = self._websocket_url()
 
+        stats_interval = 60.0
+        last_stats_log = monotonic()
+        received_messages = 0
+        cached_events = 0
+        invalid_json_messages = 0
+        invalid_events = 0
+
+        def log_stats_if_due(*, force: bool = False) -> None:
+            nonlocal last_stats_log
+            nonlocal received_messages, cached_events
+            nonlocal invalid_json_messages, invalid_events
+
+            now = monotonic()
+            elapsed = now - last_stats_log
+            if not force and elapsed < stats_interval:
+                return
+
+            if any((
+                received_messages,
+                cached_events,
+                invalid_json_messages,
+                invalid_events,
+            )):
+                self.logger.debug(
+                    'P2PQuake WebSocket statistics over %.1f seconds: '
+                    'received=%d, cached=%d, invalid_json=%d, invalid_events=%d',
+                    elapsed,
+                    received_messages,
+                    cached_events,
+                    invalid_json_messages,
+                    invalid_events,
+                )
+
+            received_messages = 0
+            cached_events = 0
+            invalid_json_messages = 0
+            invalid_events = 0
+            last_stats_log = now
+
         while True:
             try:
                 session = await self._get_session()
@@ -375,12 +415,13 @@ class P2PQuakeManager:
 
                     async for message in websocket:
                         if message.type == aiohttp.WSMsgType.TEXT:
+                            log_stats_if_due()
+                            received_messages += 1
+
                             try:
                                 payload = json.loads(message.data)
                             except json.JSONDecodeError:
-                                self.logger.warning(
-                                    'Received invalid JSON from P2PQuake.',
-                                )
+                                invalid_json_messages += 1
                                 continue
 
                             if not isinstance(payload, dict):
@@ -395,17 +436,11 @@ class P2PQuakeManager:
                                     payload,
                                 )
                             except ValidationError:
-                                self.logger.exception(
-                                    'Failed to validate P2PQuake event.',
-                                )
+                                invalid_events += 1
                                 continue
 
                             if self._cache_event(event):
-                                self.logger.debug(
-                                    'Cached P2PQuake event %s (code=%s).',
-                                    event.id,
-                                    event.code,
-                                )
+                                cached_events += 1
 
                             delay = 1.0
                         elif message.type == aiohttp.WSMsgType.ERROR:
@@ -421,11 +456,11 @@ class P2PQuakeManager:
             except asyncio.CancelledError:
                 raise
             except (aiohttp.ClientError, TimeoutError, OSError) as exc:
+                log_stats_if_due(force=True)
                 self.logger.warning(
                     'P2PQuake WebSocket disconnected (%s): %s',
                     type(exc).__name__,
                     exc,
-                    exc_info=True,
                 )
 
             self.logger.info(
@@ -496,11 +531,12 @@ class P2PQuakeManager:
                     P2PQuakeAPIError,
                     ValidationError,
                     TimeoutError,
-                ):
+                ) as exc:
                     self.logger.warning(
                         'Failed to retrieve P2PQuake history after '
-                        'a WebSocket disconnection.',
-                        exc_info=True,
+                        'a WebSocket disconnection (%s): %s',
+                        type(exc).__name__,
+                        exc,
                     )
                 else:
                     # History is newest-first; replay missed events oldest-first.
@@ -547,10 +583,9 @@ class P2PQuakeManager:
                             try:
                                 event = EVENT_ADAPTER.validate_python(payload)
                             except ValidationError:
-                                self.logger.warning(
-                                    'Invalid P2PQuake payload for code %s.',
+                                self.logger.debug(
+                                    'Ignoring invalid P2PQuake payload for code %s.',
                                     code,
-                                    exc_info=True,
                                 )
                                 continue
 
@@ -578,10 +613,11 @@ class P2PQuakeManager:
             except asyncio.CancelledError:
                 raise
 
-            except (aiohttp.ClientError, TimeoutError, OSError):
+            except (aiohttp.ClientError, TimeoutError, OSError) as exc:
                 self.logger.warning(
-                    'P2PQuake WebSocket disconnected; reconnecting.',
-                    exc_info=True,
+                    'P2PQuake WebSocket disconnected (%s): %s',
+                    type(exc).__name__,
+                    exc,
                 )
 
             if connected_once:
