@@ -1,6 +1,8 @@
 import asyncio
+import cProfile
 import gc
 from datetime import datetime
+from os import getenv
 
 from discord import (
     Color,
@@ -39,6 +41,7 @@ from ..services import (
     RuntimeState,
 )
 from ..services.counter import CounterManager
+from ..shared.utils import app_dir
 from ..shared.utils.metrics import get_or_create_metrics
 from ..shared.utils.perf_monitor import PerformanceMonitor
 from .command_tree import ModerationCommandTree
@@ -214,7 +217,21 @@ class PoxBot(commands.AutoShardedBot):
 
     async def load_extensions(self) -> None:
         """Loads all extensions using ExtensionManager."""
-        result = await self.extension_manager.load_extensions(self)
+        profiler = (
+            cProfile.Profile()
+            if getenv('POXBOT_PROFILE_EXTENSIONS') == '1'
+            else None
+        )
+
+        if profiler is not None:
+            profiler.enable()
+
+        try:
+            result = await self.extension_manager.load_extensions(self)
+        finally:
+            if profiler is not None:
+                profiler.disable()
+                profiler.dump_stats(app_dir.user_data_path / 'extension-load.prof')
 
         self.logger.info(
             'Loaded %d extensions (%d failed)',

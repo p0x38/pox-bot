@@ -1,36 +1,54 @@
+# ruff: file-ignore[import-outside-top-level]
+from __future__ import annotations
+
 import asyncio
 import pathlib
 import re
+import threading
 from datetime import datetime, timedelta
 from io import BytesIO
+from typing import TYPE_CHECKING, Any
 
-import matplotlib.pyplot as plt
 from discord import Color, Embed, File, Interaction, Member, Message, app_commands
 from discord.ext import commands
-from janome.tokenizer import Tokenizer
-from matplotlib import use
-from matplotlib.backends.backend_agg import FigureCanvasAgg
-from matplotlib.figure import Figure
-from nltk.stem.snowball import stopwords
-from nltk.tokenize import word_tokenize
 from pytz import UTC
-from wordcloud import WordCloud
 
-from ....application import PoxBot
-from ....persistence.database.stats import StatisticsDatabase
-
-use('Agg')
+if TYPE_CHECKING:
+    from ....application import PoxBot
+    from ....persistence.database.stats import StatisticsDatabase
 
 
 class StatsCog(commands.Cog):
     def __init__(self, bot: PoxBot) -> None:
         self.bot = bot
         self.db: StatisticsDatabase | None = bot.database.stats
-        self.tokenizer = Tokenizer()
+        self._wordcloud_resources: tuple[
+            Any,
+            set[str],
+            set[str],
+            set[str],
+        ] | None = None
+        self._wordcloud_resources_lock = threading.Lock()
 
-        self.eng_stopwords = set(stopwords.words('english'))
-        self.spa_stopwords = set(stopwords.words('spanish'))
-        self.rus_stopwords = set(stopwords.words('russian'))
+    def _get_wordcloud_resources(
+        self,
+    ) -> tuple[Any, set[str], set[str], set[str]]:
+        """Load and cache NLP resources only when word-cloud generation needs them."""
+        with self._wordcloud_resources_lock:
+            resources = self._wordcloud_resources
+            if resources is None:
+                from janome.tokenizer import Tokenizer
+                from nltk.stem.snowball import stopwords
+
+                resources = (
+                    Tokenizer(),
+                    set(stopwords.words('english')),
+                    set(stopwords.words('spanish')),
+                    set(stopwords.words('russian')),
+                )
+                self._wordcloud_resources = resources
+
+            return resources
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
@@ -225,28 +243,47 @@ class StatsCog(commands.Cog):
                 ),
             )
 
-        valid_words = []
-        url_pattern = re.compile(r'https?://\S+|www\.\S+')
+        def extract_words() -> list[str]:
+            from janome.tokenizer import Token
+            from nltk.tokenize import word_tokenize
 
-        for row in rows:
-            content = (
-                row.get('content', '')
-                if isinstance(row, dict)
-                else getattr(row, 'content', '')
+            tokenizer, eng_stopwords, spa_stopwords, rus_stopwords = (
+                self._get_wordcloud_resources()
             )
-            content = url_pattern.sub('', content)
-            content = re.sub(r'<@!?\d+>|<#\d+>|<@&\d+>|:\w+:|\d+', '', content)
+            valid_words: list[str] = []
+            url_pattern = re.compile(r'https?://\S+|www\.\S+')
+            japanese_pattern = re.compile(
+                r'[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]',
+            )
+            mention_pattern = re.compile(
+                r'<@!?\d+>|<#\d+>|<@&\d+>|:\w+:|\d+',
+            )
 
-            if not content.strip():
-                continue
+            for row in rows:
+                # get_cached_messages() returns strings.
+                content = (
+                    row
+                    if isinstance(row, str)
+                    else (
+                        row.get('content', '')
+                        if isinstance(row, dict)
+                        else getattr(row, 'content', '')
+                    )
+                )
 
-            if re.search(r'[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]', content):
-                for token in self.tokenizer.tokenize(content):
-                    pos_str: str = getattr(token, 'part_of_speech', '')
-                    surface: str = getattr(token, 'surface', '')
+                content = url_pattern.sub('', content)
+                content = mention_pattern.sub('', content)
 
-                    if pos_str and surface:
-                        main_pos = pos_str.split(',', maxsplit=1)[0]
+                if not content.strip():
+                    continue
+
+                if japanese_pattern.search(content):
+                    for token in tokenizer.tokenize(content, wakati=False):
+                        if not isinstance(token, Token):
+                            continue
+                        
+                        surface = token.surface
+                        main_pos = token.part_of_speech.split(',', maxsplit=1)[0]
 
                         if (
                             main_pos == '名詞'
@@ -256,20 +293,22 @@ class StatsCog(commands.Cog):
                         ):
                             valid_words.append(surface)
 
-            words_tokens = word_tokenize(content.lower())
-            valid_words.extend(
-                word
-                for word in words_tokens
-                if len(word) > 1
-                and word.isalnum()
-                and word not in self.eng_stopwords
-                and word not in self.spa_stopwords
-                and word not in self.rus_stopwords
-                and not re.search(
-                    r'[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]',
-                    word,
+                valid_words.extend(
+                    word
+                    for word in word_tokenize(content.lower())
+                    if (
+                        len(word) > 1
+                        and word.isalnum()
+                        and word not in eng_stopwords
+                        and word not in spa_stopwords
+                        and word not in rus_stopwords
+                        and not japanese_pattern.search(word)
+                    )
                 )
-            )
+
+            return valid_words
+
+        valid_words = await asyncio.to_thread(extract_words)
 
         if not valid_words:
             return await interaction.followup.send(
@@ -295,6 +334,8 @@ class StatsCog(commands.Cog):
                 font_path = '/usr/share/fonts/truetype/fonts-japanese-gothic.ttf'
 
             def generate_wc():
+                from wordcloud import WordCloud
+
                 wc = WordCloud(
                     font_path=font_path,
                     width=900,
@@ -402,9 +443,19 @@ class StatsCog(commands.Cog):
         hours = list(hour_counts.keys())
         counts = list(hour_counts.values())
 
-        def generate_chart():
-            plt.style.use('dark_background')
-            fig, ax = plt.subplots(figsize=(8, 4.5))
+        def generate_chart() -> BytesIO:
+            from matplotlib.backends.backend_agg import FigureCanvasAgg
+            from matplotlib.figure import Figure
+
+            figure = Figure(
+                figsize=(8, 4.5),
+                facecolor='#222222',
+                constrained_layout=True,
+            )
+            FigureCanvasAgg(figure)
+            ax = figure.subplots()
+            ax.set_facecolor('#222222')
+            ax.tick_params(colors='#b9bbbe')
 
             bars = ax.bar(
                 hours,
@@ -434,13 +485,11 @@ class StatsCog(commands.Cog):
             if counts[max_idx] > 0:
                 bars[max_idx].set_color('#3ba55d')
 
-            plt.tight_layout()
-
-            buf = BytesIO()
-            plt.savefig(buf, format='png', dpi=150)
-            buf.seek(0)
-            plt.close(fig)
-            return buf
+            buffer = BytesIO()
+            figure.savefig(buffer, format='png', dpi=150)
+            buffer.seek(0)
+            figure.clear()
+            return buffer
 
         try:
             img_buffer = await self.bot.loop.run_in_executor(None, generate_chart)
@@ -577,6 +626,9 @@ class StatsCog(commands.Cog):
             )
 
             def generate_chart() -> BytesIO:
+                from matplotlib.backends.backend_agg import FigureCanvasAgg
+                from matplotlib.figure import Figure
+
                 figure = Figure(figsize=(10, 7), constrained_layout=True)
                 FigureCanvasAgg(figure)
                 axes = figure.subplots(3, 1, sharex=True)

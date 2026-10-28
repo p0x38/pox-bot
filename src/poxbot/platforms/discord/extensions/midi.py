@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import asyncio
 import io
 import logging
 import os
@@ -83,8 +82,7 @@ class MidiCog(commands.Cog):
 
             try:
                 # MIDIProcessor is synchronous. Keep it off the event loop.
-                await asyncio.to_thread(
-                    self.processor.convert,
+                await self.processor.convert(
                     midi_data,
                     mp3_buffer,
                 )

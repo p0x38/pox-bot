@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from time import perf_counter
 from typing import TYPE_CHECKING, Any
 
 from ...infrastructure.logger import get_logger
@@ -65,16 +66,20 @@ class TTSManager:
         self.logger.info('Initializing all TTS engines via cog_load...')
 
         for engine_type, engine in self.engines.items():
+            started = perf_counter()
+
             try:
                 await engine.initialize(self)
-                self.logger.info(
-                    'Successfully initialized TTS engine: %s',
-                    engine_type.name,
-                )
             except Exception:
                 self.logger.exception(
                     'Failed to initialize TTS engine %s',
                     engine_type.name,
+                )
+            finally:
+                self.logger.debug(
+                    'TTS engine %s initialization took %.2f ms',
+                    engine_type.name,
+                    (perf_counter() - started) * 1000,
                 )
 
     async def generate_speech(

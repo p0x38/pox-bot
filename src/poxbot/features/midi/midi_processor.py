@@ -1,17 +1,15 @@
 from __future__ import annotations
 
+import asyncio
 import contextlib
 import io
 import os
 import shutil
-import subprocess  # ruff: ignore[suspicious-subprocess-import]
 import tempfile
 from pathlib import Path
 from typing import Any, BinaryIO
 
 import mido
-from pydub import AudioSegment
-from pydub.exceptions import CouldntEncodeError
 
 type MIDIInput = str | os.PathLike[str] | bytes | bytearray | memoryview | BinaryIO
 
@@ -496,29 +494,97 @@ class MIDIProcessor:
     # MIDI-to-MP3 conversion
     # ------------------------------------------------------------------
 
-    def convert(
-        self,
-        source: MIDIInput,
-        output: MP3Output = None,
-    ) -> Path | BinaryIO:
-        """Convert MIDI input into an MP3 file or binary stream.
+    @staticmethod
+    async def _run_process(
+        *command: str,
+        timeout: float,  # ruff: ignore[async-function-with-timeout]
+        error_message: str,
+    ) -> None:
+        """Run an external process without blocking the event loop."""
+        process = await asyncio.create_subprocess_exec(
+            *command,
+            stdin=asyncio.subprocess.DEVNULL,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
 
+        try:
+            stdout, stderr = await asyncio.wait_for(
+                process.communicate(),
+                timeout=timeout,
+            )
+        except TimeoutError as exc:
+            with contextlib.suppress(ProcessLookupError):
+                process.kill()
+
+            await process.communicate()
+
+            raise RuntimeError(
+                f'{error_message} Timed out after {timeout:g} seconds.'
+            ) from exc
+        except asyncio.CancelledError:
+            with contextlib.suppress(ProcessLookupError):
+                process.kill()
+
+            await process.communicate()
+            raise
+
+        if process.returncode != 0:
+            details = (stderr or stdout).decode(
+                'utf-8',
+                errors='replace',
+            ).strip()
+
+            raise RuntimeError(
+                error_message + (f'\n{details}' if details else '')
+            )
+
+    @staticmethod
+    def _write_output_stream(
+        output_stream: BinaryIO,
+        mp3_data: bytes,
+    ) -> BinaryIO:
+        """Write MP3 data to a stream and rewind it when possible."""
+        try:
+            output_stream.seek(0)
+            output_stream.truncate(0)
+        except (AttributeError, OSError, ValueError):
+            pass
+
+        output_stream.write(mp3_data)
+
+        with contextlib.suppress(
+            AttributeError,
+            OSError,
+            ValueError,
+        ):
+            output_stream.seek(0)
+
+        return output_stream
+
+    async def convert(
+            self,
+            source: MIDIInput,
+            output: MP3Output = None,
+    ) -> Path | BinaryIO:
+        """Asynchronously convert MIDI input into an MP3.
+        
         Args:
             source:
-                A MIDI file path, bytes, or binary file-like object.
+                A MIDI file path, bytes or binary file-like object.
             output:
                 An MP3 output path or writable binary stream.
                 If omitted, a new BytesIO containing the MP3 is returned.
-
+        
         Returns:
-            The destination Path or the output binary stream.
-            For stream output, the cursor is positioned at the beginning.
+            The destination Path or output binary stream.
         """
+        midi_data = await asyncio.to_thread(
+            self._read_midi_bytes,
+            source,
+        )
 
-        midi_data = self._read_midi_bytes(source)
-
-        # Validate the MIDI before launching the synthesizer.
-        self._load_midi(midi_data)
+        await asyncio.to_thread(self._load_midi, midi_data)
 
         destination: Path | None = None
         output_stream: BinaryIO | None = None
@@ -527,49 +593,65 @@ class MIDIProcessor:
             output_stream = io.BytesIO()
 
         elif isinstance(output, (str, os.PathLike)):
-            destination = Path(output).expanduser().resolve()
-
-            if destination.suffix.lower() != '.mp3':
-                raise ValueError('The output file must have an .mp3 extension.')
+            destination = Path(output).expanduser().resolve()  # ruff: ignore[blocking-path-method-in-async-function]
 
             if isinstance(source, (str, os.PathLike)):
-                source_path = Path(source).expanduser().resolve()
+                source_path = Path(source).expanduser().resolve()  # ruff: ignore[blocking-path-method-in-async-function]
 
                 if source_path == destination:
-                    raise ValueError('Input and output paths must be different.')
+                    raise ValueError(
+                        'Input and output paths must be different.',
+                    )
 
-            destination.parent.mkdir(parents=True, exist_ok=True)
+            await asyncio.to_thread(
+                destination.parent.mkdir,
+                parents=True,
+                exist_ok=True,
+            )
 
         elif callable(getattr(output, 'write', None)):
             output_stream = output
 
         else:
-            raise TypeError('output must be a path, writable binary stream, or None.')
+            raise TypeError(
+                'output must be a path, writable binary stream, or None.',
+            )
 
         if not self.soundfont.is_file():
-            raise FileNotFoundError(f'SoundFont file not found: {self.soundfont}')
+            raise FileNotFoundError(
+                f'Soundfont file not found: {self.soundfont}',
+            )
 
-        executable = shutil.which(self.fluidsynth_executable)
-
-        if executable is None:
+        fluidsynth_executable = shutil.which(
+            self.fluidsynth_executable,
+        )
+        if fluidsynth_executable is None:
             raise FileNotFoundError(
                 'FluidSynth was not found. Install it or configure '
-                'fluidsynth_executable.'
+                'fluidsynth_executable.',
+            )
+
+        ffmpeg_executable = shutil.which('ffmpeg')
+        if ffmpeg_executable is None:
+            raise FileNotFoundError(
+                'FFmpeg was not found. Install FFmpeg and add it to PATH.',
             )
 
         with tempfile.TemporaryDirectory(
-            prefix='midi_processor_'
+            prefix='midi_processor_',
         ) as temporary_directory:
             temporary_path = Path(temporary_directory)
-
             midi_path = temporary_path / 'input.mid'
             wav_path = temporary_path / 'rendered.wav'
             mp3_path = temporary_path / 'rendered.mp3'
 
-            midi_path.write_bytes(midi_data)
+            await asyncio.to_thread(
+                midi_path.write_bytes,
+                midi_data,
+            )
 
-            command = [
-                executable,
+            await self._run_process(
+                fluidsynth_executable,
                 '-ni',
                 '-g',
                 str(self.gain),
@@ -581,57 +663,47 @@ class MIDIProcessor:
                 str(wav_path),
                 str(self.soundfont),
                 str(midi_path),
-            ]
-
-            try:
-                subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
-                    command,
-                    shell=False,
-                    check=True,
-                    stdin=subprocess.DEVNULL,
-                    capture_output=True,
-                    text=True,
-                    timeout=300,
-                )
-            except subprocess.TimeoutExpired as exc:
-                raise RuntimeError(
-                    'FluidSynth timed out while rendering the MIDI file.',
-                ) from exc
-            except subprocess.CalledProcessError as exc:
-                details = (exc.stderr or exc.stdout or '').strip()
-
-                raise RuntimeError(
+                timeout=300,
+                error_message=(
                     'FluidSynth failed to render the MIDI file.'
-                    + (f'\n{details}' if details else '')
-                ) from exc
+                ),
+            )
 
             if not wav_path.is_file() or wav_path.stat().st_size == 0:
-                raise RuntimeError('FluidSynth did not produce a valid WAV file.')
-
-            try:
-                audio = AudioSegment.from_wav(str(wav_path))
-                encoded_file = audio.export(
-                    str(mp3_path),
-                    format='mp3',
-                    bitrate=self.bitrate,
-                )
-                encoded_file.close()
-
-            except (FileNotFoundError, CouldntEncodeError) as exc:
                 raise RuntimeError(
-                    'MP3 encoding failed. Ensure FFmpeg is installed '
-                    'and accessible to pydub.'
-                ) from exc
+                    'FluidSynth did not produce a valid WAV file.'
+                )
+
+            await self._run_process(
+                ffmpeg_executable,
+                '-hide_banner',
+                '-loglevel',
+                'error',
+                '-y',
+                '-i',
+                str(wav_path),
+                '-vn',
+                '-codec:a',
+                'libmp3lame',
+                '-b:a',
+                self.bitrate,
+                str(mp3_path),
+                timeout=300,
+                error_message=(
+                    'FFmpeg failed to encode the WAV file as MP3.'
+                ),
+            )
 
             if not mp3_path.is_file() or mp3_path.stat().st_size == 0:
-                raise RuntimeError('MP3 encoding produced no output.')
+                raise RuntimeError(
+                    'FFmpeg produced no MP3 output.'
+                )
 
+            # Stage 3: Return a file path or an output stream.
             if destination is not None:
                 staging_path: Path | None = None
 
                 try:
-                    # Stage in the destination directory so replacement
-                    # happens on the same filesystem.
                     with tempfile.NamedTemporaryFile(
                         prefix=f'.{destination.stem}.',
                         suffix='.mp3',
@@ -640,28 +712,34 @@ class MIDIProcessor:
                     ) as staging_file:
                         staging_path = Path(staging_file.name)
 
-                    shutil.copyfile(mp3_path, staging_path)
-                    Path(staging_path).replace(destination)
+                    await asyncio.to_thread(
+                        shutil.copyfile,
+                        mp3_path,
+                        staging_path,
+                    )
+                    await asyncio.to_thread(
+                        staging_path.replace,
+                        destination,
+                    )
                     staging_path = None
 
                 finally:
                     if staging_path is not None:
-                        staging_path.unlink(missing_ok=True)
+                        await asyncio.to_thread(
+                            staging_path.unlink,
+                            missing_ok=True,
+                        )
 
                 return destination
 
             assert output_stream is not None  # ruff: ignore[assert]
 
-            # Replace existing stream contents and rewind for the caller.
-            try:
-                output_stream.seek(0)
-                output_stream.truncate(0)
-            except (AttributeError, OSError, ValueError):
-                pass
+            mp3_data = await asyncio.to_thread(
+                mp3_path.read_bytes,
+            )
 
-            output_stream.write(mp3_path.read_bytes())
-
-            with contextlib.suppress(AttributeError, OSError, ValueError):
-                output_stream.seek(0)
-
-            return output_stream
+            return await asyncio.to_thread(
+                self._write_output_stream,
+                output_stream,
+                mp3_data,
+            )

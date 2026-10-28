@@ -610,7 +610,7 @@ class InfoCog(commands.Cog):
         await interaction.response.defer()
 
         loc = await self.bot.get_locale(interaction)
-        stats = self.bot.perf_monitor.get_stats()
+        stats = await self.bot.perf_monitor.get_stats()
         embed = self.bot.perf_monitor.create_embed(stats, str(loc))
 
         await interaction.followup.send(embed=embed)
