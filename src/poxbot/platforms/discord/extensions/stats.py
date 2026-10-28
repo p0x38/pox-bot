@@ -22,12 +22,15 @@ class StatsCog(commands.Cog):
     def __init__(self, bot: PoxBot) -> None:
         self.bot = bot
         self.db: StatisticsDatabase | None = bot.database.stats
-        self._wordcloud_resources: tuple[
-            Any,
-            set[str],
-            set[str],
-            set[str],
-        ] | None = None
+        self._wordcloud_resources: (
+            tuple[
+                Any,
+                set[str],
+                set[str],
+                set[str],
+            ]
+            | None
+        ) = None
         self._wordcloud_resources_lock = threading.Lock()
 
     def _get_wordcloud_resources(
@@ -281,7 +284,7 @@ class StatsCog(commands.Cog):
                     for token in tokenizer.tokenize(content, wakati=False):
                         if not isinstance(token, Token):
                             continue
-                        
+
                         surface = token.surface
                         main_pos = token.part_of_speech.split(',', maxsplit=1)[0]
 
@@ -528,14 +531,14 @@ class StatsCog(commands.Cog):
             await interaction.followup.send(f'error: `{e}`')
 
     @group.command(
-        name="activity",
+        name='activity',
         description=app_commands.locale_str(
-            "command.stats.activity.description",
+            'command.stats.activity.description',
         ),
     )
     @app_commands.describe(
         days=app_commands.locale_str(
-            "command.stats.activity.parameters.days",
+            'command.stats.activity.parameters.days',
         ),
     )
     async def activity_command(
@@ -551,11 +554,11 @@ class StatsCog(commands.Cog):
             return await interaction.followup.send(
                 embed=Embed(
                     title=self.bot.internal_translator.T(
-                        "error.embeds.database_not_available.title",
+                        'error.embeds.database_not_available.title',
                         loc,
                     ),
                     description=self.bot.internal_translator.T(
-                        "error.embeds.database_not_available.description",
+                        'error.embeds.database_not_available.description',
                         loc,
                     ),
                     color=Color.red(),
@@ -577,11 +580,11 @@ class StatsCog(commands.Cog):
                 return await interaction.followup.send(
                     embed=Embed(
                         title=self.bot.internal_translator.T(
-                            "error.embeds.data_not_found.title",
+                            'error.embeds.data_not_found.title',
                             loc,
                         ),
                         description=self.bot.internal_translator.T(
-                            "error.embeds.data_not_found.description",
+                            'error.embeds.data_not_found.description',
                             loc,
                         ),
                         color=Color.orange(),
@@ -590,38 +593,29 @@ class StatsCog(commands.Cog):
                 )
 
             # Include days with no activity so the graph has a continuous timeline.
-            dates = [
-                start_date + timedelta(days=offset)
-                for offset in range(days)
-            ]
-            daily_by_date = {
-                row["date"]: row
-                for row in rows
-            }
+            dates = [start_date + timedelta(days=offset) for offset in range(days)]
+            daily_by_date = {row['date']: row for row in rows}
 
             messages = [
-                int(daily_by_date.get(day, {}).get("messages") or 0)
-                for day in dates
+                int(daily_by_date.get(day, {}).get('messages') or 0) for day in dates
             ]
             characters = [
-                int(daily_by_date.get(day, {}).get("characters") or 0)
-                for day in dates
+                int(daily_by_date.get(day, {}).get('characters') or 0) for day in dates
             ]
             xp_gained = [
-                int(daily_by_date.get(day, {}).get("xp") or 0)
-                for day in dates
+                int(daily_by_date.get(day, {}).get('xp') or 0) for day in dates
             ]
 
             message_label = self.bot.internal_translator.T(
-                "command.stats.activity.chart.messages",
+                'command.stats.activity.chart.messages',
                 loc,
             )
             character_label = self.bot.internal_translator.T(
-                "command.stats.activity.chart.characters",
+                'command.stats.activity.chart.characters',
                 loc,
             )
             xp_label = self.bot.internal_translator.T(
-                "command.stats.activity.chart.xp",
+                'command.stats.activity.chart.xp',
                 loc,
             )
 
@@ -643,16 +637,16 @@ class StatsCog(commands.Cog):
                     axis.plot(
                         dates,
                         values,
-                        marker="o",
+                        marker='o',
                         markersize=3,
                         linewidth=1.8,
                     )
                     axis.set_ylabel(label)
-                    axis.grid(axis="y", linestyle="--", alpha=0.35)
+                    axis.grid(axis='y', linestyle='--', alpha=0.35)
 
                 axes[0].set_title(
                     self.bot.internal_translator.T(
-                        "command.stats.activity.chart.title",
+                        'command.stats.activity.chart.title',
                         loc,
                     ),
                 )
@@ -662,19 +656,19 @@ class StatsCog(commands.Cog):
 
                 axes[-1].set_xticks(tick_dates)
                 axes[-1].set_xticklabels(
-                    [day.strftime("%m-%d") for day in tick_dates],
+                    [day.strftime('%m-%d') for day in tick_dates],
                     rotation=35,
-                    ha="right",
+                    ha='right',
                 )
                 axes[-1].set_xlabel(
                     self.bot.internal_translator.T(
-                        "command.stats.activity.chart.date",
+                        'command.stats.activity.chart.date',
                         loc,
                     ),
                 )
 
                 buffer = BytesIO()
-                figure.savefig(buffer, format="png", dpi=150)
+                figure.savefig(buffer, format='png', dpi=150)
                 buffer.seek(0)
                 return buffer
 
@@ -682,11 +676,11 @@ class StatsCog(commands.Cog):
 
             embed = Embed(
                 title=self.bot.internal_translator.T(
-                    "command.stats.activity.embeds.default.title",
+                    'command.stats.activity.embeds.default.title',
                     loc,
                 ),
                 description=self.bot.internal_translator.T(
-                    "command.stats.activity.embeds.default.period",
+                    'command.stats.activity.embeds.default.period',
                     loc,
                 ).format(
                     days=days,
@@ -696,23 +690,23 @@ class StatsCog(commands.Cog):
                 color=Color.blurple(),
                 timestamp=datetime.now(UTC),
             )
-            embed.set_image(url="attachment://daily_activity.png")
+            embed.set_image(url='attachment://daily_activity.png')
 
             await interaction.followup.send(
                 embed=embed,
                 file=File(
                     fp=image_buffer,
-                    filename="daily_activity.png",
+                    filename='daily_activity.png',
                 ),
             )
 
         except Exception:
             self.bot.logger.exception(
-                "Failed to generate the daily activity graph",
+                'Failed to generate the daily activity graph',
             )
             await interaction.followup.send(
                 self.bot.internal_translator.T(
-                    "command.stats.activity.errors.failed",
+                    'command.stats.activity.errors.failed',
                     loc,
                 ),
             )

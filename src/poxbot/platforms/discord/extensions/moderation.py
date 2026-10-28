@@ -552,7 +552,7 @@ class ModerationCog(commands.Cog):
     ) -> None:
         loc = await self.bot.get_locale(interaction, prefer_guild=True)
         await interaction.response.defer(ephemeral=True)
-    
+
         if interaction.guild is None:
             await interaction.followup.send(
                 embed=Embed(
@@ -567,7 +567,7 @@ class ModerationCog(commands.Cog):
                 )
             )
             return
-    
+
         database = self.bot.database.guild
         if database is None:
             await interaction.followup.send(
@@ -583,29 +583,27 @@ class ModerationCog(commands.Cog):
                 )
             )
             return
-    
+
         def mutate(
             config: GuildConfigV2,
         ) -> tuple[bool, str | None]:
             filtering = config.filtering
             profanity = filtering.filters.get('profanity')
-    
+
             if not isinstance(profanity, ProfanityFilter):
                 return False, 'not_configured'
-    
+
             if not filtering.enabled or not profanity.enabled:
                 return False, 'not_configured'
-    
+
             profanity.use_in_globalchat = not profanity.use_in_globalchat
-            return True, (
-                'enabled' if profanity.use_in_globalchat else 'disabled'
-            )
-    
+            return True, ('enabled' if profanity.use_in_globalchat else 'disabled')
+
         _, success, status = await database.mutate_config(
             interaction.guild.id,
             mutate,
         )
-    
+
         if not success:
             await interaction.followup.send(
                 embed=Embed(
@@ -622,7 +620,7 @@ class ModerationCog(commands.Cog):
                 )
             )
             return
-    
+
         await interaction.followup.send(
             embed=Embed(
                 title=self.bot.internal_translator.T(
@@ -630,17 +628,14 @@ class ModerationCog(commands.Cog):
                     loc,
                 ),
                 description=self.bot.internal_translator.T(
-                    (
-                        'command.moderation.toggle_global_chat_swear_filter.'
-                        f'{status}'
-                    ),
+                    (f'command.moderation.toggle_global_chat_swear_filter.{status}'),
                     loc,
                 ),
                 timestamp=datetime.now(UTC),
                 color=Color.green(),
             )
         )
-    
+
     @word_group.command(
         name='add_word',
         description=app_commands.locale_str(

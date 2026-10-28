@@ -218,9 +218,7 @@ class PoxBot(commands.AutoShardedBot):
     async def load_extensions(self) -> None:
         """Loads all extensions using ExtensionManager."""
         profiler = (
-            cProfile.Profile()
-            if getenv('POXBOT_PROFILE_EXTENSIONS') == '1'
-            else None
+            cProfile.Profile() if getenv('POXBOT_PROFILE_EXTENSIONS') == '1' else None
         )
 
         if profiler is not None:

@@ -188,10 +188,10 @@ class StatisticsDatabase(BaseDatabase):
             return result.mappings().all()
 
     async def get_daily_activity(
-            self,
-            start_date: date,
-            end_date: date,
-            guild_id: int | None = None,
+        self,
+        start_date: date,
+        end_date: date,
+        guild_id: int | None = None,
     ):
         conditions = [
             DailyUserActivity.activity_date >= start_date,
@@ -203,10 +203,10 @@ class StatisticsDatabase(BaseDatabase):
 
         statement = (
             select(
-                DailyUserActivity.activity_date.label("date"),
-                func.sum(DailyUserActivity.message_count).label("messages"),
-                func.sum(DailyUserActivity.character_count).label("characters"),
-                func.sum(DailyUserActivity.xp_gained).label("xp"),
+                DailyUserActivity.activity_date.label('date'),
+                func.sum(DailyUserActivity.message_count).label('messages'),
+                func.sum(DailyUserActivity.character_count).label('characters'),
+                func.sum(DailyUserActivity.xp_gained).label('xp'),
             )
             .where(*conditions)
             .group_by(DailyUserActivity.activity_date)

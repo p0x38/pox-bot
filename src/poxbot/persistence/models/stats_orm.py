@@ -25,7 +25,7 @@ class MessageCache(Base):
 
 
 class DailyUserActivity(Base):
-    __tablename__ = "daily_user_activity"
+    __tablename__ = 'daily_user_activity'
 
     user_id: Mapped[int] = mapped_column(
         BigInteger,
@@ -55,4 +55,3 @@ class DailyUserActivity(Base):
         default=0,
         nullable=False,
     )
-    

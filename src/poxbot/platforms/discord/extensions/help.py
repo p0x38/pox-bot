@@ -19,43 +19,43 @@ from ....application import PoxBot
 
 COMMANDS_PER_PAGE = 5
 CATEGORY_OPTIONS_PER_PAGE = 23
-GENERAL_CATEGORY = "__general__"
+GENERAL_CATEGORY = '__general__'
 
 CATEGORY_TRANSLATION_KEYS = {
-    "admin": "command.help.categories.admin",
-    "channel": "command.help.categories.channel",
-    "chatbot": "command.help.categories.chatbot",
-    "contributors": "command.help.categories.contributors",
-    "conversion": "command.help.categories.conversion",
-    "economy": "command.help.categories.economy",
-    "eew": "command.help.categories.eew",
-    "globalchat": "command.help.categories.globalchat",
-    "guild": "command.help.categories.guild",
-    "image": "command.help.categories.image",
-    "info": "command.help.categories.info",
-    "logs": "command.help.categories.logs",
-    "message": "command.help.categories.message",
-    "midi": "command.help.categories.midi",
-    "minecraft": "command.help.categories.minecraft",
-    "moderation": "command.help.categories.moderation",
-    "roblox": "command.help.categories.roblox",
-    "role": "command.help.categories.role",
-    "stats": "command.help.categories.stats",
-    "user": "command.help.categories.user",
-    "user_global": "command.help.categories.user_global",
-    "welcome": "command.help.categories.welcome",
+    'admin': 'command.help.categories.admin',
+    'channel': 'command.help.categories.channel',
+    'chatbot': 'command.help.categories.chatbot',
+    'contributors': 'command.help.categories.contributors',
+    'conversion': 'command.help.categories.conversion',
+    'economy': 'command.help.categories.economy',
+    'eew': 'command.help.categories.eew',
+    'globalchat': 'command.help.categories.globalchat',
+    'guild': 'command.help.categories.guild',
+    'image': 'command.help.categories.image',
+    'info': 'command.help.categories.info',
+    'logs': 'command.help.categories.logs',
+    'message': 'command.help.categories.message',
+    'midi': 'command.help.categories.midi',
+    'minecraft': 'command.help.categories.minecraft',
+    'moderation': 'command.help.categories.moderation',
+    'roblox': 'command.help.categories.roblox',
+    'role': 'command.help.categories.role',
+    'stats': 'command.help.categories.stats',
+    'user': 'command.help.categories.user',
+    'user_global': 'command.help.categories.user_global',
+    'welcome': 'command.help.categories.welcome',
 }
 
 SUBGROUP_TRANSLATION_KEYS = {
-    ("moderation", "blacklist"): "command.help.subgroups.moderation.blacklist",
-    ("moderation", "word"): "command.help.subgroups.moderation.word",
-    ("moderation", "user"): "command.help.subgroups.moderation.user",
+    ('moderation', 'blacklist'): 'command.help.subgroups.moderation.blacklist',
+    ('moderation', 'word'): 'command.help.subgroups.moderation.word',
+    ('moderation', 'user'): 'command.help.subgroups.moderation.user',
 }
 
 
 class HelpCategorySelect(ui.Select):
-    _PREVIOUS_PAGE = "__help_category_previous__"
-    _NEXT_PAGE = "__help_category_next__"
+    _PREVIOUS_PAGE = '__help_category_previous__'
+    _NEXT_PAGE = '__help_category_next__'
 
     def __init__(self, help_view: HelpLayoutView) -> None:
         self.help_view = help_view
@@ -70,11 +70,11 @@ class HelpCategorySelect(ui.Select):
             options.append(
                 SelectOption(
                     label=help_view.translate(
-                        "command.help.previous_categories",
-                        "Previous categories...",
+                        'command.help.previous_categories',
+                        'Previous categories...',
                     )[:100],
                     value=self._PREVIOUS_PAGE,
-                    emoji="⬅️",
+                    emoji='⬅️',
                 ),
             )
 
@@ -83,8 +83,8 @@ class HelpCategorySelect(ui.Select):
                 label=help_view.category_label(category)[:100],
                 value=category,
                 description=help_view.translate(
-                    "command.help.category_option_description",
-                    "{count} command(s)",
+                    'command.help.category_option_description',
+                    '{count} command(s)',
                     count=len(items),
                 )[:100],
                 default=category == help_view.selected_category,
@@ -96,18 +96,18 @@ class HelpCategorySelect(ui.Select):
             options.append(
                 SelectOption(
                     label=help_view.translate(
-                        "command.help.next_categories",
-                        "More categories...",
+                        'command.help.next_categories',
+                        'More categories...',
                     )[:100],
                     value=self._NEXT_PAGE,
-                    emoji="➡️",
+                    emoji='➡️',
                 ),
             )
 
         super().__init__(
             placeholder=help_view.translate(
-                "command.help.select_placeholder",
-                "Select a command category...",
+                'command.help.select_placeholder',
+                'Select a command category...',
             )[:150],
             options=options,
             min_values=1,
@@ -157,13 +157,13 @@ class HelpNavigationButton(ui.Button):
         page = self.help_view.page
         category_page = self.help_view.category_page
 
-        if self.action == "home":
+        if self.action == 'home':
             category = None
             page = 0
             category_page = 0
-        elif self.action == "previous":
+        elif self.action == 'previous':
             page -= 1
-        elif self.action == "next":
+        elif self.action == 'next':
             page += 1
 
         await self.help_view.show_state(
@@ -221,7 +221,7 @@ class HelpLayoutView(ui.LayoutView):
         return max(1, math.ceil(count / CATEGORY_OPTIONS_PER_PAGE))
 
     def translate(self, key: str, fallback: str, **kwargs) -> str:
-        translator = getattr(self.bot, "internal_translator", None)
+        translator = getattr(self.bot, 'internal_translator', None)
         if translator is not None:
             translated = translator.T(key, self.locale, **kwargs)
             if translated != key:
@@ -234,11 +234,11 @@ class HelpLayoutView(ui.LayoutView):
 
     def category_label(self, category: str) -> str:
         if category == GENERAL_CATEGORY:
-            return self.translate("command.help.categories.general", "General")
+            return self.translate('command.help.categories.general', 'General')
 
-        normalized = category.casefold().replace(" ", "_")
+        normalized = category.casefold().replace(' ', '_')
         key = CATEGORY_TRANSLATION_KEYS.get(normalized)
-        fallback = category.replace("_", " ").title()
+        fallback = category.replace('_', ' ').title()
 
         if key is None:
             return fallback
@@ -249,24 +249,23 @@ class HelpLayoutView(ui.LayoutView):
         navigation = ui.ActionRow(
             HelpNavigationButton(
                 self,
-                action="previous",
-                label=self.translate("command.help.previous", "Previous"),
+                action='previous',
+                label=self.translate('command.help.previous', 'Previous'),
                 disabled=self.selected_category is None or self.page == 0,
             ),
             HelpNavigationButton(
                 self,
-                action="home",
-                label=self.translate("command.help.home", "Home"),
+                action='home',
+                label=self.translate('command.help.home', 'Home'),
                 style=ButtonStyle.primary,
                 disabled=self.selected_category is None,
             ),
             HelpNavigationButton(
                 self,
-                action="next",
-                label=self.translate("command.help.next", "Next"),
+                action='next',
+                label=self.translate('command.help.next', 'Next'),
                 disabled=(
-                    self.selected_category is None
-                    or self.page >= self.page_count - 1
+                    self.selected_category is None or self.page >= self.page_count - 1
                 ),
             ),
         )
@@ -274,15 +273,15 @@ class HelpLayoutView(ui.LayoutView):
         self.add_item(
             ui.Container(
                 ui.TextDisplay(
-                    "# "
+                    '# '
                     + self.translate(
-                        "command.help.title",
-                        "pox-bot Help Center",
+                        'command.help.title',
+                        'pox-bot Help Center',
                     )
-                    + "\n"
+                    + '\n'
                     + self.translate(
-                        "command.help.subtitle",
-                        "Browse available slash commands by category.",
+                        'command.help.subtitle',
+                        'Browse available slash commands by category.',
                     ),
                 ),
                 ui.Separator(),
@@ -310,7 +309,7 @@ class HelpLayoutView(ui.LayoutView):
         subgroup: app_commands.Group,
     ) -> str:
         key = SUBGROUP_TRANSLATION_KEYS.get((category, subgroup.name))
-        fallback = subgroup.name.replace("_", " ").title()
+        fallback = subgroup.name.replace('_', ' ').title()
         if key is None:
             return fallback
         return self.translate(key, fallback)
@@ -321,18 +320,18 @@ class HelpLayoutView(ui.LayoutView):
         *,
         fallback: str | None = None,
     ) -> str:
-        raw = str(value or "").strip()
+        raw = str(value or '').strip()
         if not raw:
             return fallback or self.translate(
-                "command.help.no_description",
-                "No description provided.",
+                'command.help.no_description',
+                'No description provided.',
             )
 
         # Command and group descriptions are often locale keys in pox-bot.
-        if raw.startswith("command.") and raw.endswith(".description"):
+        if raw.startswith('command.') and raw.endswith('.description'):
             default = fallback or self.translate(
-                "command.help.no_description",
-                "No description provided.",
+                'command.help.no_description',
+                'No description provided.',
             )
             return self.translate(raw, default)
 
@@ -340,45 +339,45 @@ class HelpLayoutView(ui.LayoutView):
 
     @staticmethod
     def _signature(command: app_commands.Command) -> str:
-        parameters = getattr(command, "parameters", ())
+        parameters = getattr(command, 'parameters', ())
         parts = [
-            f"<{parameter.display_name}>"
+            f'<{parameter.display_name}>'
             if parameter.required
-            else f"[{parameter.display_name}]"
+            else f'[{parameter.display_name}]'
             for parameter in parameters
         ]
-        return f" {' '.join(parts)}" if parts else ""
+        return f' {" ".join(parts)}' if parts else ''
 
     @staticmethod
     def _truncate(text: str, limit: int = 3500) -> str:
         if len(text) <= limit:
             return text
-        marker = "\n\n-# ..."
+        marker = '\n\n-# ...'
         return text[: limit - len(marker)].rstrip() + marker
 
     def _render_overview(self) -> str:
         total = sum(len(items) for items in self.categories.values())
         summary = self.translate(
-            "command.help.overview_stats",
-            "{total} commands across {categories} categories.",
+            'command.help.overview_stats',
+            '{total} commands across {categories} categories.',
             total=total,
             categories=len(self.categories),
         )
-        category_lines = "\n".join(
-            f"- **{self.category_label(category)}**: "
+        category_lines = '\n'.join(
+            f'- **{self.category_label(category)}**: '
             + self.translate(
-                "command.help.category_command_count",
-                "{count} command(s)",
+                'command.help.category_command_count',
+                '{count} command(s)',
                 count=len(items),
             )
             for category, items in self.categories.items()
         )
 
         overview = self.translate(
-            "command.help.overview",
-            "Welcome! Choose a category to explore its commands.",
+            'command.help.overview',
+            'Welcome! Choose a category to explore its commands.',
         )
-        return self._truncate(f"## {overview}\n\n{summary}\n\n{category_lines}")
+        return self._truncate(f'## {overview}\n\n{summary}\n\n{category_lines}')
 
     def _render_content(self) -> str:
         if self.selected_category is None:
@@ -399,28 +398,25 @@ class HelpLayoutView(ui.LayoutView):
                 current_subgroup = subgroup_id
                 if subgroup is not None:
                     subgroup_title = self._subgroup_label(category, subgroup)
-                    entries.append(f"### {subgroup_title}")
+                    entries.append(f'### {subgroup_title}')
 
             description = self._description(command.description)
             signature = self._signature(command)
             entries.append(
-                f"**`/{command.qualified_name}{signature}`**\n{description}",
+                f'**`/{command.qualified_name}{signature}`**\n{description}',
             )
 
-        body = "\n\n".join(entries) or self.translate(
-            "command.help.empty_category",
-            "No commands are available in this category.",
+        body = '\n\n'.join(entries) or self.translate(
+            'command.help.empty_category',
+            'No commands are available in this category.',
         )
         pagination = self.translate(
-            "command.help.pagination",
-            "Page {current} of {total}",
+            'command.help.pagination',
+            'Page {current} of {total}',
             current=self.page + 1,
             total=self.page_count,
         )
-        content = (
-            f"## {self.category_label(category)}\n\n"
-            f"{body}\n\n-# {pagination}"
-        )
+        content = f'## {self.category_label(category)}\n\n{body}\n\n-# {pagination}'
         return self._truncate(content)
 
     async def interaction_check(self, interaction: Interaction) -> bool:
@@ -429,8 +425,8 @@ class HelpLayoutView(ui.LayoutView):
 
         await interaction.response.send_message(
             self.translate(
-                "command.help.not_yours",
-                "This help menu belongs to another user.",
+                'command.help.not_yours',
+                'This help menu belongs to another user.',
             ),
             ephemeral=True,
         )
@@ -468,7 +464,7 @@ class HelpCog(commands.Cog):
         if contexts is None:
             return None
 
-        private_name = f"_{context_name}"
+        private_name = f'_{context_name}'
         if hasattr(contexts, private_name):
             return getattr(contexts, private_name)
 
@@ -498,11 +494,7 @@ class HelpCog(commands.Cog):
                 if default_value is not True:
                     return False
 
-            if (
-                current.guild_only
-                and context_name != "guild"
-                and value is not True
-            ):
+            if current.guild_only and context_name != 'guild' and value is not True:
                 return False
 
             current = current.parent
@@ -527,23 +519,23 @@ class HelpCog(commands.Cog):
     ) -> bool:
         return any(
             cls._explicit_context_value(contexts, name) is not None
-            for name in ("guild", "dm_channel", "private_channel")
+            for name in ('guild', 'dm_channel', 'private_channel')
         )
 
     @staticmethod
     def _interaction_context_name(interaction: Interaction) -> str:
         if interaction.guild is not None:
-            return "guild"
+            return 'guild'
 
         context = interaction.context
         if context.dm_channel:
-            return "dm_channel"
+            return 'dm_channel'
         if context.private_channel:
-            return "private_channel"
-        
+            return 'private_channel'
+
         if isinstance(interaction.channel, GroupChannel):
-            return "private_channel"
-        return "dm_channel"
+            return 'private_channel'
+        return 'dm_channel'
 
     def _build_categories(
         self,
@@ -573,7 +565,7 @@ class HelpCog(commands.Cog):
         general: list[app_commands.Command] = []
 
         for root in roots.values():
-            if root.name == "help":
+            if root.name == 'help':
                 continue
 
             if isinstance(root, app_commands.Group):
@@ -585,9 +577,8 @@ class HelpCog(commands.Cog):
                 ]
                 if visible_commands:
                     categories[root.name].extend(visible_commands)
-            elif (
-                isinstance(root, app_commands.Command)
-                and self._supports_context(root, context_name)
+            elif isinstance(root, app_commands.Command) and self._supports_context(
+                root, context_name
             ):
                 general.append(root)
 
@@ -609,8 +600,8 @@ class HelpCog(commands.Cog):
         }
 
     @app_commands.command(
-        name="help",
-        description=app_commands.locale_str("command.help.description"),
+        name='help',
+        description=app_commands.locale_str('command.help.description'),
     )
     @app_commands.allowed_contexts(
         guilds=True,

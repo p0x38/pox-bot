@@ -530,14 +530,16 @@ class MIDIProcessor:
             raise
 
         if process.returncode != 0:
-            details = (stderr or stdout).decode(
-                'utf-8',
-                errors='replace',
-            ).strip()
-
-            raise RuntimeError(
-                error_message + (f'\n{details}' if details else '')
+            details = (
+                (stderr or stdout)
+                .decode(
+                    'utf-8',
+                    errors='replace',
+                )
+                .strip()
             )
+
+            raise RuntimeError(error_message + (f'\n{details}' if details else ''))
 
     @staticmethod
     def _write_output_stream(
@@ -563,19 +565,19 @@ class MIDIProcessor:
         return output_stream
 
     async def convert(
-            self,
-            source: MIDIInput,
-            output: MP3Output = None,
+        self,
+        source: MIDIInput,
+        output: MP3Output = None,
     ) -> Path | BinaryIO:
         """Asynchronously convert MIDI input into an MP3.
-        
+
         Args:
             source:
                 A MIDI file path, bytes or binary file-like object.
             output:
                 An MP3 output path or writable binary stream.
                 If omitted, a new BytesIO containing the MP3 is returned.
-        
+
         Returns:
             The destination Path or output binary stream.
         """
@@ -664,15 +666,11 @@ class MIDIProcessor:
                 str(self.soundfont),
                 str(midi_path),
                 timeout=300,
-                error_message=(
-                    'FluidSynth failed to render the MIDI file.'
-                ),
+                error_message=('FluidSynth failed to render the MIDI file.'),
             )
 
             if not wav_path.is_file() or wav_path.stat().st_size == 0:
-                raise RuntimeError(
-                    'FluidSynth did not produce a valid WAV file.'
-                )
+                raise RuntimeError('FluidSynth did not produce a valid WAV file.')
 
             await self._run_process(
                 ffmpeg_executable,
@@ -689,15 +687,11 @@ class MIDIProcessor:
                 self.bitrate,
                 str(mp3_path),
                 timeout=300,
-                error_message=(
-                    'FFmpeg failed to encode the WAV file as MP3.'
-                ),
+                error_message=('FFmpeg failed to encode the WAV file as MP3.'),
             )
 
             if not mp3_path.is_file() or mp3_path.stat().st_size == 0:
-                raise RuntimeError(
-                    'FFmpeg produced no MP3 output.'
-                )
+                raise RuntimeError('FFmpeg produced no MP3 output.')
 
             # Stage 3: Return a file path or an output stream.
             if destination is not None:

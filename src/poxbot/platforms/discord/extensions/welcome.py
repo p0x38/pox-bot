@@ -399,7 +399,7 @@ class WelcomeCog(commands.Cog):
             mutation,
             title_key='command.welcome.leavechannel.embeds.default.title',
             description_key=('command.welcome.leavechannel.embeds.default.description'),
-            description_args={'channel': channel.mention if channel else "None"},
+            description_args={'channel': channel.mention if channel else 'None'},
         )
 
     @group.command(
