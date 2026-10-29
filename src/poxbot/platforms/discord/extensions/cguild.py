@@ -14,6 +14,7 @@ from discord.app_commands import Choice
 from discord.ext import commands
 
 from ....application import PoxBot
+from ....shared.utils.pagination_view import PaginationView
 
 
 class LoggingView(ui.View):
@@ -64,11 +65,12 @@ class LoggingView(ui.View):
                 description += f'**{i}.** {entry}\n'
             embed.description = description
 
+        category_label = self.translator.T(
+            f'command.guild.logs.categories.{self.current_category}',
+            self.locale,
+        )
         embed.set_footer(
-            text=(
-                f'Page {self.current_page + 1}/{total_pages}'
-                ' | {self.current_category}'
-            ),
+            text=f'Page {self.current_page + 1}/{total_pages} | {category_label}',
         )
         return embed
 
@@ -115,9 +117,9 @@ class LoggingView(ui.View):
         await interaction.response.edit_message(embed=self.create_embed(), view=self)
 
     async def interaction_check(self, interaction: Interaction) -> bool:
-        if interaction.user != self.user:
+        if interaction.user.id != self.user.id:
             await interaction.response.send_message(
-                'Your not executor of this menu idiot.',
+                'This menu belongs to another user.',
                 ephemeral=True,
             )
             return False
@@ -127,6 +129,40 @@ class LoggingView(ui.View):
 class GuildCog(commands.Cog):
     def __init__(self, bot):
         self.bot: PoxBot = bot
+
+    async def _send_paginated_lines(
+            self,
+            interaction: Interaction,
+            *,
+            title: str,
+            lines: list[str],
+            page_size: int = 20,
+    ) -> None:
+        """Send text items through the shared Components V2 paginator."""
+        if page_size < 1:
+            raise ValueError('page_size must be greater than zero.')
+        if not lines:
+            raise ValueError('lines must contain at least one item.')
+
+        total = len(lines)
+        pages: list[str] = []
+
+        for offset in range(0, total, page_size):
+            page_lines = lines[offset : offset + page_size]
+            last_item = offset + len(page_lines)
+
+            pages.append(
+                f'## {title}\n\n'
+                f'{"\n".join(page_lines)}\n\n'
+                f'-# {offset + 1}–{last_item} / {total}'  # ruff: ignore[ambiguous-unicode-character-string]
+            )
+
+        view = PaginationView(
+            pages,
+            owner_id=interaction.user.id,
+            timeout=180,
+        )
+        await view.send(interaction)
 
     checker_group = app_commands.Group(
         name='guild',
@@ -165,19 +201,35 @@ class GuildCog(commands.Cog):
                     'command.guild.info.placeholders.members',
                     str(loc),
                     {
-                        'count': len(guild.members),
+                        'count': (
+                            guild.member_count
+                            if guild.member_count is not None
+                            else len(guild.members)
+                        ),
                     },
                 ),
                 'server_creation': guild.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-                'server_shard': guild.shard_id if guild.shard_id else 'N/A',
+                'server_shard': (
+                    guild.shard_id
+                    if guild.shard_id is not None
+                    else 'N/A'
+                ),
                 'server_large': self.bot.internal_translator.T(
-                    'Yes' if guild.large else 'No'
+                    'text.boolean.true' if guild.large else 'text.boolean.false',
+                    str(loc),
                 ),
                 'server_roles': f'{len(guild.roles):,} roles',
                 'server_emojis': f'{len(guild.emojis):,} emojis',
                 'server_stickers': f'{len(guild.stickers):,} stickers',
                 'server_level': f'Level {guild.premium_tier}',
-                'server_boosts': f'{guild.premium_subscription_count:,} boosts',
+                'server_boosts': (
+                    f'{guild.premium_subscription_count:,} boosts'
+                    if guild.premium_subscription_count is not None
+                    else self.bot.internal_translator.T(
+                        'text.unknown',
+                        str(loc),
+                    )
+                ),
                 'server_channels': f'{len(guild.channels):,} channels',
                 'server_categories': f'{len(guild.categories):,} categories',
                 'server_chunked': f'{"Yes" if guild.chunked else "No"}',
@@ -268,63 +320,77 @@ class GuildCog(commands.Cog):
         self,
         interaction: Interaction,
         sort_by: str | None = None,
-    ):
+    ) -> None:
         guild = interaction.guild
         loc = await self.bot.get_locale(interaction)
 
         await interaction.response.defer(thinking=True)
 
-        embed = Embed(color=Color.red())
-        members = []
-        final_texts = []
-
-        if not guild:
-            embed.description = self.bot.internal_translator.T(
-                'error.embeds.guild_only.description',
-                loc,
+        if guild is None:
+            embed = Embed(
+                title=self.bot.internal_translator.T(
+                    'error.embeds.guild_only.title',
+                    loc,
+                ),
+                description=self.bot.internal_translator.T(
+                    'error.embeds.guild_only.description',
+                    loc,
+                ),
+                color=Color.red(),
             )
-            embed.title = self.bot.internal_translator.T(
-                'error.embeds.guild_only.title',
-                loc,
+            await interaction.edit_original_response(embed=embed)
+            return
+
+        members = [member for member in guild.members if not member.bot]
+
+        if sort_by == 'id':
+            members.sort(key=lambda member: member.id)
+        elif sort_by == 'username':
+            members.sort(key=lambda member: member.name.casefold())
+        elif sort_by == 'created_at':
+            members.sort(key=lambda member: member.created_at)
+        elif sort_by == 'joined_at':
+            members.sort(
+                key=lambda member: (
+                    member.joined_at is None,
+                    (
+                        member.joined_at.timestamp()
+                        if member.joined_at is not None
+                        else 0.0
+                    ),
+                ),
             )
-            return await interaction.followup.send(embed=embed)
 
-        if sort_by:
-            if sort_by == 'id':
-                members = sorted(guild.members, key=lambda m: m.id)
-            elif sort_by == 'username':
-                members = sorted(guild.members, key=lambda m: m.name)
-            elif sort_by == 'created_at':
-                members = sorted(guild.members, key=lambda m: m.created_at or 0)
-            elif sort_by == 'joined_at':
-                members = sorted(guild.members, key=lambda m: m.joined_at or 0)
-        else:
-            members = guild.members
-
-        for i, member in enumerate(members):
-            if member.bot:
-                continue
-            final_texts.append(f'{i}. {member.mention}')
-
-        if not final_texts:
-            embed.description = self.bot.internal_translator.T(
-                'error.embeds.no_members.description',
-                loc,
+        if not members:
+            embed = Embed(
+                description=self.bot.internal_translator.T(
+                    'error.embeds.no_members.description',
+                    loc,
+                ),
+                title=self.bot.internal_translator.T(
+                    'error.embeds.no_members.title',
+                    loc,
+                ),
+                color=Color.red(),
             )
-            embed.title = self.bot.internal_translator.T(
-                'error.embeds.no_members.title',
-                loc,
-            )
-            return await interaction.followup.send(embed=embed)
+            await interaction.edit_original_response(embed=embed)
+            return
 
-        embed.description = '\n'.join(final_texts)
-        embed.title = self.bot.internal_translator.T(
+        page_title = self.bot.internal_translator.T(
             'command.guild.listmembers.embeds.default.title',
             loc,
             guild_name=guild.name,
         )
+        lines = [
+            f'`{index}.` {member.mention}'
+            for index, member in enumerate(members, start=1)
+        ]
 
-        return await interaction.followup.send(embed=embed)
+        await self._send_paginated_lines(
+            interaction,
+            title=page_title,
+            lines=lines,
+        )
 
     @cached(300)
     @checker_group.command(
@@ -469,7 +535,7 @@ class GuildCog(commands.Cog):
             color=Color.green(),
         )
 
-        members = []
+        members: list[str] = []
 
         if not include_bot and not include_member:
             embed.color = Color.red()
@@ -491,8 +557,12 @@ class GuildCog(commands.Cog):
             embed.color = Color.purple()
             embed.description = 'Not found'
             return await interaction.followup.send(embed=embed)
-        embed.description = '\n'.join(members)
-        return await interaction.followup.send(embed=embed)
+
+        await self._send_paginated_lines(
+            interaction,
+            title=embed.title or '',
+            lines=members,
+        )
 
     @cached(60)
     @checker_group.command(
@@ -533,15 +603,19 @@ class GuildCog(commands.Cog):
         result = [
             member.mention
             for member in interaction.guild.members
-            if keyword in member.name
+            if member.name.casefold().startswith(keyword.casefold())
         ]
 
         if len(result) == 0:
             embed.color = Color.purple()
             embed.description = f'User starts with {keyword} not found from this guild.'
             return await interaction.followup.send(embed=embed)
-        embed.description = ', '.join(result)
-        return await interaction.followup.send(embed=embed)
+
+        await self._send_paginated_lines(
+            interaction,
+            title=embed.title or '',
+            lines=result,
+        )
 
     @cached(60)
     @checker_group.command(
@@ -574,21 +648,27 @@ class GuildCog(commands.Cog):
                 loc,
                 guild_name=interaction.guild.name,
             ),
-            description='\n'.join(
-                [
-                    role.mention
-                    for role in sorted(
-                        interaction.guild.roles,
-                        key=lambda r: r.position,
-                        reverse=True,
-                    )
-                    if not role.managed and role.name != '@everyone'
-                ]
-            ),
             color=Color.green(),
         )
 
-        return await interaction.followup.send(embed=embed)
+        lines = [
+            role.mention
+            for role in sorted(
+                interaction.guild.roles,
+                key=lambda role: role.position,
+                reverse=True,
+            )
+            if not role.managed and role.name != '@everyone'
+        ]
+
+        if not lines:
+            return await interaction.followup.send(embed=embed)
+
+        await self._send_paginated_lines(
+            interaction,
+            title=embed.title or '',
+            lines=lines,
+        )
 
     @cached(60)
     async def fetch_guild_history(self, guild: Guild):
@@ -630,6 +710,8 @@ class GuildCog(commands.Cog):
         loc = await self.bot.get_locale(interaction)
         if not interaction.guild:
             return await interaction.response.send_message('Must be in guild.')
+
+        await interaction.response.defer(thinking=True)
         history_data = await self.fetch_guild_history(interaction.guild)
 
         view = LoggingView(
@@ -639,7 +721,7 @@ class GuildCog(commands.Cog):
             self.bot.internal_translator,
             loc,
         )
-        await interaction.response.send_message(embed=view.create_embed(), view=view)
+        await interaction.followup.send(embed=view.create_embed(), view=view)
 
 
 async def setup(bot):
