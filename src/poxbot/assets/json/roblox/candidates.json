@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "candidates": [
+    {
+      "user_id": 156,
+      "username": "builderman",
+      "display_name": "builderman",
+      "features": {
+        "has_verified_badge": true,
+        "created_before_2015": true,
+        "is_known_creator": true,
+        "has_hat": null,
+        "has_hair_accessory": null
+      },
+      "tags": [
+        "administrator",
+        "classic"
+      ]
+    },
+    {
+      "user_id": 261,
+      "username": "Shedletsky",
+      "display_name": "Shedletsky",
+      "features": {
+        "has_verified_badge": true,
+        "created_before_2015": true,
+        "is_known_creator": true,
+        "has_hat": null,
+        "has_hair_accessory": null
+      },
+      "tags": [
+        "administrator",
+        "classic"
+      ]
+    }
+  ]
+}

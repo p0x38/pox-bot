@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "id": "verified",
+      "feature": "has_verified_badge",
+      "prompt": "akinator.questions.verified",
+      "enabled": true,
+      "weight": 1.0
+    },
+    {
+      "id": "old_account",
+      "feature": "created_before_2015",
+      "prompt": "akinator.questions.old_account",
+      "enabled": true,
+      "weight": 1.0
+    },
+    {
+      "id": "creator",
+      "feature": "is_known_creator",
+      "prompt": "akinator.questions.creator",
+      "enabled": true,
+      "weight": 1.2
+    },
+    {
+      "id": "hat",
+      "feature": "has_hat",
+      "prompt": "akinator.questions.hat",
+      "enabled": true,
+      "weight": 1.0
+    },
+    {
+      "id": "hair",
+      "feature": "has_hair_accessory",
+      "prompt": "akinator.questions.hair",
+      "enabled": true,
+      "weight": 1.0
+    }
+  ]
+}
