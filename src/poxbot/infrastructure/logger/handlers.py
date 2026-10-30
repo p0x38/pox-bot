@@ -46,7 +46,10 @@ def setup_console_handler(
     log_widget: RichLog | None = None,
 ) -> None:
     target_console = (
-        Console(force_terminal=True, color_system='truecolor')
+        Console(
+            force_terminal=True,
+            color_system='truecolor',
+        )
         if log_widget
         else console
     )
@@ -66,6 +69,10 @@ def setup_console_handler(
         )
     else:
         handler = RichHandler(**handler_kwargs)
+
+    handler.setFormatter(
+        logging.Formatter('%(name)s: %(message)s'),
+    )
 
     handler.addFilter(ExcludeConsoleFilter())
     handler.addFilter(SkipEmptyMessageFilter())
