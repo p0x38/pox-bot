@@ -38,7 +38,11 @@ class Bootstrap:
             settings, log_widget=dashboard.log_widget if dashboard is not None else None
         )
 
-        system_logger = get_logger(__name__, prefix='System')
+        system_logger = get_logger(
+            __name__,
+            prefix='System',
+            display_name='Bootstrap',
+        )
 
         package_dir = Path(__file__).resolve().parent  # ruff: ignore[blocking-path-method-in-async-function]
         resource_manager = ResourceManager()

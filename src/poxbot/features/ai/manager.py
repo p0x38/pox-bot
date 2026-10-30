@@ -59,7 +59,11 @@ class LLMManager:
         api_key: str | None = None,
     ):
         self.bot = bot
-        self.logger = get_logger(__name__, prefix='AIProviderManager')
+        self.logger = get_logger(
+            __name__,
+            prefix='AIProviderManager',
+            display_name='AIProviderManager',
+        )
         self.config = config
         self.api_key = api_key
         self.preferred = LLMProviderType.OPEN_ROUTER

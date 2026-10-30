@@ -15,7 +15,11 @@ if TYPE_CHECKING:
 
 class CounterManager:
     def __init__(self, bot: 'PoxBot'):
-        self.logger = get_logger(__name__, prefix='CounterManager')
+        self.logger = get_logger(
+            __name__,
+            prefix='CounterManager',
+            display_name='CounterManager',
+        )
         self.bot = bot
 
         self._counters: dict[str, int] = {}

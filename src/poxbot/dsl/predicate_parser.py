@@ -122,7 +122,11 @@ class SafeStringPredicateEvaluator:
     MAX_RECURSION_DEPTH = 50
 
     def __init__(self, expression: str, rng: Random | None = None):
-        self.logger = get_logger(__name__, prefix='PredicateDSLParser')
+        self.logger = get_logger(
+            __name__,
+            prefix='PredicateDSLParser',
+            display_name='PredicateDSLParser',
+        )
         self.expression = expression
         self.rng = rng or Random()
         self.error_message: str | None = None

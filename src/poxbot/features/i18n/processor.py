@@ -12,7 +12,12 @@ from anyio import Path as AsyncPath
 from ...core.resources import ResourceManager
 from ...infrastructure.logger import get_logger
 
-logger = get_logger(__name__, prefix='I18n', extension='i18n')
+logger = get_logger(
+    __name__,
+    prefix='I18n',
+    extension='i18n',
+    display_name='I18n',
+)
 
 
 def natural_key(s: str):

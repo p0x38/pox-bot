@@ -71,7 +71,12 @@ class DMSendModal(discord.ui.Modal):
                 f'Failed to send DM. {e}',
                 ephemeral=True,
             )
-            get_logger(__name__).exception('Exception thrown while trying to send a DM')
+            get_logger(
+                __name__,
+                prefix='DMSendModal',
+                extension='message',
+                display_name='DMSendModal',
+            ).exception('Exception thrown while trying to send a DM')
 
 
 class MessageCog(commands.Cog):
@@ -374,9 +379,9 @@ class MessageCog(commands.Cog):
         messages = []
 
         if isinstance(interaction.channel, discord.TextChannel):
-            messages.extend(
-                [message async for message in interaction.channel.history(limit=1000)]
-            )
+            messages.extend([
+                message async for message in interaction.channel.history(limit=1000)
+            ])
 
         embed = Embed(
             title=self.bot.internal_translator.T(

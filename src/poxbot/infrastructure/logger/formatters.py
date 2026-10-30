@@ -46,9 +46,23 @@ class JSONLog(TypedDict):
     stack_trace: str | None
 
 
-class PlainFormatter(Formatter):
-    def __init__(self):
-        super().__init__('%(asctime)s [%(levelname)s] %(name)s: %(message)s')
+class RichFormatter(Formatter):
+    def format(self, record: LogRecord) -> str:
+        logger_name = getattr(record, 'display_name', None)
+
+        if not logger_name:
+            logger_name = getattr(record, 'class_name', None)
+
+        if not logger_name:
+            logger_name = record.name
+
+        original_name = record.name
+
+        try:
+            record.name = logger_name
+            return super().format(record)
+        finally:
+            record.name = original_name
 
 
 class JSONFormatter(Formatter):

@@ -88,7 +88,11 @@ class Metrics:
     def __init__(self, config: TraceConfig):
         from ...infrastructure.logger import get_logger  # ruff: ignore[import-outside-top-level]
 
-        self.logger = get_logger(__name__, prefix='TelemetryManager')
+        self.logger = get_logger(
+            __name__,
+            prefix='TelemetryManager',
+            display_name='TelemetryManager',
+        )
         self.config = config
         self.resource = Resource(
             attributes={

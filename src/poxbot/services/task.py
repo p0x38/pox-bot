@@ -7,7 +7,11 @@ from ..infrastructure.logger.setup import get_logger
 
 class TaskManager:
     def __init__(self):
-        self.logger = get_logger(__name__, prefix='TaskManager')
+        self.logger = get_logger(
+            __name__,
+            prefix='TaskManager',
+            display_name='TaskManager',
+        )
         self.tasks: set[asyncio.Task[Any]] = set()
 
     def create(
@@ -19,7 +23,8 @@ class TaskManager:
         self.tasks.add(task)
 
         self.logger.info(
-            'task.spawned',
+            'Spawned task %s',
+            name,
             extra={
                 'task': name,
             },
@@ -45,7 +50,9 @@ class TaskManager:
             return
 
         self.logger.error(
-            'task.failed',
+            'Failed to complete task (%s): %s',
+            type(exception).__name__,
+            exception,
             exc_info=(
                 type(exception),
                 exception,

@@ -17,7 +17,11 @@ class I18nManager:
         *,
         resource_manager: ResourceManager | None = None,
     ):
-        self.logger = get_logger(__name__, prefix='I18nManager')
+        self.logger = get_logger(
+            __name__,
+            prefix='I18nManager',
+            display_name='I18nManager',
+        )
         self.locales_path = Path(locales_path)
         self.resource_manager = resource_manager
 

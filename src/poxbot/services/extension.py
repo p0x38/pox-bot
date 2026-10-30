@@ -133,7 +133,11 @@ class ExtensionManager:
         platform: str = 'discord',
         resource_manager: ResourceManager | None = None,
     ):
-        self.extension_logger = get_logger(__name__, prefix='ExtensionManager')
+        self.extension_logger = get_logger(
+            __name__,
+            prefix='ExtensionManager',
+            display_name='ExtensionManager',
+        )
 
         self.cogs_path = Path(cogs_path)
         self.package = package

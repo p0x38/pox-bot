@@ -24,7 +24,11 @@ if TYPE_CHECKING:
 
 class TTSManager:
     def __init__(self, bot: PoxBot):
-        self.logger = get_logger(__name__, prefix='TTSManager')
+        self.logger = get_logger(
+            __name__,
+            prefix='TTSManager',
+            display_name='TTSManager',
+        )
         self.bot = bot
 
         self.tts_config: TTSConfig | None = None

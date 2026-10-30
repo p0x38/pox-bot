@@ -11,7 +11,7 @@ from rich.logging import RichHandler
 
 from ...config.schema import BotSettings
 from .filters import ExcludeConsoleFilter, SkipEmptyMessageFilter
-from .formatters import JSONFormatter
+from .formatters import JSONFormatter, RichFormatter
 
 if TYPE_CHECKING:
     from textual.widgets import RichLog
@@ -70,9 +70,7 @@ def setup_console_handler(
     else:
         handler = RichHandler(**handler_kwargs)
 
-    handler.setFormatter(
-        logging.Formatter('%(name)s: %(message)s'),
-    )
+    handler.setFormatter(RichFormatter('%(name)s: %(message)s'))
 
     handler.addFilter(ExcludeConsoleFilter())
     handler.addFilter(SkipEmptyMessageFilter())

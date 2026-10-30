@@ -24,6 +24,7 @@ class ExporterExtension(commands.Cog):
             __name__,
             prefix='Exporter',
             extension='ExporterExtension',
+            display_name='ExporterExtension',
         )
 
     def _generate_commands_json(self) -> list:

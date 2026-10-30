@@ -7,7 +7,11 @@ from ...infrastructure.logger import get_logger
 from .processor import I18nProcessor
 from .translator import DiscordI18nTranslator, I18nTranslator
 
-translation_manager_logger = get_logger(__name__, prefix='TranslationManager')
+translation_manager_logger = get_logger(
+    __name__,
+    prefix='TranslationManager',
+    display_name='TranslationManager',
+)
 
 
 class TranslationManager:

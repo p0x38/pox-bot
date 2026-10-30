@@ -2,7 +2,11 @@ import asyncio
 
 from ...infrastructure.logger import get_logger
 
-logger = get_logger(__name__, prefix='GitInfo')
+logger = get_logger(
+    __name__,
+    prefix='GitInfo',
+    display_name='GitInfo',
+)
 
 
 class GitInfo:

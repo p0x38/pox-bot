@@ -41,6 +41,16 @@ def configure_logging(settings: BotSettings, *, log_widget: RichLog | None = Non
     _configured = True
 
 
-def get_logger(name: str, *, prefix: str | None = None, extension: str | None = None):
-    extra = {'prefix': prefix, 'extension': extension}
+def get_logger(
+    name: str,
+    *,
+    prefix: str | None = None,
+    extension: str | None = None,
+    display_name: str | None = None,
+):
+    extra = {
+        'prefix': prefix,
+        'extension': extension,
+        'display_name': display_name,
+    }
     return PrefixAdapter(getLogger(name), extra)

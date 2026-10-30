@@ -7,7 +7,11 @@ from ...infrastructure.logger import get_logger
 
 class BaseTTSEngine(ABC):
     def __init__(self):
-        self.logger = get_logger(__name__, prefix='TTSEngine')
+        self.logger = get_logger(
+            __name__,
+            prefix='TTSEngine',
+            display_name='TTSEngine',
+        )
 
     @abstractmethod
     async def initialize(self, manager: Any) -> None:

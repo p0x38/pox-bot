@@ -8,7 +8,12 @@ from ....infrastructure.logger import get_logger
 
 class MemoryManagerCog(commands.Cog):
     def __init__(self, bot: PoxBot) -> None:
-        self.logger = get_logger(__name__, prefix='MemoryManager')
+        self.logger = get_logger(
+            __name__,
+            prefix='MemoryManager',
+            extension='memory_manager',
+            display_name='MemoryManagerCog',
+        )
         self.bot = bot
         self.cleanup_loop.start()
 

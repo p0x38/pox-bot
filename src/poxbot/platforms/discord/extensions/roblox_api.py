@@ -16,7 +16,12 @@ from ....infrastructure.logger import get_logger
 
 class RobloxAPICog(commands.Cog):
     def __init__(self, bot: PoxBot):
-        self.logger = get_logger(__name__, prefix='RobloxCog')
+        self.logger = get_logger(
+            __name__,
+            prefix='RobloxCog',
+            extension='roblox_api',
+            display_name='RobloxAPICog',
+        )
         self.bot: PoxBot = bot
         self._client = Client()
 

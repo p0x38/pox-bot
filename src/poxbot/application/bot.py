@@ -122,7 +122,11 @@ class PoxBot(commands.AutoShardedBot):
 
         self.settings = context.settings
 
-        self.logger = get_logger(__name__, prefix='PoxBot')
+        self.logger = get_logger(
+            __name__,
+            prefix='PoxBot',
+            display_name='PoxBot',
+        )
 
         self.i18n_manager = context.i18n
         self.discord_translator = self.i18n_manager.discord
@@ -290,9 +294,9 @@ class PoxBot(commands.AutoShardedBot):
             )
             self.logger.info(
                 '### Guilds ###\n%s',
-                '\n'.join(
-                    [f'{g.id}: "{g.name}" (Joined at {g.me.joined_at})' for g in guilds]
-                ),
+                '\n'.join([
+                    f'{g.id}: "{g.name}" (Joined at {g.me.joined_at})' for g in guilds
+                ]),
                 extra={
                     'guilds': len(guilds),
                     'users': sum(g.member_count or 0 for g in guilds),

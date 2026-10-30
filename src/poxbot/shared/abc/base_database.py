@@ -46,7 +46,11 @@ class BaseDatabase(ABC):  # ruff: ignore[abstract-base-class-without-abstract-me
             bot (PoxBot): The main bot instance for metrics.
             dsn: The Data Source Name (connection string) for the database.
         """
-        self.logger = get_logger(__name__, prefix=self.__class__.__name__)
+        self.logger = get_logger(
+            __name__,
+            prefix=self.__class__.__name__,
+            display_name=self.__class__.__name__,
+        )
         self.bot = bot
 
         validated_dsn = self._validate_and_patch_dsn(dsn)

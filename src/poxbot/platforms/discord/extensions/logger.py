@@ -7,7 +7,12 @@ from ....infrastructure.logger import get_logger
 
 class LoggerCog(commands.Cog):
     def __init__(self, bot: PoxBot):
-        self.logger = get_logger(__name__, prefix='LoggerCog')
+        self.logger = get_logger(
+            __name__,
+            prefix='LoggerCog',
+            extension='logger',
+            display_name='LoggerCog',
+        )
         self.bot = bot
 
     def format_guild_info(self, guild: Guild):

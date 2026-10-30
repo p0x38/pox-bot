@@ -255,7 +255,11 @@ class P2PQuakeManager:
         if cache_size < 1:
             raise ValueError('cache_size must be positive')
 
-        self.logger = get_logger(__name__, prefix='P2PQuakeManager')
+        self.logger = get_logger(
+            __name__,
+            prefix='P2PQuakeManager',
+            display_name='P2PQuakeManager',
+        )
 
         self._session = session
         self._owns_session = session is None
@@ -682,12 +686,10 @@ class P2PQuakeManager:
         params: list[tuple[str, str | int]] = [
             ('codes', code) for code in dict.fromkeys(codes)
         ]
-        params.extend(
-            [
-                ('limit', limit),
-                ('offset', offset),
-            ]
-        )
+        params.extend([
+            ('limit', limit),
+            ('offset', offset),
+        ])
 
         async with session.get(
             f'{self._base_url}/history',
