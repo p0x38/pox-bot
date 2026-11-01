@@ -91,8 +91,8 @@ def test_parse_probability(
     ("value", "message"),
     [
         (True, "boolean is not a valid probability"),
-        ("", "Probability cannot be empty"),
-        (" ", "Probability cannot be empty"),
+        ("", "Invalid probability"),
+        (" ", "Invalid probability"),
         ("abc", "Invalid probability"),
         ("1/0", "Invalid probability"),
         ("-0.1", "Probability must be between"),
