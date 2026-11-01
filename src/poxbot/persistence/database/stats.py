@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 from discord import Guild
 from pytz import UTC
-from sqlalchemy import desc, func, select
+from sqlalchemy import desc, func, select, text
 from sqlalchemy.dialects.postgresql import insert as postgres_insert
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 
@@ -22,7 +22,8 @@ class StatisticsDatabase(BaseDatabase):
     async def on_load(self):
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
-        self.logger.debug('Initialized tables')
+            await conn.execute(text('DROP TABLE IF EXISTS m_cache'))
+        self.logger.debug('Initialized tables and removed any legacy message cache')
 
     async def add_xp(self, user_id: int, count: int, guild_id: int = 0):
         activity_date = datetime.now(UTC).date()

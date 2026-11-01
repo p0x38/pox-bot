@@ -11,7 +11,8 @@ from ..models.economy_orm import (
 )
 from ..models.giveaway_orm import Giveaway
 from ..models.global_chat_moderation_orm import GlobalChatModerationCase
-from ..models.guild_settings_v2_orm import ActiveTicket
+from ..models.guild_settings_v2 import GuildConfigV2
+from ..models.guild_settings_v2_orm import ActiveTicket, GuildSettings
 from ..models.orm.moderation import ModerationEntry
 from ..models.stats_orm import DailyUserActivity, UserStatistics
 from ..models.user_profile_orm import UserActivity, UserProfile
@@ -37,6 +38,135 @@ class PrivacyDatabase(BaseDatabase):
             return 0
 
         return int(row_count)
+
+    @staticmethod
+    def _matches_user_id(value: Any, user_id: int) -> bool:
+        if isinstance(value, bool) or value is None:
+            return False
+
+        try:
+            return int(value) == user_id
+        except (TypeError, ValueError):
+            return False
+
+    @classmethod
+    def _get_guild_config_user_references(
+        cls,
+        config: Any,
+        user_id: int,
+    ) -> dict[str, Any]:
+        data = config.to_dict() if hasattr(config, 'to_dict') else config
+        if not isinstance(data, dict):
+            return {}
+
+        features = data.get('features')
+        if not isinstance(features, dict):
+            return {}
+
+        references: dict[str, Any] = {}
+        executor_features = [
+            name
+            for name, feature in features.items()
+            if isinstance(feature, dict)
+            and cls._matches_user_id(feature.get('last_executor'), user_id)
+        ]
+
+        if executor_features:
+            references['last_executor_features'] = sorted(executor_features)
+
+        filtering = features.get('filtering')
+        filters = filtering.get('filters') if isinstance(filtering, dict) else None
+        anti_message = (
+            filters.get('anti_message') if isinstance(filters, dict) else None
+        )
+        blocked_user_ids = (
+            anti_message.get('blocked_user_ids')
+            if isinstance(anti_message, dict)
+            else None
+        )
+        if isinstance(blocked_user_ids, list) and any(
+            cls._matches_user_id(value, user_id) for value in blocked_user_ids
+        ):
+            references['anti_message_blocklist'] = True
+
+        global_chat = features.get('global_chat')
+        whitelisted_user_ids = (
+            global_chat.get('whitelisted_user_ids')
+            if isinstance(global_chat, dict)
+            else None
+        )
+        if isinstance(whitelisted_user_ids, list) and any(
+            cls._matches_user_id(value, user_id) for value in whitelisted_user_ids
+        ):
+            references['global_chat_whitelist'] = True
+
+        return references
+
+    @classmethod
+    def _remove_guild_config_user_references(
+        cls,
+        config: dict[str, Any],
+        user_id: int,
+    ) -> dict[str, int]:
+        features = config.get('features')
+        if not isinstance(features, dict):
+            return {}
+
+        removed: dict[str, int] = {}
+
+        filtering = features.get('filtering')
+        filters = filtering.get('filters') if isinstance(filtering, dict) else None
+        anti_message = (
+            filters.get('anti_message') if isinstance(filters, dict) else None
+        )
+        blocked_user_ids = (
+            anti_message.get('blocked_user_ids')
+            if isinstance(anti_message, dict)
+            else None
+        )
+        if isinstance(blocked_user_ids, list):
+            retained_ids = [
+                value
+                for value in blocked_user_ids
+                if not cls._matches_user_id(value, user_id)
+            ]
+            removed_count = len(blocked_user_ids) - len(retained_ids)
+            if removed_count and isinstance(anti_message, dict):
+                anti_message['blocked_user_ids'] = retained_ids
+                removed['guild_config_blocked_user_references'] = removed_count
+
+        global_chat = features.get('global_chat')
+        whitelisted_user_ids = (
+            global_chat.get('whitelisted_user_ids')
+            if isinstance(global_chat, dict)
+            else None
+        )
+        if isinstance(whitelisted_user_ids, list):
+            retained_ids = [
+                value
+                for value in whitelisted_user_ids
+                if not cls._matches_user_id(value, user_id)
+            ]
+            removed_count = len(whitelisted_user_ids) - len(retained_ids)
+            if removed_count and isinstance(global_chat, dict):
+                global_chat['whitelisted_user_ids'] = retained_ids
+                removed['guild_config_global_chat_whitelist_references'] = (
+                    removed_count
+                )
+
+        executor_count = 0
+        for feature in features.values():
+            if (
+                isinstance(feature, dict)
+                and cls._matches_user_id(feature.get('last_executor'), user_id)
+            ):
+                feature['last_executor'] = None
+                executor_count += 1
+
+        if executor_count:
+            removed['guild_config_last_executor_references'] = executor_count
+
+        return removed
 
     async def export_user_data(self, user_id: int) -> dict[str, Any]:
         """
@@ -86,6 +216,23 @@ class PrivacyDatabase(BaseDatabase):
                 .order_by(Giveaway.end_time),
             )
             giveaways = list(giveaway_result.all())
+
+            guild_settings_result = await session.scalars(
+                select(GuildSettings).order_by(GuildSettings.guild_id),
+            )
+            server_configuration_references = []
+            for guild_settings in guild_settings_result:
+                references = self._get_guild_config_user_references(
+                    guild_settings.config,
+                    user_id,
+                )
+                if references:
+                    server_configuration_references.append(
+                        {
+                            'guild_id': str(guild_settings.guild_id),
+                            **references,
+                        },
+                    )
 
             # These are moderation restrictions where this user is the target.
             # They are exported but retained during deletion for moderation
@@ -207,6 +354,7 @@ class PrivacyDatabase(BaseDatabase):
                         for row in transactions
                     ],
                 },
+                'server_configuration_references': server_configuration_references,
                 'tickets': [
                     {
                         'channel_id': str(row.channel_id),
@@ -375,6 +523,35 @@ class PrivacyDatabase(BaseDatabase):
             for name, statement in deletion_statements:
                 result = await session.execute(statement)
                 report['deleted'][name] = self._get_row_count(result)
+
+            guild_settings_result = await session.scalars(
+                select(GuildSettings)
+                .order_by(GuildSettings.guild_id)
+                .with_for_update(),
+            )
+            for guild_settings in guild_settings_result:
+                config = guild_settings.config
+                config_data = (
+                    config.to_dict() if hasattr(config, 'to_dict') else config
+                )
+                if not isinstance(config_data, dict):
+                    continue
+
+                removed_references = self._remove_guild_config_user_references(
+                    config_data,
+                    user_id,
+                )
+                if not removed_references:
+                    continue
+
+                guild_settings.config = GuildConfigV2.from_dict(config_data)
+                for name, count in removed_references.items():
+                    target = (
+                        report['anonymized']
+                        if name == 'guild_config_last_executor_references'
+                        else report['deleted']
+                    )
+                    target[name] = target.get(name, 0) + count
 
             giveaway_result = await session.execute(
                 update(Giveaway)

@@ -33,6 +33,9 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
+
+      - name: Install native audio build dependencies
+        run: sudo apt-get update && sudo apt-get install --yes libasound2-dev libjack-jackd2-dev
       
       - name: Verify lockfile
         run: uv lock --check
@@ -60,6 +63,9 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
+
+      - name: Install native audio build dependencies
+        run: sudo apt-get update && sudo apt-get install --yes libasound2-dev libjack-jackd2-dev
       
       - name: Verify lockfile
         run: uv lock --check
@@ -87,6 +93,9 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
+
+      - name: Install native audio build dependencies
+        run: sudo apt-get update && sudo apt-get install --yes libasound2-dev libjack-jackd2-dev
       
       - name: Verify lockfile
         run: uv lock --check

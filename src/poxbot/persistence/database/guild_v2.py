@@ -34,6 +34,10 @@ class GuildSettingsDatabase(BaseDatabase):
             asyncio.Lock,
         )
 
+    def invalidate_config_cache(self) -> None:
+        """Clear cached guild configuration after external database mutations."""
+        self._cache.clear()
+
     async def on_load(self):
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)

@@ -20,7 +20,7 @@ from discord import (
     app_commands,
 )
 from discord.ext import commands
-from pytz import (UTC, timezone)
+from pytz import UTC, timezone
 
 if TYPE_CHECKING:
     from ....application import PoxBot
