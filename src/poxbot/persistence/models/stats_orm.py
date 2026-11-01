@@ -1,6 +1,6 @@
-from datetime import date, datetime
+from datetime import date
 
-from sqlalchemy import BigInteger, Date, func
+from sqlalchemy import BigInteger, Date
 from sqlalchemy.orm import Mapped, mapped_column
 
 from ...shared.bases import Base
@@ -12,16 +12,6 @@ class UserStatistics(Base):
     xp: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
     total_messages: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
     level: Mapped[int] = mapped_column(BigInteger, default=1, nullable=False)
-
-
-class MessageCache(Base):
-    __tablename__ = 'm_cache'
-    message_id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
-    channel_id: Mapped[int] = mapped_column(BigInteger)
-    guild_id: Mapped[int] = mapped_column(BigInteger)
-    author_id: Mapped[int] = mapped_column(BigInteger)
-    content: Mapped[str] = mapped_column()
-    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
 
 class DailyUserActivity(Base):

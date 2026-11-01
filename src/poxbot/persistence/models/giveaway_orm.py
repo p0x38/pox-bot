@@ -13,4 +13,7 @@ class Giveaway(Base):
     end_time: Mapped[int] = mapped_column(BigInteger)
     winners: Mapped[int] = mapped_column(BigInteger)
     prize: Mapped[str] = mapped_column()
-    host_id: Mapped[int] = mapped_column(BigInteger)
+    host_id: Mapped[int | None] = mapped_column(
+        BigInteger,
+        nullable=True,
+    )

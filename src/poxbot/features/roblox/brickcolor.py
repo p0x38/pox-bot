@@ -4,6 +4,7 @@ import colorsys
 import math
 import random as _random
 import re
+from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import ClassVar
 
@@ -17,7 +18,14 @@ class Color3:
     b: float = 0.0
 
     def __post_init__(self) -> None:
-        for channel_name, value in (('r', self.r), ('g', self.g), ('b', self.b)):
+        for channel_name, value in (
+            ('r', self.r),
+            ('g', self.g),
+            ('b', self.b),
+        ):
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise TypeError(f'{channel_name} must be a number.')
+
             if not math.isfinite(value) or not 0.0 <= value <= 1.0:
                 raise ValueError(
                     f'{channel_name} must be a finite number in [0, 1]; got {value!r}'
@@ -28,7 +36,7 @@ class Color3:
         return cls(red, green, blue)
 
     @classmethod
-    def from_rgb(cls, red: int, green: int, blue: int) -> Color3:
+    def from_rgb(cls, red: float, green: float, blue: float) -> Color3:
         channels = (red, green, blue)
         if any(
             isinstance(channel, bool) or not isinstance(channel, (int, float))
@@ -63,7 +71,7 @@ class Color3:
             digits = ''.join(character * 2 for character in digits)
         if not re.fullmatch(r'[0-9a-fA-F]{6}', digits):
             raise ValueError(
-                "Hex color must have 3 or 6 hexadecimal digits, "
+                'Hex color must have 3 or 6 hexadecimal digits, '
                 "optionally prefixed with '#'"
             )
         return cls.from_rgb(
@@ -84,7 +92,11 @@ class Color3:
 
     @property
     def rgb(self) -> tuple[int, int, int]:
-        return tuple(round(channel * 255) for channel in (self.r, self.g, self.b))  # type: ignore[return-value]
+        return (
+            round(self.r * 255),
+            round(self.g * 255),
+            round(self.b * 255),
+        )
 
     @property
     def hex(self) -> str:
@@ -106,10 +118,10 @@ class Color3:
             a + (b - a) * alpha
             for a, b in zip((self.r, self.g, self.b), (color.r, color.g, color.b))
         )
-        
+
         return Color3(*(min(1.0, max(0.0, channel)) for channel in channels))
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[float]:
         return iter((self.r, self.g, self.b))
 
 
@@ -520,13 +532,11 @@ class BrickColor:
     ) -> BrickColor:
         if green is not None or blue is not None:
             if green is None or blue is None:
-                raise TypeError(
-                    "BrickColor.new(r, g, b) requires all three channels"
-                )
+                raise TypeError('BrickColor.new(r, g, b) requires all three channels')
 
             if isinstance(value, bool) or not isinstance(value, (int, float)):
                 raise TypeError(
-                    "BrickColor.new(r, g, b) requires numeric RGB components"
+                    'BrickColor.new(r, g, b) requires numeric RGB components'
                 )
 
             return cls.from_rgb(float(value), green, blue)

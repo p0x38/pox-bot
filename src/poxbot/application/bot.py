@@ -294,9 +294,9 @@ class PoxBot(commands.AutoShardedBot):
             )
             self.logger.info(
                 '### Guilds ###\n%s',
-                '\n'.join([
-                    f'{g.id}: "{g.name}" (Joined at {g.me.joined_at})' for g in guilds
-                ]),
+                '\n'.join(
+                    [f'{g.id}: "{g.name}" (Joined at {g.me.joined_at})' for g in guilds]
+                ),
                 extra={
                     'guilds': len(guilds),
                     'users': sum(g.member_count or 0 for g in guilds),
@@ -318,7 +318,6 @@ class PoxBot(commands.AutoShardedBot):
                 extra={
                     'no_console': True,
                     'request_id': request_id,
-                    'author_id': message.author.id,
                     'guild_id': message.guild.id if message.guild else None,
                     'channel_id': message.channel.id,
                 },
@@ -420,18 +419,10 @@ class PoxBot(commands.AutoShardedBot):
                 Messageable,
             )
         ):
-            options = vars(interaction.namespace)
-
             self.logger.info(
-                'User "%s" executed "/%s" in "%s"',
-                f'{interaction.user.display_name} ({interaction.user.id})',
-                interaction.command.qualified_name,
-                self.format_channel_info(interaction.channel),
+                'Application command executed.',
                 extra={
-                    'user': f'{interaction.user.display_name} ({interaction.user.id})',
                     'command': interaction.command.qualified_name,
-                    'channel': self.format_channel_info(interaction.channel),
-                    'command_args': options,
                     'guild_id': getattr(interaction.guild, 'id', None),
                     'request_id': request_id,
                 },

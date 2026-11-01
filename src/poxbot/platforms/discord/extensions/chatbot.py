@@ -2,15 +2,11 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
-import os
 import re
 from collections import deque
 from datetime import datetime, timedelta
-from pathlib import Path
 from typing import Any
 
-import aiofiles
-import orjson
 from discord import (
     AllowedMentions,
     Color,
@@ -26,7 +22,6 @@ from pytz import UTC
 from ....application import PoxBot
 from ....persistence.models.guild_settings_v2 import GuildConfigV2
 from ....services.ai import LLMManager
-from ....shared.utils.app_path import app_dir
 
 
 class ChatbotCog(commands.Cog):
@@ -57,15 +52,6 @@ class ChatbotCog(commands.Cog):
         self.history: dict[int, deque[dict[str, Any]]] = {}
         self.history_limit = 25
 
-        custom_dir = os.getenv('LLM_HISTORY_DIR')
-        self.persistence_dir = (
-            Path(custom_dir) if custom_dir else app_dir.user_data_path / 'llm_history'
-        )
-        self.persistence_dir.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
-
         # ------------------------------------------------------------------
         # Runtime state
         # ------------------------------------------------------------------
@@ -79,35 +65,6 @@ class ChatbotCog(commands.Cog):
         ]
 
         self.database = bot.database.guild
-
-    # ======================================================================
-    # AI history persistence
-    # ======================================================================
-
-    def _get_file_path(self, channel_id: int) -> Path:
-        return self.persistence_dir / f'{channel_id}.json'
-
-    async def _save_history(self, channel_id: int) -> None:
-        if channel_id not in self.history:
-            return
-
-        file_path = self._get_file_path(channel_id)
-        to_save = list(self.history[channel_id])[-self.history_limit :]
-
-        try:
-
-            def _write() -> None:
-                with file_path.open('wb') as f:
-                    f.write(orjson.dumps(to_save))
-
-            loop = asyncio.get_running_loop()
-            await loop.run_in_executor(None, _write)
-
-        except Exception:
-            self.bot.logger.exception(
-                'Failed to persist history for %s',
-                channel_id,
-            )
 
     # ======================================================================
     # AI message formatting / history
@@ -201,7 +158,6 @@ class ChatbotCog(commands.Cog):
     async def populate_channel_cache(
         self,
         channel: Messageable,
-        limit: int = 10,
     ) -> None:
         channel_id = getattr(channel, 'id', 0)
 
@@ -212,50 +168,6 @@ class ChatbotCog(commands.Cog):
             self.history[channel_id] = deque(
                 maxlen=self.history_limit,
             )
-
-        file_path = self._get_file_path(channel_id)
-
-        if file_path.is_file():
-            try:
-                async with aiofiles.open(file_path, 'rb') as f:
-                    raw = await f.read()
-
-                if raw:
-                    loaded = orjson.loads(raw)
-
-                    for item in loaded:
-                        self.history[channel_id].append(
-                            self._sanitize_history_item(item),
-                        )
-
-            except Exception:
-                self.bot.logger.exception(
-                    'Failed to load persisted history for channel %s',
-                    channel_id,
-                )
-
-        try:
-            fetched_messages = [
-                message
-                async for message in channel.history(
-                    limit=limit,
-                    oldest_first=False,
-                )
-            ]
-
-            for message in reversed(fetched_messages):
-                data = await self.format_discord_message(message)
-                sanitized = self._sanitize_history_item(data)
-
-                if sanitized not in self.history[channel_id]:
-                    self.history[channel_id].append(sanitized)
-
-        except Exception:
-            self.bot.logger.exception(
-                'Failed to populate channel cache',
-            )
-
-        await self._save_history(channel_id)
 
     # ======================================================================
     # AI response
@@ -335,7 +247,6 @@ class ChatbotCog(commands.Cog):
                 self.history[message.channel.id].append(
                     current_msg_data,
                 )
-                await self._save_history(message.channel.id)
 
             if include_history:
                 messages.extend(
@@ -447,8 +358,6 @@ class ChatbotCog(commands.Cog):
                         },
                     ),
                 )
-
-                await self._save_history(message.channel.id)
 
     # ======================================================================
     # Trigger handling
@@ -576,21 +485,8 @@ class ChatbotCog(commands.Cog):
         for channel_id in channel_ids:
             self.history.pop(channel_id, None)
 
-        # Remove persisted history files.
-        cleared_files = 0
-
-        for channel_id in channel_ids:
-            file_path = self._get_file_path(channel_id)
-
-            if not file_path.is_file():
-                continue
-
-            with contextlib.suppress(OSError):
-                file_path.unlink()
-                cleared_files += 1
-
         await interaction.response.send_message(
-            (f'Cleared AI conversation history for {cleared_files} channel(s).'),
+            'Cleared AI conversation history.',
             ephemeral=True,
         )
 

@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import math
@@ -17,22 +16,18 @@ class AkinatorSession:
         rng: random.Random | None = None,
     ) -> None:
         if not candidates:
-            raise ValueError("At least one candidate is required.")
+            raise ValueError('At least one candidate is required.')
 
-        if len({candidate.user_id for candidate in candidates}) != len(
-            candidates
-        ):
-            raise ValueError("Candidate user IDs must be unique.")
+        if len({candidate.user_id for candidate in candidates}) != len(candidates):
+            raise ValueError('Candidate user IDs must be unique.')
 
         if len({question.id for question in questions}) != len(questions):
-            raise ValueError("Question IDs must be unique.")
+            raise ValueError('Question IDs must be unique.')
 
         self.candidates = list(candidates)
         self.questions = tuple(questions)
         self.asked_questions: set[str] = set()
-        self._questions_by_id = {
-            question.id: question for question in self.questions
-        }
+        self._questions_by_id = {question.id: question for question in self.questions}
         self._rng = rng or random.Random()
 
     @property
@@ -96,16 +91,16 @@ class AkinatorSession:
         question = self._questions_by_id.get(question_id)
 
         if question is None:
-            raise KeyError(f"Unknown question: {question_id}")
+            raise KeyError(f'Unknown question: {question_id}')
 
         if not question.enabled:
-            raise ValueError(f"Question is disabled: {question_id}")
+            raise ValueError(f'Question is disabled: {question_id}')
 
         if question_id in self.asked_questions:
-            raise ValueError(f"Question already answered: {question_id}")
+            raise ValueError(f'Question already answered: {question_id}')
 
         if answer is not None and type(answer) is not bool:
-            raise TypeError("answer must be True, False, or None")
+            raise TypeError('answer must be True, False, or None')
 
         self.asked_questions.add(question_id)
 
@@ -139,12 +134,10 @@ class AkinatorSession:
         previous_count = self.remaining_count
 
         self.candidates = [
-            candidate
-            for candidate in self.candidates
-            if candidate.user_id != user_id
+            candidate for candidate in self.candidates if candidate.user_id != user_id
         ]
 
         if self.remaining_count == previous_count:
-            raise KeyError(f"Candidate not found: {user_id}")
+            raise KeyError(f'Candidate not found: {user_id}')
 
         return self.remaining_count

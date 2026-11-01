@@ -1228,12 +1228,31 @@
     "settings": {
         "description": "Peek at the settings! :3"
     },
+    "privacy": {
+        "description": "Manage your personal data stored by PoxBot.",
+        "export": {
+            "description": "Export the personal data PoxBot stores about you.",
+            "success": "Your data export is attached to this private response.",
+            "failed": "Your data export could not be generated. Please try again later."
+        },
+        "delete": {
+            "description": "Request deletion of your personal data.",
+            "buttons": {
+                "confirm": "Confirm deletion",
+                "cancel": "Cancel"
+            },
+            "confirmation": "## Delete your PoxBot data?\n\nThis operation permanently deletes your stored profile, statistics, activity, preferences, and economy data.\n\nSome moderation records may be retained for service security. Giveaway records may also be preserved with your host ID removed.\n\nThis does not delete your Discord account, server messages, or Discord channels.\n\nPress **Confirm deletion** to proceed. This action cannot be undone.",
+            "unauthorized": "This confirmation belongs to another user.",
+            "expired": "This deletion confirmation has expired. Run `/privacy delete` again to create a new one.",
+            "cancelled": "Data deletion was cancelled. No changes were made.",
+            "failed": "Your data could not be deleted. The database transaction was rolled back. Please contact the bot administrator if this keeps happening.",
+            "success": "Your deletion request has been processed.\n\nDeleted records: **{deleted}**\nAnonymized references: **{anonymized}**\nRetained records: **{retained}**\n\nSome moderation records may remain under the bot's data-retention policy.",
+            "processing": "This deletion is already being processed."
+        }
+    },
     "stats": {
         "active_pattern": {
-            "description": "See when the messages are popping off! :3",
-            "parameters": {
-                "target": "Pick a member to filter by, or leave blank for the whole channel."
-            }
+            "description": "Show the activity pattern of recent messages in this channel! :3"
         },
         "description": "Leaderboards and stats! :3",
         "globaltop": {
@@ -1248,10 +1267,7 @@
             }
         },
         "wordcloud": {
-            "description": "Turn message history into a word cloud! :3",
-            "wordcloud": {
-                "description": "Turn message history into a word cloud! :3"
-            }
+            "description": "Generate a word cloud from recent messages in this channel! :3"
         },
         "activity": {
             "description": "Graph daily XP activity.",

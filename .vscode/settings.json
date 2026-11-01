@@ -139,14 +139,11 @@
             "name": "scipy"
         },
     ],
-    "python.analysis.referencesCodeLens": true,
-    "python.analysis.reportExtraTelemetry": false,
     "python.analysis.stubPath": "typings",
     "python.analysis.typeCheckingMode": "standard",
     "python.analysis.typeEvaluation.analyzeUnannotatedFunctions": true,
     "python.analysis.useLibraryCodeForTypes": true,
     "python.analysis.userFileIndexingLimit": 2000,
-    "python.languageServer": "Default",
     "python.REPL.enableREPLSmartSend": false,
     "python.testing.pytestArgs": [
         "tests"
@@ -154,10 +151,10 @@
     "python.testing.pytestEnabled": true,
     "python.testing.unittestEnabled": false,
     "ruff.configurationPreference": "filesystemFirst",
-    "ruff.trace.server": "verbose",
     "editor.rulers": [
         88
     ],
+    
     "python.analysis.typeEvaluation.deprecateTypingAliases": true,
     "python.analysis.typeEvaluation.enableReachabilityAnalysis": true,
     "python.analysis.autoImportCompletions": true,
@@ -168,5 +165,19 @@
             "packageManager": "ms-python.python:pip",
         }
     ],
-    "python.terminal.useEnvFile": true
+    "python.terminal.useEnvFile": true,
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "/src/poxbot/assets/json/roblox/candidates.json",
+            ],
+            "url": "./schemas/roblox/candidates.schema.json"
+        },
+        {
+            "fileMatch": [
+                "/src/poxbot/assets/json/roblox/questions.json",
+            ],
+            "url": "./schemas/roblox/questions.schema.json"
+        }
+    ]
 }

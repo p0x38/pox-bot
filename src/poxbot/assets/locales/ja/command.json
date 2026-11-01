@@ -1228,6 +1228,28 @@
     "settings": {
         "description": "設定をちょっとのぞいてみよう！ :3"
     },
+    "privacy": {
+        "description": "PoxBotに保存されている個人データを管理します。",
+        "export": {
+            "description": "PoxBotが保存しているあなたの個人データをエクスポートします。",
+            "success": "データのエクスポートファイルをこの非公開の応答に添付しました。",
+            "failed": "データをエクスポートできませんでした。時間をおいて再試行してください。"
+        },
+        "delete": {
+            "buttons": {
+                "confirm": "Confirm deletion",
+                "cancel": "Cancel"
+            },
+            "description": "保存されている個人データの削除を申請します。",
+            "confirmation": "## PoxBotのデータを削除しますか？\n\nこの操作では、保存されているプロフィール、統計、活動履歴、ユーザー設定、エコノミーデータを完全に削除します。\n\nサービスの安全維持に必要な一部のモデレーション記録は保持される場合があります。また、Giveawayの記録は開催者IDを削除したうえで保持される場合があります。\n\nDiscordアカウント、サーバー内のメッセージ、Discordのチャンネルは削除されません。\n\n続行するには **Confirm deletion** を押してください。この操作は取り消せません。",
+            "unauthorized": "この確認操作は別のユーザーに属しています。",
+            "expired": "削除の確認期限が切れました。もう一度 `/privacy delete` を実行してください。",
+            "cancelled": "データの削除をキャンセルしました。変更は行われていません。",
+            "failed": "データを削除できませんでした。データベースの処理はロールバックされました。問題が続く場合はBot管理者にお問い合わせください。",
+            "success": "削除処理が完了しました。\n\n削除されたレコード: **{deleted}**\n匿名化された関連付け: **{anonymized}**\n保持されたレコード: **{retained}**\n\n一部のモデレーション記録は、Botのデータ保持方針に基づいて残る場合があります。",
+            "processing": "This deletion is already being processed."
+        }
+    },
     "stats": {
         "activity": {
             "description": "日ごとのXP活動をグラフで表示します。",
@@ -1252,10 +1274,7 @@
             }
         },
         "active_pattern": {
-            "description": "メッセージがいつ盛り上がってるか見てみよう！ :3",
-            "parameters": {
-                "target": "メンバーを指定するとその人だけ、空欄ならチャンネル全体が対象だよ。"
-            }
+            "description": "このチャンネルの直近の活動パターンを表示するよ！ :3"
         },
         "description": "リーダーボードと統計！ :3",
         "globaltop": {
@@ -1270,10 +1289,7 @@
             }
         },
         "wordcloud": {
-            "description": "メッセージ履歴からワードクラウドを作っちゃおう！ :3",
-            "wordcloud": {
-                "description": "メッセージ履歴のコンテンツを雲のようにさせるよ！ :3"
-            }
+            "description": "このチャンネルの直近のメッセージからワードクラウドを生成するよ！ :3"
         }
     },
     "ticket": {

@@ -6,6 +6,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from roblox import AvatarThumbnailType, Client
+from roblox.partials.partialuser import RequestedUsernamePartialUser
 
 
 class RobloxAPIError(RuntimeError):
@@ -17,17 +18,17 @@ class RobloxUser:
     user_id: int
     username: str
     display_name: str
-    avatar_url: str
+    avatar_url: str | None
 
     @property
     def profile_url(self) -> str:
-        return f"https://www.roblox.com/users/{self.user_id}/profile"
+        return f'https://www.roblox.com/users/{self.user_id}/profile'
 
 
 class RobloxClient:
     def __init__(self, *, cache_ttl: float = 300.0) -> None:
         if cache_ttl < 0:
-            raise ValueError("cache_ttl must not be negative.")
+            raise ValueError('cache_ttl must not be negative.')
 
         self._client = Client()
         self._cache_ttl = cache_ttl
@@ -37,11 +38,12 @@ class RobloxClient:
 
     async def close(self) -> None:
         """Close the underlying HTTP session."""
-        if self._closed:
-            return
+        async with self._lock:
+            if self._closed:
+                return
 
-        self._closed = True
-        await self._client.requests.session.aclose()
+            self._closed = True
+            await self._client.requests.session.aclose()
 
     async def resolve_users(
         self,
@@ -60,7 +62,7 @@ class RobloxClient:
 
         async with self._lock:
             if self._closed:
-                raise RobloxAPIError("The Roblox client is closed.")
+                raise RobloxAPIError('The Roblox client is closed.')
 
             now = time.monotonic()
             resolved: dict[str, RobloxUser] = {}
@@ -96,7 +98,7 @@ class RobloxClient:
                     )
                 except Exception as exc:
                     raise RobloxAPIError(
-                        "Failed to retrieve Roblox users or avatar thumbnails."
+                        'Failed to retrieve Roblox users or avatar thumbnails.'
                     ) from exc
 
                 thumbnails_by_id = {
@@ -109,9 +111,6 @@ class RobloxClient:
 
                 for record in records:
                     avatar_url = thumbnails_by_id.get(record.id)
-
-                    if avatar_url is None:
-                        continue
 
                     username = record.name
                     display_name = record.display_name
@@ -128,21 +127,15 @@ class RobloxClient:
                     )
 
                     keys = {username.casefold()}
-                    requested_username = getattr(
-                        record,
-                        "requested_username",
-                        None,
-                    )
 
-                    if isinstance(requested_username, str):
-                        keys.add(requested_username.casefold())
+                    if isinstance(record, RequestedUsernamePartialUser):
+                        requested_username = record.requested_username
+
+                        if requested_username:
+                            keys.add(requested_username.casefold())
 
                     for key in keys:
                         resolved[key] = user
                         self._cache[key] = (expires_at, user)
 
-            return [
-                resolved[key]
-                for key in unique_names
-                if key in resolved
-            ]
+            return [resolved[key] for key in unique_names if key in resolved]

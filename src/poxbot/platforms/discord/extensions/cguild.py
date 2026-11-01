@@ -131,12 +131,12 @@ class GuildCog(commands.Cog):
         self.bot: PoxBot = bot
 
     async def _send_paginated_lines(
-            self,
-            interaction: Interaction,
-            *,
-            title: str,
-            lines: list[str],
-            page_size: int = 20,
+        self,
+        interaction: Interaction,
+        *,
+        title: str,
+        lines: list[str],
+        page_size: int = 20,
     ) -> None:
         """Send text items through the shared Components V2 paginator."""
         if page_size < 1:
@@ -210,9 +210,7 @@ class GuildCog(commands.Cog):
                 ),
                 'server_creation': guild.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                 'server_shard': (
-                    guild.shard_id
-                    if guild.shard_id is not None
-                    else 'N/A'
+                    guild.shard_id if guild.shard_id is not None else 'N/A'
                 ),
                 'server_large': self.bot.internal_translator.T(
                     'text.boolean.true' if guild.large else 'text.boolean.false',

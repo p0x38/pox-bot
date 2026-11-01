@@ -3,13 +3,13 @@ from typing import TYPE_CHECKING
 
 from discord import Guild
 from pytz import UTC
-from sqlalchemy import delete, desc, extract, func, select
+from sqlalchemy import desc, func, select
 from sqlalchemy.dialects.postgresql import insert as postgres_insert
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 
 from ...shared.bases import BaseDatabase
 from ...shared.bases.base_orm_model import Base
-from ..models.stats_orm import DailyUserActivity, MessageCache, UserStatistics
+from ..models.stats_orm import DailyUserActivity, UserStatistics
 
 if TYPE_CHECKING:
     from ...application.bot import PoxBot
@@ -134,58 +134,6 @@ class StatisticsDatabase(BaseDatabase):
             stmt = select(UserStatistics).order_by(desc(col)).limit(limit)
             result = await session.execute(stmt)
             return list(result.scalars().all())
-
-    async def cache_message(self, **kwargs):
-        async with self.async_session() as session, session.begin():
-            await session.merge(MessageCache(**kwargs))
-
-            subquery = (
-                select(MessageCache.message_id)
-                .where(MessageCache.channel_id == kwargs['channel_id'])
-                .order_by(MessageCache.message_id.desc())
-                .limit(15000)
-                .scalar_subquery()
-            )
-
-            await session.execute(
-                delete(MessageCache).where(
-                    MessageCache.channel_id == kwargs['channel_id'],
-                    MessageCache.message_id.notin_(subquery),
-                ),
-            )
-
-    async def get_cached_messages(self, channel_id: int, limit: int) -> list[str]:
-        async with self.async_session() as session, session.begin():
-            result = await session.execute(
-                select(MessageCache.content)
-                .where(MessageCache.channel_id == channel_id)
-                .order_by(MessageCache.message_id.desc())
-                .limit(limit),
-            )
-            return list(result.scalars().all())
-
-    async def get_active_pattern(
-        self,
-        channel_id: int,
-        target_user_id: int | None = None,
-    ):
-        async with self.async_session() as session, session.begin():
-            if 'sqlite' in self.engine.url.drivername:
-                hour_expr = func.strftime('%H', MessageCache.created_at)
-            else:
-                hour_expr = extract('hour', MessageCache.created_at)
-
-            stmt = select(
-                hour_expr.label('hour'),
-                func.count().label('count'),
-            ).where(MessageCache.channel_id == channel_id)
-
-            if target_user_id:
-                stmt = stmt.where(MessageCache.author_id == target_user_id)
-
-            stmt = stmt.group_by(hour_expr).order_by(hour_expr)
-            result = await session.execute(stmt)
-            return result.mappings().all()
 
     async def get_daily_activity(
         self,

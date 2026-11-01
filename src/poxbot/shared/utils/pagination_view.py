@@ -17,9 +17,9 @@ class PaginationView(discord.ui.LayoutView):
         initial_page: int = 0,
         timeout: float | None = 180.0,
         wrap: bool = False,
-        empty_message: str = "No pages to display.",
+        empty_message: str = 'No pages to display.',
         unauthorized_message: str = (
-            "Only the user who invoked this command can use these buttons."
+            'Only the user who invoked this command can use these buttons.'
         ),
     ) -> None:
         super().__init__(timeout=timeout)
@@ -33,13 +33,11 @@ class PaginationView(discord.ui.LayoutView):
 
         if self.pages:
             if not 0 <= initial_page < len(self.pages):
-                raise ValueError("initial_page is outside the page range.")
+                raise ValueError('initial_page is outside the page range.')
             self.current_page = initial_page
         else:
             if initial_page != 0:
-                raise ValueError(
-                    "initial_page must be 0 when there are no pages."
-                )
+                raise ValueError('initial_page must be 0 when there are no pages.')
             self.current_page = 0
 
         self._build_layout()
@@ -59,15 +57,15 @@ class PaginationView(discord.ui.LayoutView):
 
         content = self.current or self.empty_message
         page_label = (
-            f"-# Page {self.current_page + 1} / {self.page_count}"
+            f'-# Page {self.current_page + 1} / {self.page_count}'
             if self.pages
-            else "-# Page 0 / 0"
+            else '-# Page 0 / 0'
         )
 
         if len(content) + len(page_label) > 4000:
             raise ValueError(
-                "The page content and pagination label exceed "
-                "the 4000-character Components V2 limit."
+                'The page content and pagination label exceed '
+                'the 4000-character Components V2 limit.'
             )
 
         at_first = self.current_page == 0
@@ -75,22 +73,22 @@ class PaginationView(discord.ui.LayoutView):
         disabled = self.is_finished() or self.page_count <= 1
 
         self.first_button = discord.ui.Button(
-            emoji="⏮️",
+            emoji='⏮️',
             style=discord.ButtonStyle.secondary,
             disabled=disabled or (not self.wrap and at_first),
         )
         self.previous_button = discord.ui.Button(
-            emoji="◀️",
+            emoji='◀️',
             style=discord.ButtonStyle.secondary,
             disabled=disabled or (not self.wrap and at_first),
         )
         self.next_button = discord.ui.Button(
-            emoji="▶️",
+            emoji='▶️',
             style=discord.ButtonStyle.secondary,
             disabled=disabled or (not self.wrap and at_last),
         )
         self.last_button = discord.ui.Button(
-            emoji="⏭️",
+            emoji='⏭️',
             style=discord.ButtonStyle.secondary,
             disabled=disabled or (not self.wrap and at_last),
         )
@@ -105,9 +103,9 @@ class PaginationView(discord.ui.LayoutView):
             self.previous_button,
             discord.ui.Button(
                 label=(
-                    f"{self.current_page + 1} / {self.page_count}"
+                    f'{self.current_page + 1} / {self.page_count}'
                     if self.pages
-                    else "0 / 0"
+                    else '0 / 0'
                 ),
                 style=discord.ButtonStyle.secondary,
                 disabled=True,
@@ -173,7 +171,7 @@ class PaginationView(discord.ui.LayoutView):
         interaction: discord.Interaction | None = None,
     ) -> int:
         if not 0 <= index <= self.page_count:
-            raise IndexError("Page insertion index is out of range.")
+            raise IndexError('Page insertion index is out of range.')
 
         was_empty = not self.pages
         self.pages.insert(index, page)
@@ -193,13 +191,13 @@ class PaginationView(discord.ui.LayoutView):
         interaction: discord.Interaction | None = None,
     ) -> PaginationPage:
         if not self.pages:
-            raise IndexError("Cannot remove a page from an empty paginator.")
+            raise IndexError('Cannot remove a page from an empty paginator.')
 
         if index is None:
             index = self.current_page
 
         if not 0 <= index < self.page_count:
-            raise IndexError("Page removal index is out of range.")
+            raise IndexError('Page removal index is out of range.')
 
         removed = self.pages.pop(index)
 
@@ -221,7 +219,7 @@ class PaginationView(discord.ui.LayoutView):
         interaction: discord.Interaction | None = None,
     ) -> None:
         if not 0 <= index < self.page_count:
-            raise IndexError("Page replacement index is out of range.")
+            raise IndexError('Page replacement index is out of range.')
 
         self.pages[index] = page
         await self._refresh_message(interaction)
@@ -254,7 +252,7 @@ class PaginationView(discord.ui.LayoutView):
         index: int,
     ) -> None:
         if not 0 <= index < self.page_count:
-            raise IndexError("Page index is out of range.")
+            raise IndexError('Page index is out of range.')
 
         await self._set_page(interaction, index)
 

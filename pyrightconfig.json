@@ -12,7 +12,11 @@
         ".venv",
         "scripts",
     ],
+    "extraPaths": [
+        "src"
+    ],
     "typeCheckingMode": "standard",
+    "useLibraryCodeForTypes": true,
     "venvPath": ".",
     "venv": ".venv"
 }

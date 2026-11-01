@@ -23,7 +23,11 @@ _PIPER_VOICE_ID_PATTERN = re.compile(
 )
 
 
-class PiperTTSConfig(BaseModel):
+class ConfigModel(BaseModel):
+    model_config = ConfigDict(validate_by_name=True)
+
+
+class PiperTTSConfig(ConfigModel):
     """Define configuration settings for Piper TTS.
 
     Attributes:
@@ -37,7 +41,11 @@ class PiperTTSConfig(BaseModel):
             - `default_voice` hasn't included in `allowed_voices`.
     """
 
-    default_voice: str = 'en_US-john-medium'
+    default_voice: str = Field(
+        default='en_US-john-medium',
+        validation_alias='POXBOT_PIPER_DEFAULT_VOICE',
+    )
+
     allowed_voices: list[str] = Field(
         default_factory=lambda: [
             'en_US-danny-low',
@@ -50,6 +58,7 @@ class PiperTTSConfig(BaseModel):
             'en_US-ryan-high',
             'ja_JP-hi_fi_captain-medium',
         ],
+        validation_alias='POXBOT_PIPER_ALLOWED_VOICES',
     )
 
     @field_validator('allowed_voices')
@@ -81,7 +90,7 @@ class PiperTTSConfig(BaseModel):
         return self
 
 
-class DatabaseConfig(BaseModel):
+class DatabaseConfig(ConfigModel):
     """Represent configuration parameters required to establish a database connection.
 
     This Pydantic model holds the database connection settings, including credentials,
@@ -96,12 +105,35 @@ class DatabaseConfig(BaseModel):
         driver: The specific SQLAlchemy dialect and async driver combination.
     """
 
-    host: str = '127.0.0.1'
-    port: int = 5432
-    user: str = 'postgres'
-    password: SecretStr = SecretStr('postgres')
-    name: str = 'postgres'
-    driver: str = 'postgresql+asyncpg'
+    host: str = Field(
+        default='127.0.0.1',
+        validation_alias='POXBOT_DATABASE_HOST',
+    )
+
+    port: int = Field(
+        default=5432,
+        validation_alias='POXBOT_DATABASE_PORT',
+    )
+
+    user: str = Field(
+        default='postgres',
+        validation_alias='POXBOT_DATABASE_USER',
+    )
+
+    password: SecretStr = Field(
+        default=SecretStr('postgres'),
+        validation_alias='POXBOT_DATABASE_PASSWORD',
+    )
+
+    name: str = Field(
+        default='postgres',
+        validation_alias='POXBOT_DATABASE_NAME',
+    )
+
+    driver: str = Field(
+        default='postgresql+asyncpg',
+        validation_alias='POXBOT_DATABASE_DRIVER',
+    )
 
     def build_url(self) -> str:
         """Generate a Data Source Name (DSN) for SQLAlchemy connection strings.
@@ -125,7 +157,7 @@ class DatabaseConfig(BaseModel):
         return url_object.render_as_string(hide_password=False)
 
 
-class FileLoggingConfig(BaseModel):
+class FileLoggingConfig(ConfigModel):
     """Define configuration settings for exporting logs directly to file storage.
 
     Attributes:
@@ -134,12 +166,23 @@ class FileLoggingConfig(BaseModel):
         encoding: The text encoding method applied to generated log files.
     """
 
-    enabled: bool = True
-    directory: Path = Field(default=app_dir.user_log_path)
-    encoding: str = 'utf-8'
+    enabled: bool = Field(
+        default=True,
+        validation_alias='POXBOT_LOG_FILE_ENABLED',
+    )
+
+    directory: Path = Field(
+        default=app_dir.user_log_path,
+        validation_alias='POXBOT_LOG_FILE_DIRECTORY',
+    )
+
+    encoding: str = Field(
+        default='utf-8',
+        validation_alias='POXBOT_LOG_FILE_ENCODING',
+    )
 
 
-class ConsoleLoggingConfig(BaseModel):
+class ConsoleLoggingConfig(ConfigModel):
     """Define configuration metrics for terminal-based log presentation.
 
     Attributes:
@@ -149,13 +192,28 @@ class ConsoleLoggingConfig(BaseModel):
         markup: Toggle status to support inline console formatting tags.
     """
 
-    enabled: bool = True
-    rich_tracebacks: bool = True
-    level: Literal['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] = 'INFO'
-    markup: bool = True
+    enabled: bool = Field(
+        default=True,
+        validation_alias='POXBOT_LOG_CONSOLE_ENABLED',
+    )
+
+    rich_tracebacks: bool = Field(
+        default=True,
+        validation_alias='POXBOT_LOG_CONSOLE_RICH_TRACEBACKS',
+    )
+
+    level: Literal['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] = Field(
+        default='INFO',
+        validation_alias='POXBOT_LOG_CONSOLE_LEVEL',
+    )
+
+    markup: bool = Field(
+        default=True,
+        validation_alias='POXBOT_LOG_CONSOLE_MARKUP',
+    )
 
 
-class LoggerConfig(BaseModel):
+class LoggerConfig(ConfigModel):
     """Manage systemic logging behavior across console and file channels.
 
     Attributes:
@@ -165,13 +223,26 @@ class LoggerConfig(BaseModel):
         console_logging: Dedicated settings for console log output.
     """
 
-    enabled: bool = True
-    level: Literal['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] = 'DEBUG'
-    file_logging: FileLoggingConfig = Field(default_factory=FileLoggingConfig)
-    console_logging: ConsoleLoggingConfig = Field(default_factory=ConsoleLoggingConfig)
+    enabled: bool = Field(
+        default=True,
+        validation_alias='POXBOT_LOG_ENABLED',
+    )
+
+    level: Literal['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] = Field(
+        default='DEBUG',
+        validation_alias='POXBOT_LOG_LEVEL',
+    )
+
+    file_logging: FileLoggingConfig = Field(
+        default_factory=FileLoggingConfig,
+    )
+
+    console_logging: ConsoleLoggingConfig = Field(
+        default_factory=ConsoleLoggingConfig,
+    )
 
 
-class TokenConfig(BaseModel):
+class TokenConfig(ConfigModel):
     """Store critical integration tokens and authorization keys securely.
 
     Attributes:
@@ -181,13 +252,28 @@ class TokenConfig(BaseModel):
         openrouter_api_key: Protected provider key for OpenRouter routing.
     """
 
-    discord_token: SecretStr = SecretStr('')
-    lmstudio_token: SecretStr = SecretStr('')
-    openai_api_key: SecretStr = SecretStr('')
-    openrouter_api_key: SecretStr = SecretStr('')
+    discord_token: SecretStr = Field(
+        default=SecretStr(''),
+        validation_alias='POXBOT_DISCORD_TOKEN',
+    )
+
+    lmstudio_token: SecretStr = Field(
+        default=SecretStr(''),
+        validation_alias='POXBOT_LMSTUDIO_TOKEN',
+    )
+
+    openai_api_key: SecretStr = Field(
+        default=SecretStr(''),
+        validation_alias='POXBOT_OPENAI_API_KEY',
+    )
+
+    openrouter_api_key: SecretStr = Field(
+        default=SecretStr(''),
+        validation_alias='POXBOT_OPENROUTER_API_KEY',
+    )
 
 
-class TraceConfig(BaseModel):
+class TraceConfig(ConfigModel):
     """Govern OpenTelemetry tracing, metric collection, and observability.
 
     Attributes:
@@ -205,20 +291,65 @@ class TraceConfig(BaseModel):
         max_batch_size: The maximum buffer volume of items sent per export cycle.
     """
 
-    enabled: bool = True
-    opentelemetry_endpoint: str = 'http://127.0.0.1:4317'
-    otlp_traces_endpoint: str | None = None
-    otlp_metrics_endpoint: str | None = None
-    loki_url: str = 'http://127.0.0.1:3100/loki/api/v1/push'
-    prometheus_host: str = '0.0.0.0'
-    prometheus_server_port: int = 8001
-    insecure: bool = True
-    sampling_ratio: float = Field(default=1.0, ge=0.0, le=1.0)
-    export_interval_ms: int = 1000 * 15
-    max_batch_size: int = 512
+    enabled: bool = Field(
+        default=True,
+        validation_alias='POXBOT_TRACE_ENABLED',
+    )
+
+    opentelemetry_endpoint: str = Field(
+        default='http://127.0.0.1:4317',
+        validation_alias='POXBOT_TRACE_OPENTELEMETRY_ENDPOINT',
+    )
+
+    otlp_traces_endpoint: str | None = Field(
+        default=None,
+        validation_alias='POXBOT_TRACE_OTLP_TRACES_ENDPOINT',
+    )
+
+    otlp_metrics_endpoint: str | None = Field(
+        default=None,
+        validation_alias='POXBOT_TRACE_OTLP_METRICS_ENDPOINT',
+    )
+
+    loki_url: str = Field(
+        default='http://127.0.0.1:3100/loki/api/v1/push',
+        validation_alias='POXBOT_TRACE_LOKI_URL',
+    )
+
+    prometheus_host: str = Field(
+        default='0.0.0.0',
+        validation_alias='POXBOT_TRACE_PROMETHEUS_HOST',
+    )
+
+    prometheus_server_port: int = Field(
+        default=8001,
+        validation_alias='POXBOT_TRACE_PROMETHEUS_SERVER_PORT',
+    )
+
+    insecure: bool = Field(
+        default=True,
+        validation_alias='POXBOT_TRACE_INSECURE',
+    )
+
+    sampling_ratio: float = Field(
+        default=1.0,
+        ge=0.0,
+        le=1.0,
+        validation_alias='POXBOT_TRACE_SAMPLING_RATIO',
+    )
+
+    export_interval_ms: int = Field(
+        default=1000 * 15,
+        validation_alias='POXBOT_TRACE_EXPORT_INTERVAL_MS',
+    )
+
+    max_batch_size: int = Field(
+        default=512,
+        validation_alias='POXBOT_TRACE_MAX_BATCH_SIZE',
+    )
 
 
-class LLMConfig(BaseModel):
+class LLMConfig(ConfigModel):
     """Represent setting parameters allocated for language model behaviors.
 
     Attributes:
@@ -226,11 +357,18 @@ class LLMConfig(BaseModel):
         model_id: The identifier tag of the targeted model variant.
     """
 
-    provider_type: Literal['openrouter', 'ollama', 'gemini', 'openai'] = 'openrouter'
-    model_id: str = ''
+    provider_type: Literal['openrouter', 'ollama', 'gemini', 'openai'] = Field(
+        default='openrouter',
+        validation_alias='POXBOT_LLM_PROVIDER',
+    )
+
+    model_id: str = Field(
+        default='',
+        validation_alias='POXBOT_LLM_MODEL',
+    )
 
 
-class BotCustomConfig(BaseModel):
+class BotCustomConfig(ConfigModel):
     """A config model for bot itself.
 
     Attributes:
@@ -242,12 +380,28 @@ class BotCustomConfig(BaseModel):
 
     model_config = ConfigDict(
         extra='allow',
+        validate_by_name=True,
     )
 
-    bot_name: str = "p0x38's bot"
-    default_language: str = 'en_US'
-    bot_prefix: str = 'pox/'
-    environment: str = 'dev'
+    bot_name: str = Field(
+        default="p0x38's bot",
+        validation_alias='POXBOT_BOT_NAME',
+    )
+
+    default_language: str = Field(
+        default='en_US',
+        validation_alias='POXBOT_DEFAULT_LANGUAGE',
+    )
+
+    bot_prefix: str = Field(
+        default='pox/',
+        validation_alias='POXBOT_BOT_PREFIX',
+    )
+
+    environment: str = Field(
+        default='dev',
+        validation_alias='POXBOT_ENVIRONMENT',
+    )
 
 
 class BotSettings(BaseSettings):
@@ -289,9 +443,9 @@ class BotSettings(BaseSettings):
         file_secret_settings: PydanticBaseSettingsSource,
     ) -> tuple[PydanticBaseSettingsSource, ...]:
         return (
-            init_settings,
             FlatAliasSettingsSource(settings_cls, env_settings),
             FlatAliasSettingsSource(settings_cls, dotenv_settings),
+            init_settings,
             file_secret_settings,
         )
 

@@ -384,12 +384,13 @@ class P2PQuakeManager:
             if not force and elapsed < stats_interval:
                 return
 
-            if any((
-                received_messages,
-                cached_events,
-                invalid_json_messages,
-                invalid_events,
-            )):
+            if any(
+                (
+                    cached_events,
+                    invalid_json_messages,
+                    invalid_events,
+                )
+            ):
                 self.logger.debug(
                     'P2PQuake WebSocket statistics over %.1f seconds: '
                     'received=%d, cached=%d, invalid_json=%d, invalid_events=%d',
@@ -686,10 +687,12 @@ class P2PQuakeManager:
         params: list[tuple[str, str | int]] = [
             ('codes', code) for code in dict.fromkeys(codes)
         ]
-        params.extend([
-            ('limit', limit),
-            ('offset', offset),
-        ])
+        params.extend(
+            [
+                ('limit', limit),
+                ('offset', offset),
+            ]
+        )
 
         async with session.get(
             f'{self._base_url}/history',

@@ -9,7 +9,7 @@ from typing import cast, get_args, get_origin
 
 import orjson
 from dotenv import dotenv_values
-from pydantic import BaseModel, ValidationError
+from pydantic import AliasChoices, BaseModel, ValidationError
 
 from .manager import ConfigManager
 from .schema import BotSettings
@@ -21,6 +21,17 @@ def _model_field_names(model: type[BaseModel], prefix: str = '') -> set[str]:
     for field_name, field in model.model_fields.items():
         name = f'{prefix}{field_name}'.upper()
         names.add(name)
+
+        validation_alias = field.validation_alias
+
+        if isinstance(validation_alias, str):
+            names.add(validation_alias.upper())
+        elif isinstance(validation_alias, AliasChoices):
+            names.update(
+                alias.upper()
+                for alias in validation_alias.choices
+                if isinstance(alias, str)
+            )
 
         annotation = field.annotation
         candidates = (annotation, *get_args(annotation))
@@ -50,6 +61,13 @@ def _environment_file(namespace: Namespace) -> Path:
 def _check_environment(env_file: Path) -> list[str]:
     errors: list[str] = []
     known_names = _model_field_names(BotSettings)
+    known_names.update(
+        {
+            'POXBOT_CONFIG_PATH',
+            'POXBOT_PROFILE_EXTENSIONS',
+        }
+    )
+
     values = dotenv_values(env_file) if env_file.is_file() else {}
 
     unknown_names = sorted(

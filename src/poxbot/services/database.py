@@ -7,6 +7,7 @@ from ..persistence.database.economy import EconomyDatabase
 from ..persistence.database.giveaway import GiveawayDatabase
 from ..persistence.database.guild_v2 import GuildSettingsDatabase
 from ..persistence.database.metrics import MetricsDatabase
+from ..persistence.database.privacy import PrivacyDatabase
 from ..persistence.database.settings import SettingsDatabase
 from ..persistence.database.stats import StatisticsDatabase
 from ..persistence.database.user import UserDatabase
@@ -35,6 +36,7 @@ class DatabaseManager:
         self.guild: GuildSettingsDatabase | None = None
         self.user: UserDatabase | None = None
         self.metrics: MetricsDatabase | None = None
+        self.privacy: PrivacyDatabase | None = None
 
         self.loaded: bool = False
 
@@ -50,6 +52,7 @@ class DatabaseManager:
                 self.guild,
                 self.user,
                 self.metrics,
+                self.privacy,
             )
             if db is not None
         ]
@@ -103,6 +106,10 @@ class DatabaseManager:
                 self.dsn,
             )
             self.metrics = MetricsDatabase(
+                self.bot,
+                self.dsn,
+            )
+            self.privacy = PrivacyDatabase(
                 self.bot,
                 self.dsn,
             )

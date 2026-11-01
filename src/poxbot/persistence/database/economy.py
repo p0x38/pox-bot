@@ -26,6 +26,9 @@ class EconomyDatabase(BaseDatabase):
             await conn.run_sync(Base.metadata.create_all)
         self.logger.debug('Initialized tables')
 
+    def invalidate_user(self, user_id: int) -> None:
+        self._cache.delete(user_id)
+
     async def get_user(self, user_id: int) -> EconomyUser:
         cached = self._cache.get(user_id)
         if cached:

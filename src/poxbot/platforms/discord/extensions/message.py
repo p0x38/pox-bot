@@ -229,9 +229,12 @@ class MessageCog(commands.Cog):
             async for message in interaction.channel.history(limit=limit):
                 if keyword.lower() in message.content.lower():
                     self.bot.logger.debug(
-                        'Found message: %s by %s',
-                        message.content,
-                        message.author.name,
+                        'Found matching message',
+                        extra={
+                            'message_id': message.id,
+                            'author_id': message.author.id,
+                            'channel_id': message.channel.id,
+                        },
                     )
                     found_messages.append(
                         f'- {message.author.name}: {
@@ -379,9 +382,9 @@ class MessageCog(commands.Cog):
         messages = []
 
         if isinstance(interaction.channel, discord.TextChannel):
-            messages.extend([
-                message async for message in interaction.channel.history(limit=1000)
-            ])
+            messages.extend(
+                [message async for message in interaction.channel.history(limit=1000)]
+            )
 
         embed = Embed(
             title=self.bot.internal_translator.T(

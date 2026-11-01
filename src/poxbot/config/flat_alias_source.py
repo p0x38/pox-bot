@@ -74,9 +74,17 @@ class FlatAliasSettingsSource(PydanticBaseSettingsSource):
         case_sensitive = getattr(self.source, 'case_sensitive', False)
 
         for path, alias in _iter_nested_aliases(self.settings_cls):
-            env_name = alias if case_sensitive else alias.lower()
+            fallback = '__'.join(path)
 
-            if env_name in env_vars:
+            names = (alias, fallback)
+
+            for name in names:
+                env_name = name if case_sensitive else name.lower()
+
+                if env_name not in env_vars:
+                    continue
+
                 _set_nested_value(data, path, env_vars[env_name])
+                break
 
         return data

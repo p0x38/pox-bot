@@ -9,13 +9,27 @@ from datetime import datetime, timedelta
 from io import BytesIO
 from typing import TYPE_CHECKING, Any
 
-from discord import Color, Embed, File, Interaction, Member, Message, app_commands
+from discord import (
+    Color,
+    Embed,
+    File,
+    Interaction,
+    Message,
+    TextChannel,
+    Thread,
+    app_commands,
+)
 from discord.ext import commands
-from pytz import UTC
+from pytz import (UTC, timezone)
 
 if TYPE_CHECKING:
     from ....application import PoxBot
     from ....persistence.database.stats import StatisticsDatabase
+
+
+JST = timezone('Asia/Tokyo')
+ACTIVE_PATTERN_SAMPLE_SIZE = 2000
+MIN_ACTIVITY_SAMPLE_SIZE = 20
 
 
 class StatsCog(commands.Cog):
@@ -55,37 +69,33 @@ class StatsCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
-        if message.author.bot or message.content.startswith(('!', '/')):
+        if (
+            message.author.bot
+            or not message.guild
+            or message.content.startswith(('!', '/'))
+            or not message.content.strip()
+        ):
             return
 
-        if not message.content.strip():
+        if not self.db:
             return
 
-        if self.bot.database.stats:
-            await self.bot.database.stats.cache_message(
-                message_id=message.id,
-                channel_id=message.channel.id,
-                guild_id=message.guild.id if message.guild else 0,
-                author_id=message.author.id,
-                content=message.content,
+        text_length = len(message.clean_content)
+
+        xp_process_result = await self.db.add_xp(
+            user_id=message.author.id,
+            count=text_length,
+            guild_id=message.guild.id,
+        )
+
+        if xp_process_result.get('leveled_up'):
+            new_level = xp_process_result.get('new_level')
+
+            self.bot.logger.debug(
+                '%s reached to %d!',
+                message.author.name,
+                new_level,
             )
-
-            text_length = len(message.clean_content)
-
-            xp_process_result = await self.bot.database.stats.add_xp(
-                user_id=message.author.id,
-                count=text_length,
-                guild_id=message.guild.id if message.guild else 0,
-            )
-
-            if xp_process_result.get('leveled_up') and message.guild:
-                new_level = xp_process_result.get('new_level')
-
-                self.bot.logger.debug(
-                    '%s reached to %d!',
-                    message.author.name,
-                    new_level,
-                )
 
     group = app_commands.Group(
         name='stats',
@@ -186,30 +196,19 @@ class StatsCog(commands.Cog):
         name='wordcloud',
         description=app_commands.locale_str('command.stats.wordcloud.description'),
     )
+    @app_commands.guild_only()
     async def wordcloud(self, interaction: Interaction, limit: int = 1000):
-        limit = min(max(10, limit), 10000)
+        limit = min(max(10, limit), 2000)
 
         loc = await self.bot.get_locale(interaction)
 
-        await interaction.response.defer()
+        await interaction.response.defer(
+            thinking=True,
+            ephemeral=True,
+        )
 
-        if not self.bot.database.stats:
-            return await interaction.followup.send(
-                embed=Embed(
-                    title=self.bot.internal_translator.T(
-                        'error.embeds.database_not_available.title',
-                        loc,
-                    ),
-                    description=self.bot.internal_translator.T(
-                        'error.embeds.database_not_available.description',
-                        loc,
-                    ),
-                    color=Color.red(),
-                    timestamp=datetime.now(UTC),
-                ),
-            )
-
-        if not interaction.channel:
+        channel = interaction.channel
+        if not isinstance(channel, (TextChannel, Thread)):
             return await interaction.followup.send(
                 embed=Embed(
                     title=self.bot.internal_translator.T(
@@ -223,14 +222,44 @@ class StatsCog(commands.Cog):
                     color=Color.red(),
                     timestamp=datetime.now(UTC),
                 ),
+                ephemeral=True,
             )
 
-        rows = await self.bot.database.stats.get_cached_messages(
-            interaction.channel.id,
-            limit,
-        )
+        guild = interaction.guild
+        bot_member = guild.me if guild else None
 
-        if not rows:
+        if bot_member is None and guild and self.bot.user:
+            bot_member = guild.get_member(self.bot.user.id)
+
+        if bot_member is None:
+            return await interaction.followup.send(
+                'Could not resolve the bot member.',
+                ephemeral=True,
+            )
+
+        permissions = channel.permissions_for(bot_member)
+
+        if not permissions.view_channel or not permissions.read_message_history:
+            return await interaction.followup.send(
+                'I need permission to view this channel and read its history.',
+                ephemeral=True,
+            )
+        
+        messages = [
+            message
+            async for message in channel.history(
+                limit=limit,
+                oldest_first=False,
+            )
+            if not message.author.bot and message.content.strip()
+        ]
+
+        contents = [message.clean_content for message in messages]
+        message_count = len(contents)
+
+        del messages
+
+        if not contents:
             return await interaction.followup.send(
                 embed=Embed(
                     title=self.bot.internal_translator.T(
@@ -244,6 +273,7 @@ class StatsCog(commands.Cog):
                     color=Color.red(),
                     timestamp=datetime.now(UTC),
                 ),
+                ephemeral=True,
             )
 
         def extract_words() -> list[str]:
@@ -262,20 +292,9 @@ class StatsCog(commands.Cog):
                 r'<@!?\d+>|<#\d+>|<@&\d+>|:\w+:|\d+',
             )
 
-            for row in rows:
-                # get_cached_messages() returns strings.
-                content = (
-                    row
-                    if isinstance(row, str)
-                    else (
-                        row.get('content', '')
-                        if isinstance(row, dict)
-                        else getattr(row, 'content', '')
-                    )
-                )
-
-                content = url_pattern.sub('', content)
-                content = mention_pattern.sub('', content)
+            for content in contents:
+                content = url_pattern.sub('', content)  # ruff: ignore[redefined-loop-name]
+                content = mention_pattern.sub('', content)  # ruff: ignore[redefined-loop-name]
 
                 if not content.strip():
                     continue
@@ -357,8 +376,12 @@ class StatsCog(commands.Cog):
 
             discord_file = File(fp=img_buffer, filename='wordcloud.png')
             await interaction.followup.send(
-                content=f'Genarated word cloud from {len(rows)} of messages cached',
+                content=(
+                    f'Generated a word cloud from {message_count} recent messages. '
+                    'Messages were processed temporarily and were not stored.'
+                ),
                 file=discord_file,
+                ephemeral=True,
             )
 
         except Exception as e:
@@ -372,79 +395,80 @@ class StatsCog(commands.Cog):
             'command.stats.active_pattern.description',
         ),
     )
-    @app_commands.describe(
-        target=app_commands.locale_str(
-            'command.stats.active_pattern.parameters.target',
-        ),
-    )
+    @app_commands.guild_only()
     async def active_pattern_command(
         self,
         interaction: Interaction,
-        target: Member | None = None,
-    ):
-        loc = await self.bot.get_locale(interaction)
-        await interaction.response.defer(thinking=True)
+    ) -> None:
+        loc = await self.bot.get_locale(interaction)  # ruff: ignore[unused-variable]
+        await interaction.response.defer(thinking=True, ephemeral=True)
 
-        if not self.bot.database.stats:
+        guild = interaction.guild
+        channel = interaction.channel
+
+        if guild is None or not isinstance(channel, (TextChannel, Thread)):
             return await interaction.followup.send(
-                embed=Embed(
-                    title=self.bot.internal_translator.T(
-                        'error.embeds.database_not_available.title',
-                        loc,
-                    ),
-                    description=self.bot.internal_translator.T(
-                        'error.embeds.database_not_available.description',
-                        loc,
-                    ),
-                    color=Color.red(),
-                    timestamp=datetime.now(UTC),
-                ),
+                'This command requires a server text channel or thread.',
+                ephemeral=True,
+            )
+        
+        bot_member = guild.me
+
+        if bot_member is None and self.bot.user:
+            bot_member = guild.get_member(self.bot.user.id)
+
+        if bot_member is None:
+            return await interaction.followup.send(
+                'Could not resolve the bot member.',
+                ephemeral=True,
             )
 
-        if not interaction.channel:
+        permissions = channel.permissions_for(bot_member)
+
+        if not permissions.view_channel or not permissions.read_message_history:
             return await interaction.followup.send(
-                embed=Embed(
-                    title=self.bot.internal_translator.T(
-                        'error.embeds.unsupported_channel_type.title',
-                        loc,
-                    ),
-                    description=self.bot.internal_translator.T(
-                        'error.embeds.unsupported_channel_type.description',
-                        loc,
-                    ),
-                    color=Color.red(),
-                    timestamp=datetime.now(UTC),
-                ),
+                'I need permission to view this channel and read its history.',
+                ephemeral=True,
             )
 
-        target_id = target.id if target else None
-        rows = await self.bot.database.stats.get_active_pattern(
-            interaction.channel.id,
-            target_id,
-        )
+        hour_counts = [0] * 24
+        message_count = 0
 
-        if not rows:
-            return await interaction.followup.send(
-                embed=Embed(
-                    title=self.bot.internal_translator.T(
-                        'error.embeds.data_not_found.title',
-                        loc,
-                    ),
-                    description=self.bot.internal_translator.T(
-                        'error.embeds.data_not_found.description',
-                        loc,
-                    ),
-                    color=Color.red(),
-                    timestamp=datetime.now(UTC),
-                ),
+        try:
+            async for message in channel.history(
+                limit=ACTIVE_PATTERN_SAMPLE_SIZE,
+                oldest_first=False,
+            ):
+                if message.author.bot:
+                    continue
+
+                hour = message.created_at.astimezone(JST).hour
+
+                hour_counts[hour] += 1
+                message_count += 1
+
+        except Exception:
+            self.bot.logger.exception(
+                'Failed to collect channel activity data for %s',
+                channel.id,
             )
 
-        hour_counts = dict.fromkeys(range(24), 0)
-        for row in rows:
-            hour_counts[row['hour']] = row['count']
+            return await interaction.followup.send(
+                'Failed to retrieve channel activity.',
+                ephemeral=True,
+            )
 
-        hours = list(hour_counts.keys())
-        counts = list(hour_counts.values())
+        if message_count < MIN_ACTIVITY_SAMPLE_SIZE:
+            return await interaction.followup.send(
+                (
+                    'Not enough activity to generate a useful chart. '
+                    f'At least {MIN_ACTIVITY_SAMPLE_SIZE} human messages are required.'
+                ),
+                ephemeral=True,
+            )
+
+        hours = list(range(24))
+        counts = hour_counts
 
         def generate_chart() -> BytesIO:
             from matplotlib.backends.backend_agg import FigureCanvasAgg
@@ -456,6 +480,7 @@ class StatsCog(commands.Cog):
                 constrained_layout=True,
             )
             FigureCanvasAgg(figure)
+
             ax = figure.subplots()
             ax.set_facecolor('#222222')
             ax.tick_params(colors='#b9bbbe')
@@ -484,48 +509,40 @@ class StatsCog(commands.Cog):
             for spine in ax.spines.values():
                 spine.set_color('#4f545c')
 
-            max_idx = counts.index(max(counts)) if max(counts) > 0 else 0
-            if counts[max_idx] > 0:
-                bars[max_idx].set_color('#3ba55d')
+            max_idx = counts.index(max(counts))
+
+            bars[max_idx].set_color('#3ba55d')
 
             buffer = BytesIO()
             figure.savefig(buffer, format='png', dpi=150)
             buffer.seek(0)
             figure.clear()
+
             return buffer
 
         try:
-            img_buffer = await self.bot.loop.run_in_executor(None, generate_chart)
+            img_buffer = await asyncio.to_thread(generate_chart)
 
-            if target:
-                title_name = target.display_name
-            else:
-                chan = interaction.channel
-                if hasattr(chan, 'name') and chan.name:  # pyright: ignore[reportAttributeAccessIssue]
-                    title_name = f'#{chan.name}'  # pyright: ignore[reportAttributeAccessIssue]
-                else:
-                    recipient = getattr(chan, 'recipient', None) or getattr(
-                        chan,
-                        'recipients',
-                        None,
-                    )
-                    if recipient:
-                        if isinstance(recipient, (list, tuple)):
-                            title_name = ', '.join(
-                                getattr(r, 'display_name', str(r)) for r in recipient
-                            )
-                        else:
-                            title_name = getattr(
-                                recipient,
-                                'display_name',
-                                str(recipient),
-                            )
-                    else:
-                        title_name = 'Direct Message'
-            content_text = f'idk **{title_name}**'
+            embed = Embed(
+                title='Channel Activity Pattern',
+                description=(
+                    f'Based on {message_count:,} human-authored messages '
+                    f'from the latest {ACTIVE_PATTERN_SAMPLE_SIZE:,} messages.\n'
+                    'All timestamps are displayed in JST.'
+                ),
+                color=Color.blurple(),
+            )
 
-            discord_file = File(fp=img_buffer, filename='active_pattern.png')
-            await interaction.followup.send(content=content_text, file=discord_file)
+            embed.set_image(url='attachment://active_pattern.png')
+
+            await interaction.followup.send(
+                embed=embed,
+                file=File(
+                    fp=img_buffer,
+                    filename='active_pattern.png',
+                ),
+                ephemeral=True,
+            )
 
         except Exception as e:
             await interaction.followup.send(f'error: `{e}`')

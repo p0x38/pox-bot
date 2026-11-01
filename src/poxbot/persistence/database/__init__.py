@@ -1,6 +1,17 @@
-from .economy import EconomyDatabase as EconomyDatabase
-from .giveaway import GiveawayDatabase as GiveawayDatabase
-from .guild_v2 import GuildSettingsDatabase as GuildSettingsDatabase
-from .settings import SettingsDatabase as SettingsDatabase
-from .stats import StatisticsDatabase as StatisticsDatabase
-from .user import UserDatabase as UserDatabase
+from .economy import EconomyDatabase
+from .giveaway import GiveawayDatabase
+from .guild_v2 import GuildSettingsDatabase
+from .privacy import PrivacyDatabase
+from .settings import SettingsDatabase
+from .stats import StatisticsDatabase
+from .user import UserDatabase
+
+__all__ = (
+    "EconomyDatabase",
+    "GiveawayDatabase",
+    "GuildSettingsDatabase",
+    "PrivacyDatabase",
+    "SettingsDatabase",
+    "StatisticsDatabase",
+    "UserDatabase",
+)
