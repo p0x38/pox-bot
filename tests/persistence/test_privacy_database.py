@@ -35,21 +35,24 @@ if TYPE_CHECKING:
     from poxbot.services.i18n import I18nManager
 
 
-TABLES: list[Table] = [
-    UserStatistics.__table__,
-    DailyUserActivity.__table__,
-    UserProfile.__table__,
-    UserActivity.__table__,
-    UserPreference.__table__,
-    EconomyUser.__table__,
-    EconomyInventory.__table__,
-    EconomyTransaction.__table__,
-    ActiveTicket.__table__,
-    GuildSettings.__table__,
-    Giveaway.__table__,
-    ModerationEntry.__table__,
-    GlobalChatModerationCase.__table__,
-]
+TABLES = cast(
+    list[Table],
+    [
+        UserStatistics.__table__,
+        DailyUserActivity.__table__,
+        UserProfile.__table__,
+        UserActivity.__table__,
+        UserPreference.__table__,
+        EconomyUser.__table__,
+        EconomyInventory.__table__,
+        EconomyTransaction.__table__,
+        ActiveTicket.__table__,
+        GuildSettings.__table__,
+        Giveaway.__table__,
+        ModerationEntry.__table__,
+        GlobalChatModerationCase.__table__,
+    ],
+)
 
 
 async def create_database(path) -> PrivacyDatabase:
