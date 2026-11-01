@@ -24,11 +24,11 @@ def format_status(bot: PoxBot, client_status: ClientStatus, locale: Locale | str
 
     platforms = []
 
-    if client_status.mobile is str:
+    if client_status.mobile is not None:
         platforms.append(bot.internal_translator.T('text.device.mobile', locale))
-    if client_status.desktop is str:
+    if client_status.desktop is not None:
         platforms.append(bot.internal_translator.T('text.device.desktop', locale))
-    if client_status.web is str:
+    if client_status.web is not None:
         platforms.append(bot.internal_translator.T('text.device.website', locale))
 
     if platforms:

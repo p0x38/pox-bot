@@ -44,6 +44,9 @@ def format_duration(n: float) -> str:
 def parse_duration(text: str) -> timedelta:
     text = text.strip().lower()
 
+    if not text:
+        raise ValueError('Invalid duration: input is empty.')
+
     if text.isdigit():
         return timedelta(seconds=int(text))
 
@@ -64,11 +67,11 @@ def parse_duration(text: str) -> timedelta:
                 minutes=int(m),
                 seconds=int(s),
             )
-        raise ValueError()
+        raise ValueError('Invalid duration format.')
 
     match = DURATION_REGEX.fullmatch(text)
     if match:
         parts = {k: int(v) if v else 0 for k, v in match.groupdict().items()}
         return timedelta(**parts)
 
-    raise ValueError()
+    raise ValueError('Invalid duration.')

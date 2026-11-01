@@ -45,8 +45,8 @@ class UserDatabase(BaseDatabase):
             )
 
             if activity_type == 'command':
-                activity.commands_run += 1
+                activity.commands_run = (activity.commands_run or 0) + 1
             elif activity_type == 'message':
-                activity.messages_sent += 1
+                activity.messages_sent = (activity.messages_sent or 0) + 1
 
             await session.merge(activity)

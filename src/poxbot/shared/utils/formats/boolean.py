@@ -4,6 +4,6 @@ def format_boolean(
     false_text: str = 'No',
     missing_text: str = 'None',
 ):
-    if not i:
+    if i is None:
         return missing_text
     return true_text if i else false_text
