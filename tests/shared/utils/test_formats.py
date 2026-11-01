@@ -50,7 +50,7 @@ def test_parse_duration(value: str, expected: timedelta) -> None:
 
 @pytest.mark.parametrize("value", ["", " ", "abc", "1x", "1:2:3:4:5", "-1s"])
 def test_parse_duration_rejects_invalid_input(value: str) -> None:
-    with pytest.raises(ValueError, match=".*"):
+    with pytest.raises(ValueError, match="Invalid duration"):
         parse_duration(value)
 
 
@@ -88,21 +88,24 @@ def test_parse_probability(
 
 
 @pytest.mark.parametrize(
-    "value",
+    ("value", "message"),
     [
-        True,
-        "",
-        " ",
-        "abc",
-        "1/0",
-        "-0.1",
-        "1.1",
-        float("nan"),
-        float("inf"),
+        (True, "boolean is not a valid probability"),
+        ("", "Probability cannot be empty"),
+        (" ", "Probability cannot be empty"),
+        ("abc", "Invalid probability"),
+        ("1/0", "Invalid probability"),
+        ("-0.1", "Probability must be between"),
+        ("1.1", "Probability must be between"),
+        (float("nan"), "Probability must be between"),
+        (float("inf"), "Probability must be between"),
     ],
 )
-def test_parse_probability_rejects_invalid_values(value: object) -> None:
-    with pytest.raises(ValueError, match=".*"):
+def test_parse_probability_rejects_invalid_values(
+    value: object,
+    message: str,
+) -> None:
+    with pytest.raises(ValueError, match=message):
         parse_probability(value)  # type: ignore[arg-type]
 
 

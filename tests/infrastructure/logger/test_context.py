@@ -95,7 +95,7 @@ def test_log_filters_exclude_console_and_empty_messages() -> None:
     assert ExcludeConsoleFilter().filter(record) is True
     assert SkipEmptyMessageFilter().filter(record) is True
 
-    setattr(record, "no_console", True)
+    record.no_console = True
     assert ExcludeConsoleFilter().filter(record) is False
 
     record.msg = "   "

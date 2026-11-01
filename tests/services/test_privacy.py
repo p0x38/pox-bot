@@ -25,7 +25,13 @@ def _service(*, delete_result=None, delete_error=None):
         settings=settings,
         guild=guild,
     )
-    return PrivacyService(cast(Any, database)), privacy_database, economy, settings, guild
+    return (
+        PrivacyService(cast(Any, database)),
+        privacy_database,
+        economy,
+        settings,
+        guild,
+    )
 
 
 def test_export_delegates_to_privacy_database() -> None:
