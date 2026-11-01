@@ -41,4 +41,9 @@ class PrivacyService:
         if settings_database is not None:
             settings_database.invalidate_user(user_id)
 
+        guild_database = self.database.guild
+
+        if guild_database is not None:
+            guild_database.invalidate_config_cache()
+
         return report

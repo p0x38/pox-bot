@@ -525,7 +525,9 @@ class PrivacyDatabase(BaseDatabase):
                 report['deleted'][name] = self._get_row_count(result)
 
             guild_settings_result = await session.scalars(
-                select(GuildSettings).order_by(GuildSettings.guild_id),
+                select(GuildSettings)
+                .order_by(GuildSettings.guild_id)
+                .with_for_update(),
             )
             for guild_settings in guild_settings_result:
                 config = guild_settings.config

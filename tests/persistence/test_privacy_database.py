@@ -6,6 +6,7 @@ from sqlalchemy import Table, text
 from sqlalchemy.exc import SQLAlchemyError
 
 from poxbot.persistence.database.privacy import PrivacyDatabase
+from poxbot.persistence.database.guild_v2 import GuildSettingsDatabase
 from poxbot.persistence.database.settings import SettingsDatabase
 from poxbot.persistence.database.stats import StatisticsDatabase
 from poxbot.persistence.models.economy_orm import (
@@ -503,6 +504,27 @@ def test_statistics_database_drops_legacy_message_cache(tmp_path) -> None:
             )
             assert result.scalar_one_or_none() is None
 
+        await database.engine.dispose()
+
+    asyncio.run(run())
+
+
+
+def test_guild_settings_cache_can_be_invalidated(tmp_path) -> None:
+    async def run() -> None:
+        database = GuildSettingsDatabase(
+            cast('PoxBot', None),
+            f'sqlite+aiosqlite:///{tmp_path / "guild-settings-cache.db"}',
+        )
+        guild_id = 3003
+        cached_config = object()
+
+        database._cache.set(guild_id, cached_config)
+        assert database._cache.get(guild_id) is cached_config
+
+        database.invalidate_config_cache()
+
+        assert database._cache.get(guild_id) is None
         await database.engine.dispose()
 
     asyncio.run(run())
