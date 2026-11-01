@@ -2,7 +2,6 @@ import asyncio
 from time import perf_counter
 from typing import TYPE_CHECKING
 
-from ..features.markov.storage import MarkovDatabase
 from ..infrastructure.logger.tracing import traced
 from ..persistence.database.economy import EconomyDatabase
 from ..persistence.database.giveaway import GiveawayDatabase
@@ -36,7 +35,6 @@ class DatabaseManager:
         self.guild: GuildSettingsDatabase | None = None
         self.user: UserDatabase | None = None
         self.metrics: MetricsDatabase | None = None
-        self.markov: MarkovDatabase | None = None
 
         self.loaded: bool = False
 
@@ -52,7 +50,6 @@ class DatabaseManager:
                 self.guild,
                 self.user,
                 self.metrics,
-                self.markov,
             )
             if db is not None
         ]
@@ -106,10 +103,6 @@ class DatabaseManager:
                 self.dsn,
             )
             self.metrics = MetricsDatabase(
-                self.bot,
-                self.dsn,
-            )
-            self.markov = MarkovDatabase(
                 self.bot,
                 self.dsn,
             )

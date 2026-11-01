@@ -1,6 +1,6 @@
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
-from enum import Enum, IntEnum
+from enum import IntEnum
 
 from pytz import UTC
 
@@ -141,24 +141,9 @@ class UserphoneConfig(BaseConfigData):
     current_partner_id: int | None = None
 
 
-class ChatbotMethodType(IntEnum):
-    ai = 0
-    markov_chain = 1
-
-
-class MarkovModelScope(Enum):
-    GLOBAL = 'global'
-    SERVER = 'server'
-    USER = 'user'
-
-
 @dataclass
 class ChatbotConfig(BaseConfigData):
-    enabled: bool = False
-    type: ChatbotMethodType = ChatbotMethodType.ai
-    markov_scope: MarkovModelScope = MarkovModelScope.SERVER
-    markov_order: int = 2
-    markov_max_tokens: int = 50
+    pass
 
 
 @dataclass
@@ -393,34 +378,6 @@ class GuildConfigV2:
 
         chatbot_raw = f.get('chatbot', {})
 
-        chatbot_type_raw = chatbot_raw.get(
-            'type',
-            ChatbotMethodType.ai,
-        )
-
-        try:
-            chatbot_type = ChatbotMethodType(
-                chatbot_type_raw,
-            )
-        except (ValueError, TypeError):
-            if isinstance(chatbot_type_raw, str):
-                try:
-                    chatbot_type = ChatbotMethodType[chatbot_type_raw.lower()]
-                except KeyError:
-                    chatbot_type = ChatbotMethodType.ai
-            else:
-                chatbot_type = ChatbotMethodType.ai
-
-        markov_scope_raw = chatbot_raw.get(
-            'markov_scope',
-            MarkovModelScope.SERVER.value,
-        )
-
-        try:
-            markov_scope = MarkovModelScope(markov_scope_raw)
-        except (ValueError, TypeError):
-            markov_scope = MarkovModelScope.SERVER
-
         parsed['chatbot'] = ChatbotConfig(
             enabled=chatbot_raw.get('enabled', False),
             last_execution=chatbot_raw.get(
@@ -428,10 +385,6 @@ class GuildConfigV2:
                 datetime.now(UTC).timestamp(),
             ),
             last_executor=chatbot_raw.get('last_executor'),
-            type=chatbot_type,
-            markov_scope=markov_scope,
-            markov_order=chatbot_raw.get('markov_order', 2),
-            markov_max_tokens=chatbot_raw.get('markov_max_tokens', 50),
         )
 
         return cls(

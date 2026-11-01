@@ -83,25 +83,13 @@
         "add_event": {
             "description": "Adds a global event to my history! :3"
         },
-        "clear": {
-            "description": "Wipe the Markov model clean! 3:"
-        },
         "clear_history": {
             "description": "Forget this server's AI chat history! 3:"
         },
         "clear_memories": {
             "description": "Wipes my chat memory clean! 3:"
         },
-        "clear_server": {
-            "description": "Wipe this server's Markov model and chat history! 3:"
-        },
         "description": "A group for my AI chatbot stuff! :3",
-        "generate": {
-            "description": "Make the Markov model say something! :3"
-        },
-        "markov_stats": {
-            "description": "Peek at the Markov model stats! :3"
-        },
         "mem": {
             "description": "Let's peek into Jim's brain space~ :3",
             "embeds": {
@@ -111,14 +99,6 @@
             },
             "messages": {
                 "empty": "My brain is completely empty right now. 3:"
-            }
-        },
-        "mode": {
-            "description": "Give my chatbot a mode switch! :3",
-            "parameters": {
-                "ai": "AI",
-                "markov": "Markov chain",
-                "mode": "The chatbot mode to use! :3"
             }
         },
         "perf": {
@@ -131,18 +111,6 @@
             },
             "messages": {
                 "empty_logs": "I don't have any performance data right now... 3:"
-            }
-        },
-        "reload": {
-            "description": "Give the chatbot and Markov runtime a refresh! >:D"
-        },
-        "scope": {
-            "description": "Pick which Markov model my chatbot uses! :3",
-            "parameters": {
-                "global": "Globally",
-                "scope": "The markov chain based model learning scope to use! :3",
-                "server": "Server-scoped",
-                "user": "User-scoped"
             }
         },
         "stats": {

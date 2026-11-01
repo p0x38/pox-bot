@@ -83,25 +83,13 @@
         "add_event": {
             "description": "私の歴史に世界的な出来事が加わりました! :3"
         },
-        "clear": {
-            "description": "マルコフモデルをまっさらにしちゃおう！ 3:"
-        },
         "clear_history": {
             "description": "このサーバーのAI会話履歴を忘れちゃおう！ 3:"
         },
         "clear_memories": {
             "description": "チャットの記憶を完全に消去します。 3:"
         },
-        "clear_server": {
-            "description": "このサーバーのマルコフモデルと会話履歴をお掃除！ 3:"
-        },
         "description": "私の AI チャットボット関連のグループです。 :3",
-        "generate": {
-            "description": "マルコフモデルに何かしゃべらせよう！ :3"
-        },
-        "markov_stats": {
-            "description": "マルコフモデルの統計をのぞいてみよう！ :3"
-        },
         "mem": {
             "description": "ジムの脳内空間を覗いてみましょう~ :3",
             "embeds": {
@@ -111,14 +99,6 @@
             },
             "messages": {
                 "empty": "今私の頭は完全に空っぽです。 3:"
-            }
-        },
-        "mode": {
-            "description": "チャットボットのモードを切り替えよう！ :3",
-            "parameters": {
-                "ai": "AI",
-                "markov": "マルコフ連鎖",
-                "mode": "チャットボットのモード"
             }
         },
         "perf": {
@@ -131,18 +111,6 @@
             },
             "messages": {
                 "empty_logs": "現在パフォーマンス データがありません... 3:"
-            }
-        },
-        "reload": {
-            "description": "チャットボットとマルコフのデータをリフレッシュ！ >:D"
-        },
-        "scope": {
-            "description": "チャットボットが使うマルコフモデルを選ぼう！ :3",
-            "parameters": {
-                "global": "グローバル",
-                "scope": "学習する範囲",
-                "server": "サーバー",
-                "user": "ユーザー"
             }
         },
         "stats": {

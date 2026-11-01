@@ -2,14 +2,12 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta
 
-from discord import AllowedMentions, Message
+from discord import Message
 from discord.ext import commands
 from pytz import UTC
 
 from ....application import PoxBot
 from ....features.chatbot.trigger import SmartTriggerEvaluator, TriggerReason
-from ....features.markov.model import MarkovGenerationResult
-from ....persistence.models.guild_settings_v2 import ChatbotMethodType
 from ....services.ai import LLMProviderType
 from .chatbot import ChatbotCog
 
@@ -23,7 +21,6 @@ class SmartChatbotTriggersCog(commands.Cog):
     def __init__(self, bot: PoxBot) -> None:
         self.bot = bot
         self._cooldowns: dict[int, datetime] = {}
-        self._last_responses: dict[int, str] = {}
 
     def _get_chatbot(self) -> ChatbotCog | None:
         cog = self.bot.get_cog('ChatbotCog')
@@ -55,14 +52,6 @@ class SmartChatbotTriggersCog(commands.Cog):
                 for user_id, timestamp in self._cooldowns.items()
                 if now - timestamp < self.cooldown
             }
-
-    def _is_duplicate_response(self, message: Message, response: str) -> bool:
-        previous = self._last_responses.get(message.channel.id)
-        if previous == response:
-            return True
-
-        self._last_responses[message.channel.id] = response
-        return False
 
     def _evaluator(self) -> SmartTriggerEvaluator:
         if not self.bot.user:
@@ -130,59 +119,23 @@ class SmartChatbotTriggersCog(commands.Cog):
         if not permissions.send_messages:
             return
 
-        match config.chatbot.type:
-            case ChatbotMethodType.ai:
-                provider = self.bot.settings.llm_config.provider_type
-                if provider not in {item.value for item in LLMProviderType}:
-                    chatbot.bot.logger.error(
-                        'Unsupported LLM provider configured: %s',
-                        provider,
-                    )
-                    return
+        provider = self.bot.settings.llm_config.provider_type
 
-                await chatbot.respond(
-                    message=message,
-                    provider=provider,
-                    model=self.bot.settings.llm_config.model_id,
-                    include_history=permissions.read_message_history,
-                )
-                self._mark_cooldown(message.author.id)
+        if provider not in {item.value for item in LLMProviderType}:
+            chatbot.bot.logger.error(
+                'Unsupported LLM provider configured: %s',
+                provider,
+            )
+            return
 
-            case ChatbotMethodType.markov_chain:
-                result: (
-                    MarkovGenerationResult | None
-                ) = await chatbot.generate_markov_response(
-                    message,
-                    scope=config.chatbot.markov_scope,
-                    max_tokens=config.chatbot.markov_max_tokens,
-                    order=config.chatbot.markov_order,
-                )
+        await chatbot.respond(
+            message=message,
+            provider=provider,
+            model=self.bot.settings.llm_config.model_id,
+            include_history=permissions.read_message_history,
+        )
 
-                if result is None:
-                    return
-
-                response = result.response.strip()
-                if not response or self._is_duplicate_response(message, response):
-                    return
-
-                await message.reply(
-                    response[:2000],
-                    allowed_mentions=AllowedMentions.none(),
-                )
-
-                key = chatbot._make_markov_key(
-                    config.chatbot.markov_scope,
-                    guild_id=message.guild.id,
-                    user_id=message.author.id,
-                )
-                dialogue = await chatbot._get_markov_dialogue(key)
-                dialogue.learn(chatbot._clean_markov_prompt(message), response)
-                await chatbot._save_markov_dialogue(key)
-
-                self._mark_cooldown(message.author.id)
-
-            case _:
-                return
+        self._mark_cooldown(message.author.id)
 
 
 async def setup(bot: PoxBot) -> None:
