@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from typing import Any
 
 from poxbot.infrastructure.logger.adapters import PrefixAdapter
 from poxbot.infrastructure.logger.context import (
@@ -94,7 +95,7 @@ def test_log_filters_exclude_console_and_empty_messages() -> None:
     assert ExcludeConsoleFilter().filter(record) is True
     assert SkipEmptyMessageFilter().filter(record) is True
 
-    record.no_console = True
+    setattr(record, "no_console", True)
     assert ExcludeConsoleFilter().filter(record) is False
 
     record.msg = "   "
@@ -106,7 +107,7 @@ def test_prefix_adapter_merges_adapter_and_context_extras() -> None:
     extension_token = extension_var.set("moderation")
     logger = logging.getLogger("poxbot.test")
     adapter = PrefixAdapter(logger, {"component": "adapter"})
-    kwargs: dict = {"extra": {"operation": "check"}}
+    kwargs: dict[str, Any] = {"extra": {"operation": "check"}}
 
     try:
         message, processed = adapter.process("moderation event", kwargs)

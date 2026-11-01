@@ -1,5 +1,6 @@
 import asyncio
 from types import SimpleNamespace
+from typing import Any, cast
 from unittest.mock import AsyncMock, Mock
 
 import pytest
@@ -10,9 +11,7 @@ from poxbot.services.privacy import PrivacyService
 def _service(*, delete_result=None, delete_error=None):
     privacy_database = SimpleNamespace(
         export_user_data=AsyncMock(return_value={"user": {"discord_id": "1001"}}),
-        delete_user_data=AsyncMock(
-            return_value=delete_result
-        ),
+        delete_user_data=AsyncMock(return_value=delete_result),
     )
     if delete_error is not None:
         privacy_database.delete_user_data.side_effect = delete_error
@@ -26,7 +25,7 @@ def _service(*, delete_result=None, delete_error=None):
         settings=settings,
         guild=guild,
     )
-    return PrivacyService(database), privacy_database, economy, settings, guild
+    return PrivacyService(cast(Any, database)), privacy_database, economy, settings, guild
 
 
 def test_export_delegates_to_privacy_database() -> None:
@@ -77,7 +76,7 @@ def test_delete_does_not_invalidate_caches_when_database_fails() -> None:
 
 def test_export_and_delete_fail_when_privacy_database_is_unavailable() -> None:
     async def run() -> None:
-        service = PrivacyService(SimpleNamespace(privacy=None))
+        service = PrivacyService(cast(Any, SimpleNamespace(privacy=None)))
 
         with pytest.raises(RuntimeError, match="unavailable"):
             await service.export_user_data(1001)

@@ -4,8 +4,6 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, cast
 
-from sqlalchemy import Table
-
 from poxbot.persistence.database.economy import EconomyDatabase
 from poxbot.persistence.database.giveaway import GiveawayDatabase
 from poxbot.persistence.database.settings import SettingsDatabase
@@ -25,7 +23,7 @@ from poxbot.persistence.models.user_settings_orm import UserPreference
 from poxbot.shared.bases import Base
 
 
-async def _create_tables(database: Any, tables: list[Table]) -> None:
+async def _create_tables(database: Any, tables: list[Any]) -> None:
     async with database.engine.begin() as connection:
         await connection.run_sync(
             lambda sync_connection: Base.metadata.create_all(
@@ -42,7 +40,7 @@ def _dsn(tmp_path: Path, name: str) -> str:
 def test_economy_database_user_inventory_shop_and_history(tmp_path: Path) -> None:
     async def run() -> None:
         database = EconomyDatabase(
-            cast("PoxBot", None),
+            cast(Any, None),
             _dsn(tmp_path, "economy.db"),
         )
         await _create_tables(
@@ -105,7 +103,9 @@ def test_economy_database_user_inventory_shop_and_history(tmp_path: Path) -> Non
             )
 
         assert [item.id for item in await database.get_shop_items()] == ["shop-item"]
-        assert (await database.get_item("shop-item")).name == "Shop item"
+        shop_item = await database.get_item("shop-item")
+        assert shop_item is not None
+        assert shop_item.name == "Shop item"
         assert await database.get_item("missing") is None
 
         history = await database.get_history(1001, limit=1)
@@ -127,7 +127,7 @@ def test_giveaway_database_filters_active_and_deletes_records(
             lambda: 1000,
         )
         database = GiveawayDatabase(
-            cast("PoxBot", None),
+            cast(Any, None),
             _dsn(tmp_path, "giveaways.db"),
         )
         await _create_tables(database, [Giveaway.__table__])
@@ -172,9 +172,9 @@ def test_settings_database_persists_and_invalidates_preferences(tmp_path: Path) 
             normalize_language_code=lambda locale: f"normalized:{locale}",
         )
         database = SettingsDatabase(
-            cast("PoxBot", None),
+            cast(Any, None),
             _dsn(tmp_path, "settings.db"),
-            cast("I18nManager", manager),
+            cast(Any, manager),
         )
         await _create_tables(database, [UserPreference.__table__])
 
@@ -194,7 +194,7 @@ def test_settings_database_persists_and_invalidates_preferences(tmp_path: Path) 
             user=SimpleNamespace(id=1001),
             locale="en_US",
         )
-        assert await database.get_locale(interaction) == "normalized:ja_JP"
+        assert await database.get_locale(cast(Any, interaction)) == "normalized:ja_JP"
 
         await database.engine.dispose()
 
@@ -204,7 +204,7 @@ def test_settings_database_persists_and_invalidates_preferences(tmp_path: Path) 
 def test_user_database_updates_profiles_and_activity(tmp_path: Path) -> None:
     async def run() -> None:
         database = UserDatabase(
-            cast("PoxBot", None),
+            cast(Any, None),
             _dsn(tmp_path, "users.db"),
         )
         await _create_tables(
@@ -246,7 +246,7 @@ def test_user_database_updates_profiles_and_activity(tmp_path: Path) -> None:
 def test_statistics_database_tracks_xp_and_daily_activity(tmp_path: Path) -> None:
     async def run() -> None:
         database = StatisticsDatabase(
-            cast("PoxBot", None),
+            cast(Any, None),
             _dsn(tmp_path, "statistics.db"),
         )
         await _create_tables(

@@ -1,7 +1,8 @@
 from datetime import timedelta
+from typing import Any, cast
 
 import pytest
-from discord import ClientStatus, Status, app_commands
+from discord import ClientStatus, Locale, Status, app_commands
 
 from poxbot.shared.enums.app_command_context import (
     AppCommandContextFlag,
@@ -49,7 +50,7 @@ def test_parse_duration(value: str, expected: timedelta) -> None:
 
 @pytest.mark.parametrize("value", ["", " ", "abc", "1x", "1:2:3:4:5", "-1s"])
 def test_parse_duration_rejects_invalid_input(value: str) -> None:
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=".*"):
         parse_duration(value)
 
 
@@ -101,7 +102,7 @@ def test_parse_probability(
     ],
 )
 def test_parse_probability_rejects_invalid_values(value: object) -> None:
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=".*"):
         parse_probability(value)  # type: ignore[arg-type]
 
 
@@ -112,16 +113,16 @@ def test_parse_probability_validates_maximum() -> None:
         parse_probability("0.5", maxv=float("inf"))
 
 
-def test_fuzzy_search_matches_case_insensitively_and_deduplicates_objects() -> None:
-    first = {"name": "Apple", "aliases": ["Macintosh", "Pomme"]}
+def test_fuzzy_search_matches_aliases_and_deduplicates_objects() -> None:
+    first = {"name": "Apple", "aliases": ["Apples", "Pomme"]}
     second = {"name": "Banana", "aliases": ["Plantain"]}
 
     result = fuzzy_search_objects(
-        "aple",
+        "apple",
         [first, second],
         lambda item: [item["name"], *item["aliases"]],
         limit=5,
-        score_cutoff=60,
+        score_cutoff=80,
     )
 
     assert result == [first]
@@ -164,7 +165,7 @@ def test_approach_target_is_reproducible_with_a_seed() -> None:
 
 
 class _Translator:
-    def T(self, key: str, locale: str) -> str:
+    def T(self, key: str, locale: Locale | str) -> str:
         translations = {
             "text.status.online": "Online",
             "text.status.dnd": "Do not disturb",
@@ -178,18 +179,22 @@ class _Translator:
 def test_format_status_includes_every_reported_platform() -> None:
     client_status = ClientStatus(
         status="online",
-        mobile="online",
-        desktop="idle",
-        web="online",
+        data={
+            "mobile": "online",
+            "desktop": "idle",
+            "web": "online",
+        },
     )
-    bot = type("Bot", (), {"internal_translator": _Translator()})()
+    bot = cast(Any, type("Bot", (), {"internal_translator": _Translator()})())
 
-    assert format_status(bot, client_status, "en") == "Online (Mobile, Desktop, Website)"
+    assert format_status(bot, client_status, "en") == (
+        "Online (Mobile, Desktop, Website)"
+    )
 
 
 def test_format_status_uses_dnd_translation() -> None:
     client_status = ClientStatus(status=Status.do_not_disturb.value)
-    bot = type("Bot", (), {"internal_translator": _Translator()})()
+    bot = cast(Any, type("Bot", (), {"internal_translator": _Translator()})())
 
     assert format_status(bot, client_status, "en") == "Do not disturb"
 

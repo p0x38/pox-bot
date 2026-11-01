@@ -6,12 +6,13 @@ from poxbot.features.text_transform.base import (
     get_integer_adjugate,
     ndarray_to_ascii,
 )
-from poxbot.features.text_transform.base_transformer import BaseTextTransformer
 from poxbot.features.text_transform.manager import TextTransformManager
 from poxbot.features.text_transform.models import TransformerRequest
 from poxbot.features.text_transform.transformers.base64 import Base64Transformer
 from poxbot.features.text_transform.transformers.caesar import CaesarCipherTransformer
-from poxbot.features.text_transform.transformers.predicate import PredicateCaseTransformer
+from poxbot.features.text_transform.transformers.predicate import (
+    PredicateCaseTransformer,
+)
 from poxbot.features.text_transform.transformers.reverse import ReverseLetterTransformer
 from poxbot.shared.exceptions.text_transform import (
     InvalidCaesarShiftError,
@@ -71,10 +72,14 @@ def test_caesar_cipher_round_trip_and_shift_validation() -> None:
     assert decoded.output == "Hello, World!"
 
     with pytest.raises(InvalidCaesarShiftError):
-        transformer.transform(TransformerRequest(text="hello", options={"shift": 0}))
+        transformer.transform(
+            TransformerRequest(text="hello", options={"shift": 0}),
+        )
 
     with pytest.raises(InvalidCaesarShiftError):
-        transformer.transform(TransformerRequest(text="hello", options={"shift": "bad"}))
+        transformer.transform(
+            TransformerRequest(text="hello", options={"shift": "bad"}),
+        )
 
 
 def test_reverse_transformer_supports_word_and_letter_modes() -> None:
@@ -152,7 +157,12 @@ def test_predicate_transformer_falls_back_to_lowercase_on_callable_error() -> No
 def test_base_transformer_option_coercion_and_validation() -> None:
     assert Base64Transformer.option({"enabled": 1}, "enabled", bool, False) is True
     assert Base64Transformer.option({"count": "3"}, "count", int, 0) == 3
-    assert Base64Transformer.option({"ratio": "0.5"}, "ratio", float, 1.0) == 0.5
+    assert Base64Transformer.option(
+        {"ratio": "0.5"},
+        "ratio",
+        float,
+        1.0,
+    ) == pytest.approx(0.5)
     assert Base64Transformer.option(
         {"values": [1, 2]},
         "values",
