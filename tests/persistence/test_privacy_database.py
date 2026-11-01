@@ -120,6 +120,7 @@ def test_export_only_contains_requested_user_data(tmp_path) -> None:
                         quantity=2,
                     ),
                     EconomyTransaction(
+                        id=1,
                         user_id=target_user_id,
                         tx_type='deposit',
                         amount=100,
