@@ -50,6 +50,7 @@ Depending on the features enabled by a server, PoxBot may store:
 
 - Ticket ownership associations
 - Giveaway host associations
+- User references in server feature configuration, such as moderation blocklists, allowlists, and feature executor metadata
 - Other records required to operate enabled server features
 
 ### Moderation records
@@ -227,6 +228,8 @@ interaction response.
 
 The export only includes information that PoxBot can associate with
 the requesting user and that is covered by the export implementation.
+It may also include user-associated references found in server
+configuration, without exporting unrelated server configuration.
 
 Because Global Chat message references do not independently contain
 the original author's Discord user ID, they may not all be identifiable
@@ -249,6 +252,7 @@ Deletion may remove:
 - Economy accounts and inventory
 - Economy transactions
 - Ticket ownership associations
+- User references in server feature configuration, including blocklist and allowlist entries
 
 Some operational records may be anonymized or retained, particularly
 where they are needed for moderation or service security.
