@@ -36,4 +36,9 @@ class PrivacyService:
         if economy_database is not None:
             economy_database.invalidate_user(user_id)
 
+        settings_database = self.database.settings
+
+        if settings_database is not None:
+            settings_database.invalidate_user(user_id)
+
         return report

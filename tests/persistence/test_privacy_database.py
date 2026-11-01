@@ -6,6 +6,8 @@ from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
 from poxbot.persistence.database.privacy import PrivacyDatabase
+from poxbot.persistence.database.settings import SettingsDatabase
+from poxbot.persistence.database.stats import StatisticsDatabase
 from poxbot.persistence.models.economy_orm import (
     EconomyInventory,
     EconomyTransaction,
@@ -15,7 +17,8 @@ from poxbot.persistence.models.giveaway_orm import Giveaway
 from poxbot.persistence.models.global_chat_moderation_orm import (
     GlobalChatModerationCase,
 )
-from poxbot.persistence.models.guild_settings_v2_orm import ActiveTicket
+from poxbot.persistence.models.guild_settings_v2 import GuildConfigV2
+from poxbot.persistence.models.guild_settings_v2_orm import ActiveTicket, GuildSettings
 from poxbot.persistence.models.orm.moderation import ModerationEntry
 from poxbot.persistence.models.stats_orm import (
     DailyUserActivity,
@@ -28,6 +31,7 @@ from poxbot.shared.bases import Base
 
 if TYPE_CHECKING:
     from poxbot.application.bot import PoxBot
+    from poxbot.services.i18n import I18nManager
 
 
 TABLES = [
@@ -40,6 +44,7 @@ TABLES = [
     EconomyInventory.__table__,
     EconomyTransaction.__table__,
     ActiveTicket.__table__,
+    GuildSettings.__table__,
     Giveaway.__table__,
     ModerationEntry.__table__,
     GlobalChatModerationCase.__table__,
@@ -338,6 +343,165 @@ def test_delete_rolls_back_when_a_table_delete_fails(tmp_path) -> None:
             # Both rows must remain because the transaction rolled back.
             assert statistics is not None
             assert preference is not None
+
+        await database.engine.dispose()
+
+    asyncio.run(run())
+
+
+
+def test_guild_configuration_references_are_exported_and_removed(tmp_path) -> None:
+    async def run() -> None:
+        database = await create_database(tmp_path / 'privacy-guild-config.db')
+
+        target_user_id = 1001
+        other_user_id = 2002
+        guild_id = 3003
+
+        config = GuildConfigV2.from_dict(
+            {
+                'features': {
+                    'filtering': {
+                        'last_executor': target_user_id,
+                        'filters': {
+                            'anti_message': {
+                                'blocked_user_ids': [
+                                    target_user_id,
+                                    other_user_id,
+                                ],
+                            },
+                        },
+                    },
+                    'global_chat': {
+                        'last_executor': target_user_id,
+                        'whitelisted_user_ids': [
+                            target_user_id,
+                            other_user_id,
+                        ],
+                    },
+                    'logs': {
+                        'last_executor': target_user_id,
+                    },
+                    'userphone': {
+                        # This is a guild ID, not a user ID.
+                        'current_partner_id': 9009,
+                    },
+                },
+            },
+        )
+
+        async with database.async_session() as session, session.begin():
+            session.add(GuildSettings(guild_id=guild_id, config=config))
+
+        exported = await database.export_user_data(target_user_id)
+        references = exported['server_configuration_references']
+
+        assert references == [
+            {
+                'guild_id': str(guild_id),
+                'last_executor_features': ['filtering', 'global_chat', 'logs'],
+                'anti_message_blocklist': True,
+                'global_chat_whitelist': True,
+            },
+        ]
+
+        report = await database.delete_user_data(target_user_id)
+
+        async with database.async_session() as session:
+            guild_settings = await session.get(GuildSettings, guild_id)
+            assert guild_settings is not None
+
+            config_data = guild_settings.config.to_dict()
+            features = config_data['features']
+
+            assert features['filtering']['filters']['anti_message'][
+                'blocked_user_ids'
+            ] == [other_user_id]
+            assert features['global_chat']['whitelisted_user_ids'] == [
+                other_user_id,
+            ]
+            assert features['filtering']['last_executor'] is None
+            assert features['global_chat']['last_executor'] is None
+            assert features['logs']['last_executor'] is None
+
+            # Guild IDs must not be treated as user IDs.
+            assert features['userphone']['current_partner_id'] == 9009
+
+        assert report['deleted']['guild_config_blocked_user_references'] == 1
+        assert report['deleted']['guild_config_global_chat_whitelist_references'] == 1
+        assert report['anonymized']['guild_config_last_executor_references'] == 3
+
+        await database.engine.dispose()
+
+    asyncio.run(run())
+
+
+def test_settings_cache_can_be_invalidated(tmp_path) -> None:
+    async def run() -> None:
+        database = SettingsDatabase(
+            cast('PoxBot', None),
+            f'sqlite+aiosqlite:///{tmp_path / "settings-cache.db"}',
+            cast('I18nManager', None),
+        )
+        user_id = 1001
+        cached_settings = object()
+
+        database.settings_cache.set(user_id, cached_settings)
+        assert database.settings_cache.get(user_id) is cached_settings
+
+        database.invalidate_user(user_id)
+
+        assert database.settings_cache.get(user_id) is None
+        await database.engine.dispose()
+
+    asyncio.run(run())
+
+
+def test_statistics_database_drops_legacy_message_cache(tmp_path) -> None:
+    async def run() -> None:
+        database = StatisticsDatabase(
+            cast('PoxBot', None),
+            f'sqlite+aiosqlite:///{tmp_path / "legacy-message-cache.db"}',
+        )
+
+        async with database.engine.begin() as connection:
+            await connection.execute(
+                text(
+                    """
+                    CREATE TABLE m_cache (
+                        message_id BIGINT PRIMARY KEY,
+                        channel_id BIGINT NOT NULL,
+                        guild_id BIGINT NOT NULL,
+                        author_id BIGINT NOT NULL,
+                        content TEXT NOT NULL
+                    )
+                    """,
+                ),
+            )
+            await connection.execute(
+                text(
+                    """
+                    INSERT INTO m_cache (
+                        message_id,
+                        channel_id,
+                        guild_id,
+                        author_id,
+                        content
+                    ) VALUES (1, 2, 3, 4, 'legacy message')
+                    """,
+                ),
+            )
+
+        await database.on_load()
+
+        async with database.engine.connect() as connection:
+            result = await connection.execute(
+                text(
+                    "SELECT name FROM sqlite_master "
+                    "WHERE type = 'table' AND name = 'm_cache'",
+                ),
+            )
+            assert result.scalar_one_or_none() is None
 
         await database.engine.dispose()
 

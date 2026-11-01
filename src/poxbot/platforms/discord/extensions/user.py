@@ -1172,9 +1172,12 @@ class UserCog(commands.Cog):
                     and keyword.lower() in msg.content.lower()
                 ):
                     self.bot.logger.debug(
-                        'Found message: %s by %s',
-                        msg.content,
-                        msg.author.name,
+                        'Found matching user message',
+                        extra={
+                            'message_id': msg.id,
+                            'author_id': msg.author.id,
+                            'channel_id': msg.channel.id,
+                        },
                     )
                     messages.append(msg)
 

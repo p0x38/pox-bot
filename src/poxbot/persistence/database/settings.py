@@ -49,6 +49,10 @@ class SettingsDatabase(BaseDatabase):
         self.settings_cache.set(user_id, settings)
         return settings
 
+    def invalidate_user(self, user_id: int) -> None:
+        """Remove cached preferences for a user after a data mutation."""
+        self.settings_cache.delete(user_id)
+
     async def set_settings(self, user_id: int, settings: SettingsData):
         if isinstance(settings.locale, list):
             settings.locale = settings.locale[0] if settings.locale else 'en'

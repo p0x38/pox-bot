@@ -122,7 +122,24 @@ data-retention practices.
 Users should avoid submitting passwords, personal information,
 confidential information, or other sensitive content to the chatbot.
 
-### 3.3. Global Chat message references
+### 3.3. Server audit logging
+
+When server administrators enable PoxBot audit logging, PoxBot may
+send audit events to the configured Discord channel.
+
+Message edit events may include the previous and updated message
+content. Message deletion events may include the deleted content
+when the message is available in the bot's Discord message cache.
+
+These audit-log messages are created in Discord channels managed by
+the respective server. Access to them is controlled by that server's
+channel permissions and administrators, not by PoxBot's privacy
+database.
+
+A PoxBot data export or deletion request does not automatically
+remove audit-log messages already sent to a server's Discord channel.
+
+### 3.4. Global Chat message references
 
 PoxBot maintains message references to associate original messages
 with their forwarded copies.
@@ -140,7 +157,7 @@ servers and support Global Chat operations.
 The reference records do not independently identify the original
 message author by Discord user ID.
 
-### 3.4. Global Chat moderation records
+### 3.5. Global Chat moderation records
 
 When a Global Chat message is flagged or held for moderation,
 PoxBot may create a moderation record to support moderation,
@@ -167,7 +184,7 @@ message through the other identifiers retained in the record.
 Moderation records are subject to the retention practices described
 in Section 9.
 
-### 3.5. Deletion of Global Chat messages
+### 3.6. Deletion of Global Chat messages
 
 Deleting an original message does not guarantee that every forwarded
 copy will also be deleted.
@@ -239,7 +256,8 @@ where they are needed for moderation or service security.
 Global Chat message references and forwarded messages may not all
 be identifiable through a deletion request based only on the user's
 Discord ID. Deletion of PoxBot database records also does not
-guarantee deletion of forwarded Discord messages.
+guarantee deletion of forwarded Discord messages or audit-log messages
+already sent to Discord channels managed by server administrators.
 
 The bot will report how many records were deleted, anonymized,
 and retained, as supported by the deletion implementation.
@@ -251,6 +269,7 @@ A PoxBot deletion request does not automatically delete:
 - Discord accounts
 - Messages stored by Discord
 - Messages forwarded to other participating Discord servers
+- Audit-log messages already sent to Discord channels managed by server administrators
 - Discord server memberships
 - Discord channels
 - Records held independently by server administrators
