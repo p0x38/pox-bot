@@ -2,11 +2,11 @@ import re
 from datetime import timedelta
 
 DURATION_REGEX = re.compile(
-    r'(?:(?P<weeks>\\d+)\\s*w)?\\s*'
-    r'(?:(?P<days>\\d+)\\s*d)?\\s*'
-    r'(?:(?P<hours>\\d+)\\s*h)?\\s*'
-    r'(?:(?P<minutes>\\d+)\\s*m)?\\s*'
-    r'(?:(?P<seconds>\\d+)\\s*s)?',
+    r'(?:(?P<weeks>\d+)\s*w)?\s*'
+    r'(?:(?P<days>\d+)\s*d)?\s*'
+    r'(?:(?P<hours>\d+)\s*h)?\s*'
+    r'(?:(?P<minutes>\d+)\s*m)?\s*'
+    r'(?:(?P<seconds>\d+)\s*s)?',
     re.IGNORECASE,
 )
 
