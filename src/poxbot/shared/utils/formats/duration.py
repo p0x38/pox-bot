@@ -44,6 +44,9 @@ def format_duration(n: float) -> str:
 def parse_duration(text: str) -> timedelta:
     text = text.strip().lower()
 
+    if not text:
+        raise ValueError('Duration cannot be empty.')
+
     if text.isdigit():
         return timedelta(seconds=int(text))
 

@@ -50,6 +50,7 @@ class SafeStringPredicateEvaluator:
     }
     _NODE_CONTROLS: ClassVar[set[type[ast.AST]]] = {
         ast.Call,
+        ast.Attribute,
         ast.keyword,
         ast.arguments,
         ast.arg,
