@@ -131,7 +131,7 @@ class PrivacyDatabase(BaseDatabase):
                 if not cls._matches_user_id(value, user_id)
             ]
             removed_count = len(blocked_user_ids) - len(retained_ids)
-            if removed_count:
+            if removed_count and isinstance(anti_message, dict):
                 anti_message['blocked_user_ids'] = retained_ids
                 removed['guild_config_blocked_user_references'] = removed_count
 
@@ -148,7 +148,7 @@ class PrivacyDatabase(BaseDatabase):
                 if not cls._matches_user_id(value, user_id)
             ]
             removed_count = len(whitelisted_user_ids) - len(retained_ids)
-            if removed_count:
+            if removed_count and isinstance(global_chat, dict):
                 global_chat['whitelisted_user_ids'] = retained_ids
                 removed['guild_config_global_chat_whitelist_references'] = (
                     removed_count

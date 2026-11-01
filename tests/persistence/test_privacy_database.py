@@ -2,7 +2,7 @@ import asyncio
 from datetime import date
 from typing import TYPE_CHECKING, cast
 
-from sqlalchemy import text
+from sqlalchemy import Table, text
 from sqlalchemy.exc import SQLAlchemyError
 
 from poxbot.persistence.database.privacy import PrivacyDatabase
@@ -34,7 +34,7 @@ if TYPE_CHECKING:
     from poxbot.services.i18n import I18nManager
 
 
-TABLES = [
+TABLES: list[Table] = [
     UserStatistics.__table__,
     DailyUserActivity.__table__,
     UserProfile.__table__,
