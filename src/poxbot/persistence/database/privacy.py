@@ -39,7 +39,6 @@ class PrivacyDatabase(BaseDatabase):
 
         return int(row_count)
 
-
     @staticmethod
     def _matches_user_id(value: Any, user_id: int) -> bool:
         if isinstance(value, bool) or value is None:
@@ -530,7 +529,9 @@ class PrivacyDatabase(BaseDatabase):
             )
             for guild_settings in guild_settings_result:
                 config = guild_settings.config
-                config_data = config.to_dict() if hasattr(config, 'to_dict') else config
+                config_data = (
+                    config.to_dict() if hasattr(config, 'to_dict') else config
+                )
                 if not isinstance(config_data, dict):
                     continue
 

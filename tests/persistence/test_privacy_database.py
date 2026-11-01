@@ -349,7 +349,6 @@ def test_delete_rolls_back_when_a_table_delete_fails(tmp_path) -> None:
     asyncio.run(run())
 
 
-
 def test_guild_configuration_references_are_exported_and_removed(tmp_path) -> None:
     async def run() -> None:
         database = await create_database(tmp_path / 'privacy-guild-config.db')
